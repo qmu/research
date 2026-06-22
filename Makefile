@@ -33,4 +33,4 @@ a11y: ## Check the built preview site against WCAG 2.2 AA (needs `make build`)
 	@cd docs && npm run a11y
 
 publish: ## Copy finished research Markdown to the corporate site
-	@echo "Reserved. Implemented by ticket 20260622191216 (qmu-co-jp publish pipeline)."
+	@bash scripts/publish-research.sh --all

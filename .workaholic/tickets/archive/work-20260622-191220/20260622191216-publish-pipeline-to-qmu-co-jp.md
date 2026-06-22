@@ -3,9 +3,9 @@ created_at: 2026-06-22T19:12:16+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [Infrastructure, Config]
-effort:
-commit_hash:
-category:
+effort: 1h
+commit_hash: ae688a1
+category: Added
 depends_on: [20260622191214-initialize-research-monorepo-skeleton.md]
 ---
 
