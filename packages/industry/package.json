@@ -20,7 +20,7 @@
     "prettier": "^3.4.0",
     "tsx": "^4.19.0",
     "typescript": "^5.8.0",
-    "typescript-eslint": "^8.18.0",
+    "typescript-eslint": "^8.61.1",
     "vitest": "^3.0.0"
   }
 }
