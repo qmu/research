@@ -1,0 +1,16 @@
+# Local dependencies for reproducible research runs.
+# `docker compose -f workloads/docker/docker-compose.yml up` builds the dev image
+# and runs the test suite. Researches that need runtime services (for example a
+# database for the multi-tenant multi-database study) add pinned service
+# definitions here.
+
+services:
+  research:
+    build:
+      context: ../..
+      dockerfile: workloads/docker/Dockerfile
+      target: dev
+    working_dir: /repo
+    volumes:
+      - ../../:/repo
+    command: make test

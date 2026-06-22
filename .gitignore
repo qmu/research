@@ -1,0 +1,15 @@
+node_modules/
+dist/
+outputs/*
+!outputs/.gitkeep
+
+# VitePress
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+
+# Logs and local env
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store

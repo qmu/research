@@ -1,0 +1,26 @@
+{
+  "name": "@qmu/research-industry",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fundamental industry and market research.",
+  "license": "MIT",
+  "author": "qmu co.,Inc.",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "tsc": "tsc --noEmit",
+    "test": "tsc --noEmit && vitest --run --passWithNoTests",
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^3.0.0"
+  }
+}

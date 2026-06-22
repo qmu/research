@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # CI invokes the same Makefile targets developers run locally, so the
+      # inspection logic lives in the repository, not in this workflow.
+      - name: Install
+        run: make install
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: make test
+
+      - name: Lint
+        run: make lint
+
+      - name: Audit dependencies
+        run: |
+          for p in packages/tech packages/industry; do
+            (cd "$p" && npm audit --audit-level=high) || true
+          done
