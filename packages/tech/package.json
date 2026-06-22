@@ -26,6 +26,6 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.104.1"
+    "@anthropic-ai/sdk": "^0.105.0"
   }
 }
