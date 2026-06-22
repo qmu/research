@@ -29,6 +29,9 @@ jobs:
       - name: Lint
         run: make lint
 
+      - name: Accessibility check (WCAG 2.2 AA)
+        run: make a11y
+
       - name: Audit dependencies
         run: |
           for p in packages/tech packages/industry; do

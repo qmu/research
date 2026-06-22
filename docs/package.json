@@ -1,0 +1,22 @@
+{
+  "name": "@qmu/research-docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VitePress preview site for research result pages.",
+  "license": "MIT",
+  "author": "qmu co.,Inc.",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "a11y": "start-server-and-test 'vitepress preview --port 4173' http://localhost:4173 'pa11y-ci'"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  },
+  "optionalDependencies": {
+    "pa11y-ci": "^3.1.0",
+    "start-server-and-test": "^2.0.12"
+  }
+}

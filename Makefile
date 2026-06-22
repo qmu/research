@@ -3,17 +3,19 @@
 
 PACKAGES := packages/tech packages/industry
 
-.PHONY: help install build test lint format docs publish
+.PHONY: help install build test lint format docs a11y publish
 
 help: ## List available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  make %-10s %s\n", $$1, $$2}'
 
-install: ## Install dependencies in every package
+install: ## Install dependencies in every package and the docs site
 	@for p in $(PACKAGES); do echo "==> install $$p"; (cd $$p && npm install); done
+	@echo "==> install docs"; (cd docs && npm install)
 
-build: ## Type-check and build every package
+build: ## Type-check and build every package and the docs site
 	@for p in $(PACKAGES); do echo "==> build $$p"; (cd $$p && npm run build); done
+	@echo "==> build docs"; (cd docs && npm run build)
 
 test: ## Type-check and run unit tests in every package
 	@for p in $(PACKAGES); do echo "==> test $$p"; (cd $$p && npm test); done
@@ -25,7 +27,10 @@ format: ## Apply formatting across every package
 	@for p in $(PACKAGES); do echo "==> format $$p"; (cd $$p && npm run format); done
 
 docs: ## Run the local research preview site (VitePress)
-	@echo "Reserved. Implemented by ticket 20260622191215 (VitePress preview site)."
+	@cd docs && npm run dev
+
+a11y: ## Check the built preview site against WCAG 2.2 AA (needs `make build`)
+	@cd docs && npm run a11y
 
 publish: ## Copy finished research Markdown to the corporate site
 	@echo "Reserved. Implemented by ticket 20260622191216 (qmu-co-jp publish pipeline)."
