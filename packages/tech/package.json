@@ -17,7 +17,7 @@
     "benchmark:fixture": "tsx src/entrypoints/run-llm-benchmark.ts --fixture"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
+    "@types/node": "^26.0.0",
     "eslint": "^9.17.0",
     "prettier": "^3.4.0",
     "tsx": "^4.19.0",
