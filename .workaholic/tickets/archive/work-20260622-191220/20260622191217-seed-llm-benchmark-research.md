@@ -3,9 +3,9 @@ created_at: 2026-06-22T19:12:17+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [Domain, Infrastructure]
-effort:
-commit_hash:
-category:
+effort: 2h
+commit_hash: 263d3a2
+category: Added
 depends_on: [20260622191214-initialize-research-monorepo-skeleton.md, 20260622191215-vitepress-research-preview-site.md, 20260622191216-publish-pipeline-to-qmu-co-jp.md]
 ---
 

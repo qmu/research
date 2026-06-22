@@ -1,0 +1,39 @@
+name: build-research-tech
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/tech/**"
+  pull_request:
+    paths:
+      - "packages/tech/**"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/tech
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: packages/tech/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --include=dev
+
+      - name: Type-check and test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
+
+      # No API key in CI: the deterministic fixture run exercises the full
+      # dataset -> grade -> score -> result-page pipeline without credentials.
+      - name: Benchmark pipeline self-test
+        run: npm run benchmark:fixture

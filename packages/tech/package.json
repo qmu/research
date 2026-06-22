@@ -12,7 +12,9 @@
     "tsc": "tsc --noEmit",
     "test": "tsc --noEmit && vitest --run --passWithNoTests",
     "lint": "prettier --check . && eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "benchmark": "tsx src/entrypoints/run-llm-benchmark.ts",
+    "benchmark:fixture": "tsx src/entrypoints/run-llm-benchmark.ts --fixture"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
@@ -22,5 +24,8 @@
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.18.0",
     "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1"
   }
 }

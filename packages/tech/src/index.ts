@@ -6,7 +6,8 @@
 
 const main = (): void => {
   process.stdout.write(
-    "qmu technical research. No research topic selected.\n" +
+    "qmu technical research.\n" +
+      "Topics live under src/. Try: npm run benchmark:fixture (the llm-benchmark topic).\n" +
       "See TEMPLATE.md to add a topic, or run an entrypoint under src/entrypoints/.\n",
   );
 };

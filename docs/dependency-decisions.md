@@ -34,6 +34,17 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 - **Monitoring**: Dependabot (`.github/dependabot.yml`), `npm audit` in CI.
 - **Exit strategy**: Standard, swappable tooling; no domain logic depends on them.
 
+### @anthropic-ai/sdk (packages/tech)
+
+- **Reason**: The `llm-benchmark` topic calls the Anthropic Messages API. Implementing an HTTP client by hand would duplicate ret/streaming/typing the SDK provides; the dependency is isolated behind `packages/tech/src/vendors/llm/`.
+- **Assessment**:
+  - License: MIT — compatible with this MIT repo.
+  - Reputation: Official Anthropic SDK; actively maintained.
+  - Development status: Active, frequent releases.
+  - Sustainability: Vendored by Anthropic.
+- **Monitoring**: Dependabot, `npm audit` in CI.
+- **Exit strategy**: Reached only through the domain-named `LlmClient` anti-corruption layer (`generateAnswer`); swapping providers means adding another `src/vendors/llm/` implementation, not touching benchmark logic.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
