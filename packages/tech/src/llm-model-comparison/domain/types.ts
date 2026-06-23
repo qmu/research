@@ -41,8 +41,7 @@ export type Measurement = Readonly<{
 
 // The join: a curated card plus its measurement. The only type the report
 // consumes, and the only place the two halves meet.
-export type ComparisonRow = ModelCard &
-  Readonly<{ measurement: Measurement }>;
+export type ComparisonRow = ModelCard & Readonly<{ measurement: Measurement }>;
 
 // Probe parameters the runner owns and echoes here for the Method section. The
 // domain does not decide the depth ladder or the length target — that is

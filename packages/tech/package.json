@@ -14,7 +14,9 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "benchmark": "tsx src/entrypoints/run-llm-benchmark.ts",
-    "benchmark:fixture": "tsx src/entrypoints/run-llm-benchmark.ts --fixture"
+    "benchmark:fixture": "tsx src/entrypoints/run-llm-benchmark.ts --fixture",
+    "compare": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts",
+    "compare:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --fixture"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
@@ -26,6 +28,8 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.104.1"
+    "@anthropic-ai/sdk": "^0.104.1",
+    "@google/genai": "^2.8.0",
+    "openai": "^6.43.0"
   }
 }

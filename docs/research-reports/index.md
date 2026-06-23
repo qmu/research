@@ -8,6 +8,10 @@ description: Finished, reproducible research studies.
 Finished research studies. Each page documents what was measured, how, and the
 exact steps to reproduce it.
 
-No reports have been published yet. When a study is ready, its page is added to
-this section and listed here. To add one, see the `TEMPLATE.md` in the relevant
-package under `packages/`.
+- [LLM exact-match benchmark](./llm-benchmark) — a small, reproducible
+  exact-match accuracy benchmark, runnable in seconds from a clone.
+- [Fundamental LLM model comparison](./llm-model-comparison) — frontier models
+  from Anthropic, OpenAI, and Google across eight aspects: five curated catalog
+  facts and three live-measured behavioral probes.
+
+To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

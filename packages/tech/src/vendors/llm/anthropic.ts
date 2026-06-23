@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { LlmClient } from "./types";
+import type { CompletionClient, CompletionOptions, LlmClient } from "./types";
+import { anthropicOutputTokens } from "./usage";
 
 // Default to the latest Claude model. Override with ANTHROPIC_MODEL to benchmark
 // a specific model; pin the id in any published comparison.
@@ -23,6 +24,43 @@ export const createAnthropicClient = (
       return response.content
         .map((block) => (block.type === "text" ? block.text : ""))
         .join("");
+    },
+  };
+};
+
+// Wrap the Anthropic SDK behind the richer CompletionClient for the comparison
+// topic. Captures the wall-clock elapsed time around the SDK call and normalizes
+// usage.output_tokens through the pure helper. A final-answer-only instruction
+// keeps the response gradeable; no thinking parameter is set.
+const SYSTEM_FINAL_ANSWER_ONLY =
+  "Respond with only the requested output. Do not include preamble, explanation, " +
+  "or commentary.";
+
+export const createAnthropicCompletionClient = (
+  apiModelId: string,
+  apiKey: string,
+): CompletionClient => {
+  const client = new Anthropic({ apiKey });
+  return {
+    model: apiModelId,
+    complete: async (prompt: string, options?: CompletionOptions) => {
+      const startedAt = Date.now();
+      const response = await client.messages.create({
+        model: apiModelId,
+        max_tokens: options?.maxTokens ?? 2048,
+        system: SYSTEM_FINAL_ANSWER_ONLY,
+        messages: [{ role: "user", content: prompt }],
+      });
+      const elapsedMs = Date.now() - startedAt;
+      const text = response.content
+        .map((block) => (block.type === "text" ? block.text : ""))
+        .join("");
+      return {
+        text,
+        outputTokens: anthropicOutputTokens(response.usage),
+        elapsedMs,
+        model: apiModelId,
+      };
     },
   };
 };

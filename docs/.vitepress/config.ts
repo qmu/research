@@ -22,7 +22,16 @@ export default defineConfig({
       {
         text: "Research reports",
         link: "/research-reports/",
-        items: [],
+        items: [
+          {
+            text: "LLM exact-match benchmark",
+            link: "/research-reports/llm-benchmark",
+          },
+          {
+            text: "LLM model comparison",
+            link: "/research-reports/llm-model-comparison",
+          },
+        ],
       },
       {
         text: "Project",

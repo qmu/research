@@ -45,6 +45,28 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 - **Monitoring**: Dependabot, `npm audit` in CI.
 - **Exit strategy**: Reached only through the domain-named `LlmClient` anti-corruption layer (`generateAnswer`); swapping providers means adding another `src/vendors/llm/` implementation, not touching benchmark logic.
 
+### openai (packages/tech)
+
+- **Reason**: The `llm-model-comparison` topic measures OpenAI models live. The official SDK provides typed request/response and usage shapes; hand-rolling an HTTP client would duplicate that. Isolated behind `packages/tech/src/vendors/llm/openai.ts`.
+- **Assessment**:
+  - License: Apache-2.0 — compatible with this MIT repo.
+  - Reputation: Official OpenAI SDK; broad adoption, actively maintained.
+  - Development status: Active, frequent releases.
+  - Sustainability: Vendored by OpenAI.
+- **Monitoring**: Dependabot, `npm audit` in CI.
+- **Exit strategy**: Reached only through the domain-named `CompletionClient` contract; the SDK's usage shape is normalized to `Completion.outputTokens` in `vendors/llm/usage.ts`, so dropping the provider is a one-file change with no domain impact.
+
+### @google/genai (packages/tech)
+
+- **Reason**: The `llm-model-comparison` topic measures Google Gemini models live. The official SDK provides typed access and usage metadata; hand-rolling an HTTP client would duplicate that. Isolated behind `packages/tech/src/vendors/llm/google.ts`.
+- **Assessment**:
+  - License: Apache-2.0 — compatible with this MIT repo.
+  - Reputation: Official Google Gen AI SDK; actively maintained.
+  - Development status: Active, frequent releases.
+  - Sustainability: Vendored by Google.
+- **Monitoring**: Dependabot, `npm audit` in CI.
+- **Exit strategy**: Reached only through the domain-named `CompletionClient` contract; `usageMetadata.candidatesTokenCount` is normalized to `Completion.outputTokens` in `vendors/llm/usage.ts`, so dropping the provider is a one-file change with no domain impact.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
