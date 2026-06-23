@@ -37,8 +37,20 @@ Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comp
   all six amendments; 47 tests pass incl. seed, lint clean, `compare:fixture` report
   generated, `make build` ok; real `compare` left paused). Architect discovery ready;
   Planner E2E plan (`1cad599`). Gate 3/3.
-- [ ] coding/review-and-testing — Architect analytical review of `4be4412` → GATE →
-  Planner E2E (Groups A–C) → GATE.
+- [~] coding/review-and-testing —
+  - [x] Architect analytical review of `4be4412`: **APPROVE WITH OBSERVATIONS**
+    (`9340ff1`), no must-fix; all six points held in code/test/artifact, both Round-1
+    changes closed, legal/ToS seam homed, dep-pins + env-file wiring sound. GATE passed.
+  - [ ] Planner E2E (Groups A–C) → GATE.
+
+### Non-blocking carry-over observations (Architect, round-2; for `/report` to judge)
+
+- **O1 — `released` granularity:** all three models show bare `"2026"` though the type
+  allows `YYYY-MM`; tighten to `YYYY-MM` from the cited sources at the paused-real-run /
+  ToS WebFetch checkpoint. Registry-value refinement, no code change.
+- **O2 — provenance invariant location:** measured-honesty is enforced by runner
+  discipline (correct, tested, ADR-recorded), not a type-level barrier — preserve as the
+  topic grows to a 4th provider.
 
 ### Environment constraints (lead-recorded; not code defects)
 
