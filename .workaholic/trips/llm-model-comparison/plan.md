@@ -1,9 +1,9 @@
 ---
 instruction: "Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comparison-poc.md — fundamental LLM model-comparison PoC (second packages/tech research topic): multi-provider (Anthropic/OpenAI/Google) comparison behind one CompletionClient, curated model registry, three live probes (speed, nested-JSON depth, length accuracy), fixture path for keyless CI, generated docs/research-reports/llm-model-comparison.md, VitePress + CI wiring, and ADR 0004. Pause before the first real compare run so the user can populate .env."
-phase: planning
-step: respond-to-feedback
+phase: coding
+step: concurrent-launch
 iteration: 0
-updated_at: 2026-06-24T08:20:00+09:00
+updated_at: 2026-06-24T08:35:00+09:00
 ---
 
 # Trip Plan
@@ -29,8 +29,14 @@ Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comp
 - [x] planning/one-turn-review — Planner (`636b6bf`), Architect (event-log `c59c303`,
   file bundled in `636b6bf`), Constructor (`3d788d6`). All decisions in the
   "Approve …" family; no "Request revision", no escalation. Gate 3/3.
-- [ ] planning/respond-to-feedback — Constructor folds the converged amendments into
-  `design-v2` (accept-and-revise); direction-v1 + model-v1 stand approved.
+- [x] planning/respond-to-feedback — Constructor accept-and-revise → `design-v2`
+  (`e13b548`) folding all six amendments; response-constructor-to-architect.md written.
+  **Consensus Gate met** (all reviews approved, revision accepted, no escalation).
+  Plan is FIXED. `design-v2.md` is the authoritative build spec.
+- [ ] coding/concurrent-launch — Constructor implements + internal tests; Architect
+  codebase discovery; Planner E2E scenario plan. **Hard stop before any real `compare`
+  run** (paused for the developer's `.env`); the team verifies via keyless
+  `compare:fixture` only.
 
 ### Converged amendments adopted into design-v2 (lead synthesis of all three reviews)
 
