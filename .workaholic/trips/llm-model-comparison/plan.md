@@ -1,9 +1,9 @@
 ---
 instruction: "Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comparison-poc.md — fundamental LLM model-comparison PoC (second packages/tech research topic): multi-provider (Anthropic/OpenAI/Google) comparison behind one CompletionClient, curated model registry, three live probes (speed, nested-JSON depth, length accuracy), fixture path for keyless CI, generated docs/research-reports/llm-model-comparison.md, VitePress + CI wiring, and ADR 0004. Pause before the first real compare run so the user can populate .env."
-phase: coding
-step: review-and-testing
+phase: complete
+step: done
 iteration: 0
-updated_at: 2026-06-24T09:10:00+09:00
+updated_at: 2026-06-24T09:40:00+09:00
 ---
 
 # Trip Plan
@@ -41,7 +41,29 @@ Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comp
   - [x] Architect analytical review of `4be4412`: **APPROVE WITH OBSERVATIONS**
     (`9340ff1`), no must-fix; all six points held in code/test/artifact, both Round-1
     changes closed, legal/ToS seam homed, dep-pins + env-file wiring sound. GATE passed.
-  - [ ] Planner E2E (Groups A–C) → GATE.
+  - [x] Planner E2E (Groups A–C): **PASS** (`ed76967`), no code defects. A: fixture
+    run exit 0 / hermetic / deterministic. B: all honesty checks (B4 `n/a (fixtured)`,
+    B5 masked raw cells, B6 Scope&limitations, B7 Publication-constraints). C: `make
+    build` clean, both reports in sidebar+index; `make a11y` exit 127 = pa11y binary
+    absent here (env-only, CI-verified) — semantic `<th>`/anchors/text-legend confirmed
+    by inspection. D: real run developer-gated, not executed. GATE passed.
+- [x] **complete/done** — all planning + coding gates passed; no rollback. Branch
+  `work-20260622-191220`. Real `compare` run remains paused for the developer's `.env`.
+
+### Additional non-blocking carry-over (Planner, round-2; for `/report`)
+
+- **O3 — `.pa11yci` page coverage:** the a11y config checks `/`, `/research-reports/`,
+  `/glossary` but not individual report pages (same as the seed — no regression). Adding
+  the two report URLs is an optional follow-up.
+
+### Deferred deliverable (developer-gated)
+
+- **Real multi-provider `compare` run:** awaiting `.env` (`ANTHROPIC_API_KEY` /
+  `OPENAI_API_KEY` / `GOOGLE_API_KEY`). `npm run compare` regenerates
+  `docs/research-reports/llm-model-comparison.md` with live Speed / nested-JSON-depth /
+  length-accuracy numbers; any key-less provider stays flagged `n/a (fixtured)`. Do the
+  O1 `released` YYYY-MM tightening + the model-ID/pricing sanity-check (GPT-5.5,
+  Gemini 3.1 Pro) at this same ToS checkpoint before publishing.
 
 ### Non-blocking carry-over observations (Architect, round-2; for `/report` to judge)
 
