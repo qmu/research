@@ -1,9 +1,9 @@
 ---
 instruction: "Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comparison-poc.md — fundamental LLM model-comparison PoC (second packages/tech research topic): multi-provider (Anthropic/OpenAI/Google) comparison behind one CompletionClient, curated model registry, three live probes (speed, nested-JSON depth, length accuracy), fixture path for keyless CI, generated docs/research-reports/llm-model-comparison.md, VitePress + CI wiring, and ADR 0004. Pause before the first real compare run so the user can populate .env."
 phase: coding
-step: concurrent-launch
+step: review-and-testing
 iteration: 0
-updated_at: 2026-06-24T08:35:00+09:00
+updated_at: 2026-06-24T09:10:00+09:00
 ---
 
 # Trip Plan
@@ -33,10 +33,24 @@ Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comp
   (`e13b548`) folding all six amendments; response-constructor-to-architect.md written.
   **Consensus Gate met** (all reviews approved, revision accepted, no escalation).
   Plan is FIXED. `design-v2.md` is the authoritative build spec.
-- [ ] coding/concurrent-launch — Constructor implements + internal tests; Architect
-  codebase discovery; Planner E2E scenario plan. **Hard stop before any real `compare`
-  run** (paused for the developer's `.env`); the team verifies via keyless
-  `compare:fixture` only.
+- [x] coding/concurrent-launch — Constructor implementation green (`4be4412`, 29 files,
+  all six amendments; 47 tests pass incl. seed, lint clean, `compare:fixture` report
+  generated, `make build` ok; real `compare` left paused). Architect discovery ready;
+  Planner E2E plan (`1cad599`). Gate 3/3.
+- [ ] coding/review-and-testing — Architect analytical review of `4be4412` → GATE →
+  Planner E2E (Groups A–C) → GATE.
+
+### Environment constraints (lead-recorded; not code defects)
+
+- **npm date cutoff (< 2026-06-17):** latest `openai` 6.44 / `@google/genai` 2.9 are
+  unresolvable in this environment; pinned to newest installable `^6.43.0` / `^2.8.0`.
+- **`make a11y` exits 127 locally:** pa11y-ci binary not installed here (Chromium pull);
+  it is the CI a11y step (`--no-sandbox`). Built site serves 200; report a11y-sound by
+  construction (semantic table headers, stable anchors, text-only legend). Planner to
+  run pa11y where installed, else confirm CI coverage.
+- **`models.ts` OpenAI/Google IDs+pricing** were WebFetch-verified at build time
+  (GPT-5.5, Gemini 3.1 Pro) — flagged for a developer sanity-check before the public
+  live run.
 
 ### Converged amendments adopted into design-v2 (lead synthesis of all three reviews)
 
