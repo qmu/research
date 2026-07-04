@@ -248,24 +248,34 @@ const main = async (): Promise<void> => {
   };
 
   const configs: ConfigRun[] = [];
+  let done = 0;
   for (const { card, effort } of matrix) {
+    let run: ConfigRun;
     try {
-      configs.push(
-        await buildConfigRun(card, effort, {
-          trials: args.trials,
-          probe: PROBE,
-          liveClient: liveClient(card),
-          fixtureFor: (i) => createFixtureCompletionClient(card.apiModelId, i),
-          judge,
-        }),
-      );
+      run = await buildConfigRun(card, effort, {
+        trials: args.trials,
+        probe: PROBE,
+        liveClient: liveClient(card),
+        fixtureFor: (i) => createFixtureCompletionClient(card.apiModelId, i),
+        judge,
+      });
     } catch (error: unknown) {
       // A configuration that fails catastrophically is recorded and skipped.
       process.stderr.write(`${card.modelName} (${effort}): ${String(error)}\n`);
-      configs.push(
-        errorRun(card, effort, args.trials, String(error), JUDGE.apiModelId),
-      );
+      run = errorRun(card, effort, args.trials, String(error), JUDGE.apiModelId);
     }
+    configs.push(run);
+    done += 1;
+    // Stream per-config progress the moment each config finishes, so a long real
+    // sweep is observable instead of silent until the very end.
+    const s = run.stats;
+    const line =
+      run.provenance === "measured"
+        ? `${s.throughputTokensPerSec.mean.toFixed(0)} tok/s, ttft ${s.ttftMs.mean.toFixed(0)}ms, schema ${s.maxSchemaComplexity.mean.toFixed(1)}, length ${(s.lengthAccuracy.mean * 100).toFixed(0)}%`
+        : run.provenance;
+    process.stderr.write(
+      `[${done}/${matrix.length}] ${run.provider}/${run.modelName} [${run.effort}]: ${line}\n`,
+    );
   }
 
   const generatedAt = args.forceFixture
@@ -304,16 +314,12 @@ const main = async (): Promise<void> => {
     "utf8",
   );
 
-  for (const run of configs) {
-    const s = run.stats;
-    const summary =
-      run.provenance === "measured"
-        ? ` — ${s.throughputTokensPerSec.mean.toFixed(0)} tok/s, ttft ${s.ttftMs.mean.toFixed(0)}ms, schema ${s.maxSchemaComplexity.mean.toFixed(1)}, length ${(s.lengthAccuracy.mean * 100).toFixed(0)}%`
-        : "";
-    process.stdout.write(
-      `${run.provider}/${run.modelName} [${run.effort}]: ${run.provenance}${summary}\n`,
-    );
-  }
+  const measuredCount = configs.filter(
+    (r) => r.provenance === "measured",
+  ).length;
+  process.stdout.write(
+    `done: ${measuredCount}/${configs.length} configs measured live.\n`,
+  );
   process.stdout.write(`wrote ${outputPath}\n`);
   process.stdout.write(`wrote ${artifactPath}\n`);
 };
