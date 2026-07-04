@@ -1,21 +1,31 @@
 import type {
   Aggregate,
   ComparisonResult,
-  ModelRun,
+  ConfigRun,
   Provenance,
+  Review,
   TrialResult,
 } from "./types";
-import { buildNestedJsonPrompt } from "./nested-json";
+import { buildThroughputPrompt } from "./throughput";
+import { buildSchemaPrompt } from "./json-schema";
 import { buildLengthPrompt } from "./length-accuracy";
 
 // Render the comparison result page as Markdown — a comprehensive, objective
 // research report, not just a table. Provenance (curated / measured / fixtured /
 // error) is conveyed by TEXT and a legend, never by colour, so the page inherits
 // VitePress's WCAG-2.2-AA-compliant theme contrast with no custom low-contrast
-// styling to get wrong. Every measured aspect is a mean over N trials reported
-// with its spread; fixtured and failed rows are flagged and never shown as live;
-// the exact prompts are quoted verbatim and the full per-trial raw capture is
-// linked as a JSON artifact.
+// styling to get wrong. Throughput and latency are reported separately with
+// units; the JSON metric is the empirically tested max schema complexity; each
+// configuration carries a developer review from the LLM judge; and the full
+// per-call raw capture is linked as a JSON artifact.
+//
+// The report is a RENDERING of that artifact, not the source of truth: the same
+// artifact can be re-rendered at any `DetailLevel` without re-running the sweep.
+//  - "summary"  — headline table + one-line reviews + links.
+//  - "standard" — + per-aspect distributions + full reviews + prompts (default).
+//  - "full"     — + per-trial tables and inline sample raw outputs.
+
+export type DetailLevel = "summary" | "standard" | "full";
 
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
@@ -27,7 +37,7 @@ const pct = (n: number): string => `${(n * 100).toFixed(0)}%`;
 const notMeasured = (p: Provenance): string =>
   p === "error" ? "n/a (error)" : "n/a (fixtured)";
 
-const measured = (run: ModelRun, value: string): string =>
+const measured = (run: ConfigRun, value: string): string =>
   run.provenance === "measured" ? value : notMeasured(run.provenance);
 
 // "14.4 ± 2.2" — a mean with its sample spread, at a fixed precision.
@@ -38,20 +48,24 @@ const meanSd = (a: Aggregate, digits: number): string =>
 const range = (a: Aggregate, digits: number): string =>
   `${a.min.toFixed(digits)}–${a.max.toFixed(digits)}`;
 
+// A stable anchor/key for a configuration (model slug + effort level).
+const configKey = (run: ConfigRun): string => `${run.id}-${run.effort}`;
+
 // --- headline comparison table -----------------------------------------------
 
-const comparisonTable = (runs: ReadonlyArray<ModelRun>): string => {
+const comparisonTable = (configs: ReadonlyArray<ConfigRun>): string => {
   const header =
-    "| Provider | Model | Tier | Released | Cost (in / out per MTok) | Effort levels | Speed (mean) | Max JSON depth (mean) | Length accuracy (mean) |\n" +
-    "| -------- | ----- | ---- | -------- | ------------------------ | ------------- | ------------ | --------------------- | ---------------------- |";
-  const rows = runs.map((run) => {
+    "| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema complexity | Length accuracy |\n" +
+    "| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | --------------------- | --------------- |";
+  const rows = configs.map((run) => {
     const s = run.stats;
     return (
       `| ${escapeCell(run.provider)} | ${escapeCell(run.modelName)} | ${run.tier} | ` +
-      `${escapeCell(run.released)} | ${usd(run.inputCostPerMTok)} / ${usd(run.outputCostPerMTok)} | ` +
-      `${escapeCell(run.effortLevels.join(", "))} | ` +
-      `${measured(run, `${s.tokensPerSecond.mean.toFixed(1)} tok/s`)} | ` +
-      `${measured(run, s.maxNestedJsonDepth.mean.toFixed(1))} | ` +
+      `${escapeCell(run.effort)} | ${usd(run.inputCostPerMTok)} / ${usd(run.outputCostPerMTok)} | ` +
+      `${measured(run, s.throughputTokensPerSec.mean.toFixed(0))} | ` +
+      `${measured(run, s.ttftMs.mean.toFixed(0))} | ` +
+      `${measured(run, s.totalLatencyMs.mean.toFixed(0))} | ` +
+      `${measured(run, s.maxSchemaComplexity.mean.toFixed(1))} | ` +
       `${measured(run, pct(s.lengthAccuracy.mean))} |`
     );
   });
@@ -61,24 +75,38 @@ const comparisonTable = (runs: ReadonlyArray<ModelRun>): string => {
 // --- per-aspect analysis -----------------------------------------------------
 
 type Aspect = Readonly<{
-  key: keyof ModelRun["stats"];
+  key: keyof ConfigRun["stats"];
   title: string;
   digits: number;
-  format: (a: Aggregate) => string; // headline value for the sentence
+  format: (a: Aggregate) => string;
   better: "higher" | "lower";
 }>;
 
 const ASPECTS: ReadonlyArray<Aspect> = [
   {
-    key: "tokensPerSecond",
-    title: "Speed (output tokens / second)",
+    key: "throughputTokensPerSec",
+    title: "Sustained throughput (tokens / second during generation)",
     digits: 1,
-    format: (a) => `${a.mean.toFixed(1)} tok/s`,
+    format: (a) => `${a.mean.toFixed(0)} tok/s`,
     better: "higher",
   },
   {
-    key: "maxNestedJsonDepth",
-    title: "Maximum nested-JSON depth",
+    key: "ttftMs",
+    title: "Latency — time to first token (ms)",
+    digits: 0,
+    format: (a) => `${a.mean.toFixed(0)} ms`,
+    better: "lower",
+  },
+  {
+    key: "totalLatencyMs",
+    title: "Latency — total response time (ms)",
+    digits: 0,
+    format: (a) => `${a.mean.toFixed(0)} ms`,
+    better: "lower",
+  },
+  {
+    key: "maxSchemaComplexity",
+    title: "Tested maximum JSON-schema complexity",
     digits: 1,
     format: (a) => a.mean.toFixed(1),
     better: "higher",
@@ -92,37 +120,41 @@ const ASPECTS: ReadonlyArray<Aspect> = [
   },
 ];
 
+const label = (run: ConfigRun): string =>
+  `${escapeCell(run.modelName)} [${escapeCell(run.effort)}]`;
+
 const aspectSentence = (
   aspect: Aspect,
-  measuredRuns: ReadonlyArray<ModelRun>,
+  measuredRuns: ReadonlyArray<ConfigRun>,
 ): string => {
   if (measuredRuns.length === 0) {
-    return "No live measurements in this run — every model was fixtured or errored, so this aspect has no comparison.";
+    return "No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.";
   }
-  const value = (run: ModelRun): number => run.stats[aspect.key].mean;
+  const value = (run: ConfigRun): number => run.stats[aspect.key].mean;
   const sorted = [...measuredRuns].sort((a, b) =>
     aspect.better === "higher" ? value(b) - value(a) : value(a) - value(b),
   );
   const best = sorted[0];
   const worst = sorted[sorted.length - 1];
+  const dir = aspect.better === "higher" ? "Best" : "Fastest / lowest";
   return (
-    `Best of the ${measuredRuns.length} measured model(s): **${escapeCell(best.modelName)}** ` +
-    `at ${aspect.format(best.stats[aspect.key])}; lowest: ${escapeCell(worst.modelName)} ` +
-    `at ${aspect.format(worst.stats[aspect.key])}.`
+    `${dir} of the ${measuredRuns.length} measured configuration(s): ` +
+    `**${label(best)}** at ${aspect.format(best.stats[aspect.key])}; ` +
+    `other end: ${label(worst)} at ${aspect.format(worst.stats[aspect.key])}.`
   );
 };
 
 const aspectSection = (
   aspect: Aspect,
-  runs: ReadonlyArray<ModelRun>,
-  measuredRuns: ReadonlyArray<ModelRun>,
+  configs: ReadonlyArray<ConfigRun>,
+  measuredRuns: ReadonlyArray<ConfigRun>,
 ): string => {
   const header =
-    "| Model | Mean ± SD | Min–Max | n |\n| ----- | --------- | ------- | - |";
-  const rows = runs.map((run) => {
+    "| Configuration | Mean ± SD | Min–Max | n |\n| ------------- | --------- | ------- | - |";
+  const rows = configs.map((run) => {
     const a = run.stats[aspect.key];
     return (
-      `| ${escapeCell(run.modelName)} | ${measured(run, meanSd(a, aspect.digits))} | ` +
+      `| ${label(run)} | ${measured(run, meanSd(a, aspect.digits))} | ` +
       `${measured(run, range(a, aspect.digits))} | ${measured(run, String(a.n))} |`
     );
   });
@@ -132,206 +164,268 @@ const aspectSection = (
   );
 };
 
-// --- per-model profiles ------------------------------------------------------
+// --- per-configuration developer reviews -------------------------------------
 
-const profile = (run: ModelRun): string => {
-  const s = run.stats;
-  const curated =
-    `- **Curated:** released ${escapeCell(run.released)}, cost ${usd(run.inputCostPerMTok)} / ` +
-    `${usd(run.outputCostPerMTok)} per MTok, effort levels ${escapeCell(run.effortLevels.join(", "))}, ` +
-    `[source](${escapeCell(run.source)}).`;
-  const meas =
-    run.provenance === "measured"
-      ? `- **Measured (n=${s.tokensPerSecond.n}):** speed ${meanSd(s.tokensPerSecond, 1)} tok/s · ` +
-        `max JSON depth ${meanSd(s.maxNestedJsonDepth, 1)} · length accuracy ${pct(s.lengthAccuracy.mean)} (± ${(s.lengthAccuracy.stdDev * 100).toFixed(0)} pts).`
-      : run.provenance === "error"
-        ? "- **Measured:** every trial failed for this model (`n/a (error)`); see the run-artifact for the errors."
-        : "- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).";
-  return `### ${escapeCell(run.modelName)} — ${escapeCell(run.provider)} · ${run.tier}\n\n${curated}\n${meas}`;
+const reviewProvenanceNote = (r: Review): string => {
+  if (r.provenance === "judged") return "";
+  if (r.provenance === "skipped")
+    return " _(no review — every trial failed for this configuration)_";
+  return ` _(fixtured judge — a deterministic stand-in, not a live review)_`;
 };
 
-// --- data transparency -------------------------------------------------------
+const reviewBlock = (run: ConfigRun, detail: DetailLevel): string => {
+  const r = run.review;
+  const head = `### ${label(run)} — ${escapeCell(run.provider)} · ${run.tier} {#${configKey(run)}}`;
+  if (r.provenance === "skipped") {
+    return `${head}\n\n_No developer review: every trial failed for this configuration._`;
+  }
+  if (detail === "summary") {
+    return `${head}\n\n**Best for:** ${escapeCell(r.bestFor)}${reviewProvenanceNote(r)}`;
+  }
+  return (
+    `${head}${reviewProvenanceNote(r)}\n\n` +
+    `- **Strengths:** ${escapeCell(r.strengths)}\n` +
+    `- **Weaknesses:** ${escapeCell(r.weaknesses)}\n` +
+    `- **Best for:** ${escapeCell(r.bestFor)}`
+  );
+};
 
-const perTrialTable = (run: ModelRun): string => {
+const reviewsSection = (
+  configs: ReadonlyArray<ConfigRun>,
+  detail: DetailLevel,
+): string =>
+  `## Per-configuration developer reviews\n\n` +
+  `Each review is written by the LLM judge (\`${escapeCell(configs[0]?.review.judgeModel ?? "n/a")}\`) ` +
+  `from the configuration's actual trial outputs and measured metrics.\n\n` +
+  configs.map((run) => reviewBlock(run, detail)).join("\n\n");
+
+// --- per-trial detail (full only) --------------------------------------------
+
+const perTrialTable = (run: ConfigRun): string => {
   const okTrials = run.trials.filter((t: TrialResult) => t.ok);
   if (okTrials.length === 0) {
     return "";
   }
   const header =
-    "| Trial | Speed (tok/s) | Max JSON depth | Length accuracy |\n" +
-    "| ----- | ------------- | -------------- | --------------- |";
+    "| Trial | Throughput (tok/s) | TTFT (ms) | Total (ms) | Max schema | Length acc |\n" +
+    "| ----- | ------------------ | --------- | ---------- | ---------- | ---------- |";
   const rows = okTrials.map(
     (t) =>
-      `| ${t.trial} | ${t.metrics.tokensPerSecond.toFixed(1)} | ` +
-      `${t.metrics.maxNestedJsonDepth} | ${pct(t.metrics.lengthAccuracy)} |`,
+      `| ${t.trial} | ${t.metrics.throughputTokensPerSec.toFixed(0)} | ` +
+      `${t.metrics.ttftMs.toFixed(0)} | ${t.metrics.totalLatencyMs.toFixed(0)} | ` +
+      `${t.metrics.maxSchemaComplexity} | ${pct(t.metrics.lengthAccuracy)} |`,
   );
-  return `#### ${escapeCell(run.modelName)}\n\n${header}\n${rows.join("\n")}`;
+  return `#### ${label(run)}\n\n${header}\n${rows.join("\n")}`;
 };
 
-const transparencySection = (result: ComparisonResult): string => {
-  const deepest = Math.max(...result.probe.depthLadder);
-  const nestedPrompt = buildNestedJsonPrompt(deepest);
-  const lengthPrompt = buildLengthPrompt(
-    result.probe.lengthTargetWords,
-    result.probe.lengthTopic,
-  );
-  const measuredRuns = result.runs.filter((r) => r.provenance === "measured");
+const perTrialSection = (configs: ReadonlyArray<ConfigRun>): string => {
+  const measuredRuns = configs.filter((r) => r.provenance === "measured");
   const perTrial = measuredRuns
     .map(perTrialTable)
     .filter((s) => s !== "")
     .join("\n\n");
+  return `## Per-trial measured values\n\n${
+    perTrial === ""
+      ? "No measured configurations in this run; the fixtured/failed trials are in the artifact."
+      : `Every successful trial's derived metrics (full raw output in the artifact):\n\n${perTrial}`
+  }`;
+};
+
+// --- data transparency -------------------------------------------------------
+
+const transparencySection = (result: ComparisonResult): string => {
+  const throughputPrompt = buildThroughputPrompt(
+    result.probe.throughputTargetWords,
+    result.probe.throughputTopic,
+  );
+  const lengthPrompt = buildLengthPrompt(
+    result.probe.lengthTargetWords,
+    result.probe.lengthTopic,
+  );
+  const deepestRung =
+    result.probe.schemaLadder[result.probe.schemaLadder.length - 1];
+  const schemaPrompt = deepestRung ? buildSchemaPrompt(deepestRung) : "(none)";
 
   return `## Data transparency
 
 The exact prompts and every trial's verbatim raw output are preserved so the
-result can be re-checked, not just trusted.
+result can be re-checked, not just trusted, and so a report can be regenerated at
+any detail level from the artifact alone.
 
-**Exact prompts.** The nested-JSON probe sends one prompt per ladder rung; the
-deepest (depth ${deepest}) rung is:
+**Throughput probe** (streamed long generation; sustained tok/s is measured over
+the generation window, excluding time-to-first-token):
 
 \`\`\`text
-${nestedPrompt}
+${throughputPrompt}
 \`\`\`
 
-The length probe sends a single prompt:
+**Latency probe** (streamed short prompt; TTFT + total response time):
+
+\`\`\`text
+${escapeCell(result.probe.latencyPrompt)}
+\`\`\`
+
+**Schema-complexity probe** (structured-output mode; the deepest rung asks for):
+
+\`\`\`text
+${schemaPrompt}
+\`\`\`
+
+**Length probe:**
 
 \`\`\`text
 ${lengthPrompt}
 \`\`\`
 
-**Raw per-trial capture.** Every trial's exact prompt and verbatim model output —
-for every model, including fixtured and failed ones — is committed alongside this
-page as a JSON run-artifact:
+**Complete raw record.** Every configuration, trial, and call — prompt, verbatim
+output, token counts, TTFT, per-rung schema conformance, and the judge review —
+is committed alongside this page as a JSON run-artifact:
 [\`${escapeCell(result.artifactPath)}\`](./${escapeCell(result.artifactPath)}).
+This page is a rendering of that record; the artifact is the source of truth.`;
+};
 
-${
-  perTrial === ""
-    ? "No measured models in this run, so there are no per-trial measured values to tabulate here; the fixtured/failed trials are in the artifact above."
-    : `**Per-trial measured values** (measured models only; full raw output in the artifact):\n\n${perTrial}`
-}`;
+// --- cost & time -------------------------------------------------------------
+
+const costSection = (result: ComparisonResult): string => {
+  const e = result.estimate;
+  return `## Cost & time
+
+A full real sweep of this matrix is **${e.configCount} configurations** (model ×
+effort) × the four probes × **${result.trials} trials**, plus one judge call per
+configuration — about **${e.callCount} API calls**. The runner prints an
+**estimated** call count, rough USD cost (~${usd(e.usdCost)}), and ETA
+(~${e.etaMinutes.toFixed(0)} min) *before* making any call, and supports a
+\`--estimate\` dry run that prints the estimate without calling any provider. The
+estimate uses rough per-call token assumptions; **actual** token usage is captured
+per call in the run-artifact. CI never runs the real sweep — only the keyless
+\`compare:fixture\` self-test.`;
 };
 
 // --- the page ----------------------------------------------------------------
 
-export const renderComparisonReport = (result: ComparisonResult): string => {
-  const runs = result.runs;
-  const measuredRuns = runs.filter((r) => r.provenance === "measured");
-  const anyNonMeasured = runs.some((r) => r.provenance !== "measured");
-  const ladder = result.probe.depthLadder.join(", ");
-  const providers = [...new Set(runs.map((r) => r.provider))].length;
+export const renderComparisonReport = (
+  result: ComparisonResult,
+  detail: DetailLevel = "standard",
+): string => {
+  const configs = result.configs;
+  const measuredRuns = configs.filter((r) => r.provenance === "measured");
+  const anyNonMeasured = configs.some((r) => r.provenance !== "measured");
+  const providers = [...new Set(configs.map((r) => r.provider))].length;
+  const models = [...new Set(configs.map((r) => r.id))].length;
+  const ladder = result.probe.schemaLadder
+    .map((c) => `${c.depth}×${c.breadth}`)
+    .join(", ");
 
-  const aspects = ASPECTS.map((a) => aspectSection(a, runs, measuredRuns)).join(
-    "\n\n",
-  );
-  const profiles = runs.map(profile).join("\n\n");
+  const aspects =
+    detail === "summary"
+      ? ""
+      : `\n## Per-aspect analysis\n\nEach aspect as a distribution across the configurations — mean ± sample standard\ndeviation, the observed min–max, and the number of contributing trials.\n\n${ASPECTS.map(
+          (a) => aspectSection(a, configs, measuredRuns),
+        ).join("\n\n")}\n`;
+
+  const perTrial = detail === "full" ? `\n${perTrialSection(configs)}\n` : "";
 
   return `---
 title: Fundamental LLM model comparison
-description: A reproducible, cited comparison of ${runs.length} large language models across ${providers} providers — five curated catalog facts and three behavioral probes measured live over ${result.trials} trials each, reported with mean and spread.
+description: A reproducible, cited comparison of ${models} large language models across ${providers} providers over ${configs.length} model×effort configurations — sustained throughput and latency measured separately, empirically tested JSON-schema complexity, length-instruction accuracy, and a per-configuration LLM-judge developer review, each over ${result.trials} trials.
 ---
 
 # Fundamental LLM model comparison
 
-A routine, reproducible snapshot of what current large language models from
-Anthropic, OpenAI, and Google do on three narrow, auto-gradable behaviors. Each
-model is scored on eight aspects: five are **curated catalog data** (a cited
-in-code registry — provider, model, tier, released, cost, effort levels) and three
-are **measured live** against each provider's API over **${result.trials} trials**
-each and reported as a **mean with spread**. The split is deliberate and the type
-system enforces it: a reader can always tell a sourced fact from a behavioral
-measurement.
+A routine, reproducible snapshot of how current large language models from
+Anthropic, OpenAI, and Google behave across a **matrix of configurations**: each
+model is swept over every one of its **effort levels**, and each configuration is
+measured on four narrow, auto-gradable behaviors over **${result.trials} trials**,
+then read by an LLM judge that writes a developer-facing review. Curated catalog
+facts (provider, model, tier, cost, effort levels) stay separated from measured
+behavior by the type system.
 
 ## Methodology
 
-**Models.** ${runs.length} models across ${providers} providers, spanning each
-provider's flagship, mid, and small tiers, so the comparison shows the real spread
-of behavior — and cost — from a provider's largest model to its smallest.
+**Configurations.** ${models} models across ${providers} providers, each swept
+over its effort levels — ${configs.length} model×effort configurations. Effort maps
+to each provider's own reasoning knob (Anthropic \`output_config.effort\`, OpenAI
+\`reasoning_effort\`, Google thinking budget); a level a model does not support is
+flagged, never faked.
 
-**Trials & statistics.** Every probe is run **${result.trials} times** per model.
-The per-trial values are reduced to a **mean and sample standard deviation**
-(Bessel's n−1) by the pure functions in
-\`packages/tech/src/llm-model-comparison/domain/aggregate.ts\`; a failed trial is
-excluded from the aggregates, never counted as a zero. Only **successful (ok)**
-trials contribute, and \`n\` is reported alongside every mean.
+**Trials & statistics.** Every probe runs **${result.trials} times** per
+configuration; the per-trial values are reduced to a **mean and sample standard
+deviation** (Bessel's n−1) by the pure functions in
+\`packages/tech/src/llm-model-comparison/domain/aggregate.ts\`. A failed trial is
+excluded from the aggregates, never counted as a zero, and \`n\` is reported
+alongside every mean.
 
-**Probes.** Each model is sent three probes through a provider-neutral
-\`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`, so
-providers stay swappable and no SDK type leaks into the comparison logic:
+**Probes.** Each configuration is sent four probes through a provider-neutral
+\`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`:
 
-- **Speed** — output tokens divided by wall-clock time over a trial's probe calls.
-- **Nested-JSON depth** — the model is asked for JSON nested to each depth on a
-  fixed ladder (${ladder}); the deepest correctly-nested response is recorded.
-- **Length accuracy** — the model is asked for a paragraph of exactly
-  ${result.probe.lengthTargetWords} words on "${escapeCell(result.probe.lengthTopic)}";
-  accuracy is \`1 - min(1, |actual - target| / target)\`, in [0, 1].
+- **Throughput** — a long streamed generation; **sustained tokens/second during
+  generation** (output tokens over \`total − time-to-first-token\`). This is
+  generation speed, not round-trip latency.
+- **Latency** — a short streamed prompt; **time-to-first-token and total response
+  time**, reported separately from throughput.
+- **JSON-schema complexity** — the provider's **structured-output mode** is driven
+  up an escalation ladder over depth × breadth (${ladder}); the **maximum
+  complexity that still returns schema-conforming output** is recorded — the
+  tested affordance, not the paper spec.
+- **Length accuracy** — a paragraph of exactly ${result.probe.lengthTargetWords}
+  words on "${escapeCell(result.probe.lengthTopic)}"; accuracy is
+  \`1 - min(1, |actual - target| / target)\`.
 
-The grading and scoring logic is pure and unit-tested in
+Every grader is pure and unit-tested in
 \`packages/tech/src/llm-model-comparison/domain/\`.
 
 \`\`\`mermaid
 flowchart LR
-  R[Curated registry: models.ts] --> A[Assemble runs]
-  P[Live probes x ${result.trials} trials] --> A
-  A --> G[Pure graders + statistics in domain/]
-  G --> T[Tables + per-aspect distributions]
-  G --> J[Raw per-trial JSON artifact]
-  T --> Page[Result page]
+  R[Curated registry: models.ts] --> M[Model × effort matrix]
+  M --> P[Live probes x ${result.trials} trials]
+  P --> G[Pure graders + statistics in domain/]
+  G --> J[LLM judge: per-config review]
+  G --> A[Complete raw JSON artifact]
+  G --> T[Tables + distributions]
+  J --> Page[Result page]
+  T --> Page
 \`\`\`
 
-_Diagram: the curated registry and the live per-trial probes are assembled into
-runs, reduced by the pure graders and statistics, and rendered both as this page's
-tables and as the raw JSON run-artifact._
+_Diagram: the curated registry expands into a model×effort matrix; the live
+per-trial probes are reduced by the pure graders and statistics, reviewed by the
+judge, and rendered both as this page and as the complete raw JSON artifact._
 
-### Publication constraints
-
-The curated columns cite each provider's official model or pricing page and use
-the provider's official product name. Model ids, prices, and release dates move
-quickly and some sit near a model's knowledge cutoff; treat every curated cell as
-correct only as of the cited source, and the \`apiModelId\` values are isolated in
-\`models.ts\` so a correction is a one-line edit.
+${costSection(result)}
 
 ## Comparison
 
-${comparisonTable(runs)}
+${comparisonTable(configs)}
 
-**Legend.** Provider, Model, Tier, Released, Cost, and Effort levels are
-**curated** catalog data (cited). Speed, Max JSON depth, and Length accuracy are
-**measured** live, each a mean over ${result.trials} trials. A cell reading
-\`n/a (fixtured)\` was produced by the deterministic fixture client (no API key
-supplied) and is **not** a live measurement; \`n/a (error)\` means every trial for
-that model failed. Provenance is stated in words, never by colour, so the table
-reads the same for every reader.
-
-## Per-aspect analysis
-
-Each aspect as a distribution across the models — mean ± sample standard
-deviation, the observed min–max, and the number of contributing trials.
-
+**Legend.** Provider, Model, Tier, Effort, and Cost are **curated** catalog data
+(cited). Throughput, TTFT, total latency, max schema complexity, and length
+accuracy are **measured** live, each a mean over ${result.trials} trials. A cell
+reading \`n/a (fixtured)\` was produced by the deterministic fixture client (no
+API key) and is **not** a live measurement; \`n/a (error)\` means every trial for
+that configuration failed. Provenance is stated in words, never by colour.
 ${aspects}
-
-## Per-model profiles
-
-${profiles}
-
+${reviewsSection(configs, detail)}
+${perTrial}
 ${transparencySection(result)}
 
 ## Scope & limitations
 
 This is a deliberately narrow probe set, not an exhaustive evaluation suite:
 
-- **${result.trials} trials** per model×probe — a small sample, enough for a mean
-  and a rough spread, not a rigorous statistical study. Numbers vary run to run.
+- **${result.trials} trials** per configuration×probe — a small sample, enough for
+  a mean and rough spread, not a rigorous statistical study.
 - **Point-in-time.** The measured behavior reflects the models and APIs on the
   date below; the curated facts reflect their cited sources on that date.
-- The three probes test narrow, specific behaviors (raw throughput, structural
-  nesting, length-instruction following) — they do **not** measure general
-  capability, reasoning quality, or task success.
+- The four probes test narrow behaviors (generation throughput, responsiveness,
+  structured-output complexity, length-instruction following) — they do **not**
+  measure general capability or reasoning quality.
+- **Effort semantics vary by provider** — a reasoning-effort enum on one, a
+  thinking-token budget on another, none on the Realtime surface — so an effort
+  level is comparable within a provider more readily than across providers.
 ${
   anyNonMeasured
-    ? "- **This run includes non-measured rows.** A provider with no API key is a deterministic fixture stand-in flagged `n/a (fixtured)`; a model whose every trial failed is flagged `n/a (error)`. Neither is a live measurement.\n"
+    ? "- **This run includes non-measured configurations.** A provider with no API key is a deterministic fixture stand-in flagged `n/a (fixtured)`; a configuration whose every trial failed is flagged `n/a (error)`. Neither is a live measurement.\n"
     : ""
-}
-- **Generated:** ${escapeCell(result.generatedAt)}
+}- **Generated:** ${escapeCell(result.generatedAt)}
 
 ## Reproduce
 
@@ -340,14 +434,16 @@ git clone https://github.com/qmu/research
 cd research/packages/tech
 npm install
 
-# Pipeline self-test, no API keys or cost (deterministic fixture clients):
+# Pipeline self-test, no API keys or cost (deterministic fixture clients + judge):
 npm run compare:fixture
+
+# See the estimated call count / cost / ETA WITHOUT making any call:
+npm run compare -- --estimate
 
 # Against the real providers (populate .env first; see .env.example):
 #   ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY
-# Optionally bound the run: --trials <n> (default ${result.trials}) and
-# --models <id,id,...> (a subset of the models.ts ids). A full real matrix is
-# roughly ${runs.length} models x (${result.probe.depthLadder.length}-rung ladder + 1 length) x ${result.trials} trials of API calls.
+# Bound the run with --models <id,...>, --effort <level,...>, --trials <n>,
+# and choose report detail with --detail summary|standard|full.
 npm run compare
 \`\`\`
 

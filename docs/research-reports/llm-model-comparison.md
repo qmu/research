@@ -1,264 +1,752 @@
 ---
 title: Fundamental LLM model comparison
-description: A reproducible, cited comparison of 13 large language models across 3 providers — five curated catalog facts and three behavioral probes measured live over 5 trials each, reported with mean and spread.
+description: A reproducible, cited comparison of 13 large language models across 3 providers over 47 model×effort configurations — sustained throughput and latency measured separately, empirically tested JSON-schema complexity, length-instruction accuracy, and a per-configuration LLM-judge developer review, each over 3 trials.
 ---
 
 # Fundamental LLM model comparison
 
-A routine, reproducible snapshot of what current large language models from
-Anthropic, OpenAI, and Google do on three narrow, auto-gradable behaviors. Each
-model is scored on eight aspects: five are **curated catalog data** (a cited
-in-code registry — provider, model, tier, released, cost, effort levels) and three
-are **measured live** against each provider's API over **5 trials**
-each and reported as a **mean with spread**. The split is deliberate and the type
-system enforces it: a reader can always tell a sourced fact from a behavioral
-measurement.
+A routine, reproducible snapshot of how current large language models from
+Anthropic, OpenAI, and Google behave across a **matrix of configurations**: each
+model is swept over every one of its **effort levels**, and each configuration is
+measured on four narrow, auto-gradable behaviors over **3 trials**,
+then read by an LLM judge that writes a developer-facing review. Curated catalog
+facts (provider, model, tier, cost, effort levels) stay separated from measured
+behavior by the type system.
 
 ## Methodology
 
-**Models.** 13 models across 3 providers, spanning each
-provider's flagship, mid, and small tiers, so the comparison shows the real spread
-of behavior — and cost — from a provider's largest model to its smallest.
+**Configurations.** 13 models across 3 providers, each swept
+over its effort levels — 47 model×effort configurations. Effort maps
+to each provider's own reasoning knob (Anthropic `output_config.effort`, OpenAI
+`reasoning_effort`, Google thinking budget); a level a model does not support is
+flagged, never faked.
 
-**Trials & statistics.** Every probe is run **5 times** per model.
-The per-trial values are reduced to a **mean and sample standard deviation**
-(Bessel's n−1) by the pure functions in
-`packages/tech/src/llm-model-comparison/domain/aggregate.ts`; a failed trial is
-excluded from the aggregates, never counted as a zero. Only **successful (ok)**
-trials contribute, and `n` is reported alongside every mean.
+**Trials & statistics.** Every probe runs **3 times** per
+configuration; the per-trial values are reduced to a **mean and sample standard
+deviation** (Bessel's n−1) by the pure functions in
+`packages/tech/src/llm-model-comparison/domain/aggregate.ts`. A failed trial is
+excluded from the aggregates, never counted as a zero, and `n` is reported
+alongside every mean.
 
-**Probes.** Each model is sent three probes through a provider-neutral
-`CompletionClient` anti-corruption layer in `packages/tech/src/vendors/llm/`, so
-providers stay swappable and no SDK type leaks into the comparison logic:
+**Probes.** Each configuration is sent four probes through a provider-neutral
+`CompletionClient` anti-corruption layer in `packages/tech/src/vendors/llm/`:
 
-- **Speed** — output tokens divided by wall-clock time over a trial's probe calls.
-- **Nested-JSON depth** — the model is asked for JSON nested to each depth on a
-  fixed ladder (3, 5, 8, 12, 16); the deepest correctly-nested response is recorded.
-- **Length accuracy** — the model is asked for a paragraph of exactly
-  100 words on "the water cycle";
-  accuracy is `1 - min(1, |actual - target| / target)`, in [0, 1].
+- **Throughput** — a long streamed generation; **sustained tokens/second during
+  generation** (output tokens over `total − time-to-first-token`). This is
+  generation speed, not round-trip latency.
+- **Latency** — a short streamed prompt; **time-to-first-token and total response
+  time**, reported separately from throughput.
+- **JSON-schema complexity** — the provider's **structured-output mode** is driven
+  up an escalation ladder over depth × breadth (1×2, 1×4, 2×4, 2×6, 3×6, 3×8); the **maximum
+  complexity that still returns schema-conforming output** is recorded — the
+  tested affordance, not the paper spec.
+- **Length accuracy** — a paragraph of exactly 100
+  words on "the water cycle"; accuracy is
+  `1 - min(1, |actual - target| / target)`.
 
-The grading and scoring logic is pure and unit-tested in
+Every grader is pure and unit-tested in
 `packages/tech/src/llm-model-comparison/domain/`.
 
 ```mermaid
 flowchart LR
-  R[Curated registry: models.ts] --> A[Assemble runs]
-  P[Live probes x 5 trials] --> A
-  A --> G[Pure graders + statistics in domain/]
-  G --> T[Tables + per-aspect distributions]
-  G --> J[Raw per-trial JSON artifact]
-  T --> Page[Result page]
+  R[Curated registry: models.ts] --> M[Model × effort matrix]
+  M --> P[Live probes x 3 trials]
+  P --> G[Pure graders + statistics in domain/]
+  G --> J[LLM judge: per-config review]
+  G --> A[Complete raw JSON artifact]
+  G --> T[Tables + distributions]
+  J --> Page[Result page]
+  T --> Page
 ```
 
-_Diagram: the curated registry and the live per-trial probes are assembled into
-runs, reduced by the pure graders and statistics, and rendered both as this page's
-tables and as the raw JSON run-artifact._
+_Diagram: the curated registry expands into a model×effort matrix; the live
+per-trial probes are reduced by the pure graders and statistics, reviewed by the
+judge, and rendered both as this page and as the complete raw JSON artifact._
 
-### Publication constraints
+## Cost & time
 
-The curated columns cite each provider's official model or pricing page and use
-the provider's official product name. Model ids, prices, and release dates move
-quickly and some sit near a model's knowledge cutoff; treat every curated cell as
-correct only as of the cited source, and the `apiModelId` values are isolated in
-`models.ts` so a correction is a one-line edit.
+A full real sweep of this matrix is **47 configurations** (model ×
+effort) × the four probes × **3 trials**, plus one judge call per
+configuration — about **1316 API calls**. The runner prints an
+**estimated** call count, rough USD cost (~$12.97), and ETA
+(~88 min) *before* making any call, and supports a
+`--estimate` dry run that prints the estimate without calling any provider. The
+estimate uses rough per-call token assumptions; **actual** token usage is captured
+per call in the run-artifact. CI never runs the real sweep — only the keyless
+`compare:fixture` self-test.
 
 ## Comparison
 
-| Provider | Model | Tier | Released | Cost (in / out per MTok) | Effort levels | Speed (mean) | Max JSON depth (mean) | Length accuracy (mean) |
-| -------- | ----- | ---- | -------- | ------------------------ | ------------- | ------------ | --------------------- | ---------------------- |
-| anthropic | Claude Fable 5 | frontier | 2026-06 | $6.00 / $30.00 | low, medium, high, xhigh, max | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| anthropic | Claude Opus 4.8 | flagship | 2026 | $5.00 / $25.00 | low, medium, high, xhigh, max | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| anthropic | Claude Sonnet 5 | mid | 2026-06 | $3.00 / $15.00 | low, medium, high, xhigh, max | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| anthropic | Claude Haiku 4.5 | small | 2025-10 | $1.00 / $5.00 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.5 | flagship | 2026 | $5.00 / $30.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.4 | mid | 2026 | $2.50 / $15.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.4 mini | small | 2026 | $0.50 / $2.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.4 nano | small | 2026 | $0.15 / $0.60 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | o4-mini | mid | 2025 | $1.10 / $4.40 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT Realtime | flagship | 2025 | $4.00 / $16.00 | n/a | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| google | Gemini 3.1 Pro | flagship | 2026 | $2.00 / $12.00 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| google | Gemini 3.5 Flash | mid | 2026 | $0.30 / $2.50 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| google | Gemini 3.1 Flash-Lite | small | 2026 | $0.10 / $0.40 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema complexity | Length accuracy |
+| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | --------------------- | --------------- |
+| anthropic | Claude Fable 5 | frontier | low | $6.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Fable 5 | frontier | medium | $6.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Fable 5 | frontier | high | $6.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Fable 5 | frontier | xhigh | $6.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Fable 5 | frontier | max | $6.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Opus 4.8 | flagship | low | $5.00 / $25.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Opus 4.8 | flagship | medium | $5.00 / $25.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Opus 4.8 | flagship | high | $5.00 / $25.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Opus 4.8 | flagship | xhigh | $5.00 / $25.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Opus 4.8 | flagship | max | $5.00 / $25.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Sonnet 5 | mid | low | $3.00 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Sonnet 5 | mid | medium | $3.00 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Sonnet 5 | mid | high | $3.00 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Sonnet 5 | mid | xhigh | $3.00 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Sonnet 5 | mid | max | $3.00 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Haiku 4.5 | small | low | $1.00 / $5.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Haiku 4.5 | small | medium | $1.00 / $5.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Haiku 4.5 | small | high | $1.00 / $5.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.5 | flagship | minimal | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.5 | flagship | low | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.5 | flagship | medium | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.5 | flagship | high | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 | mid | minimal | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 | mid | low | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 | mid | medium | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 | mid | high | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 mini | small | minimal | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 mini | small | low | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 mini | small | medium | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 mini | small | high | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 nano | small | minimal | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 nano | small | low | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 nano | small | medium | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 nano | small | high | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | o4-mini | mid | low | $1.10 / $4.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | o4-mini | mid | medium | $1.10 / $4.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | o4-mini | mid | high | $1.10 / $4.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT Realtime | flagship | n/a | $4.00 / $16.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.1 Pro | flagship | low | $2.00 / $12.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.1 Pro | flagship | medium | $2.00 / $12.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.1 Pro | flagship | high | $2.00 / $12.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.5 Flash | mid | low | $0.30 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.5 Flash | mid | medium | $0.30 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.5 Flash | mid | high | $0.30 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.1 Flash-Lite | small | low | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.1 Flash-Lite | small | medium | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.1 Flash-Lite | small | high | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
-**Legend.** Provider, Model, Tier, Released, Cost, and Effort levels are
-**curated** catalog data (cited). Speed, Max JSON depth, and Length accuracy are
-**measured** live, each a mean over 5 trials. A cell reading
-`n/a (fixtured)` was produced by the deterministic fixture client (no API key
-supplied) and is **not** a live measurement; `n/a (error)` means every trial for
-that model failed. Provenance is stated in words, never by colour, so the table
-reads the same for every reader.
+**Legend.** Provider, Model, Tier, Effort, and Cost are **curated** catalog data
+(cited). Throughput, TTFT, total latency, max schema complexity, and length
+accuracy are **measured** live, each a mean over 3 trials. A cell
+reading `n/a (fixtured)` was produced by the deterministic fixture client (no
+API key) and is **not** a live measurement; `n/a (error)` means every trial for
+that configuration failed. Provenance is stated in words, never by colour.
 
 ## Per-aspect analysis
 
-Each aspect as a distribution across the models — mean ± sample standard
+Each aspect as a distribution across the configurations — mean ± sample standard
 deviation, the observed min–max, and the number of contributing trials.
 
-### Speed (output tokens / second)
+### Sustained throughput (tokens / second during generation)
 
-| Model | Mean ± SD | Min–Max | n |
-| ----- | --------- | ------- | - |
-| Claude Fable 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Opus 4.8 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Sonnet 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Haiku 4.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| o4-mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT Realtime | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Pro | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.5 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Flash-Lite | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Configuration | Mean ± SD | Min–Max | n |
+| ------------- | --------- | ------- | - |
+| Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
-No live measurements in this run — every model was fixtured or errored, so this aspect has no comparison.
+No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
-### Maximum nested-JSON depth
+### Latency — time to first token (ms)
 
-| Model | Mean ± SD | Min–Max | n |
-| ----- | --------- | ------- | - |
-| Claude Fable 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Opus 4.8 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Sonnet 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Haiku 4.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| o4-mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT Realtime | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Pro | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.5 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Flash-Lite | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Configuration | Mean ± SD | Min–Max | n |
+| ------------- | --------- | ------- | - |
+| Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
-No live measurements in this run — every model was fixtured or errored, so this aspect has no comparison.
+No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
+
+### Latency — total response time (ms)
+
+| Configuration | Mean ± SD | Min–Max | n |
+| ------------- | --------- | ------- | - |
+| Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+
+No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
+
+### Tested maximum JSON-schema complexity
+
+| Configuration | Mean ± SD | Min–Max | n |
+| ------------- | --------- | ------- | - |
+| Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+
+No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
 ### Length-instruction accuracy
 
-| Model | Mean ± SD | Min–Max | n |
-| ----- | --------- | ------- | - |
-| Claude Fable 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Opus 4.8 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Sonnet 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Claude Haiku 4.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| o4-mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT Realtime | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Pro | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.5 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Flash-Lite | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Configuration | Mean ± SD | Min–Max | n |
+| ------------- | --------- | ------- | - |
+| Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Fable 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Opus 4.8 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Claude Haiku 4.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
-No live measurements in this run — every model was fixtured or errored, so this aspect has no comparison.
+No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
-## Per-model profiles
+## Per-configuration developer reviews
 
-### Claude Fable 5 — anthropic · frontier
+Each review is written by the LLM judge (`claude-opus-4-8`) from the configuration's actual trial outputs and measured metrics.
 
-- **Curated:** released 2026-06, cost $6.00 / $30.00 per MTok, effort levels low, medium, high, xhigh, max, [source](https://platform.claude.com/docs/en/about-claude/models/overview).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Fable 5 [low] — anthropic · frontier {#anthropic-claude-fable-5-low} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### Claude Opus 4.8 — anthropic · flagship
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $5.00 / $25.00 per MTok, effort levels low, medium, high, xhigh, max, [source](https://platform.claude.com/docs/en/about-claude/models/overview).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Fable 5 [medium] — anthropic · frontier {#anthropic-claude-fable-5-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### Claude Sonnet 5 — anthropic · mid
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026-06, cost $3.00 / $15.00 per MTok, effort levels low, medium, high, xhigh, max, [source](https://platform.claude.com/docs/en/about-claude/models/overview).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Fable 5 [high] — anthropic · frontier {#anthropic-claude-fable-5-high} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### Claude Haiku 4.5 — anthropic · small
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2025-10, cost $1.00 / $5.00 per MTok, effort levels low, medium, high, [source](https://platform.claude.com/docs/en/about-claude/models/overview).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Fable 5 [xhigh] — anthropic · frontier {#anthropic-claude-fable-5-xhigh} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### GPT-5.5 — openai · flagship
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $5.00 / $30.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Fable 5 [max] — anthropic · frontier {#anthropic-claude-fable-5-max} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### GPT-5.4 — openai · mid
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $2.50 / $15.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Opus 4.8 [low] — anthropic · flagship {#anthropic-claude-opus-4-8-low} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### GPT-5.4 mini — openai · small
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $0.50 / $2.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Opus 4.8 [medium] — anthropic · flagship {#anthropic-claude-opus-4-8-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### GPT-5.4 nano — openai · small
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $0.15 / $0.60 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Opus 4.8 [high] — anthropic · flagship {#anthropic-claude-opus-4-8-high} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### o4-mini — openai · mid
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2025, cost $1.10 / $4.40 per MTok, effort levels low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Opus 4.8 [xhigh] — anthropic · flagship {#anthropic-claude-opus-4-8-xhigh} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### GPT Realtime — openai · flagship
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2025, cost $4.00 / $16.00 per MTok, effort levels n/a, [source](https://developers.openai.com/api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Opus 4.8 [max] — anthropic · flagship {#anthropic-claude-opus-4-8-max} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### Gemini 3.1 Pro — google · flagship
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $2.00 / $12.00 per MTok, effort levels low, medium, high, [source](https://ai.google.dev/gemini-api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Sonnet 5 [low] — anthropic · mid {#anthropic-claude-sonnet-5-low} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### Gemini 3.5 Flash — google · mid
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $0.30 / $2.50 per MTok, effort levels low, medium, high, [source](https://ai.google.dev/gemini-api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Sonnet 5 [medium] — anthropic · mid {#anthropic-claude-sonnet-5-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
 
-### Gemini 3.1 Flash-Lite — google · small
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
-- **Curated:** released 2026, cost $0.10 / $0.40 per MTok, effort levels low, medium, high, [source](https://ai.google.dev/gemini-api/docs/pricing).
-- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+### Claude Sonnet 5 [high] — anthropic · mid {#anthropic-claude-sonnet-5-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Claude Sonnet 5 [xhigh] — anthropic · mid {#anthropic-claude-sonnet-5-xhigh} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Claude Sonnet 5 [max] — anthropic · mid {#anthropic-claude-sonnet-5-max} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Claude Haiku 4.5 [low] — anthropic · small {#anthropic-claude-haiku-4-5-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Claude Haiku 4.5 [medium] — anthropic · small {#anthropic-claude-haiku-4-5-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Claude Haiku 4.5 [high] — anthropic · small {#anthropic-claude-haiku-4-5-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.5 [minimal] — openai · flagship {#openai-gpt-5-5-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.5 [low] — openai · flagship {#openai-gpt-5-5-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.5 [medium] — openai · flagship {#openai-gpt-5-5-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.5 [high] — openai · flagship {#openai-gpt-5-5-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 [minimal] — openai · mid {#openai-gpt-5-4-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 [low] — openai · mid {#openai-gpt-5-4-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 [medium] — openai · mid {#openai-gpt-5-4-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 [high] — openai · mid {#openai-gpt-5-4-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 mini [minimal] — openai · small {#openai-gpt-5-4-mini-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 mini [low] — openai · small {#openai-gpt-5-4-mini-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 mini [medium] — openai · small {#openai-gpt-5-4-mini-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 mini [high] — openai · small {#openai-gpt-5-4-mini-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 nano [minimal] — openai · small {#openai-gpt-5-4-nano-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 nano [low] — openai · small {#openai-gpt-5-4-nano-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 nano [medium] — openai · small {#openai-gpt-5-4-nano-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.4 nano [high] — openai · small {#openai-gpt-5-4-nano-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### o4-mini [low] — openai · mid {#openai-o4-mini-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### o4-mini [medium] — openai · mid {#openai-o4-mini-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### o4-mini [high] — openai · mid {#openai-o4-mini-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT Realtime [n/a] — openai · flagship {#openai-gpt-realtime-n/a} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.1 Pro [low] — google · flagship {#google-gemini-3-1-pro-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.1 Pro [medium] — google · flagship {#google-gemini-3-1-pro-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.1 Pro [high] — google · flagship {#google-gemini-3-1-pro-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.5 Flash [low] — google · mid {#google-gemini-3-5-flash-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.5 Flash [medium] — google · mid {#google-gemini-3-5-flash-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.5 Flash [high] — google · mid {#google-gemini-3-5-flash-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.1 Flash-Lite [low] — google · small {#google-gemini-3-1-flash-lite-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.1 Flash-Lite [medium] — google · small {#google-gemini-3-1-flash-lite-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Gemini 3.1 Flash-Lite [high] — google · small {#google-gemini-3-1-flash-lite-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
 
 ## Data transparency
 
 The exact prompts and every trial's verbatim raw output are preserved so the
-result can be re-checked, not just trusted.
+result can be re-checked, not just trusted, and so a report can be regenerated at
+any detail level from the artifact alone.
 
-**Exact prompts.** The nested-JSON probe sends one prompt per ladder rung; the
-deepest (depth 16) rung is:
+**Throughput probe** (streamed long generation; sustained tok/s is measured over
+the generation window, excluding time-to-first-token):
 
 ```text
-Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is "child" except the deepest level, whose value is the string "leaf". For example, depth 2 is {"child":{"child":"leaf"}}. Produce depth 16.
+Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.
 ```
 
-The length probe sends a single prompt:
+**Latency probe** (streamed short prompt; TTFT + total response time):
+
+```text
+In one short sentence, state a single interesting fact about the water cycle.
+```
+
+**Schema-complexity probe** (structured-output mode; the deepest rung asks for):
+
+```text
+Produce a JSON object that conforms to the provided schema: an object nested 3 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested "child" object). Fill every string field with a short, plausible value.
+```
+
+**Length probe:**
 
 ```text
 Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.
 ```
 
-**Raw per-trial capture.** Every trial's exact prompt and verbatim model output —
-for every model, including fixtured and failed ones — is committed alongside this
-page as a JSON run-artifact:
+**Complete raw record.** Every configuration, trial, and call — prompt, verbatim
+output, token counts, TTFT, per-rung schema conformance, and the judge review —
+is committed alongside this page as a JSON run-artifact:
 [`llm-model-comparison.data.json`](./llm-model-comparison.data.json).
-
-No measured models in this run, so there are no per-trial measured values to tabulate here; the fixtured/failed trials are in the artifact above.
+This page is a rendering of that record; the artifact is the source of truth.
 
 ## Scope & limitations
 
 This is a deliberately narrow probe set, not an exhaustive evaluation suite:
 
-- **5 trials** per model×probe — a small sample, enough for a mean
-  and a rough spread, not a rigorous statistical study. Numbers vary run to run.
+- **3 trials** per configuration×probe — a small sample, enough for
+  a mean and rough spread, not a rigorous statistical study.
 - **Point-in-time.** The measured behavior reflects the models and APIs on the
   date below; the curated facts reflect their cited sources on that date.
-- The three probes test narrow, specific behaviors (raw throughput, structural
-  nesting, length-instruction following) — they do **not** measure general
-  capability, reasoning quality, or task success.
-- **This run includes non-measured rows.** A provider with no API key is a deterministic fixture stand-in flagged `n/a (fixtured)`; a model whose every trial failed is flagged `n/a (error)`. Neither is a live measurement.
-
+- The four probes test narrow behaviors (generation throughput, responsiveness,
+  structured-output complexity, length-instruction following) — they do **not**
+  measure general capability or reasoning quality.
+- **Effort semantics vary by provider** — a reasoning-effort enum on one, a
+  thinking-token budget on another, none on the Realtime surface — so an effort
+  level is comparable within a provider more readily than across providers.
+- **This run includes non-measured configurations.** A provider with no API key is a deterministic fixture stand-in flagged `n/a (fixtured)`; a configuration whose every trial failed is flagged `n/a (error)`. Neither is a live measurement.
 - **Generated:** 2026-01-01T00:00:00.000Z
 
 ## Reproduce
@@ -268,14 +756,16 @@ git clone https://github.com/qmu/research
 cd research/packages/tech
 npm install
 
-# Pipeline self-test, no API keys or cost (deterministic fixture clients):
+# Pipeline self-test, no API keys or cost (deterministic fixture clients + judge):
 npm run compare:fixture
+
+# See the estimated call count / cost / ETA WITHOUT making any call:
+npm run compare -- --estimate
 
 # Against the real providers (populate .env first; see .env.example):
 #   ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY
-# Optionally bound the run: --trials <n> (default 5) and
-# --models <id,id,...> (a subset of the models.ts ids). A full real matrix is
-# roughly 13 models x (5-rung ladder + 1 length) x 5 trials of API calls.
+# Bound the run with --models <id,...>, --effort <level,...>, --trials <n>,
+# and choose report detail with --detail summary|standard|full.
 npm run compare
 ```
 

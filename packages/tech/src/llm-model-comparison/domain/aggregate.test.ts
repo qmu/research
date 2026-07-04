@@ -70,15 +70,17 @@ const trial = (
   n: number,
   ok: boolean,
   tps: number,
-  depth: number,
+  schema: number,
   len: number,
 ): TrialResult => ({
   trial: n,
   ok,
   error: ok ? null : "boom",
   metrics: {
-    tokensPerSecond: tps,
-    maxNestedJsonDepth: depth,
+    throughputTokensPerSec: tps,
+    ttftMs: 200,
+    totalLatencyMs: 800,
+    maxSchemaComplexity: schema,
     lengthAccuracy: len,
   },
   calls: [],
@@ -87,21 +89,22 @@ const trial = (
 describe("summarizeTrials", () => {
   it("aggregates only the successful trials, excluding failures", () => {
     const trials: TrialResult[] = [
-      trial(1, true, 50, 16, 1),
+      trial(1, true, 50, 6, 1),
       trial(2, false, 0, 0, 0), // failure — must not drag the mean toward 0
-      trial(3, true, 70, 12, 0.9),
+      trial(3, true, 70, 4, 0.9),
     ];
     const stats = summarizeTrials(trials);
-    expect(stats.tokensPerSecond.n).toBe(2);
-    expect(stats.tokensPerSecond.mean).toBe(60);
-    expect(stats.maxNestedJsonDepth.mean).toBe(14);
+    expect(stats.throughputTokensPerSec.n).toBe(2);
+    expect(stats.throughputTokensPerSec.mean).toBe(60);
+    expect(stats.maxSchemaComplexity.mean).toBe(5);
+    expect(stats.ttftMs.mean).toBe(200);
     expect(stats.lengthAccuracy.mean).toBeCloseTo(0.95, 10);
   });
 
   it("yields n:0 aggregates when every trial failed", () => {
     const stats = summarizeTrials([trial(1, false, 0, 0, 0)]);
-    expect(stats.tokensPerSecond.n).toBe(0);
-    expect(stats.maxNestedJsonDepth.n).toBe(0);
+    expect(stats.throughputTokensPerSec.n).toBe(0);
+    expect(stats.maxSchemaComplexity.n).toBe(0);
     expect(stats.lengthAccuracy.n).toBe(0);
   });
 });

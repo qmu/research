@@ -3,176 +3,140 @@ import { renderComparisonReport } from "./report";
 import type {
   Aggregate,
   ComparisonResult,
-  ModelRun,
+  ConfigRun,
+  ProbeParams,
   Provenance,
-  ProbeStats,
-  TrialResult,
+  Review,
 } from "./types";
+import { escalatingLadder } from "./json-schema";
 
-const agg = (mean: number, sd: number, n: number): Aggregate => ({
+const agg = (mean: number, n: number): Aggregate => ({
   mean,
-  stdDev: sd,
-  min: mean - sd,
-  max: mean + sd,
+  stdDev: 0,
+  min: mean,
+  max: mean,
   n,
 });
 
-const stats = (
-  tps: Aggregate,
-  depth: Aggregate,
-  len: Aggregate,
-): ProbeStats => ({
-  tokensPerSecond: tps,
-  maxNestedJsonDepth: depth,
-  lengthAccuracy: len,
+const review = (provenance: Review["provenance"]): Review => ({
+  provenance,
+  judgeModel: "claude-opus-4-8",
+  strengths: "fast and structured",
+  weaknesses: "pricey at high effort",
+  bestFor: "latency-sensitive structured extraction",
+  raw: "{}",
 });
 
-const okTrial = (
-  trial: number,
-  tps: number,
-  depth: number,
-  len: number,
-): TrialResult => ({
-  trial,
-  ok: true,
-  error: null,
-  metrics: {
-    tokensPerSecond: tps,
-    maxNestedJsonDepth: depth,
-    lengthAccuracy: len,
-  },
-  calls: [],
-});
-
-const run = (
-  over: Partial<ModelRun> & { provenance: Provenance; stats: ProbeStats },
-): ModelRun => ({
-  id: "anthropic-opus",
+const config = (
+  overrides: Partial<ConfigRun> & { effort: string; provenance: Provenance },
+): ConfigRun => ({
+  id: "test-model",
   provider: "anthropic",
   tier: "flagship",
-  modelName: "Claude Opus 4.8",
-  apiModelId: "claude-opus-4-8",
+  modelName: "Test Model",
+  apiModelId: "test",
   released: "2026",
   inputCostPerMTok: 5,
   outputCostPerMTok: 25,
   effortLevels: ["low", "high"],
-  source: "https://example.com/anthropic",
-  trialsRequested: 2,
+  source: "https://example.com",
+  trialsRequested: 3,
   trials: [],
-  ...over,
-});
-
-const measuredRun = run({
-  provenance: "measured",
-  trials: [okTrial(1, 85, 12, 0.93), okTrial(2, 90, 12, 0.95)],
-  stats: stats(agg(87.5, 2.5, 2), agg(12, 0, 2), agg(0.94, 0.01, 2)),
-});
-
-const fixturedRun = run({
-  id: "openai-gpt",
-  provider: "openai",
-  tier: "flagship",
-  modelName: "GPT-5.5",
-  apiModelId: "gpt-5.5",
-  inputCostPerMTok: 5,
-  outputCostPerMTok: 30,
-  effortLevels: ["medium"],
-  source: "https://example.com/openai",
-  provenance: "fixtured",
-  stats: stats(agg(999, 0, 5), agg(99, 0, 5), agg(1, 0, 5)),
-});
-
-const result: ComparisonResult = {
-  runs: [measuredRun, fixturedRun],
-  trials: 5,
-  generatedAt: "2026-07-04T00:00:00Z",
-  probe: {
-    depthLadder: [3, 5, 8, 12, 16],
-    lengthTargetWords: 100,
-    lengthTopic: "the water cycle",
+  stats: {
+    throughputTokensPerSec: agg(150, 3),
+    ttftMs: agg(320, 3),
+    totalLatencyMs: agg(900, 3),
+    maxSchemaComplexity: agg(4, 3),
+    lengthAccuracy: agg(0.92, 3),
   },
-  artifactPath: "llm-model-comparison.data.json",
+  review: review(overrides.provenance === "error" ? "skipped" : "judged"),
+  ...overrides,
+});
+
+const PROBE: ProbeParams = {
+  throughputTargetWords: 400,
+  throughputTopic: "how large language models generate text",
+  latencyPrompt: "One short fact about the water cycle.",
+  schemaLadder: escalatingLadder(6),
+  lengthTargetWords: 100,
+  lengthTopic: "the water cycle",
 };
 
+const result = (configs: ReadonlyArray<ConfigRun>): ComparisonResult => ({
+  configs,
+  trials: 3,
+  generatedAt: "2026-01-01T00:00:00.000Z",
+  probe: PROBE,
+  judgeModel: "claude-opus-4-8",
+  estimate: {
+    configCount: configs.length,
+    callCount: 60,
+    usdCost: 12.5,
+    etaMinutes: 4,
+  },
+  artifactPath: "llm-model-comparison.data.json",
+});
+
 describe("renderComparisonReport", () => {
-  const page = renderComparisonReport(result);
-
-  it("starts with frontmatter carrying a non-empty description", () => {
-    expect(page.startsWith("---\n")).toBe(true);
-    expect(page).toMatch(/\ndescription: \S.*\n/);
-  });
-
-  it("has all the comprehensive sections", () => {
-    expect(page).toContain("## Methodology");
-    expect(page).toContain("## Comparison");
-    expect(page).toContain("## Per-aspect analysis");
-    expect(page).toContain("## Per-model profiles");
-    expect(page).toContain("## Data transparency");
-    expect(page).toContain("## Scope & limitations");
-    expect(page).toContain("## Reproduce");
-  });
-
-  it("renders per-aspect distribution tables", () => {
-    expect(page).toContain("### Speed (output tokens / second)");
-    expect(page).toContain("### Maximum nested-JSON depth");
-    expect(page).toContain("### Length-instruction accuracy");
-    expect(page).toContain("| Mean ± SD | Min–Max | n |");
-  });
-
-  it("renders a per-model profile with curated facts and a source link", () => {
-    expect(page).toContain("### Claude Opus 4.8 — anthropic · flagship");
-    expect(page).toContain("[source](https://example.com/anthropic)");
-  });
-
-  it("quotes the exact probe prompts verbatim and links the artifact", () => {
-    expect(page).toContain(
-      "Return ONLY a single JSON object nested exactly 16 levels deep",
+  it("reports throughput and latency as separate, unit-labelled columns", () => {
+    const md = renderComparisonReport(
+      result([config({ effort: "low", provenance: "measured" })]),
     );
-    expect(page).toContain(
-      "Write a single paragraph about the water cycle that is exactly 100 words",
+    expect(md).toContain("Throughput (tok/s)");
+    expect(md).toContain("TTFT (ms)");
+    expect(md).toContain("Total latency (ms)");
+    expect(md).toContain("Max schema complexity");
+  });
+
+  it("never presents a fixtured or errored configuration as a live measurement", () => {
+    const md = renderComparisonReport(
+      result([
+        config({ effort: "low", provenance: "fixtured" }),
+        config({ effort: "high", provenance: "error" }),
+      ]),
     );
-    expect(page).toContain("(./llm-model-comparison.data.json)");
+    expect(md).toContain("n/a (fixtured)");
+    expect(md).toContain("n/a (error)");
   });
 
-  it("shows measured means and per-trial values for a live model", () => {
-    expect(page).toContain("87.5 tok/s");
-    expect(page).toContain("87.5 ± 2.5");
-    expect(page).toContain("| 1 | 85.0 |"); // per-trial row
+  it("states the pre-run cost estimate and the --estimate dry run", () => {
+    const md = renderComparisonReport(
+      result([config({ effort: "low", provenance: "measured" })]),
+    );
+    expect(md).toContain("## Cost & time");
+    expect(md).toContain("--estimate");
+    expect(md).toContain("API calls");
   });
 
-  it("masks every probe column for a non-measured model", () => {
-    expect(page).not.toContain("999.0 tok/s");
-    expect(page).not.toContain("| 99.0 |");
-    expect(page).toContain("n/a (fixtured)");
+  it("links the complete raw record artifact and renders per-config reviews", () => {
+    const md = renderComparisonReport(
+      result([config({ effort: "low", provenance: "measured" })]),
+    );
+    expect(md).toContain("llm-model-comparison.data.json");
+    expect(md).toContain("Per-configuration developer reviews");
+    expect(md).toContain("latency-sensitive structured extraction");
   });
 
-  it("states provenance in words, not colour (a11y root-cause fix)", () => {
-    expect(page).toContain("never by colour");
+  it("summary detail omits the per-aspect distributions; full adds per-trial tables", () => {
+    const one = result([config({ effort: "low", provenance: "measured" })]);
+    expect(renderComparisonReport(one, "summary")).not.toContain(
+      "Per-aspect analysis",
+    );
+    expect(renderComparisonReport(one, "standard")).toContain(
+      "Per-aspect analysis",
+    );
+    expect(renderComparisonReport(one, "full")).toContain(
+      "Per-trial measured values",
+    );
   });
 
-  it("flags an all-failed model as n/a (error)", () => {
-    const errored = renderComparisonReport({
-      ...result,
-      runs: [
-        run({
-          provenance: "error",
-          stats: stats(agg(0, 0, 0), agg(0, 0, 0), agg(0, 0, 0)),
-        }),
-      ],
-    });
-    expect(errored).toContain("n/a (error)");
-    expect(errored).toContain("This run includes non-measured rows.");
-  });
-
-  it("omits the non-measured warning when every row is measured", () => {
-    const allMeasured = renderComparisonReport({
-      ...result,
-      runs: [measuredRun],
-    });
-    expect(allMeasured).not.toContain("This run includes non-measured rows.");
-  });
-
-  it("matches the golden snapshot (formatting regression guard)", () => {
-    expect(page).toMatchSnapshot();
+  it("matches the golden standard-detail snapshot", () => {
+    const md = renderComparisonReport(
+      result([
+        config({ effort: "low", provenance: "measured" }),
+        config({ effort: "high", provenance: "measured" }),
+      ]),
+    );
+    expect(md).toMatchSnapshot();
   });
 });

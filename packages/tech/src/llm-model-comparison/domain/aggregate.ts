@@ -34,7 +34,7 @@ export const aggregate = (xs: ReadonlyArray<number>): Aggregate => ({
   n: xs.length,
 });
 
-// Summarize a model's trials into the three aggregated metrics. Only successful
+// Summarize a configuration's trials into the aggregated metrics. Only successful
 // (`ok`) trials contribute — a failed trial is excluded from every aggregate, so
 // the mean is over real measurements, never contaminated by a zeroed failure.
 export const summarizeTrials = (
@@ -42,8 +42,14 @@ export const summarizeTrials = (
 ): ProbeStats => {
   const ok = trials.filter((t) => t.ok);
   return {
-    tokensPerSecond: aggregate(ok.map((t) => t.metrics.tokensPerSecond)),
-    maxNestedJsonDepth: aggregate(ok.map((t) => t.metrics.maxNestedJsonDepth)),
+    throughputTokensPerSec: aggregate(
+      ok.map((t) => t.metrics.throughputTokensPerSec),
+    ),
+    ttftMs: aggregate(ok.map((t) => t.metrics.ttftMs)),
+    totalLatencyMs: aggregate(ok.map((t) => t.metrics.totalLatencyMs)),
+    maxSchemaComplexity: aggregate(
+      ok.map((t) => t.metrics.maxSchemaComplexity),
+    ),
     lengthAccuracy: aggregate(ok.map((t) => t.metrics.lengthAccuracy)),
   };
 };

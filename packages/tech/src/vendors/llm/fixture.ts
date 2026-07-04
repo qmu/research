@@ -1,4 +1,12 @@
-import type { CompletionClient, Completion, LlmClient } from "./types";
+import type {
+  CompletionClient,
+  Completion,
+  CompletionOptions,
+  JsonSchema,
+  LlmClient,
+  StreamedCompletion,
+  StructuredCompletion,
+} from "./types";
 
 // A deterministic client that returns canned answers keyed by prompt. It calls
 // no API, so it runs in CI without credentials or cost. Used for the pipeline
@@ -11,67 +19,161 @@ export const createFixtureClient = (
     Promise.resolve(answers.get(prompt) ?? ""),
 });
 
-// Build a JSON object nested exactly `depth` levels deep, matching the shape the
-// nested-JSON prompt asks for: each level is {"child": ...} and the deepest value
-// is "leaf".
-const buildNestedJson = (depth: number): string => {
-  let value = '"leaf"';
-  for (let i = 0; i < depth; i += 1) {
-    value = `{"child":${value}}`;
-  }
-  return value;
-};
-
 // A deterministic CompletionClient for the comparison pipeline's keyless path.
 //
-// It is a pure function of (prompt, seed): the SAME seed reproduces byte-identical
-// output, and DIFFERENT seeds vary the output in a small, bounded way. The runner
-// passes the trial index as the seed, so a multi-trial fixture run produces a real
-// (non-degenerate) yet perfectly reproducible distribution — exercising the
-// multi-trial aggregation and statistics without any API, key, or cost. Every row
-// built from this client is flagged `fixtured`, so these numbers are never
-// presented as live; they only exercise the pipeline.
+// It is a pure function of (prompt, schema, seed): the SAME seed reproduces
+// byte-identical output, and DIFFERENT seeds vary the output in a small, bounded
+// way. The runner passes the trial index as the seed, so a multi-trial fixture
+// run produces a real (non-degenerate) yet perfectly reproducible distribution —
+// exercising throughput/latency/schema/length aggregation, and the judge, without
+// any API, key, or cost. Every configuration built from this client is flagged
+// `fixtured`, so these numbers are never presented as live.
 export const createFixtureCompletionClient = (
   model = "fixture",
   seed = 0,
 ): CompletionClient => ({
   model,
-  complete: (prompt: string): Promise<Completion> =>
-    Promise.resolve(buildFixtureCompletion(prompt, model, seed)),
+  complete: (
+    prompt: string,
+    _options?: CompletionOptions,
+  ): Promise<Completion> => Promise.resolve(buildComplete(prompt, model, seed)),
+  completeStreaming: (
+    prompt: string,
+    _options?: CompletionOptions,
+  ): Promise<StreamedCompletion> =>
+    Promise.resolve(buildStreamed(prompt, model, seed)),
+  completeStructured: (
+    _prompt: string,
+    schema: JsonSchema,
+    _options?: CompletionOptions,
+  ): Promise<StructuredCompletion> =>
+    Promise.resolve(buildStructured(schema, model, seed)),
 });
 
-const buildFixtureCompletion = (
+const wordCountFor = (
+  regex: RegExp,
+  prompt: string,
+  fallback: number,
+): number => {
+  const m = prompt.match(regex);
+  return m ? Number(m[1]) : fallback;
+};
+
+const tokensOf = (text: string): number =>
+  Math.max(1, Math.ceil(text.length / 4));
+
+// --- text completion (the length probe uses this non-streamed path) -----------
+
+const buildComplete = (
   prompt: string,
   model: string,
   seed: number,
 ): Completion => {
-  const text = fixtureText(prompt, seed);
-  // Deterministic-but-seed-varying timing so tokensPerSecond has real spread
-  // across trials while staying byte-stable for a given seed.
-  const outputTokens = Math.max(1, Math.ceil(text.length / 4));
-  const elapsedMs = 8 + (seed % 5) * 2 + (text.length % 3);
-  return { text, outputTokens, elapsedMs, model };
+  const target = wordCountFor(/exactly (\d+) words/, prompt, 100);
+  const jitter = (seed % 3) - 1; // -1, 0, +1 — small reproducible spread
+  const count = Math.max(1, target + jitter);
+  const text = Array.from({ length: count }, () => "word").join(" ");
+  return {
+    text,
+    outputTokens: tokensOf(text),
+    elapsedMs: 12 + (seed % 5) * 2,
+    model,
+  };
 };
 
-// Produce a plausible response for each probe shape, perturbed by `seed`:
-//  - nested-JSON: even seeds nest to any requested depth; odd seeds cap at depth
-//    12, so the deepest ladder rung (16) fails on odd trials — giving the
-//    max-depth metric a real, reproducible spread across trials.
-//  - length: the word count is the target plus a bounded jitter in {-1, 0, +1}
-//    keyed on the seed, so length-accuracy varies slightly across trials.
-const fixtureText = (prompt: string, seed: number): string => {
-  const depthMatch = prompt.match(/exactly (\d+) levels deep/);
-  if (depthMatch) {
-    const target = Number(depthMatch[1]);
-    const cap = seed % 2 === 0 ? target : Math.min(target, 12);
-    return buildNestedJson(cap);
+// --- streamed completion (throughput + latency probes) ------------------------
+
+const buildStreamed = (
+  prompt: string,
+  model: string,
+  seed: number,
+): StreamedCompletion => {
+  const isThroughput = /at least (\d+) words/.test(prompt);
+  if (isThroughput) {
+    const target = wordCountFor(/at least (\d+) words/, prompt, 400);
+    const text = Array.from({ length: target }, () => "word").join(" ");
+    const outputTokens = tokensOf(text);
+    const ttftMs = 40 + seed * 3;
+    const perToken = 6 + (seed % 3); // ~143–167 tok/s, seed-varying
+    return {
+      text,
+      outputTokens,
+      elapsedMs: ttftMs + outputTokens * perToken,
+      ttftMs,
+      model,
+    };
   }
-  const wordMatch = prompt.match(/exactly (\d+) words/);
-  if (wordMatch) {
-    const target = Number(wordMatch[1]);
-    const jitter = (seed % 3) - 1; // -1, 0, or +1
-    const count = Math.max(1, target + jitter);
-    return Array.from({ length: count }, () => "word").join(" ");
+  // Latency probe: a short response; the numbers are about responsiveness.
+  const text = `A concise fixtured fact number ${seed}.`;
+  const outputTokens = tokensOf(text);
+  const ttftMs = 30 + seed * 5;
+  return {
+    text,
+    outputTokens,
+    elapsedMs: ttftMs + 20 + seed * 2,
+    ttftMs,
+    model,
+  };
+};
+
+// --- structured output (schema-escalation probe + the judge review) -----------
+
+// Total scalar (leaf) count of a generated schema — a proxy for its complexity,
+// used to decide how far up the escalation ladder this fixture "affords" before
+// it stops returning conforming output.
+const scalarCount = (schema: Record<string, unknown>): number => {
+  if (schema.type === "object") {
+    const props = (schema.properties ?? {}) as Record<
+      string,
+      Record<string, unknown>
+    >;
+    return Object.values(props).reduce((sum, s) => sum + scalarCount(s), 0);
   }
-  return "";
+  return 1;
+};
+
+// Build a value that conforms to the given schema. String leaves get a
+// deterministic, seed-varying value; nested objects recurse. This same builder
+// produces both a conforming schema-probe instance and a well-formed judge review
+// (whose schema is three string fields), so the fixture judge is deterministic.
+const buildInstance = (
+  schema: Record<string, unknown>,
+  seed: number,
+): unknown => {
+  if (schema.type === "object") {
+    const props = (schema.properties ?? {}) as Record<
+      string,
+      Record<string, unknown>
+    >;
+    const required = (schema.required ?? []) as ReadonlyArray<string>;
+    const out: Record<string, unknown> = {};
+    for (const key of required) {
+      out[key] = buildInstance(props[key], seed);
+    }
+    return out;
+  }
+  if (schema.type === "integer") return seed;
+  if (schema.type === "number") return seed;
+  if (schema.type === "boolean") return seed % 2 === 0;
+  return `fixtured value ${seed}`; // string leaf
+};
+
+const buildStructured = (
+  schema: JsonSchema,
+  model: string,
+  seed: number,
+): StructuredCompletion => {
+  const s = schema as Record<string, unknown>;
+  const size = scalarCount(s);
+  // Seed-varying complexity cap so max-schema-complexity has a real spread across
+  // trials. The review schema (3 fields) is always under the cap, so the fixture
+  // judge always returns a well-formed review.
+  const cap = 8 + (seed % 3) * 6; // 8, 14, or 20
+  const raw = size <= cap ? JSON.stringify(buildInstance(s, seed)) : "{}"; // beyond the cap: valid JSON that does not conform (missing keys)
+  return {
+    raw,
+    outputTokens: tokensOf(raw),
+    elapsedMs: 15 + seed * 3 + size,
+    model,
+  };
 };

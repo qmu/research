@@ -10,6 +10,18 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-non-null-assertion": "error",
+      // Unused symbols stay an error, but an underscore prefix marks an argument
+      // as intentionally unused — needed where a provider-neutral port method must
+      // accept a positional argument (e.g. the prompt) that a particular adapter
+      // does not consume.
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
       "no-var": "error",
       eqeqeq: ["error", "always"],
       "no-restricted-syntax": [
