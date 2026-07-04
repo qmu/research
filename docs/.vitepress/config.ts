@@ -13,6 +13,16 @@ export default defineConfig({
   // Role and template READMEs are documentation for editors, not site pages.
   srcExclude: ["**/README.md"],
   sitemap: { hostname: "https://research.qmu.dev" },
+  markdown: {
+    // High-contrast code themes so syntax-highlighted tokens (comments,
+    // keywords) in code blocks meet WCAG 2.2 AA (4.5:1). The default
+    // github-light theme's comment (#6A737D, 4.46:1) and keyword (#D73A49,
+    // 4.24:1) colors fall just under the threshold on the report pages.
+    theme: {
+      light: "github-light-high-contrast",
+      dark: "github-dark-high-contrast",
+    },
+  },
   themeConfig: {
     nav: [
       { text: "Home", link: "/" },

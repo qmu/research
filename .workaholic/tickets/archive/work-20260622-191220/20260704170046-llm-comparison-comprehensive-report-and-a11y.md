@@ -3,9 +3,9 @@ created_at: 2026-07-04T17:00:46+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [UX, Domain]
-effort:
-commit_hash:
-category:
+effort: 4h
+commit_hash: 97215de
+category: Changed
 depends_on: [20260704170045-llm-comparison-multimodel-multitrial-engine.md]
 ---
 
@@ -125,3 +125,43 @@ How the outcome's quality is assured, captured from the owner at ticket time.
 - **Determinism for the snapshot.** The golden snapshot only holds if fixture mode is byte-stable (guaranteed by 1/2's deterministic fixture); a real `compare` report is expected to differ run-to-run and is **not** snapshotted.
 - **Terminology consistency** — the enlarged surface (provider/model/tier/probe/trial/aggregate) must read identically in code, report, sidebar, and diagram (`policies/terminology.md`).
 - **Mermaid accessibility** — the Method diagram needs a text alternative/caption to stay AA (`policies/diagram-generation.md`, `policies/accessibility-first.md`).
+
+## Final Report
+
+Development completed as planned. Rewrote `domain/report.ts` into a comprehensive
+report (Methodology, Comparison, per-aspect distribution tables, 8 per-model
+profiles, Data transparency with exact prompts + per-trial values + the
+JSON-artifact link, Scope, Reproduce), added a golden-file snapshot, and fixed a
+real WCAG-AA contrast gap. Provenance is conveyed by text/labels, never colour.
+Verified end to end with a live 3-model run (Opus 4.8, GPT-5.5, Gemini 3.1 Pro),
+which also exercised failure isolation in the wild (Gemini n=2 — one trial dropped,
+not zeroed).
+
+### Discovered Insights
+
+- **Insight**: Adding the two report pages to the `.pa11yci` URL list surfaced
+  **real, pre-existing** WCAG-AA failures that CI never checked — VitePress's default
+  Shiki code-token colours (comment `#6A737D` at 4.46:1, keyword `#D73A49` at 4.24:1,
+  both just under 4.5:1) in shell code blocks.
+  **Context**: The owner's reported "white text on a bright background" was in an
+  ad-hoc PDF, but the code-block contrast was a genuine gap; the fix (switch to the
+  `github-*-high-contrast` code theme in `docs/.vitepress/config.ts`) is global and
+  also fixes the `llm-benchmark` page. The report pages are now in CI's a11y coverage.
+- **Insight**: Conveying provenance with **text + labels instead of colour** means
+  the report carries zero custom CSS and inherits VitePress's AA-correct theme.
+  **Context**: This is the most robust a11y posture — there is no custom contrast to
+  get wrong — and it reads identically at any contrast setting or colour-blindness.
+- **Insight**: `pa11y-ci` is declared in `docs/package.json` but was not materialised
+  in `docs/node_modules`, and the sandbox could not reliably run the preview-server +
+  Chromium (errexit + background-process quirks).
+  **Context**: The a11y fix was therefore confirmed by HTML inspection of the built
+  pages (the failing colours are gone, replaced by ≥4.5:1 values) plus a partial pa11y
+  run that had already isolated those as the only violations — the same
+  HTML-inspection practice the prior trip used. CI runs the full pa11y gate.
+- **Insight**: The JSON run-artifact is linked by a relative path; `make publish`
+  copies only the `.md`, so the transparency link will not resolve on the corporate
+  Astro site until the artifact is added to the publish copy set (or linked by a
+  stable GitHub URL).
+  **Context**: Left as a follow-up (`scripts/publish-research.sh`) — it does not affect
+  the VitePress preview, tests, or the a11y gate, but should be closed before the page
+  is published.

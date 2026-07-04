@@ -6,25 +6,42 @@ import type {
   ModelRun,
   Provenance,
   ProbeStats,
+  TrialResult,
 } from "./types";
 
-const agg = (mean: number, n: number): Aggregate => ({
+const agg = (mean: number, sd: number, n: number): Aggregate => ({
   mean,
-  stdDev: 0,
-  min: mean,
-  max: mean,
+  stdDev: sd,
+  min: mean - sd,
+  max: mean + sd,
   n,
 });
 
 const stats = (
+  tps: Aggregate,
+  depth: Aggregate,
+  len: Aggregate,
+): ProbeStats => ({
+  tokensPerSecond: tps,
+  maxNestedJsonDepth: depth,
+  lengthAccuracy: len,
+});
+
+const okTrial = (
+  trial: number,
   tps: number,
   depth: number,
   len: number,
-  n: number,
-): ProbeStats => ({
-  tokensPerSecond: agg(tps, n),
-  maxNestedJsonDepth: agg(depth, n),
-  lengthAccuracy: agg(len, n),
+): TrialResult => ({
+  trial,
+  ok: true,
+  error: null,
+  metrics: {
+    tokensPerSecond: tps,
+    maxNestedJsonDepth: depth,
+    lengthAccuracy: len,
+  },
+  calls: [],
 });
 
 const run = (
@@ -40,14 +57,15 @@ const run = (
   outputCostPerMTok: 25,
   effortLevels: ["low", "high"],
   source: "https://example.com/anthropic",
-  trialsRequested: 5,
+  trialsRequested: 2,
   trials: [],
   ...over,
 });
 
 const measuredRun = run({
   provenance: "measured",
-  stats: stats(87.5, 12, 0.94, 5),
+  trials: [okTrial(1, 85, 12, 0.93), okTrial(2, 90, 12, 0.95)],
+  stats: stats(agg(87.5, 2.5, 2), agg(12, 0, 2), agg(0.94, 0.01, 2)),
 });
 
 const fixturedRun = run({
@@ -56,13 +74,12 @@ const fixturedRun = run({
   tier: "flagship",
   modelName: "GPT-5.5",
   apiModelId: "gpt-5.5",
-  released: "2026",
   inputCostPerMTok: 5,
   outputCostPerMTok: 30,
   effortLevels: ["medium"],
   source: "https://example.com/openai",
   provenance: "fixtured",
-  stats: stats(999, 99, 1, 5),
+  stats: stats(agg(999, 0, 5), agg(99, 0, 5), agg(1, 0, 5)),
 });
 
 const result: ComparisonResult = {
@@ -85,51 +102,63 @@ describe("renderComparisonReport", () => {
     expect(page).toMatch(/\ndescription: \S.*\n/);
   });
 
-  it("renders one table row per model with curated cells", () => {
-    expect(page).toContain("| anthropic | Claude Opus 4.8 | flagship |");
-    expect(page).toContain("| openai | GPT-5.5 | flagship |");
-    expect(page).toContain("$5.00 / $25.00");
+  it("has all the comprehensive sections", () => {
+    expect(page).toContain("## Methodology");
+    expect(page).toContain("## Comparison");
+    expect(page).toContain("## Per-aspect analysis");
+    expect(page).toContain("## Per-model profiles");
+    expect(page).toContain("## Data transparency");
+    expect(page).toContain("## Scope & limitations");
+    expect(page).toContain("## Reproduce");
   });
 
-  it("shows measured mean probe values for a live row", () => {
+  it("renders per-aspect distribution tables", () => {
+    expect(page).toContain("### Speed (output tokens / second)");
+    expect(page).toContain("### Maximum nested-JSON depth");
+    expect(page).toContain("### Length-instruction accuracy");
+    expect(page).toContain("| Mean ± SD | Min–Max | n |");
+  });
+
+  it("renders a per-model profile with curated facts and a source link", () => {
+    expect(page).toContain("### Claude Opus 4.8 — anthropic · flagship");
+    expect(page).toContain("[source](https://example.com/anthropic)");
+  });
+
+  it("quotes the exact probe prompts verbatim and links the artifact", () => {
+    expect(page).toContain(
+      "Return ONLY a single JSON object nested exactly 16 levels deep",
+    );
+    expect(page).toContain(
+      "Write a single paragraph about the water cycle that is exactly 100 words",
+    );
+    expect(page).toContain("(./llm-model-comparison.data.json)");
+  });
+
+  it("shows measured means and per-trial values for a live model", () => {
     expect(page).toContain("87.5 tok/s");
-    expect(page).toContain("12.0"); // depth mean, one decimal
-    expect(page).toContain("94%");
+    expect(page).toContain("87.5 ± 2.5");
+    expect(page).toContain("| 1 | 85.0 |"); // per-trial row
   });
 
-  it("masks all three probe columns for a fixtured row", () => {
+  it("masks every probe column for a non-measured model", () => {
     expect(page).not.toContain("999.0 tok/s");
     expect(page).not.toContain("| 99.0 |");
     expect(page).toContain("n/a (fixtured)");
   });
 
-  it("reports the distribution (mean ± SD, min–max, n) in the per-probe detail", () => {
-    expect(page).toContain("Per-probe detail (mean ± sample SD, min–max, n)");
-    expect(page).toContain("87.5 ± 0.0 (87.5–87.5, n=5)");
-  });
-
-  it("links the raw per-trial run-artifact", () => {
-    expect(page).toContain("(./llm-model-comparison.data.json)");
-  });
-
-  it("includes the legend, scope, and publication-constraints prose", () => {
-    expect(page).toContain("**Legend.**");
-    expect(page).toContain("## Scope & limitations");
-    expect(page).toContain("### Publication constraints");
-  });
-
-  it("states the trial count in the methodology", () => {
-    expect(page).toContain("over **5 trials**");
-  });
-
-  it("warns about non-measured rows when any row is fixtured or errored", () => {
-    expect(page).toContain("This run includes non-measured rows.");
+  it("states provenance in words, not colour (a11y root-cause fix)", () => {
+    expect(page).toContain("never by colour");
   });
 
   it("flags an all-failed model as n/a (error)", () => {
     const errored = renderComparisonReport({
       ...result,
-      runs: [run({ provenance: "error", stats: stats(0, 0, 0, 0) })],
+      runs: [
+        run({
+          provenance: "error",
+          stats: stats(agg(0, 0, 0), agg(0, 0, 0), agg(0, 0, 0)),
+        }),
+      ],
     });
     expect(errored).toContain("n/a (error)");
     expect(errored).toContain("This run includes non-measured rows.");
@@ -141,5 +170,9 @@ describe("renderComparisonReport", () => {
       runs: [measuredRun],
     });
     expect(allMeasured).not.toContain("This run includes non-measured rows.");
+  });
+
+  it("matches the golden snapshot (formatting regression guard)", () => {
+    expect(page).toMatchSnapshot();
   });
 });

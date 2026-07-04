@@ -9,6 +9,8 @@
   "urls": [
     "http://localhost:4173/",
     "http://localhost:4173/research-reports/",
+    "http://localhost:4173/research-reports/llm-model-comparison",
+    "http://localhost:4173/research-reports/llm-benchmark",
     "http://localhost:4173/glossary"
   ]
 }
