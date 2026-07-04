@@ -47,6 +47,24 @@ export type JudgeConfig = Readonly<{
   model: string;
 }>;
 
+// Hard per-call wall-clock ceiling. A single provider call that never returns
+// (a stalled stream, a wedged socket) must not freeze the whole sweep: the call
+// is raced against a timer so a hang becomes a caught error, the trial is flagged
+// failed by the normal isolation, and the sweep continues. Generous enough that
+// a legitimately slow high-effort generation still completes.
+export const CALL_TIMEOUT_MS = 180_000;
+
+const withTimeout = <T>(work: Promise<T>, label: string): Promise<T> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const guard = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`${label} timed out after ${CALL_TIMEOUT_MS}ms`)),
+      CALL_TIMEOUT_MS,
+    );
+  });
+  return Promise.race([work, guard]).finally(() => clearTimeout(timer));
+};
+
 // Run one trial: throughput (streamed long generation), latency (streamed short
 // prompt), the schema-complexity escalation, and the length probe — capturing
 // every call verbatim and deriving the metrics. NEVER throws — a failed call is
@@ -65,7 +83,10 @@ export const runTrial = async (
       probe.throughputTargetWords,
       probe.throughputTopic,
     );
-    const tp = await client.completeStreaming(throughputPrompt, { effort });
+    const tp = await withTimeout(
+      client.completeStreaming(throughputPrompt, { effort }),
+      "throughput",
+    );
     calls.push({
       probe: "throughput",
       effort,
@@ -85,7 +106,10 @@ export const runTrial = async (
 
     // --- latency: TTFT + total on a short streamed prompt ---------------------
     const latencyPrompt = probe.latencyPrompt;
-    const lat = await client.completeStreaming(latencyPrompt, { effort });
+    const lat = await withTimeout(
+      client.completeStreaming(latencyPrompt, { effort }),
+      "latency",
+    );
     calls.push({
       probe: "latency",
       effort,
@@ -105,9 +129,10 @@ export const runTrial = async (
       const rung = probe.schemaLadder[i];
       const schema = buildSchema(rung);
       const prompt = buildSchemaPrompt(rung);
-      const structured = await client.completeStructured(prompt, schema, {
-        effort,
-      });
+      const structured = await withTimeout(
+        client.completeStructured(prompt, schema, { effort }),
+        "schema",
+      );
       const grade = gradeConformance(schema, structured.raw);
       calls.push({
         probe: "schema",
@@ -132,10 +157,10 @@ export const runTrial = async (
       probe.lengthTargetWords,
       probe.lengthTopic,
     );
-    const lengthCompletion = await client.complete(lengthPrompt, {
-      effort,
-      topic: probe.lengthTopic,
-    });
+    const lengthCompletion = await withTimeout(
+      client.complete(lengthPrompt, { effort, topic: probe.lengthTopic }),
+      "length",
+    );
     calls.push({
       probe: "length",
       effort,
@@ -227,18 +252,21 @@ const runJudge = async (
   const reviewProvenance =
     provenance === "measured" && judge.live ? "judged" : "fixtured";
   try {
-    const structured = await judge.client.completeStructured(
-      buildReviewPrompt({
-        modelName: card.modelName,
-        effort,
-        throughputTokensPerSec: stats.throughputTokensPerSec.mean,
-        ttftMs: stats.ttftMs.mean,
-        totalLatencyMs: stats.totalLatencyMs.mean,
-        maxSchemaComplexity: stats.maxSchemaComplexity.mean,
-        lengthAccuracy: stats.lengthAccuracy.mean,
-        sampleOutputs: sampleOutputs(trials),
-      }),
-      reviewSchema(),
+    const structured = await withTimeout(
+      judge.client.completeStructured(
+        buildReviewPrompt({
+          modelName: card.modelName,
+          effort,
+          throughputTokensPerSec: stats.throughputTokensPerSec.mean,
+          ttftMs: stats.ttftMs.mean,
+          totalLatencyMs: stats.totalLatencyMs.mean,
+          maxSchemaComplexity: stats.maxSchemaComplexity.mean,
+          lengthAccuracy: stats.lengthAccuracy.mean,
+          sampleOutputs: sampleOutputs(trials),
+        }),
+        reviewSchema(),
+      ),
+      "judge",
     );
     return parseReview(structured.raw, judge.model, reviewProvenance);
   } catch {
