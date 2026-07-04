@@ -1,55 +1,80 @@
 import { describe, it, expect } from "vitest";
 import { renderComparisonReport } from "./report";
-import type { ComparisonResult, ComparisonRow } from "./types";
+import type {
+  Aggregate,
+  ComparisonResult,
+  ModelRun,
+  Provenance,
+  ProbeStats,
+} from "./types";
 
-const measuredRow: ComparisonRow = {
+const agg = (mean: number, n: number): Aggregate => ({
+  mean,
+  stdDev: 0,
+  min: mean,
+  max: mean,
+  n,
+});
+
+const stats = (
+  tps: number,
+  depth: number,
+  len: number,
+  n: number,
+): ProbeStats => ({
+  tokensPerSecond: agg(tps, n),
+  maxNestedJsonDepth: agg(depth, n),
+  lengthAccuracy: agg(len, n),
+});
+
+const run = (
+  over: Partial<ModelRun> & { provenance: Provenance; stats: ProbeStats },
+): ModelRun => ({
   id: "anthropic-opus",
   provider: "anthropic",
+  tier: "flagship",
   modelName: "Claude Opus 4.8",
   apiModelId: "claude-opus-4-8",
-  released: "2026-01",
+  released: "2026",
   inputCostPerMTok: 5,
   outputCostPerMTok: 25,
   effortLevels: ["low", "high"],
   source: "https://example.com/anthropic",
-  measurement: {
-    measured: true,
-    tokensPerSecond: 87.5,
-    maxNestedJsonDepth: 12,
-    lengthAccuracy: 0.94,
-    elapsedMs: 2300,
-    outputTokens: 201,
-  },
-};
+  trialsRequested: 5,
+  trials: [],
+  ...over,
+});
 
-const fixturedRow: ComparisonRow = {
+const measuredRun = run({
+  provenance: "measured",
+  stats: stats(87.5, 12, 0.94, 5),
+});
+
+const fixturedRun = run({
   id: "openai-gpt",
   provider: "openai",
+  tier: "flagship",
   modelName: "GPT-5.5",
   apiModelId: "gpt-5.5",
-  released: "2026-02",
+  released: "2026",
   inputCostPerMTok: 5,
   outputCostPerMTok: 30,
   effortLevels: ["medium"],
   source: "https://example.com/openai",
-  measurement: {
-    measured: false,
-    tokensPerSecond: 999,
-    maxNestedJsonDepth: 99,
-    lengthAccuracy: 1,
-    elapsedMs: 1234,
-    outputTokens: 555,
-  },
-};
+  provenance: "fixtured",
+  stats: stats(999, 99, 1, 5),
+});
 
 const result: ComparisonResult = {
-  rows: [measuredRow, fixturedRow],
-  generatedAt: "2026-06-24T00:00:00Z",
+  runs: [measuredRun, fixturedRun],
+  trials: 5,
+  generatedAt: "2026-07-04T00:00:00Z",
   probe: {
     depthLadder: [3, 5, 8, 12, 16],
     lengthTargetWords: 100,
     lengthTopic: "the water cycle",
   },
+  artifactPath: "llm-model-comparison.data.json",
 };
 
 describe("renderComparisonReport", () => {
@@ -60,29 +85,31 @@ describe("renderComparisonReport", () => {
     expect(page).toMatch(/\ndescription: \S.*\n/);
   });
 
-  it("renders one table row per model with all eight aspects", () => {
-    expect(page).toContain("| anthropic | Claude Opus 4.8 |");
-    expect(page).toContain("| openai | GPT-5.5 |");
+  it("renders one table row per model with curated cells", () => {
+    expect(page).toContain("| anthropic | Claude Opus 4.8 | flagship |");
+    expect(page).toContain("| openai | GPT-5.5 | flagship |");
     expect(page).toContain("$5.00 / $25.00");
   });
 
-  it("shows measured probe values for a live row", () => {
+  it("shows measured mean probe values for a live row", () => {
     expect(page).toContain("87.5 tok/s");
-    expect(page).toContain("| 12 |");
+    expect(page).toContain("12.0"); // depth mean, one decimal
     expect(page).toContain("94%");
   });
 
   it("masks all three probe columns for a fixtured row", () => {
-    // The fixtured row's synthetic probe values must never appear as live figures.
     expect(page).not.toContain("999.0 tok/s");
-    expect(page).not.toContain("| 99 |");
+    expect(page).not.toContain("| 99.0 |");
     expect(page).toContain("n/a (fixtured)");
   });
 
-  it("masks the raw elapsed and output-token cells for a fixtured row", () => {
-    // The deterministic fixture's raw numbers must not surface as if measured.
-    expect(page).not.toContain("1234 ms");
-    expect(page).not.toContain("| 555 |");
+  it("reports the distribution (mean ± SD, min–max, n) in the per-probe detail", () => {
+    expect(page).toContain("Per-probe detail (mean ± sample SD, min–max, n)");
+    expect(page).toContain("87.5 ± 0.0 (87.5–87.5, n=5)");
+  });
+
+  it("links the raw per-trial run-artifact", () => {
+    expect(page).toContain("(./llm-model-comparison.data.json)");
   });
 
   it("includes the legend, scope, and publication-constraints prose", () => {
@@ -91,15 +118,28 @@ describe("renderComparisonReport", () => {
     expect(page).toContain("### Publication constraints");
   });
 
-  it("warns that the run includes fixtured rows when any row is fixtured", () => {
-    expect(page).toContain("This run includes fixtured rows.");
+  it("states the trial count in the methodology", () => {
+    expect(page).toContain("over **5 trials**");
   });
 
-  it("omits the fixtured-run warning when every row is measured", () => {
+  it("warns about non-measured rows when any row is fixtured or errored", () => {
+    expect(page).toContain("This run includes non-measured rows.");
+  });
+
+  it("flags an all-failed model as n/a (error)", () => {
+    const errored = renderComparisonReport({
+      ...result,
+      runs: [run({ provenance: "error", stats: stats(0, 0, 0, 0) })],
+    });
+    expect(errored).toContain("n/a (error)");
+    expect(errored).toContain("This run includes non-measured rows.");
+  });
+
+  it("omits the non-measured warning when every row is measured", () => {
     const allMeasured = renderComparisonReport({
       ...result,
-      rows: [measuredRow],
+      runs: [measuredRun],
     });
-    expect(allMeasured).not.toContain("This run includes fixtured rows.");
+    expect(allMeasured).not.toContain("This run includes non-measured rows.");
   });
 });

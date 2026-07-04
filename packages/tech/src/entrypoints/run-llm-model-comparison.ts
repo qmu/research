@@ -1,22 +1,13 @@
 import { writeFile, mkdir } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 import { MODELS } from "../llm-model-comparison/models";
 import type {
-  ComparisonRow,
-  Measurement,
+  ComparisonResult,
   ModelCard,
+  ModelRun,
   ProbeParams,
 } from "../llm-model-comparison/domain/types";
-import {
-  buildNestedJsonPrompt,
-  gradeNestedJson,
-} from "../llm-model-comparison/domain/nested-json";
-import {
-  buildLengthPrompt,
-  lengthAccuracy,
-  wordCount,
-} from "../llm-model-comparison/domain/length-accuracy";
-import { tokensPerSecond } from "../llm-model-comparison/domain/speed";
+import { buildRun, errorRun } from "../llm-model-comparison/run";
 import { renderComparisonReport } from "../llm-model-comparison/domain/report";
 import type { CompletionClient } from "../vendors/llm/types";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
@@ -24,9 +15,10 @@ import { createOpenAiCompletionClient } from "../vendors/llm/openai";
 import { createGoogleCompletionClient } from "../vendors/llm/google";
 import { createFixtureCompletionClient } from "../vendors/llm/fixture";
 
-// Thin entrypoint: own the probe constants, build each model's client, run the
-// probes through the pure domain logic, assemble rows, render the result page,
-// and write it. No comparison or correctness logic lives here.
+// Thin entrypoint: own the probe/trial policy and the CLI/env/IO wiring, build
+// each model's client, delegate the trial loop + aggregation to the pure-ish
+// `run.ts` orchestration and the `domain/` statistics, then write the page + the
+// raw JSON run-artifact. No comparison, scoring, or statistics logic lives here.
 
 // Probe constants are orchestration policy, not domain truth — they live here and
 // are echoed into the result for the Method section.
@@ -35,6 +27,12 @@ const PROBE: ProbeParams = {
   lengthTargetWords: 100,
   lengthTopic: "the water cycle",
 };
+
+const DEFAULT_TRIALS = 5;
+
+// A fixed timestamp for `--fixture` runs so the self-test report + artifact are
+// byte-identical across runs (real runs stamp the wall clock).
+const FIXTURE_TIMESTAMP = "2026-01-01T00:00:00.000Z";
 
 const ENV_KEY: Record<ModelCard["provider"], string> = {
   anthropic: "ANTHROPIC_API_KEY",
@@ -55,7 +53,7 @@ const CLIENT_FACTORY: Record<
 };
 
 // Build the live client for a provider, or undefined when the key is absent (the
-// caller then substitutes the fixture client and flags the row not-measured).
+// caller then uses the fixture path and flags the row fixtured).
 const buildLiveClient = (card: ModelCard): CompletionClient | undefined => {
   const key = process.env[ENV_KEY[card.provider]];
   if (!key) {
@@ -64,90 +62,74 @@ const buildLiveClient = (card: ModelCard): CompletionClient | undefined => {
   return CLIENT_FACTORY[card.provider](card.apiModelId, key);
 };
 
-// Run the nested-JSON ladder, recording the deepest correctly-nested response.
-const probeJsonDepth = async (
-  client: CompletionClient,
-): Promise<{ maxDepth: number; elapsedMs: number; outputTokens: number }> => {
-  let maxDepth = 0;
-  let elapsedMs = 0;
-  let outputTokens = 0;
-  for (const target of PROBE.depthLadder) {
-    const completion = await client.complete(buildNestedJsonPrompt(target));
-    elapsedMs += completion.elapsedMs;
-    outputTokens += completion.outputTokens;
-    const grade = gradeNestedJson(target, completion.text);
-    if (grade.success && target > maxDepth) {
-      maxDepth = target;
-    }
+// --- argument parsing (orchestration only) -----------------------------------
+
+type Args = Readonly<{
+  forceFixture: boolean;
+  trials: number;
+  modelIds: ReadonlyArray<string> | null; // null = all models
+}>;
+
+const parseArgs = (argv: ReadonlyArray<string>): Args => {
+  const forceFixture = argv.includes("--fixture");
+  const trialsIdx = argv.indexOf("--trials");
+  const parsedTrials =
+    trialsIdx >= 0 ? Number(argv[trialsIdx + 1]) : DEFAULT_TRIALS;
+  const trials =
+    Number.isFinite(parsedTrials) && parsedTrials >= 1
+      ? Math.floor(parsedTrials)
+      : DEFAULT_TRIALS;
+  const modelsIdx = argv.indexOf("--models");
+  const modelIds =
+    modelsIdx >= 0 && argv[modelsIdx + 1]
+      ? argv[modelsIdx + 1].split(",").map((s) => s.trim())
+      : null;
+  return { forceFixture, trials, modelIds };
+};
+
+const selectModels = (
+  ids: ReadonlyArray<string> | null,
+): ReadonlyArray<ModelCard> => {
+  if (ids === null) {
+    return MODELS;
   }
-  return { maxDepth, elapsedMs, outputTokens };
-};
-
-// Run the length probe once, scoring how close the response is to the target.
-const probeLength = async (
-  client: CompletionClient,
-): Promise<{ accuracy: number; elapsedMs: number; outputTokens: number }> => {
-  const completion = await client.complete(
-    buildLengthPrompt(PROBE.lengthTargetWords, PROBE.lengthTopic),
-    { topic: PROBE.lengthTopic },
-  );
-  return {
-    accuracy: lengthAccuracy(
-      PROBE.lengthTargetWords,
-      wordCount(completion.text),
-    ),
-    elapsedMs: completion.elapsedMs,
-    outputTokens: completion.outputTokens,
-  };
-};
-
-const measure = async (
-  client: CompletionClient,
-  live: boolean,
-): Promise<Measurement> => {
-  const json = await probeJsonDepth(client);
-  const length = await probeLength(client);
-  const elapsedMs = json.elapsedMs + length.elapsedMs;
-  const outputTokens = json.outputTokens + length.outputTokens;
-  // Zero-token guard: if a live call returned no usable token count, downgrade
-  // the row to not-measured rather than letting tokensPerSecond report a corrupt
-  // rate.
-  const measured = live && outputTokens > 0 && elapsedMs > 0;
-  return {
-    measured,
-    tokensPerSecond: tokensPerSecond(outputTokens, elapsedMs),
-    maxNestedJsonDepth: json.maxDepth,
-    lengthAccuracy: length.accuracy,
-    elapsedMs,
-    outputTokens,
-  };
-};
-
-const buildRow = async (card: ModelCard): Promise<ComparisonRow> => {
-  const forceFixture = process.argv.includes("--fixture");
-  const liveClient = forceFixture ? undefined : buildLiveClient(card);
-  if (!liveClient && !forceFixture) {
-    process.stderr.write(
-      `${ENV_KEY[card.provider]} not set; ${card.modelName} row is fixtured.\n`,
-    );
+  const chosen = MODELS.filter((m) => ids.includes(m.id));
+  for (const id of ids.filter((x) => !MODELS.some((m) => m.id === x))) {
+    process.stderr.write(`--models: no model with id "${id}"\n`);
   }
-  const client = liveClient ?? createFixtureCompletionClient(card.apiModelId);
-  const measurement = await measure(client, liveClient !== undefined);
-  return { ...card, measurement };
+  return chosen;
 };
 
 const main = async (): Promise<void> => {
-  const rows: ComparisonRow[] = [];
-  for (const card of MODELS) {
-    rows.push(await buildRow(card));
+  const args = parseArgs(process.argv.slice(2));
+  const models = selectModels(args.modelIds);
+  if (models.length === 0) {
+    process.stderr.write("no models selected; nothing to do\n");
+    process.exitCode = 1;
+    return;
   }
 
-  const result = {
-    rows,
-    generatedAt: new Date().toISOString(),
-    probe: PROBE,
-  };
-  const page = renderComparisonReport(result);
+  const runs: ModelRun[] = [];
+  for (const card of models) {
+    try {
+      runs.push(
+        await buildRun(card, {
+          trials: args.trials,
+          probe: PROBE,
+          liveClient: args.forceFixture ? undefined : buildLiveClient(card),
+          fixtureFor: (i) => createFixtureCompletionClient(card.apiModelId, i),
+        }),
+      );
+    } catch (error: unknown) {
+      // A model that fails catastrophically is recorded and skipped, never fatal.
+      process.stderr.write(`${card.modelName}: ${String(error)}\n`);
+      runs.push(errorRun(card, args.trials, String(error)));
+    }
+  }
+
+  const generatedAt = args.forceFixture
+    ? FIXTURE_TIMESTAMP
+    : new Date().toISOString();
 
   const outputPath =
     process.env.OUTPUT_PATH ??
@@ -155,21 +137,35 @@ const main = async (): Promise<void> => {
       process.cwd(),
       "../../docs/research-reports/llm-model-comparison.md",
     );
-  await mkdir(dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, page, "utf8");
+  const artifactPath = outputPath.replace(/\.md$/, ".data.json");
 
-  for (const row of rows) {
-    const m = row.measurement;
-    const flag = m.measured ? "measured" : "fixtured";
+  const core = {
+    runs,
+    trials: args.trials,
+    generatedAt,
+    probe: PROBE,
+  };
+  const result: ComparisonResult = {
+    ...core,
+    artifactPath: basename(artifactPath),
+  };
+
+  await mkdir(dirname(outputPath), { recursive: true });
+  await writeFile(artifactPath, `${JSON.stringify(core, null, 2)}\n`, "utf8");
+  await writeFile(outputPath, renderComparisonReport(result), "utf8");
+
+  for (const run of runs) {
+    const s = run.stats;
+    const summary =
+      run.provenance === "measured"
+        ? ` — ${s.tokensPerSecond.mean.toFixed(1)} tok/s, depth ${s.maxNestedJsonDepth.mean.toFixed(1)}, length ${(s.lengthAccuracy.mean * 100).toFixed(0)}% (n=${s.tokensPerSecond.n})`
+        : "";
     process.stdout.write(
-      `${row.provider}/${row.modelName}: ${flag}` +
-        (m.measured
-          ? ` — ${m.tokensPerSecond.toFixed(1)} tok/s, depth ${m.maxNestedJsonDepth}, length ${(m.lengthAccuracy * 100).toFixed(0)}%`
-          : "") +
-        "\n",
+      `${run.provider}/${run.modelName}: ${run.provenance}${summary}\n`,
     );
   }
   process.stdout.write(`wrote ${outputPath}\n`);
+  process.stdout.write(`wrote ${artifactPath}\n`);
 };
 
 main().catch((error: unknown) => {

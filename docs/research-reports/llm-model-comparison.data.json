@@ -1,0 +1,2528 @@
+{
+  "runs": [
+    {
+      "id": "anthropic-claude-opus-4-8",
+      "provider": "anthropic",
+      "tier": "flagship",
+      "modelName": "Claude Opus 4.8",
+      "apiModelId": "claude-opus-4-8",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    },
+    {
+      "id": "anthropic-claude-sonnet-5",
+      "provider": "anthropic",
+      "tier": "mid",
+      "modelName": "Claude Sonnet 5",
+      "apiModelId": "claude-sonnet-5",
+      "released": "2026",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    },
+    {
+      "id": "anthropic-claude-haiku-4-5",
+      "provider": "anthropic",
+      "tier": "small",
+      "modelName": "Claude Haiku 4.5",
+      "apiModelId": "claude-haiku-4-5-20251001",
+      "released": "2025-10",
+      "inputCostPerMTok": 1,
+      "outputCostPerMTok": 5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    },
+    {
+      "id": "openai-gpt-5-5",
+      "provider": "openai",
+      "tier": "flagship",
+      "modelName": "GPT-5.5",
+      "apiModelId": "gpt-5.5",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "effortLevels": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    },
+    {
+      "id": "openai-gpt-5",
+      "provider": "openai",
+      "tier": "mid",
+      "modelName": "GPT-5",
+      "apiModelId": "gpt-5",
+      "released": "2025",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 10,
+      "effortLevels": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    },
+    {
+      "id": "openai-gpt-5-mini",
+      "provider": "openai",
+      "tier": "small",
+      "modelName": "GPT-5 mini",
+      "apiModelId": "gpt-5-mini",
+      "released": "2025",
+      "inputCostPerMTok": 0.25,
+      "outputCostPerMTok": 2,
+      "effortLevels": [
+        "minimal",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    },
+    {
+      "id": "google-gemini-3-1-pro",
+      "provider": "google",
+      "tier": "flagship",
+      "modelName": "Gemini 3.1 Pro",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "released": "2026",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 12,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    },
+    {
+      "id": "google-gemini-3-1-flash",
+      "provider": "google",
+      "tier": "small",
+      "modelName": "Gemini 3.1 Flash",
+      "apiModelId": "gemini-3.1-flash-preview",
+      "released": "2026",
+      "inputCostPerMTok": 0.3,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "provenance": "fixtured",
+      "trialsRequested": 5,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 4418.181818181818,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 8
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 9
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 10
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3600,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 10
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 11
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 3181.818181818182,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 12
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 13
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 126,
+              "elapsedMs": 12
+            }
+          ]
+        },
+        {
+          "trial": 4,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2588.8888888888887,
+            "maxNestedJsonDepth": 12,
+            "lengthAccuracy": 0.99
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 14
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 124,
+              "elapsedMs": 16
+            }
+          ]
+        },
+        {
+          "trial": 5,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "tokensPerSecond": 2392.156862745098,
+            "maxNestedJsonDepth": 16,
+            "lengthAccuracy": 1
+          },
+          "calls": [
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 3 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 3.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":\"leaf\"}}}",
+              "outputTokens": 9,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 5 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 5.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}",
+              "outputTokens": 14,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 8 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 8.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}",
+              "outputTokens": 22,
+              "elapsedMs": 18
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 12 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 12.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}",
+              "outputTokens": 32,
+              "elapsedMs": 16
+            },
+            {
+              "probe": "nested-json",
+              "prompt": "Return ONLY a single JSON object nested exactly 16 levels deep, with no surrounding text, no markdown, and no code fences. Each level must be an object whose sole key is \"child\" except the deepest level, whose value is the string \"leaf\". For example, depth 2 is {\"child\":{\"child\":\"leaf\"}}. Produce depth 16.",
+              "rawOutput": "{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":{\"child\":\"leaf\"}}}}}}}}}}}}}}}}",
+              "outputTokens": 42,
+              "elapsedMs": 17
+            },
+            {
+              "probe": "length",
+              "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
+              "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
+              "outputTokens": 125,
+              "elapsedMs": 17
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "tokensPerSecond": {
+          "mean": 3236.2091503267975,
+          "stdDev": 816.0590254934862,
+          "min": 2392.156862745098,
+          "max": 4418.181818181818,
+          "n": 5
+        },
+        "maxNestedJsonDepth": {
+          "mean": 14.4,
+          "stdDev": 2.1908902300206643,
+          "min": 12,
+          "max": 16,
+          "n": 5
+        },
+        "lengthAccuracy": {
+          "mean": 0.994,
+          "stdDev": 0.005477225575051666,
+          "min": 0.99,
+          "max": 1,
+          "n": 5
+        }
+      }
+    }
+  ],
+  "trials": 5,
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "probe": {
+    "depthLadder": [
+      3,
+      5,
+      8,
+      12,
+      16
+    ],
+    "lengthTargetWords": 100,
+    "lengthTopic": "the water cycle"
+  }
+}
