@@ -13,6 +13,7 @@ import type { CompletionClient } from "../vendors/llm/types";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
 import { createOpenAiCompletionClient } from "../vendors/llm/openai";
 import { createGoogleCompletionClient } from "../vendors/llm/google";
+import { createOpenAiRealtimeCompletionClient } from "../vendors/llm/openai-realtime";
 import { createFixtureCompletionClient } from "../vendors/llm/fixture";
 
 // Thin entrypoint: own the probe/trial policy and the CLI/env/IO wiring, build
@@ -58,6 +59,11 @@ const buildLiveClient = (card: ModelCard): CompletionClient | undefined => {
   const key = process.env[ENV_KEY[card.provider]];
   if (!key) {
     return undefined;
+  }
+  // The realtime WebSocket surface uses a dedicated adapter (OpenAI-only here);
+  // everything else goes through the per-provider chat-completions factory.
+  if (card.api === "realtime") {
+    return createOpenAiRealtimeCompletionClient(card.apiModelId, key);
   }
   return CLIENT_FACTORY[card.provider](card.apiModelId, key);
 };

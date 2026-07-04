@@ -1,6 +1,6 @@
 ---
 title: Fundamental LLM model comparison
-description: A reproducible, cited comparison of 8 large language models across 3 providers — five curated catalog facts and three behavioral probes measured live over 5 trials each, reported with mean and spread.
+description: A reproducible, cited comparison of 13 large language models across 3 providers — five curated catalog facts and three behavioral probes measured live over 5 trials each, reported with mean and spread.
 ---
 
 # Fundamental LLM model comparison
@@ -16,7 +16,7 @@ measurement.
 
 ## Methodology
 
-**Models.** 8 models across 3 providers, spanning each
+**Models.** 13 models across 3 providers, spanning each
 provider's flagship, mid, and small tiers, so the comparison shows the real spread
 of behavior — and cost — from a provider's largest model to its smallest.
 
@@ -67,14 +67,19 @@ correct only as of the cited source, and the `apiModelId` values are isolated in
 
 | Provider | Model | Tier | Released | Cost (in / out per MTok) | Effort levels | Speed (mean) | Max JSON depth (mean) | Length accuracy (mean) |
 | -------- | ----- | ---- | -------- | ------------------------ | ------------- | ------------ | --------------------- | ---------------------- |
+| anthropic | Claude Fable 5 | frontier | 2026-06 | $6.00 / $30.00 | low, medium, high, xhigh, max | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | anthropic | Claude Opus 4.8 | flagship | 2026 | $5.00 / $25.00 | low, medium, high, xhigh, max | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| anthropic | Claude Sonnet 5 | mid | 2026 | $3.00 / $15.00 | low, medium, high, xhigh, max | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| anthropic | Claude Sonnet 5 | mid | 2026-06 | $3.00 / $15.00 | low, medium, high, xhigh, max | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | anthropic | Claude Haiku 4.5 | small | 2025-10 | $1.00 / $5.00 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.5 | flagship | 2026 | $5.00 / $30.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5 | mid | 2025 | $1.25 / $10.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5 mini | small | 2025 | $0.25 / $2.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 | mid | 2026 | $2.50 / $15.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 mini | small | 2026 | $0.50 / $2.00 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 nano | small | 2026 | $0.15 / $0.60 | minimal, low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | o4-mini | mid | 2025 | $1.10 / $4.40 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT Realtime | flagship | 2025 | $4.00 / $16.00 | n/a | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Pro | flagship | 2026 | $2.00 / $12.00 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| google | Gemini 3.1 Flash | small | 2026 | $0.30 / $2.50 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.5 Flash | mid | 2026 | $0.30 / $2.50 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| google | Gemini 3.1 Flash-Lite | small | 2026 | $0.10 / $0.40 | low, medium, high | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 **Legend.** Provider, Model, Tier, Released, Cost, and Effort levels are
 **curated** catalog data (cited). Speed, Max JSON depth, and Length accuracy are
@@ -93,14 +98,19 @@ deviation, the observed min–max, and the number of contributing trials.
 
 | Model | Mean ± SD | Min–Max | n |
 | ----- | --------- | ------- | - |
+| Claude Fable 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Opus 4.8 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every model was fixtured or errored, so this aspect has no comparison.
 
@@ -108,14 +118,19 @@ No live measurements in this run — every model was fixtured or errored, so thi
 
 | Model | Mean ± SD | Min–Max | n |
 | ----- | --------- | ------- | - |
+| Claude Fable 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Opus 4.8 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every model was fixtured or errored, so this aspect has no comparison.
 
@@ -123,18 +138,28 @@ No live measurements in this run — every model was fixtured or errored, so thi
 
 | Model | Mean ± SD | Min–Max | n |
 | ----- | --------- | ------- | - |
+| Claude Fable 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Opus 4.8 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| o4-mini | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT Realtime | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Gemini 3.1 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.5 Flash | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Gemini 3.1 Flash-Lite | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every model was fixtured or errored, so this aspect has no comparison.
 
 ## Per-model profiles
+
+### Claude Fable 5 — anthropic · frontier
+
+- **Curated:** released 2026-06, cost $6.00 / $30.00 per MTok, effort levels low, medium, high, xhigh, max, [source](https://platform.claude.com/docs/en/about-claude/models/overview).
+- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
 
 ### Claude Opus 4.8 — anthropic · flagship
 
@@ -143,7 +168,7 @@ No live measurements in this run — every model was fixtured or errored, so thi
 
 ### Claude Sonnet 5 — anthropic · mid
 
-- **Curated:** released 2026, cost $3.00 / $15.00 per MTok, effort levels low, medium, high, xhigh, max, [source](https://platform.claude.com/docs/en/about-claude/models/overview).
+- **Curated:** released 2026-06, cost $3.00 / $15.00 per MTok, effort levels low, medium, high, xhigh, max, [source](https://platform.claude.com/docs/en/about-claude/models/overview).
 - **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
 
 ### Claude Haiku 4.5 — anthropic · small
@@ -156,14 +181,29 @@ No live measurements in this run — every model was fixtured or errored, so thi
 - **Curated:** released 2026, cost $5.00 / $30.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
 - **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
 
-### GPT-5 — openai · mid
+### GPT-5.4 — openai · mid
 
-- **Curated:** released 2025, cost $1.25 / $10.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
+- **Curated:** released 2026, cost $2.50 / $15.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
 - **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
 
-### GPT-5 mini — openai · small
+### GPT-5.4 mini — openai · small
 
-- **Curated:** released 2025, cost $0.25 / $2.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
+- **Curated:** released 2026, cost $0.50 / $2.00 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
+- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+
+### GPT-5.4 nano — openai · small
+
+- **Curated:** released 2026, cost $0.15 / $0.60 per MTok, effort levels minimal, low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
+- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+
+### o4-mini — openai · mid
+
+- **Curated:** released 2025, cost $1.10 / $4.40 per MTok, effort levels low, medium, high, [source](https://developers.openai.com/api/docs/pricing).
+- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+
+### GPT Realtime — openai · flagship
+
+- **Curated:** released 2025, cost $4.00 / $16.00 per MTok, effort levels n/a, [source](https://developers.openai.com/api/docs/pricing).
 - **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
 
 ### Gemini 3.1 Pro — google · flagship
@@ -171,9 +211,14 @@ No live measurements in this run — every model was fixtured or errored, so thi
 - **Curated:** released 2026, cost $2.00 / $12.00 per MTok, effort levels low, medium, high, [source](https://ai.google.dev/gemini-api/docs/pricing).
 - **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
 
-### Gemini 3.1 Flash — google · small
+### Gemini 3.5 Flash — google · mid
 
 - **Curated:** released 2026, cost $0.30 / $2.50 per MTok, effort levels low, medium, high, [source](https://ai.google.dev/gemini-api/docs/pricing).
+- **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
+
+### Gemini 3.1 Flash-Lite — google · small
+
+- **Curated:** released 2026, cost $0.10 / $0.40 per MTok, effort levels low, medium, high, [source](https://ai.google.dev/gemini-api/docs/pricing).
 - **Measured:** fixtured — no live measurement (`n/a (fixtured)`).
 
 ## Data transparency
@@ -230,7 +275,7 @@ npm run compare:fixture
 #   ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY
 # Optionally bound the run: --trials <n> (default 5) and
 # --models <id,id,...> (a subset of the models.ts ids). A full real matrix is
-# roughly 8 models x (5-rung ladder + 1 length) x 5 trials of API calls.
+# roughly 13 models x (5-rung ladder + 1 length) x 5 trials of API calls.
 npm run compare
 ```
 

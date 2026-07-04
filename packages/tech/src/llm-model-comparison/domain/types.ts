@@ -21,7 +21,11 @@ export type Provider = "anthropic" | "openai" | "google";
 export type ModelCard = Readonly<{
   id: string; // stable slug, used for anchors/keys
   provider: Provider;
-  tier: "flagship" | "mid" | "small"; // curated capability/price tier
+  tier: "frontier" | "flagship" | "mid" | "small"; // curated capability/price tier
+  // Which API surface the model is reached through. "chat" is the default
+  // text-completions endpoint; "realtime" is the bidirectional WebSocket Realtime
+  // API, driven text-only. Both sit behind the same CompletionClient port.
+  api?: "chat" | "realtime";
   modelName: string; // official product name, e.g. "Claude Opus 4.8"
   apiModelId: string; // exact wire id, e.g. "claude-opus-4-8"
   released: string; // ISO date or YYYY-MM, curated
