@@ -55,8 +55,8 @@ const configKey = (run: ConfigRun): string => `${run.id}-${run.effort}`;
 
 const comparisonTable = (configs: ReadonlyArray<ConfigRun>): string => {
   const header =
-    "| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema complexity | Length accuracy |\n" +
-    "| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | --------------------- | --------------- |";
+    "| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy |\n" +
+    "| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- |";
   const rows = configs.map((run) => {
     const s = run.stats;
     return (
@@ -65,7 +65,8 @@ const comparisonTable = (configs: ReadonlyArray<ConfigRun>): string => {
       `${measured(run, s.throughputTokensPerSec.mean.toFixed(0))} | ` +
       `${measured(run, s.ttftMs.mean.toFixed(0))} | ` +
       `${measured(run, s.totalLatencyMs.mean.toFixed(0))} | ` +
-      `${measured(run, s.maxSchemaComplexity.mean.toFixed(1))} | ` +
+      `${measured(run, s.maxSchemaDepth.mean.toFixed(0))} | ` +
+      `${measured(run, s.maxSchemaBreadth.mean.toFixed(0))} | ` +
       `${measured(run, pct(s.lengthAccuracy.mean))} |`
     );
   });
@@ -105,10 +106,17 @@ const ASPECTS: ReadonlyArray<Aspect> = [
     better: "lower",
   },
   {
-    key: "maxSchemaComplexity",
-    title: "Tested maximum JSON-schema complexity",
-    digits: 1,
-    format: (a) => a.mean.toFixed(1),
+    key: "maxSchemaDepth",
+    title: "Tested maximum JSON-schema nesting depth",
+    digits: 0,
+    format: (a) => a.mean.toFixed(0),
+    better: "higher",
+  },
+  {
+    key: "maxSchemaBreadth",
+    title: "Tested maximum JSON-schema field breadth",
+    digits: 0,
+    format: (a) => a.mean.toFixed(0),
     better: "higher",
   },
   {
@@ -207,13 +215,13 @@ const perTrialTable = (run: ConfigRun): string => {
     return "";
   }
   const header =
-    "| Trial | Throughput (tok/s) | TTFT (ms) | Total (ms) | Max schema | Length acc |\n" +
-    "| ----- | ------------------ | --------- | ---------- | ---------- | ---------- |";
+    "| Trial | Throughput (tok/s) | TTFT (ms) | Total (ms) | Max depth | Max breadth | Length acc |\n" +
+    "| ----- | ------------------ | --------- | ---------- | --------- | ----------- | ---------- |";
   const rows = okTrials.map(
     (t) =>
       `| ${t.trial} | ${t.metrics.throughputTokensPerSec.toFixed(0)} | ` +
       `${t.metrics.ttftMs.toFixed(0)} | ${t.metrics.totalLatencyMs.toFixed(0)} | ` +
-      `${t.metrics.maxSchemaComplexity} | ${pct(t.metrics.lengthAccuracy)} |`,
+      `${t.metrics.maxSchemaDepth} | ${t.metrics.maxSchemaBreadth} | ${pct(t.metrics.lengthAccuracy)} |`,
   );
   return `#### ${label(run)}\n\n${header}\n${rows.join("\n")}`;
 };
@@ -242,9 +250,8 @@ const transparencySection = (result: ComparisonResult): string => {
     result.probe.lengthTargetWords,
     result.probe.lengthTopic,
   );
-  const deepestRung =
-    result.probe.schemaLadder[result.probe.schemaLadder.length - 1];
-  const schemaPrompt = deepestRung ? buildSchemaPrompt(deepestRung) : "(none)";
+  const sp = result.probe.schemaProbe;
+  const schemaPrompt = buildSchemaPrompt({ depth: sp.depth.start, breadth: 1 });
 
   return `## Data transparency
 
@@ -265,7 +272,10 @@ ${throughputPrompt}
 ${escapeCell(result.probe.latencyPrompt)}
 \`\`\`
 
-**Schema-complexity probe** (structured-output mode; the deepest rung asks for):
+**Schema-complexity probe** (structured-output mode; each axis is escalated
+independently — depth up to ${sp.depth.cap} nesting levels, breadth up to
+${sp.breadth.cap} fields — climbing geometrically then bisecting to the tested
+maximum. The first rung on the depth axis asks for):
 
 \`\`\`text
 ${schemaPrompt}
@@ -278,8 +288,9 @@ ${lengthPrompt}
 \`\`\`
 
 **Complete raw record.** Every configuration, trial, and call — prompt, verbatim
-output, token counts, TTFT, per-rung schema conformance, and the judge review —
-is committed alongside this page as a JSON run-artifact:
+output, token counts, TTFT, per-probe schema axis/value/conformance (and any
+provider rejection verbatim), and the judge review — is committed alongside this
+page as a JSON run-artifact:
 [\`${escapeCell(result.artifactPath)}\`](./${escapeCell(result.artifactPath)}).
 This page is a rendering of that record; the artifact is the source of truth.`;
 };
@@ -312,9 +323,7 @@ export const renderComparisonReport = (
   const anyNonMeasured = configs.some((r) => r.provenance !== "measured");
   const providers = [...new Set(configs.map((r) => r.provider))].length;
   const models = [...new Set(configs.map((r) => r.id))].length;
-  const ladder = result.probe.schemaLadder
-    .map((c) => `${c.depth}×${c.breadth}`)
-    .join(", ");
+  const sp = result.probe.schemaProbe;
 
   const aspects =
     detail === "summary"
@@ -364,9 +373,12 @@ alongside every mean.
 - **Latency** — a short streamed prompt; **time-to-first-token and total response
   time**, reported separately from throughput.
 - **JSON-schema complexity** — the provider's **structured-output mode** is driven
-  up an escalation ladder over depth × breadth (${ladder}); the **maximum
-  complexity that still returns schema-conforming output** is recorded — the
-  tested affordance, not the paper spec.
+  up **two independent axes** — nesting depth (up to ${sp.depth.cap}) and field
+  breadth (up to ${sp.breadth.cap}) — each climbing geometrically from
+  ${sp.depth.start} then bisecting to pin the **maximum that still returns
+  schema-conforming output**. A fixed short ladder only measured its own ceiling;
+  this finds the model's. A provider that rejects a schema at some size caps that
+  axis there — a tested affordance, recorded verbatim, not the paper spec.
 - **Length accuracy** — a paragraph of exactly ${result.probe.lengthTargetWords}
   words on "${escapeCell(result.probe.lengthTopic)}"; accuracy is
   \`1 - min(1, |actual - target| / target)\`.

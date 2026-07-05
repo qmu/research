@@ -80,7 +80,8 @@ const trial = (
     throughputTokensPerSec: tps,
     ttftMs: 200,
     totalLatencyMs: 800,
-    maxSchemaComplexity: schema,
+    maxSchemaDepth: schema,
+    maxSchemaBreadth: schema * 2,
     lengthAccuracy: len,
   },
   calls: [],
@@ -96,7 +97,8 @@ describe("summarizeTrials", () => {
     const stats = summarizeTrials(trials);
     expect(stats.throughputTokensPerSec.n).toBe(2);
     expect(stats.throughputTokensPerSec.mean).toBe(60);
-    expect(stats.maxSchemaComplexity.mean).toBe(5);
+    expect(stats.maxSchemaDepth.mean).toBe(5);
+    expect(stats.maxSchemaBreadth.mean).toBe(10);
     expect(stats.ttftMs.mean).toBe(200);
     expect(stats.lengthAccuracy.mean).toBeCloseTo(0.95, 10);
   });
@@ -104,7 +106,7 @@ describe("summarizeTrials", () => {
   it("yields n:0 aggregates when every trial failed", () => {
     const stats = summarizeTrials([trial(1, false, 0, 0, 0)]);
     expect(stats.throughputTokensPerSec.n).toBe(0);
-    expect(stats.maxSchemaComplexity.n).toBe(0);
+    expect(stats.maxSchemaDepth.n).toBe(0);
     expect(stats.lengthAccuracy.n).toBe(0);
   });
 });

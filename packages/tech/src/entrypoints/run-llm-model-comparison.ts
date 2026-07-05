@@ -13,7 +13,6 @@ import type { JudgeConfig } from "../llm-model-comparison/run";
 import { renderComparisonReport } from "../llm-model-comparison/domain/report";
 import type { DetailLevel } from "../llm-model-comparison/domain/report";
 import { buildLatencyPrompt } from "../llm-model-comparison/domain/latency";
-import { escalatingLadder } from "../llm-model-comparison/domain/json-schema";
 import { estimateRun } from "../llm-model-comparison/domain/estimate";
 import type { CompletionClient } from "../vendors/llm/types";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
@@ -34,7 +33,16 @@ const PROBE: ProbeParams = {
   throughputTargetWords: 400,
   throughputTopic: "how large language models generate text",
   latencyPrompt: buildLatencyPrompt("the water cycle"),
-  schemaLadder: escalatingLadder(6),
+  // Adaptive schema probe: climb each axis geometrically to a hard ceiling, then
+  // bisect. A short fixed ladder only measured its own ceiling (near everything
+  // hit 6/6); these caps are deliberately far past any current model so the
+  // tested maximum is the model's limit, not the probe's.
+  schemaProbe: {
+    depth: { start: 2, cap: 128 },
+    breadth: { start: 2, cap: 512 },
+    refineSteps: 6,
+    maxTokens: 8192,
+  },
   lengthTargetWords: 100,
   lengthTopic: "the water cycle",
 };
@@ -167,9 +175,24 @@ const buildMatrix = (
     return levels.map((effort) => ({ card, effort }));
   });
 
-const probeCallsPerConfig = (probe: ProbeParams, trials: number): number =>
-  // throughput + latency + schema-ladder + length, per trial
-  (3 + probe.schemaLadder.length) * trials;
+// Upper bound on the calls one schema axis makes: the geometric climb from
+// `start` to `cap` (log2 doublings, +1 for the cap probe) plus the bisection
+// budget. Used only for the pre-run estimate; the real count is a little lower
+// when a model caps out early.
+const schemaAxisCalls = (
+  axis: ProbeParams["schemaProbe"]["depth"],
+  refineSteps: number,
+): number =>
+  Math.floor(Math.log2(Math.max(1, axis.cap / axis.start))) + 2 + refineSteps;
+
+const probeCallsPerConfig = (probe: ProbeParams, trials: number): number => {
+  const sp = probe.schemaProbe;
+  const schemaCalls =
+    schemaAxisCalls(sp.depth, sp.refineSteps) +
+    schemaAxisCalls(sp.breadth, sp.refineSteps);
+  // throughput + latency + (depth axis + breadth axis) + length, per trial
+  return (3 + schemaCalls) * trials;
+};
 
 const buildEstimate = (
   matrix: ReadonlyArray<Configuration>,
@@ -262,7 +285,13 @@ const main = async (): Promise<void> => {
     } catch (error: unknown) {
       // A configuration that fails catastrophically is recorded and skipped.
       process.stderr.write(`${card.modelName} (${effort}): ${String(error)}\n`);
-      run = errorRun(card, effort, args.trials, String(error), JUDGE.apiModelId);
+      run = errorRun(
+        card,
+        effort,
+        args.trials,
+        String(error),
+        JUDGE.apiModelId,
+      );
     }
     configs.push(run);
     done += 1;
@@ -271,7 +300,7 @@ const main = async (): Promise<void> => {
     const s = run.stats;
     const line =
       run.provenance === "measured"
-        ? `${s.throughputTokensPerSec.mean.toFixed(0)} tok/s, ttft ${s.ttftMs.mean.toFixed(0)}ms, schema ${s.maxSchemaComplexity.mean.toFixed(1)}, length ${(s.lengthAccuracy.mean * 100).toFixed(0)}%`
+        ? `${s.throughputTokensPerSec.mean.toFixed(0)} tok/s, ttft ${s.ttftMs.mean.toFixed(0)}ms, schema depth ${s.maxSchemaDepth.mean.toFixed(0)}/breadth ${s.maxSchemaBreadth.mean.toFixed(0)}, length ${(s.lengthAccuracy.mean * 100).toFixed(0)}%`
         : run.provenance;
     process.stderr.write(
       `[${done}/${matrix.length}] ${run.provider}/${run.modelName} [${run.effort}]: ${line}\n`,

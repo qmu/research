@@ -14,6 +14,7 @@ import type {
   ProbeParams,
   Provenance,
   Review,
+  SchemaAxisParams,
   TrialResult,
 } from "./domain/types";
 import {
@@ -22,9 +23,11 @@ import {
 } from "./domain/throughput";
 import { normalizeLatency } from "./domain/latency";
 import {
+  advanceAxis,
   buildSchema,
   buildSchemaPrompt,
   gradeConformance,
+  startAxisProbe,
 } from "./domain/json-schema";
 import {
   buildLengthPrompt,
@@ -95,8 +98,10 @@ export const runTrial = async (
       outputTokens: tp.outputTokens,
       elapsedMs: tp.elapsedMs,
       ttftMs: tp.ttftMs,
-      schemaComplexity: null,
+      schemaAxis: null,
+      schemaValue: null,
       schemaConforms: null,
+      error: null,
     });
     const throughputTokensPerSec = sustainedTokensPerSecond(
       tp.outputTokens,
@@ -118,39 +123,76 @@ export const runTrial = async (
       outputTokens: lat.outputTokens,
       elapsedMs: lat.elapsedMs,
       ttftMs: lat.ttftMs,
-      schemaComplexity: null,
+      schemaAxis: null,
+      schemaValue: null,
       schemaConforms: null,
+      error: null,
     });
     const latency = normalizeLatency(lat.ttftMs, lat.elapsedMs);
 
-    // --- schema complexity: escalate depth × breadth until non-conforming -----
-    let maxSchemaComplexity = 0;
-    for (let i = 0; i < probe.schemaLadder.length; i += 1) {
-      const rung = probe.schemaLadder[i];
-      const schema = buildSchema(rung);
-      const prompt = buildSchemaPrompt(rung);
-      const structured = await withTimeout(
-        client.completeStructured(prompt, schema, { effort }),
-        "schema",
-      );
-      const grade = gradeConformance(schema, structured.raw);
-      calls.push({
-        probe: "schema",
-        effort,
-        prompt,
-        rawOutput: structured.raw,
-        outputTokens: structured.outputTokens,
-        elapsedMs: structured.elapsedMs,
-        ttftMs: null,
-        schemaComplexity: i + 1,
-        schemaConforms: grade.conforms,
-      });
-      if (grade.conforms) {
-        maxSchemaComplexity = i + 1;
-      } else {
-        break; // the model stopped affording this complexity; record the last max
+    // --- schema complexity: adaptively escalate each axis to its tested max ---
+    // Depth and breadth are probed INDEPENDENTLY (depth at breadth 1; breadth at
+    // depth 1), each doubling until the model stops conforming (or the provider
+    // rejects the schema), then bisecting to pin the maximum. A rejection is a
+    // finding, recorded verbatim, and never aborts the trial.
+    const probeAxis = async (
+      axis: "depth" | "breadth",
+      params: SchemaAxisParams,
+    ): Promise<number> => {
+      let state = startAxisProbe(params, probe.schemaProbe.refineSteps);
+      while (state.next !== null) {
+        const value = state.next;
+        const shape =
+          axis === "depth"
+            ? { depth: value, breadth: 1 }
+            : { depth: 1, breadth: value };
+        const schema = buildSchema(shape);
+        const prompt = buildSchemaPrompt(shape);
+        let conforms = false;
+        let raw = "";
+        let outputTokens = 0;
+        let elapsedMs = 0;
+        let callError: string | null = null;
+        try {
+          const structured = await withTimeout(
+            client.completeStructured(prompt, schema, {
+              effort,
+              maxTokens: probe.schemaProbe.maxTokens,
+            }),
+            `schema:${axis}=${value}`,
+          );
+          raw = structured.raw;
+          outputTokens = structured.outputTokens;
+          elapsedMs = structured.elapsedMs;
+          conforms = gradeConformance(schema, raw).conforms;
+        } catch (e: unknown) {
+          // Provider rejection / failure at this complexity: a ceiling finding,
+          // not a trial failure. Record it and treat the rung as non-conforming.
+          callError = String(e);
+        }
+        calls.push({
+          probe: "schema",
+          effort,
+          prompt,
+          rawOutput: raw,
+          outputTokens,
+          elapsedMs,
+          ttftMs: null,
+          schemaAxis: axis,
+          schemaValue: value,
+          schemaConforms: conforms,
+          error: callError,
+        });
+        state = advanceAxis(state, conforms);
       }
-    }
+      return state.maxConforming;
+    };
+
+    const maxSchemaDepth = await probeAxis("depth", probe.schemaProbe.depth);
+    const maxSchemaBreadth = await probeAxis(
+      "breadth",
+      probe.schemaProbe.breadth,
+    );
 
     // --- length: word-count accuracy on a fixed target ------------------------
     const lengthPrompt = buildLengthPrompt(
@@ -169,8 +211,10 @@ export const runTrial = async (
       outputTokens: lengthCompletion.outputTokens,
       elapsedMs: lengthCompletion.elapsedMs,
       ttftMs: null,
-      schemaComplexity: null,
+      schemaAxis: null,
+      schemaValue: null,
       schemaConforms: null,
+      error: null,
     });
     const accuracy = lengthAccuracy(
       probe.lengthTargetWords,
@@ -185,7 +229,8 @@ export const runTrial = async (
         throughputTokensPerSec,
         ttftMs: latency.ttftMs,
         totalLatencyMs: latency.totalMs,
-        maxSchemaComplexity,
+        maxSchemaDepth,
+        maxSchemaBreadth,
         lengthAccuracy: accuracy,
       },
       calls,
@@ -199,7 +244,8 @@ export const runTrial = async (
         throughputTokensPerSec: 0,
         ttftMs: 0,
         totalLatencyMs: 0,
-        maxSchemaComplexity: 0,
+        maxSchemaDepth: 0,
+        maxSchemaBreadth: 0,
         lengthAccuracy: 0,
       },
       calls,
@@ -260,7 +306,8 @@ const runJudge = async (
           throughputTokensPerSec: stats.throughputTokensPerSec.mean,
           ttftMs: stats.ttftMs.mean,
           totalLatencyMs: stats.totalLatencyMs.mean,
-          maxSchemaComplexity: stats.maxSchemaComplexity.mean,
+          maxSchemaDepth: stats.maxSchemaDepth.mean,
+          maxSchemaBreadth: stats.maxSchemaBreadth.mean,
           lengthAccuracy: stats.lengthAccuracy.mean,
           sampleOutputs: sampleOutputs(trials),
         }),
@@ -338,7 +385,8 @@ export const errorRun = (
         throughputTokensPerSec: 0,
         ttftMs: 0,
         totalLatencyMs: 0,
-        maxSchemaComplexity: 0,
+        maxSchemaDepth: 0,
+        maxSchemaBreadth: 0,
         lengthAccuracy: 0,
       },
       calls: [],
@@ -348,7 +396,8 @@ export const errorRun = (
     throughputTokensPerSec: zeroStat,
     ttftMs: zeroStat,
     totalLatencyMs: zeroStat,
-    maxSchemaComplexity: zeroStat,
+    maxSchemaDepth: zeroStat,
+    maxSchemaBreadth: zeroStat,
     lengthAccuracy: zeroStat,
   },
   review: skippedReview(judgeModel),

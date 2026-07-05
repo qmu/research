@@ -16,7 +16,8 @@ export type ReviewSubject = Readonly<{
   throughputTokensPerSec: number;
   ttftMs: number;
   totalLatencyMs: number;
-  maxSchemaComplexity: number;
+  maxSchemaDepth: number;
+  maxSchemaBreadth: number;
   lengthAccuracy: number;
   sampleOutputs: ReadonlyArray<string>;
 }>;
@@ -54,7 +55,8 @@ export const buildReviewPrompt = (subject: ReviewSubject): string => {
     `- Sustained throughput: ${subject.throughputTokensPerSec.toFixed(1)} tokens/sec\n` +
     `- Time to first token: ${subject.ttftMs.toFixed(0)} ms\n` +
     `- Total response time: ${subject.totalLatencyMs.toFixed(0)} ms\n` +
-    `- Max conforming JSON-schema complexity index: ${subject.maxSchemaComplexity.toFixed(1)}\n` +
+    `- Tested max JSON-schema nesting depth: ${subject.maxSchemaDepth.toFixed(0)}\n` +
+    `- Tested max JSON-schema field breadth: ${subject.maxSchemaBreadth.toFixed(0)}\n` +
     `- Length-instruction accuracy: ${(subject.lengthAccuracy * 100).toFixed(0)}%\n\n` +
     `Sample outputs:\n${samples || "(none)"}\n\n` +
     `Respond with a JSON object having "strengths", "weaknesses", and "bestFor" ` +

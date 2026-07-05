@@ -49,8 +49,13 @@ export type Probe = "throughput" | "latency" | "schema" | "length";
 //
 //  - `ttftMs` is the streamed time-to-first-token (throughput/latency calls) or
 //    null for non-streamed calls.
-//  - `schemaComplexity` / `schemaConforms` describe a structured-output call: the
-//    complexity index attempted and whether the returned JSON conformed.
+//  - `schemaAxis` / `schemaValue` / `schemaConforms` describe a structured-output
+//    call: which axis was being escalated (nesting depth or field breadth), the
+//    value attempted, and whether the returned JSON conformed.
+//  - `error` records a call the provider rejected or that failed (e.g. "schema
+//    too complex", a 400, a timeout) — for schema calls this is a FINDING (the
+//    ceiling), preserved verbatim so a reader can distinguish a structural limit
+//    from a transient network failure.
 export type CallRecord = Readonly<{
   probe: Probe;
   effort: string; // the configuration's effort level
@@ -59,19 +64,23 @@ export type CallRecord = Readonly<{
   outputTokens: number;
   elapsedMs: number; // total wall-clock for the call
   ttftMs: number | null; // time-to-first-token when streamed, else null
-  schemaComplexity: number | null; // schema calls: ladder index attempted
+  schemaAxis: "depth" | "breadth" | null; // schema calls: the escalated axis
+  schemaValue: number | null; // schema calls: the depth/breadth attempted
   schemaConforms: boolean | null; // schema calls: did the output conform
+  error: string | null; // the failure/rejection, verbatim, when the call failed
 }>;
 
 // The metrics derived from a single trial's calls. Throughput and latency are
 // separate (throughput is sustained generation speed; latency is TTFT + total
-// response time), and the JSON metric is the tested maximum schema-complexity
-// index that the model returned conforming output for.
+// response time), and the JSON metrics are the tested maxima along the two
+// independent schema axes: the deepest nesting and the widest field count for
+// which the model still returned schema-conforming structured output.
 export type TrialMetrics = Readonly<{
   throughputTokensPerSec: number; // sustained tokens/sec during generation
   ttftMs: number; // time-to-first-token on the latency probe
   totalLatencyMs: number; // total response time on the latency probe
-  maxSchemaComplexity: number; // deepest×widest schema index that conformed
+  maxSchemaDepth: number; // deepest conforming nesting (breadth 1)
+  maxSchemaBreadth: number; // widest conforming field count (depth 1)
   lengthAccuracy: number; // 0..1
 }>;
 
@@ -104,7 +113,8 @@ export type ProbeStats = Readonly<{
   throughputTokensPerSec: Aggregate;
   ttftMs: Aggregate;
   totalLatencyMs: Aggregate;
-  maxSchemaComplexity: Aggregate;
+  maxSchemaDepth: Aggregate;
+  maxSchemaBreadth: Aggregate;
   lengthAccuracy: Aggregate;
 }>;
 
@@ -139,12 +149,30 @@ export type ConfigRun = ModelCard &
     review: Review; // per-configuration developer review
   }>;
 
-// One rung of the schema-complexity escalation: an object nested `depth` levels,
-// each level carrying `breadth` scalar fields. Escalating both axes probes how
-// much structured-output complexity a model actually affords.
+// One shape for the schema generator: an object nested `depth` levels, each
+// level carrying `breadth` scalar fields.
 export type SchemaComplexity = Readonly<{
   depth: number; // object nesting levels (>= 1)
   breadth: number; // scalar fields per level (>= 0)
+}>;
+
+// One escalation axis: geometric climb from `start` (doubling per probe) up to a
+// hard probe ceiling `cap`, then bounded bisection to pin the tested maximum. A
+// fixed short ladder measures its own ceiling, not the model's — this finds the
+// real one, bounded only by `cap`.
+export type SchemaAxisParams = Readonly<{
+  start: number; // first probed value
+  cap: number; // hard probe ceiling (a conforming cap reads as ">= cap")
+}>;
+
+// The adaptive schema probe: the two independent axes (nesting depth at breadth
+// 1; field breadth at depth 1), the bisection budget after the failure bracket,
+// and the output-token budget schema calls run under (wide schemas need room).
+export type SchemaProbeParams = Readonly<{
+  depth: SchemaAxisParams;
+  breadth: SchemaAxisParams;
+  refineSteps: number; // max bisection probes per axis after the bracket
+  maxTokens: number; // output budget for structured-output calls
 }>;
 
 // Probe parameters the runner owns and echoes here for the Method section. The
@@ -154,7 +182,7 @@ export type ProbeParams = Readonly<{
   throughputTargetWords: number; // long-generation target for the throughput probe
   throughputTopic: string;
   latencyPrompt: string; // short prompt whose TTFT + total is the latency probe
-  schemaLadder: ReadonlyArray<SchemaComplexity>; // escalating depth × breadth
+  schemaProbe: SchemaProbeParams; // adaptive per-axis escalation
   lengthTargetWords: number;
   lengthTopic: string;
 }>;

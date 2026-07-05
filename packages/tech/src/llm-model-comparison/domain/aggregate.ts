@@ -47,9 +47,8 @@ export const summarizeTrials = (
     ),
     ttftMs: aggregate(ok.map((t) => t.metrics.ttftMs)),
     totalLatencyMs: aggregate(ok.map((t) => t.metrics.totalLatencyMs)),
-    maxSchemaComplexity: aggregate(
-      ok.map((t) => t.metrics.maxSchemaComplexity),
-    ),
+    maxSchemaDepth: aggregate(ok.map((t) => t.metrics.maxSchemaDepth)),
+    maxSchemaBreadth: aggregate(ok.map((t) => t.metrics.maxSchemaBreadth)),
     lengthAccuracy: aggregate(ok.map((t) => t.metrics.lengthAccuracy)),
   };
 };

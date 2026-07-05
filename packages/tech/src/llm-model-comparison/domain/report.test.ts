@@ -8,7 +8,6 @@ import type {
   Provenance,
   Review,
 } from "./types";
-import { escalatingLadder } from "./json-schema";
 
 const agg = (mean: number, n: number): Aggregate => ({
   mean,
@@ -46,7 +45,8 @@ const config = (
     throughputTokensPerSec: agg(150, 3),
     ttftMs: agg(320, 3),
     totalLatencyMs: agg(900, 3),
-    maxSchemaComplexity: agg(4, 3),
+    maxSchemaDepth: agg(12, 3),
+    maxSchemaBreadth: agg(48, 3),
     lengthAccuracy: agg(0.92, 3),
   },
   review: review(overrides.provenance === "error" ? "skipped" : "judged"),
@@ -57,7 +57,12 @@ const PROBE: ProbeParams = {
   throughputTargetWords: 400,
   throughputTopic: "how large language models generate text",
   latencyPrompt: "One short fact about the water cycle.",
-  schemaLadder: escalatingLadder(6),
+  schemaProbe: {
+    depth: { start: 2, cap: 128 },
+    breadth: { start: 2, cap: 512 },
+    refineSteps: 6,
+    maxTokens: 8192,
+  },
   lengthTargetWords: 100,
   lengthTopic: "the water cycle",
 };
@@ -85,7 +90,8 @@ describe("renderComparisonReport", () => {
     expect(md).toContain("Throughput (tok/s)");
     expect(md).toContain("TTFT (ms)");
     expect(md).toContain("Total latency (ms)");
-    expect(md).toContain("Max schema complexity");
+    expect(md).toContain("Max schema depth");
+    expect(md).toContain("Max schema breadth");
   });
 
   it("never presents a fixtured or errored configuration as a live measurement", () => {

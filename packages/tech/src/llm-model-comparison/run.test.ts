@@ -1,15 +1,34 @@
 import { describe, it, expect } from "vitest";
 import { runTrial, buildConfigRun } from "./run";
 import type { JudgeConfig } from "./run";
-import type { CompletionClient } from "../vendors/llm/types";
+import type { CompletionClient, JsonSchema } from "../vendors/llm/types";
 import type { ModelCard, ProbeParams } from "./domain/types";
-import { escalatingLadder } from "./domain/json-schema";
+
+// Build a value that conforms to any generated schema — so the structured-output
+// stub always conforms and the adaptive axis probe climbs to its caps.
+const conformingInstance = (schema: JsonSchema): unknown => {
+  const s = schema as Record<string, unknown>;
+  if (s.type === "object") {
+    const props = (s.properties ?? {}) as Record<string, JsonSchema>;
+    const required = (s.required ?? []) as ReadonlyArray<string>;
+    const out: Record<string, unknown> = {};
+    for (const k of required) out[k] = conformingInstance(props[k]);
+    return out;
+  }
+  return "x";
+};
 
 const PROBE: ProbeParams = {
   throughputTargetWords: 400,
   throughputTopic: "the water cycle",
   latencyPrompt: "One short fact about the water cycle.",
-  schemaLadder: escalatingLadder(3),
+  // Small caps keep the test escalation short and deterministic.
+  schemaProbe: {
+    depth: { start: 2, cap: 4 },
+    breadth: { start: 2, cap: 4 },
+    refineSteps: 2,
+    maxTokens: 2048,
+  },
   lengthTargetWords: 100,
   lengthTopic: "the water cycle",
 };
@@ -27,7 +46,6 @@ const CARD: ModelCard = {
   source: "https://example.com",
 };
 
-// A judge that returns a well-formed review. Toggle `live` per test.
 const judgeClient: CompletionClient = {
   model: "judge",
   complete: () =>
@@ -68,9 +86,8 @@ const throwingClient: CompletionClient = {
   completeStructured: () => Promise.reject(new Error("429 quota exhausted")),
 };
 
-// Returns well-formed results for every probe. Its structured output conforms to
-// the first ladder rung (2 string fields) but not the second (4 fields), so the
-// escalation records a tested max schema complexity of exactly 1.
+// Returns well-formed results for every probe; its structured output always
+// conforms, so each schema axis climbs to its cap (depth 4, breadth 4 here).
 const okClient: CompletionClient = {
   model: "test",
   complete: () =>
@@ -88,9 +105,9 @@ const okClient: CompletionClient = {
       ttftMs: 20,
       model: "test",
     }),
-  completeStructured: () =>
+  completeStructured: (_prompt, schema) =>
     Promise.resolve({
-      raw: JSON.stringify({ field0: "a", field1: "b" }),
+      raw: JSON.stringify(conformingInstance(schema)),
       outputTokens: 10,
       elapsedMs: 15,
       model: "test",
@@ -104,15 +121,43 @@ describe("runTrial", () => {
     const t = await runTrial(okClient, 1, PROBE, "low");
     expect(t.ok).toBe(true);
     expect(t.error).toBeNull();
-    // throughput + latency + (2 schema rungs: rung1 conforms, rung2 breaks) + length
-    expect(t.calls).toHaveLength(5);
+    // throughput + latency + depth axis (2,4) + breadth axis (2,4) + length
+    expect(t.calls).toHaveLength(7);
     expect(t.calls[0].probe).toBe("throughput");
     expect(t.calls[0].ttftMs).toBe(20);
     expect(t.metrics.throughputTokensPerSec).toBeCloseTo(300, 6); // 30 / ((120-20)/1000)
-    expect(t.metrics.maxSchemaComplexity).toBe(1); // deepest conforming rung
+    // Always conforms → each axis reaches its cap.
+    expect(t.metrics.maxSchemaDepth).toBe(4);
+    expect(t.metrics.maxSchemaBreadth).toBe(4);
+    const schemaCalls = t.calls.filter((c) => c.probe === "schema");
+    expect(schemaCalls.some((c) => c.schemaAxis === "depth")).toBe(true);
+    expect(schemaCalls.some((c) => c.schemaAxis === "breadth")).toBe(true);
+    expect(schemaCalls.every((c) => c.schemaConforms === true)).toBe(true);
   });
 
-  it("never throws on a failing call — returns ok:false with the error", async () => {
+  it("records a schema-call rejection as a finding, not a trial failure", async () => {
+    // Structured calls reject at depth/breadth >= 4; smaller schemas conform.
+    const rejectAtCap: CompletionClient = {
+      ...okClient,
+      completeStructured: (_prompt, schema) => {
+        const s = schema as Record<string, unknown>;
+        const props = (s.properties ?? {}) as Record<string, unknown>;
+        const wide = Object.keys(props).length >= 4;
+        const deep = "child" in props; // a nested child means depth > 1
+        if (wide || deep) {
+          return Promise.reject(new Error("400 schema too complex"));
+        }
+        return okClient.completeStructured(_prompt, schema);
+      },
+    };
+    const t = await runTrial(rejectAtCap, 1, PROBE, "low");
+    expect(t.ok).toBe(true); // a schema rejection never fails the trial
+    expect(t.metrics.maxSchemaDepth).toBe(1); // depth 2 rejected → capped at 1
+    const rejected = t.calls.find((c) => c.error?.includes("too complex"));
+    expect(rejected?.probe).toBe("schema");
+  });
+
+  it("never throws on a failing probe — returns ok:false with the error", async () => {
     const t = await runTrial(throwingClient, 2, PROBE, "low");
     expect(t.ok).toBe(false);
     expect(t.error).toContain("429 quota exhausted");
@@ -132,6 +177,7 @@ describe("buildConfigRun failure isolation & judging", () => {
     expect(run.provenance).toBe("measured");
     expect(run.effort).toBe("low");
     expect(run.stats.throughputTokensPerSec.n).toBe(3);
+    expect(run.stats.maxSchemaDepth.mean).toBe(4);
     expect(run.review.provenance).toBe("judged");
     expect(run.review.bestFor).toBe("b");
   });

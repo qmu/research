@@ -40,9 +40,12 @@ alongside every mean.
 - **Latency** — a short streamed prompt; **time-to-first-token and total response
   time**, reported separately from throughput.
 - **JSON-schema complexity** — the provider's **structured-output mode** is driven
-  up an escalation ladder over depth × breadth (1×2, 1×4, 2×4, 2×6, 3×6, 3×8); the **maximum
-  complexity that still returns schema-conforming output** is recorded — the
-  tested affordance, not the paper spec.
+  up **two independent axes** — nesting depth (up to 128) and field
+  breadth (up to 512) — each climbing geometrically from
+  2 then bisecting to pin the **maximum that still returns
+  schema-conforming output**. A fixed short ladder only measured its own ceiling;
+  this finds the model's. A provider that rejects a schema at some size caps that
+  axis there — a tested affordance, recorded verbatim, not the paper spec.
 - **Length accuracy** — a paragraph of exactly 100
   words on "the water cycle"; accuracy is
   \`1 - min(1, |actual - target| / target)\`.
@@ -80,10 +83,10 @@ per call in the run-artifact. CI never runs the real sweep — only the keyless
 
 ## Comparison
 
-| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema complexity | Length accuracy |
-| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | --------------------- | --------------- |
-| anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 | 320 | 900 | 4.0 | 92% |
-| anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 | 320 | 900 | 4.0 | 92% |
+| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy |
+| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- |
+| anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 | 320 | 900 | 12 | 48 | 92% |
+| anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 | 320 | 900 | 12 | 48 | 92% |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are **curated** catalog data
 (cited). Throughput, TTFT, total latency, max schema complexity, and length
@@ -124,14 +127,23 @@ Fastest / lowest of the 2 measured configuration(s): **Test Model [low]** at 320
 
 Fastest / lowest of the 2 measured configuration(s): **Test Model [low]** at 900 ms; other end: Test Model [high] at 900 ms.
 
-### Tested maximum JSON-schema complexity
+### Tested maximum JSON-schema nesting depth
 
 | Configuration | Mean ± SD | Min–Max | n |
 | ------------- | --------- | ------- | - |
-| Test Model [low] | 4.0 ± 0.0 | 4.0–4.0 | 3 |
-| Test Model [high] | 4.0 ± 0.0 | 4.0–4.0 | 3 |
+| Test Model [low] | 12 ± 0 | 12–12 | 3 |
+| Test Model [high] | 12 ± 0 | 12–12 | 3 |
 
-Best of the 2 measured configuration(s): **Test Model [low]** at 4.0; other end: Test Model [high] at 4.0.
+Best of the 2 measured configuration(s): **Test Model [low]** at 12; other end: Test Model [high] at 12.
+
+### Tested maximum JSON-schema field breadth
+
+| Configuration | Mean ± SD | Min–Max | n |
+| ------------- | --------- | ------- | - |
+| Test Model [low] | 48 ± 0 | 48–48 | 3 |
+| Test Model [high] | 48 ± 0 | 48–48 | 3 |
+
+Best of the 2 measured configuration(s): **Test Model [low]** at 48; other end: Test Model [high] at 48.
 
 ### Length-instruction accuracy
 
@@ -177,10 +189,13 @@ Write a detailed, flowing explanation of how large language models generate text
 One short fact about the water cycle.
 \`\`\`
 
-**Schema-complexity probe** (structured-output mode; the deepest rung asks for):
+**Schema-complexity probe** (structured-output mode; each axis is escalated
+independently — depth up to 128 nesting levels, breadth up to
+512 fields — climbing geometrically then bisecting to the tested
+maximum. The first rung on the depth axis asks for):
 
 \`\`\`text
-Produce a JSON object that conforms to the provided schema: an object nested 3 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested "child" object). Fill every string field with a short, plausible value.
+Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested "child" object). Fill every string field with a one-or-two-word value.
 \`\`\`
 
 **Length probe:**
@@ -190,8 +205,9 @@ Write a single paragraph about the water cycle that is exactly 100 words long. R
 \`\`\`
 
 **Complete raw record.** Every configuration, trial, and call — prompt, verbatim
-output, token counts, TTFT, per-rung schema conformance, and the judge review —
-is committed alongside this page as a JSON run-artifact:
+output, token counts, TTFT, per-probe schema axis/value/conformance (and any
+provider rejection verbatim), and the judge review — is committed alongside this
+page as a JSON run-artifact:
 [\`llm-model-comparison.data.json\`](./llm-model-comparison.data.json).
 This page is a rendering of that record; the artifact is the source of truth.
 

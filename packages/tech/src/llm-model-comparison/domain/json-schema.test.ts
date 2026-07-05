@@ -1,10 +1,29 @@
 import { describe, it, expect } from "vitest";
 import {
+  advanceAxis,
   buildSchema,
   buildSchemaPrompt,
-  escalatingLadder,
   gradeConformance,
+  startAxisProbe,
 } from "./json-schema";
+
+// Drive the axis state machine to completion, feeding a conformance verdict from
+// `conformsUpTo` — the model conforms for values <= this and fails above it.
+const runAxis = (
+  start: number,
+  cap: number,
+  refineSteps: number,
+  conformsUpTo: number,
+) => {
+  let state = startAxisProbe({ start, cap }, refineSteps);
+  const probed: number[] = [];
+  while (state.next !== null) {
+    const v = state.next;
+    probed.push(v);
+    state = advanceAxis(state, v <= conformsUpTo);
+  }
+  return { max: state.maxConforming, probed };
+};
 
 describe("buildSchema", () => {
   it("builds a flat object with `breadth` string fields at depth 1", () => {
@@ -31,14 +50,33 @@ describe("buildSchema", () => {
   });
 });
 
-describe("escalatingLadder", () => {
-  it("grows complexity along both axes, alternating breadth then depth", () => {
-    expect(escalatingLadder(4)).toEqual([
-      { depth: 1, breadth: 2 },
-      { depth: 1, breadth: 4 },
-      { depth: 2, breadth: 4 },
-      { depth: 2, breadth: 6 },
-    ]);
+describe("adaptive axis escalation", () => {
+  it("climbs geometrically from start, then bisects to the exact tested max", () => {
+    // Conforms up to 20; cap 128. Climb: 2,4,8,16,32(fail) → bracket (16,32),
+    // bisect with a generous budget → pins 20 exactly.
+    const { max, probed } = runAxis(2, 128, 8, 20);
+    expect(probed.slice(0, 5)).toEqual([2, 4, 8, 16, 32]);
+    expect(max).toBe(20);
+  });
+
+  it("reports >= cap when the model conforms all the way up", () => {
+    // Conforms up to 1000 but the probe cap is 128 → climb reaches 128, conforms,
+    // and the axis stops at the ceiling (the true max may be higher).
+    const { max } = runAxis(2, 128, 6, 1000);
+    expect(max).toBe(128);
+  });
+
+  it("reports 0 when nothing conforms at all (never afforded)", () => {
+    const { max } = runAxis(2, 128, 6, 0);
+    expect(max).toBe(0);
+  });
+
+  it("gives a conservative (never-overclaimed) max when the bisection budget runs out", () => {
+    // True max is 100 but only 1 refine step: after the bracket (64,128) one
+    // bisection probes 96 (conforms) → reports 96, never above the real max.
+    const { max } = runAxis(2, 128, 1, 100);
+    expect(max).toBeLessThanOrEqual(100);
+    expect(max).toBe(96);
   });
 });
 

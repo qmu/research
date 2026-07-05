@@ -12,7 +12,8 @@ const subject = {
   throughputTokensPerSec: 120.4,
   ttftMs: 340,
   totalLatencyMs: 900,
-  maxSchemaComplexity: 4,
+  maxSchemaDepth: 8,
+  maxSchemaBreadth: 24,
   lengthAccuracy: 0.92,
   sampleOutputs: ["Some sample output about the water cycle."],
 };

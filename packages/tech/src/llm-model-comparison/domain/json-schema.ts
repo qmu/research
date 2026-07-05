@@ -1,16 +1,19 @@
-// JSON-schema complexity probe. Replaces the old "ask for nested JSON in prose
-// and grade the text" approach: the runner drives the provider's dedicated
-// structured-output feature with a generated schema, escalating complexity along
-// BOTH nesting depth AND field breadth, and records the maximum complexity the
-// model actually returns schema-conforming output for — the tested affordance,
-// not the paper spec.
+// JSON-schema complexity probe: the runner drives the provider's dedicated
+// structured-output feature with a generated schema and ADAPTIVELY escalates two
+// independent axes — nesting depth (at breadth 1) and field breadth (at depth 1)
+// — recording the maximum value on each axis for which the model still returns
+// schema-conforming output. A fixed short ladder measures its own ceiling, not
+// the model's; this escalation climbs geometrically (doubling) until the model
+// stops conforming or the provider rejects the schema, then bisects (a bounded
+// number of steps) to pin the tested maximum, up to a hard probe cap.
 //
-// Everything here is pure: a schema generator, an escalation ladder, a prompt
-// builder, and a conformance grader. The structured-output *call* is a vendor
-// concern; the grading rule lives here so it is identical across providers and
-// unit-tested without a network call.
+// Everything here is pure: a schema generator, the per-axis escalation state
+// machine, a prompt builder, and a conformance grader. The structured-output
+// *call* is a vendor concern; the grading rule and the escalation policy live
+// here so they are identical across providers and unit-tested without a network
+// call.
 
-import type { SchemaComplexity } from "./types";
+import type { SchemaAxisParams, SchemaComplexity } from "./types";
 
 // A generated JSON schema is a plain object; the vendor port accepts it as a
 // provider-neutral `JsonSchema` (a readonly record) without the domain importing
@@ -47,34 +50,91 @@ export const buildSchema = (c: SchemaComplexity): GeneratedSchema => {
   return level(depth);
 };
 
-// An escalation ladder of `count` rungs that grows complexity along both axes,
-// alternating a breadth step and a depth step so neither dimension is favored.
-// Starts small so even weak models clear the first rungs.
-export const escalatingLadder = (
-  count: number,
-): ReadonlyArray<SchemaComplexity> => {
-  const rungs: SchemaComplexity[] = [];
-  let depth = 1;
-  let breadth = 2;
-  for (let i = 0; i < Math.max(0, Math.floor(count)); i += 1) {
-    rungs.push({ depth, breadth });
-    if (i % 2 === 0) {
-      breadth += 2;
-    } else {
-      depth += 1;
-    }
+// The per-axis escalation state machine. Pure: the runner makes the structured
+// call for `next`, grades conformance, and feeds the verdict back into
+// `advanceAxis` until `next` is null. `maxConforming` is then the TESTED maximum
+// on the axis (0 = the model never conformed at all). Two phases:
+//
+//  1. Climb — double from `start` until a probe fails (the bracket) or the cap
+//     conforms (probe ceiling reached; the true ceiling may be higher).
+//  2. Refine — bisect inside (maxConforming, failedAt), spending at most
+//     `refinesLeft` probes, so the reported max is exact-or-conservative:
+//     always a value the model actually conformed at.
+export type AxisProbeState = Readonly<{
+  cap: number;
+  maxConforming: number; // highest value that conformed so far
+  failedAt: number | null; // lowest value that failed (null while climbing)
+  next: number | null; // next value to probe; null = axis done
+  refinesLeft: number;
+}>;
+
+export const startAxisProbe = (
+  axis: SchemaAxisParams,
+  refineSteps: number,
+): AxisProbeState => {
+  const cap = Math.max(1, Math.floor(axis.cap));
+  const start = Math.min(Math.max(1, Math.floor(axis.start)), cap);
+  return {
+    cap,
+    maxConforming: 0,
+    failedAt: null,
+    next: start,
+    refinesLeft: Math.max(0, Math.floor(refineSteps)),
+  };
+};
+
+const bisect = (
+  state: AxisProbeState,
+  lo: number,
+  hi: number,
+): AxisProbeState => {
+  if (state.refinesLeft <= 0 || hi - lo <= 1) {
+    return { ...state, maxConforming: lo, failedAt: hi, next: null };
   }
-  return rungs;
+  return {
+    ...state,
+    maxConforming: lo,
+    failedAt: hi,
+    next: Math.floor((lo + hi) / 2),
+    refinesLeft: state.refinesLeft - 1,
+  };
+};
+
+export const advanceAxis = (
+  state: AxisProbeState,
+  conformed: boolean,
+): AxisProbeState => {
+  const probed = state.next;
+  if (probed === null) {
+    return state;
+  }
+  if (conformed) {
+    if (state.failedAt === null) {
+      // Still climbing. Conforming at the cap ends the axis (ceiling reached);
+      // otherwise double, clamped to the cap.
+      if (probed >= state.cap) {
+        return { ...state, maxConforming: probed, next: null };
+      }
+      return {
+        ...state,
+        maxConforming: probed,
+        next: Math.min(probed * 2, state.cap),
+      };
+    }
+    return bisect(state, probed, state.failedAt);
+  }
+  return bisect(state, state.maxConforming, probed);
 };
 
 // Instruct the model to return a JSON object conforming to a schema of the given
 // shape. Under structured-output mode the schema is enforced by the provider;
-// the prompt only supplies realistic content to fill it.
+// the prompt only supplies content to fill it — values are kept to one or two
+// words so wide schemas stay within the output-token budget.
 export const buildSchemaPrompt = (c: SchemaComplexity): string =>
   `Produce a JSON object that conforms to the provided schema: an object nested ` +
   `${c.depth} level(s) deep, each level containing ${c.breadth} string field(s) ` +
   `(and, above the deepest level, a nested "child" object). Fill every string ` +
-  `field with a short, plausible value.`;
+  `field with a one-or-two-word value.`;
 
 // Extract the first balanced JSON object/array from arbitrary text and parse it.
 // Structured-output responses are usually clean JSON, but this recovers the value
