@@ -35,11 +35,14 @@ const PROBE: ProbeParams = {
   latencyPrompt: buildLatencyPrompt("the water cycle"),
   // Adaptive schema probe: climb each axis geometrically to a hard ceiling, then
   // bisect. A short fixed ladder only measured its own ceiling (near everything
-  // hit 6/6); these caps are deliberately far past any current model so the
-  // tested maximum is the model's limit, not the probe's.
+  // hit 6/6). Caps sit well above where current models actually fail (a first
+  // sweep measured ~depth 21 / breadth 72) so the tested maximum is the model's
+  // limit, not the probe's — while staying low enough that the climb doesn't
+  // waste large, slow calls probing far past every model's ceiling. A model that
+  // clears a cap is reported as ">= cap".
   schemaProbe: {
-    depth: { start: 2, cap: 128 },
-    breadth: { start: 2, cap: 512 },
+    depth: { start: 2, cap: 48 },
+    breadth: { start: 2, cap: 192 },
     refineSteps: 6,
     maxTokens: 8192,
   },
@@ -61,11 +64,11 @@ const JUDGE = {
 // Rough per-call token assumptions for the pre-run cost ESTIMATE only (real usage
 // is measured and reported). The throughput probe dominates output tokens; the
 // average is across all probe calls.
-const ESTIMATE_AVG_INPUT_TOKENS = 150;
-const ESTIMATE_AVG_OUTPUT_TOKENS = 700;
+const ESTIMATE_AVG_INPUT_TOKENS = 200;
+const ESTIMATE_AVG_OUTPUT_TOKENS = 1200; // schema calls generate sizable JSON
 const ESTIMATE_JUDGE_INPUT_TOKENS = 1500;
 const ESTIMATE_JUDGE_OUTPUT_TOKENS = 200;
-const ESTIMATE_SECONDS_PER_CALL = 4;
+const ESTIMATE_SECONDS_PER_CALL = 9; // schema-heavy calls are slower than chat
 
 // A fixed timestamp for `--fixture` runs so the self-test report + artifact are
 // byte-identical across runs (real runs stamp the wall clock).
