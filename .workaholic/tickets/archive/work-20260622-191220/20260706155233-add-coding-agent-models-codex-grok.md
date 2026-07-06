@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain, Infrastructure, Config]
 effort: 4h
-commit_hash:
+commit_hash: 7750f37
 category: Added
 depends_on:
 ---
@@ -168,3 +168,50 @@ key-gated.
   `npm test` (tsc + vitest, incl. any new adapter unit tests), `npm run lint`, and
   `make build` all green; `docs/dependency-decisions.md` updated for the xAI base-URL
   reuse.
+
+## Final Report
+
+Development completed as planned, with the xAI live run brought fully into scope
+(the owner supplied XAI_API_KEY and funded the team mid-drive, so grok was
+live-verified rather than deferred).
+
+Delivered: new `api:"responses"` surface + `vendors/llm/openai-responses.ts`
+(Responses API adapter, grounded in the installed openai@6.43.0 SDK —
+`input`/`instructions`, `reasoning.effort`, `text.format` json-schema,
+`output_text` + `response.completed` stream); `Provider += "xai"` +
+`vendors/llm/xai.ts` (base-URL variant of the OpenAI adapter) +
+`createOpenAiCompatibleCompletionClient`; the OpenAI `n/a` effort guard;
+`openAiResponsesOutputTokens` normalizer (+ test); entrypoint `xai`
+ENV_KEY/CLIENT_FACTORY + the `api:"responses"` dispatch branch; registry cards
+`gpt-5.3-codex`, `gpt-5.1-codex-mini`, `grok-code-fast-1`; dependency-decisions
+note. No coding-specific probe (owner's call).
+
+Verified: **all three new coding models measured LIVE, 0 errors** —
+gpt-5.3-codex (57 tok/s, schema 10/127), gpt-5.1-codex-mini (212 tok/s, schema
+10/3), grok-code-fast-1 (247 tok/s, schema depth 42/breadth 192). `npm test` 91
+pass (+1), `compare:fixture` ×2 byte-identical (matrix 45→53), `npm run lint` +
+`make build` green.
+
+### Discovered Insights
+
+- **Insight**: The OpenAI `-codex` line is Responses-API-only, so the benchmark's
+  Chat-Completions-only OpenAI path could not reach it — the whole point of the
+  new `api:"responses"` surface. The `card.api` field is branched in exactly ONE
+  place (`buildLiveClient`), so adding an API surface is a 1-branch + 1-adapter
+  change; the realtime card was the precedent.
+  **Context**: This is why "add a coding model" was mostly *adapter* work, not
+  registry work — the model was on a surface the code didn't speak.
+- **Insight**: xAI is OpenAI-wire-compatible, so grok reuses the Chat Completions
+  adapter with only the base URL swapped (`createOpenAiCompatibleCompletionClient`
+  + a 4-line `xai.ts`). No new SDK/dependency — the `openai` package fronts both.
+  The `n/a` effort guard had to be added to the OpenAI adapter too (grok has no
+  effort knob) — the same sentinel the Anthropic adapter already used for Haiku.
+  **Context**: An OpenAI-compatible provider is nearly free to add; the cost is a
+  key + a base URL, not a new adapter.
+- **Insight**: grok's first two live runs failed with a 403 "team has no credits",
+  NOT an auth/URL error — proof the adapter was correct and the blocker was purely
+  the owner's xAI billing state. A specific-billing 403 (vs 401/404/400) is a
+  reliable signal that wiring is right and only account funding is missing. Once
+  credits propagated (~20 min after purchase) the same config measured cleanly.
+  **Context**: When a new-provider integration errors, read the status code
+  before touching code — 403-with-a-billing-message means "wait/fund", not "fix".

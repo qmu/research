@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   anthropicOutputTokens,
   openAiOutputTokens,
+  openAiResponsesOutputTokens,
   googleOutputTokens,
 } from "./usage";
 
@@ -12,6 +13,12 @@ describe("usage normalization", () => {
 
   it("reads OpenAI's completion_tokens field", () => {
     expect(openAiOutputTokens({ completion_tokens: 188 })).toBe(188);
+  });
+
+  it("reads the OpenAI Responses API's output_tokens field", () => {
+    expect(openAiResponsesOutputTokens({ output_tokens: 244 })).toBe(244);
+    expect(openAiResponsesOutputTokens({ output_tokens: 0 })).toBe(0);
+    expect(openAiResponsesOutputTokens(undefined)).toBe(0);
   });
 
   it("reads Google's candidatesTokenCount field", () => {

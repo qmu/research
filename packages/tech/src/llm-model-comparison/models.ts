@@ -15,9 +15,15 @@ import type { ModelCard } from "./domain/types";
 // every curated cell as correct only as of its source. Costs are USD per 1M
 // tokens, input / output.
 //
-// Cross-provider models (xAI Grok, DeepSeek, Qwen, Mistral, …) are intentionally
-// out of scope here: they need their own API keys (and, being OpenAI-compatible,
-// only a base-URL variant of the OpenAI adapter) — a follow-up once keys exist.
+// Coding-agent-optimized models are included where reachable: OpenAI's `-codex`
+// line (via the Responses API, below) reuses OPENAI_API_KEY, and xAI's
+// grok-code-fast-1 (below) is wired via a base-URL variant of the OpenAI adapter
+// but is KEY-GATED on XAI_API_KEY — it renders on the keyless fixture path until
+// that key exists. The remaining cross-provider models (DeepSeek-Coder, Qwen-Coder,
+// Mistral Devstral/Codestral, …) stay out of scope: each needs its own key/endpoint
+// (and, being OpenAI-compatible, a base-URL variant) — a follow-up once keys exist.
+// Google and Anthropic have no coding-specialized model id — their general Gemini
+// Pro/Flash and Claude Opus/Sonnet tiers (above) are the coding tier.
 export const MODELS: ReadonlyArray<ModelCard> = [
   // ── Anthropic ──────────────────────────────────────────────────────────────
   {
@@ -153,6 +159,36 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     effortLevels: ["n/a"],
     source: "https://developers.openai.com/api/docs/pricing",
   },
+  // ── OpenAI Codex (coding-agent-optimized; Responses API) ─────────────────────
+  // The `-codex` line is reached through the Responses API (`api: "responses"`),
+  // NOT Chat Completions — reasoning models carry state across the Responses
+  // surface. Reuses OPENAI_API_KEY. `xhigh` is the codex-recommended top effort.
+  {
+    id: "openai-gpt-5-3-codex",
+    provider: "openai",
+    tier: "flagship",
+    api: "responses",
+    modelName: "GPT-5.3 Codex",
+    apiModelId: "gpt-5.3-codex",
+    released: "2026",
+    inputCostPerMTok: 1.75,
+    outputCostPerMTok: 14,
+    effortLevels: ["low", "medium", "high", "xhigh"],
+    source: "https://developers.openai.com/api/docs/models/gpt-5.3-codex",
+  },
+  {
+    id: "openai-gpt-5-1-codex-mini",
+    provider: "openai",
+    tier: "small",
+    api: "responses",
+    modelName: "GPT-5.1 Codex mini",
+    apiModelId: "gpt-5.1-codex-mini",
+    released: "2026",
+    inputCostPerMTok: 0.25,
+    outputCostPerMTok: 2,
+    effortLevels: ["low", "medium", "high"],
+    source: "https://developers.openai.com/api/docs/models/gpt-5.1-codex-mini",
+  },
   // ── Google ─────────────────────────────────────────────────────────────────
   {
     id: "google-gemini-3-1-pro",
@@ -189,5 +225,22 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     outputCostPerMTok: 0.4,
     effortLevels: ["low", "medium", "high"],
     source: "https://ai.google.dev/gemini-api/docs/pricing",
+  },
+  // ── xAI (coding-agent-optimized; OpenAI-compatible endpoint) ─────────────────
+  // grok-code-fast-1 is a purpose-built agentic-coding model on an OpenAI-compatible
+  // API, reached through a base-URL variant of the OpenAI adapter. KEY-GATED: needs
+  // XAI_API_KEY; the keyless fixture path renders it until the key exists. No
+  // reasoning-effort knob is swept (`n/a`) — the adapter omits the field.
+  {
+    id: "xai-grok-code-fast-1",
+    provider: "xai",
+    tier: "small",
+    modelName: "Grok Code Fast 1",
+    apiModelId: "grok-code-fast-1",
+    released: "2025",
+    inputCostPerMTok: 0.2,
+    outputCostPerMTok: 1.5,
+    effortLevels: ["n/a"],
+    source: "https://docs.x.ai/docs/models",
   },
 ];

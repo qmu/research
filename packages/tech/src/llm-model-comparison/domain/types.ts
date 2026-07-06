@@ -15,8 +15,9 @@
 
 // Closed union of the providers compared. Widening this is a deliberate decision,
 // not an accident — the domain names a provider only as a tag, never importing an
-// SDK type.
-export type Provider = "anthropic" | "openai" | "google";
+// SDK type. `xai` is an OpenAI-compatible endpoint reached through a base-URL
+// variant of the OpenAI adapter (its coding model grok-code-fast-1).
+export type Provider = "anthropic" | "openai" | "google" | "xai";
 
 // The CURATED half: static, cited, human-authored catalog data. Every field is a
 // column of the comparison table except `apiModelId` (the wire id, isolated here
@@ -28,8 +29,10 @@ export type ModelCard = Readonly<{
   tier: "frontier" | "flagship" | "mid" | "small"; // curated capability/price tier
   // Which API surface the model is reached through. "chat" is the default
   // text-completions endpoint; "realtime" is the bidirectional WebSocket Realtime
-  // API, driven text-only. Both sit behind the same CompletionClient port.
-  api?: "chat" | "realtime";
+  // API, driven text-only; "responses" is OpenAI's Responses API (`/v1/responses`),
+  // the surface the reasoning/`-codex` models are reached through. All sit behind
+  // the same CompletionClient port.
+  api?: "chat" | "realtime" | "responses";
   modelName: string; // official product name, e.g. "Claude Opus 4.8"
   apiModelId: string; // exact wire id, e.g. "claude-opus-4-8"
   released: string; // ISO date or YYYY-MM, curated

@@ -1,6 +1,6 @@
 ---
 title: Fundamental LLM model comparison
-description: A reproducible, cited comparison of 13 large language models across 3 providers over 45 model×effort configurations — sustained throughput and latency measured separately, empirically tested JSON-schema complexity, length-instruction accuracy, and a per-configuration LLM-judge developer review, each over 3 trials.
+description: A reproducible, cited comparison of 16 large language models across 4 providers over 53 model×effort configurations — sustained throughput and latency measured separately, empirically tested JSON-schema complexity, length-instruction accuracy, and a per-configuration LLM-judge developer review, each over 3 trials.
 ---
 
 # Fundamental LLM model comparison
@@ -15,8 +15,8 @@ behavior by the type system.
 
 ## Methodology
 
-**Configurations.** 13 models across 3 providers, each swept
-over its effort levels — 45 model×effort configurations. Effort maps
+**Configurations.** 16 models across 4 providers, each swept
+over its effort levels — 53 model×effort configurations. Effort maps
 to each provider's own reasoning knob (Anthropic `output_config.effort`, OpenAI
 `reasoning_effort`, Google thinking budget); a level a model does not support is
 flagged, never faked.
@@ -68,11 +68,11 @@ judge, and rendered both as this page and as the complete raw JSON artifact._
 
 ## Cost & time
 
-A full real sweep of this matrix is **45 configurations** (model ×
+A full real sweep of this matrix is **53 configurations** (model ×
 effort) × the four probes × **3 trials**, plus one judge call per
-configuration — about **3960 API calls**. The runner prints an
-**estimated** call count, rough USD cost (~$67.27), and ETA
-(~594 min) *before* making any call, and supports a
+configuration — about **4664 API calls**. The runner prints an
+**estimated** call count, rough USD cost (~$74.14), and ETA
+(~700 min) *before* making any call, and supports a
 `--estimate` dry run that prints the estimate without calling any provider. The
 estimate uses rough per-call token assumptions; **actual** token usage is captured
 per call in the run-artifact. CI never runs the real sweep — only the keyless
@@ -118,6 +118,13 @@ per call in the run-artifact. CI never runs the real sweep — only the keyless
 | openai | o4-mini | mid | medium | $1.10 / $4.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | o4-mini | mid | high | $1.10 / $4.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT Realtime | flagship | n/a | $4.00 / $16.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.3 Codex | flagship | low | $1.75 / $14.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.3 Codex | flagship | medium | $1.75 / $14.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.3 Codex | flagship | high | $1.75 / $14.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.3 Codex | flagship | xhigh | $1.75 / $14.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.1 Codex mini | small | low | $0.25 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.1 Codex mini | small | medium | $0.25 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.1 Codex mini | small | high | $0.25 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Pro | flagship | low | $2.00 / $12.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Pro | flagship | medium | $2.00 / $12.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Pro | flagship | high | $2.00 / $12.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -127,6 +134,7 @@ per call in the run-artifact. CI never runs the real sweep — only the keyless
 | google | Gemini 3.1 Flash-Lite | small | low | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Flash-Lite | small | medium | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Flash-Lite | small | high | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok Code Fast 1 | small | n/a | $0.20 / $1.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are **curated** catalog data
 (cited). Throughput, TTFT, total latency, max schema complexity, and length
@@ -180,6 +188,13 @@ deviation, the observed min–max, and the number of contributing trials.
 | o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -189,6 +204,7 @@ deviation, the observed min–max, and the number of contributing trials.
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -232,6 +248,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -241,6 +264,7 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -284,6 +308,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -293,6 +324,7 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -336,6 +368,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -345,6 +384,7 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -388,6 +428,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -397,6 +444,7 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -440,6 +488,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | o4-mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | o4-mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT Realtime [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.3 Codex [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.1 Codex mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Pro [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -449,6 +504,7 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -672,6 +728,48 @@ Each review is written by the LLM judge (`claude-opus-4-8`) from the configurati
 - **Weaknesses:** fixtured value 0
 - **Best for:** fixtured value 0
 
+### GPT-5.3 Codex [low] — openai · flagship {#openai-gpt-5-3-codex-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.3 Codex [medium] — openai · flagship {#openai-gpt-5-3-codex-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.3 Codex [high] — openai · flagship {#openai-gpt-5-3-codex-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.3 Codex [xhigh] — openai · flagship {#openai-gpt-5-3-codex-xhigh} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.1 Codex mini [low] — openai · small {#openai-gpt-5-1-codex-mini-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.1 Codex mini [medium] — openai · small {#openai-gpt-5-1-codex-mini-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### GPT-5.1 Codex mini [high] — openai · small {#openai-gpt-5-1-codex-mini-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
 ### Gemini 3.1 Pro [low] — google · flagship {#google-gemini-3-1-pro-low} _(fixtured judge — a deterministic stand-in, not a live review)_
 
 - **Strengths:** fixtured value 0
@@ -721,6 +819,12 @@ Each review is written by the LLM judge (`claude-opus-4-8`) from the configurati
 - **Best for:** fixtured value 0
 
 ### Gemini 3.1 Flash-Lite [high] — google · small {#google-gemini-3-1-flash-lite-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Grok Code Fast 1 [n/a] — xai · small {#xai-grok-code-fast-1-n/a} _(fixtured judge — a deterministic stand-in, not a live review)_
 
 - **Strengths:** fixtured value 0
 - **Weaknesses:** fixtured value 0

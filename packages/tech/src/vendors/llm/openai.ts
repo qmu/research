@@ -35,15 +35,33 @@ const baseBody = (
     max_completion_tokens: options?.maxTokens ?? 2048,
     messages: messages(prompt),
   };
-  if (options?.effort) body.reasoning_effort = options.effort;
+  // `n/a` is the registry sentinel for a model with no reasoning-effort knob;
+  // omit the field for it (sending an unsupported effort is a hard 400, not a
+  // finding). Applies to OpenAI-compatible endpoints reached through this adapter.
+  if (options?.effort && options.effort !== "n/a") {
+    body.reasoning_effort = options.effort;
+  }
   return body;
 };
 
+// The default OpenAI client: the Chat Completions adapter against api.openai.com.
 export const createOpenAiCompletionClient = (
   apiModelId: string,
   apiKey: string,
+): CompletionClient =>
+  createOpenAiCompatibleCompletionClient(apiModelId, apiKey);
+
+// The same Chat Completions adapter parameterized by base URL, so an
+// OpenAI-compatible endpoint (e.g. xAI at https://api.x.ai/v1, which speaks the
+// Chat Completions protocol) is reached with no protocol duplication — only the
+// base URL differs. Provider-specific facts (the URL) stay in the caller / a thin
+// per-provider wrapper, never in the domain.
+export const createOpenAiCompatibleCompletionClient = (
+  apiModelId: string,
+  apiKey: string,
+  baseURL?: string,
 ): CompletionClient => {
-  const client = new OpenAI({ apiKey });
+  const client = new OpenAI({ apiKey, baseURL });
   return {
     model: apiModelId,
     complete: async (prompt, options) => {

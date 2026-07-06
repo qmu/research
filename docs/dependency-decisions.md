@@ -47,7 +47,7 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 
 ### openai (packages/tech)
 
-- **Reason**: The `llm-model-comparison` topic measures OpenAI models live. The official SDK provides typed request/response and usage shapes; hand-rolling an HTTP client would duplicate that. Isolated behind `packages/tech/src/vendors/llm/openai.ts`.
+- **Reason**: The `llm-model-comparison` topic measures OpenAI models live. The official SDK provides typed request/response and usage shapes; hand-rolling an HTTP client would duplicate that. Isolated behind `packages/tech/src/vendors/llm/openai.ts` (Chat Completions) and `packages/tech/src/vendors/llm/openai-responses.ts` (the Responses API, for the `-codex` coding models). The **same SDK also fronts the xAI OpenAI-compatible endpoint** (`grok-code-fast-1`) via a base-URL variant in `vendors/llm/xai.ts` — no new dependency is taken on for xAI; only a base URL differs.
 - **Assessment**:
   - License: Apache-2.0 — compatible with this MIT repo.
   - Reputation: Official OpenAI SDK; broad adoption, actively maintained.

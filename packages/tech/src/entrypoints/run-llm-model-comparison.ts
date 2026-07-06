@@ -25,6 +25,8 @@ import { estimateRun } from "../llm-model-comparison/domain/estimate";
 import type { CompletionClient } from "../vendors/llm/types";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
 import { createOpenAiCompletionClient } from "../vendors/llm/openai";
+import { createOpenAiResponsesCompletionClient } from "../vendors/llm/openai-responses";
+import { createXaiCompletionClient } from "../vendors/llm/xai";
 import { createGoogleCompletionClient } from "../vendors/llm/google";
 import { createOpenAiRealtimeCompletionClient } from "../vendors/llm/openai-realtime";
 import { createFixtureCompletionClient } from "../vendors/llm/fixture";
@@ -98,6 +100,7 @@ const ENV_KEY: Record<ModelCard["provider"], string> = {
   anthropic: "ANTHROPIC_API_KEY",
   openai: "OPENAI_API_KEY",
   google: "GOOGLE_API_KEY",
+  xai: "XAI_API_KEY",
 };
 
 const CLIENT_FACTORY: Record<
@@ -107,6 +110,8 @@ const CLIENT_FACTORY: Record<
   anthropic: createAnthropicCompletionClient,
   openai: createOpenAiCompletionClient,
   google: createGoogleCompletionClient,
+  // xAI is OpenAI-compatible — the same Chat Completions adapter against its base URL.
+  xai: createXaiCompletionClient,
 };
 
 // Build the live client for a model, or undefined when the key is absent (the
@@ -118,6 +123,11 @@ const buildLiveClient = (card: ModelCard): CompletionClient | undefined => {
   }
   if (card.api === "realtime") {
     return createOpenAiRealtimeCompletionClient(card.apiModelId, key);
+  }
+  // The `-codex` coding models are only reached through the Responses API surface
+  // (dispatched on `api`, keyed by the model's provider — OpenAI's key).
+  if (card.api === "responses") {
+    return createOpenAiResponsesCompletionClient(card.apiModelId, key);
   }
   return CLIENT_FACTORY[card.provider](card.apiModelId, key);
 };
