@@ -16,7 +16,7 @@
 // Closed union of the providers compared. Widening this is a deliberate decision,
 // not an accident — the domain names a provider only as a tag, never importing an
 // SDK type. `xai` is an OpenAI-compatible endpoint reached through a base-URL
-// variant of the OpenAI adapter (its coding model grok-code-fast-1).
+// variant of the OpenAI adapter (the Grok lineup — general + coding models).
 export type Provider = "anthropic" | "openai" | "google" | "xai";
 
 // The CURATED half: static, cited, human-authored catalog data. Every field is a

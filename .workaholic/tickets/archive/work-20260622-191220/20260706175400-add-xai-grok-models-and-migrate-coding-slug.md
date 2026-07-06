@@ -3,8 +3,8 @@ created_at: 2026-07-06T17:54:00+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [Config]
-effort: 1h
-commit_hash:
+effort: 2h
+commit_hash: 6943ae6
 category: Added
 depends_on: 20260706155233-add-coding-agent-models-codex-grok.md
 ---

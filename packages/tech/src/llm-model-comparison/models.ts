@@ -16,14 +16,16 @@ import type { ModelCard } from "./domain/types";
 // tokens, input / output.
 //
 // Coding-agent-optimized models are included where reachable: OpenAI's `-codex`
-// line (via the Responses API, below) reuses OPENAI_API_KEY, and xAI's
-// grok-code-fast-1 (below) is wired via a base-URL variant of the OpenAI adapter
-// but is KEY-GATED on XAI_API_KEY — it renders on the keyless fixture path until
-// that key exists. The remaining cross-provider models (DeepSeek-Coder, Qwen-Coder,
-// Mistral Devstral/Codestral, …) stay out of scope: each needs its own key/endpoint
-// (and, being OpenAI-compatible, a base-URL variant) — a follow-up once keys exist.
-// Google and Anthropic have no coding-specialized model id — their general Gemini
-// Pro/Flash and Claude Opus/Sonnet tiers (above) are the coding tier.
+// line (via the Responses API, below) reuses OPENAI_API_KEY, and xAI's coding model
+// grok-build-0.1 (below) reuses XAI_API_KEY. xAI's general Grok lineup (grok-4.3 and
+// the 4.20 reasoning/non-reasoning pair, below) is reached through the same base-URL
+// variant of the OpenAI adapter. All xAI cards are KEY-GATED on XAI_API_KEY; the
+// keyless CI/fixture path renders them deterministically. The remaining
+// cross-provider models (DeepSeek-Coder, Qwen-Coder, Mistral Devstral/Codestral, …)
+// stay out of scope: each needs its own key/endpoint (and, being OpenAI-compatible,
+// a base-URL variant) — a follow-up once keys exist. Google and Anthropic have no
+// coding-specialized model id — their general Gemini Pro/Flash and Claude
+// Opus/Sonnet tiers (above) are the coding tier.
 export const MODELS: ReadonlyArray<ModelCard> = [
   // ── Anthropic ──────────────────────────────────────────────────────────────
   {
@@ -226,21 +228,73 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     effortLevels: ["low", "medium", "high"],
     source: "https://ai.google.dev/gemini-api/docs/pricing",
   },
-  // ── xAI (coding-agent-optimized; OpenAI-compatible endpoint) ─────────────────
-  // grok-code-fast-1 is a purpose-built agentic-coding model on an OpenAI-compatible
-  // API, reached through a base-URL variant of the OpenAI adapter. KEY-GATED: needs
-  // XAI_API_KEY; the keyless fixture path renders it until the key exists. No
-  // reasoning-effort knob is swept (`n/a`) — the adapter omits the field.
+  // ── xAI (OpenAI-compatible endpoint) ─────────────────────────────────────────
+  // xAI speaks the OpenAI Chat Completions protocol at a different base URL, so its
+  // whole Grok lineup is reached through the same base-URL variant of the OpenAI
+  // adapter — a pure registry entry per model, no adapter work. KEY-GATED on
+  // XAI_API_KEY; the keyless CI/fixture path renders each deterministically.
+  // Reasoning effort maps to `reasoning_effort` and is swept only where the API
+  // accepts it: grok-4.3 sweeps none/low/medium/high (`none` = no reasoning, the fast
+  // end). The 4.20 reasoning sibling rejects `reasoning_effort` (a live 400) — its
+  // reasoning is fixed — so like the non-reasoning 4.20 and the grok-build coding
+  // model it has no effort knob (`n/a`, the adapter omits the field). The multi-agent
+  // "heavy" tier is out of scope — its `effort` means agent count, billed per agent.
   {
-    id: "xai-grok-code-fast-1",
+    id: "xai-grok-4-3",
+    provider: "xai",
+    tier: "frontier",
+    modelName: "Grok 4.3",
+    apiModelId: "grok-4.3",
+    released: "2026",
+    inputCostPerMTok: 1.25,
+    outputCostPerMTok: 2.5,
+    // The only Grok card documented with a `none` effort level (no reasoning, the
+    // fast end of its own sweep) through high — so one card fills an effort sweep.
+    effortLevels: ["none", "low", "medium", "high"],
+    source: "https://docs.x.ai/developers/models/grok-4.3",
+  },
+  {
+    id: "xai-grok-4-20-0309-reasoning",
+    provider: "xai",
+    tier: "flagship",
+    modelName: "Grok 4.20 Reasoning",
+    apiModelId: "grok-4.20-0309-reasoning",
+    released: "2026",
+    inputCostPerMTok: 1.25,
+    outputCostPerMTok: 2.5,
+    // Reasoning sibling, but its reasoning is FIXED: a live probe returns 400
+    // ("does not support parameter reasoningEffort") for every effort value — unlike
+    // grok-4.3, this card has no effort knob. Declared `n/a` (the adapter omits the
+    // field) so it measures at its single natural configuration; never faked.
+    effortLevels: ["n/a"],
+    source: "https://docs.x.ai/developers/models",
+  },
+  {
+    id: "xai-grok-4-20-0309-non-reasoning",
+    provider: "xai",
+    tier: "mid",
+    modelName: "Grok 4.20 Non-Reasoning",
+    apiModelId: "grok-4.20-0309-non-reasoning",
+    released: "2026",
+    inputCostPerMTok: 1.25,
+    outputCostPerMTok: 2.5,
+    // The fast / non-reasoning general model: no reasoning-effort knob (`n/a`).
+    effortLevels: ["n/a"],
+    source: "https://docs.x.ai/developers/models",
+  },
+  // Coding-agent-optimized. grok-code-fast-1 was retired in xAI's 2026-05-15 model
+  // retirement (it currently auto-redirects to grok-build-0.1 but hard-removes
+  // ~2026-08-15); migrated proactively here to the current coding id. No effort knob.
+  {
+    id: "xai-grok-build-0-1",
     provider: "xai",
     tier: "small",
-    modelName: "Grok Code Fast 1",
-    apiModelId: "grok-code-fast-1",
-    released: "2025",
-    inputCostPerMTok: 0.2,
-    outputCostPerMTok: 1.5,
+    modelName: "Grok Build 0.1",
+    apiModelId: "grok-build-0.1",
+    released: "2026",
+    inputCostPerMTok: 1,
+    outputCostPerMTok: 2,
     effortLevels: ["n/a"],
-    source: "https://docs.x.ai/docs/models",
+    source: "https://docs.x.ai/developers/models",
   },
 ];

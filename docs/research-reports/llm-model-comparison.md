@@ -1,6 +1,6 @@
 ---
 title: Fundamental LLM model comparison
-description: A reproducible, cited comparison of 16 large language models across 4 providers over 53 model×effort configurations — sustained throughput and latency measured separately, empirically tested JSON-schema complexity, length-instruction accuracy, and a per-configuration LLM-judge developer review, each over 3 trials.
+description: A reproducible, cited comparison of 19 large language models across 4 providers over 59 model×effort configurations — sustained throughput and latency measured separately, empirically tested JSON-schema complexity, length-instruction accuracy, and a per-configuration LLM-judge developer review, each over 3 trials.
 ---
 
 # Fundamental LLM model comparison
@@ -15,8 +15,8 @@ behavior by the type system.
 
 ## Methodology
 
-**Configurations.** 16 models across 4 providers, each swept
-over its effort levels — 53 model×effort configurations. Effort maps
+**Configurations.** 19 models across 4 providers, each swept
+over its effort levels — 59 model×effort configurations. Effort maps
 to each provider's own reasoning knob (Anthropic `output_config.effort`, OpenAI
 `reasoning_effort`, Google thinking budget); a level a model does not support is
 flagged, never faked.
@@ -68,11 +68,11 @@ judge, and rendered both as this page and as the complete raw JSON artifact._
 
 ## Cost & time
 
-A full real sweep of this matrix is **53 configurations** (model ×
+A full real sweep of this matrix is **59 configurations** (model ×
 effort) × the four probes × **3 trials**, plus one judge call per
-configuration — about **4664 API calls**. The runner prints an
-**estimated** call count, rough USD cost (~$74.14), and ETA
-(~700 min) *before* making any call, and supports a
+configuration — about **5192 API calls**. The runner prints an
+**estimated** call count, rough USD cost (~$75.98), and ETA
+(~779 min) *before* making any call, and supports a
 `--estimate` dry run that prints the estimate without calling any provider. The
 estimate uses rough per-call token assumptions; **actual** token usage is captured
 per call in the run-artifact. CI never runs the real sweep — only the keyless
@@ -134,7 +134,13 @@ per call in the run-artifact. CI never runs the real sweep — only the keyless
 | google | Gemini 3.1 Flash-Lite | small | low | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Flash-Lite | small | medium | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | google | Gemini 3.1 Flash-Lite | small | high | $0.10 / $0.40 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| xai | Grok Code Fast 1 | small | n/a | $0.20 / $1.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok 4.3 | frontier | none | $1.25 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok 4.3 | frontier | low | $1.25 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok 4.3 | frontier | medium | $1.25 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok 4.3 | frontier | high | $1.25 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok 4.20 Reasoning | flagship | n/a | $1.25 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok 4.20 Non-Reasoning | mid | n/a | $1.25 / $2.50 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| xai | Grok Build 0.1 | small | n/a | $1.00 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are **curated** catalog data
 (cited). Throughput, TTFT, total latency, max schema complexity, and length
@@ -204,7 +210,13 @@ deviation, the observed min–max, and the number of contributing trials.
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Non-Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Build 0.1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -264,7 +276,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Non-Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Build 0.1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -324,7 +342,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Non-Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Build 0.1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -384,7 +408,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Non-Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Build 0.1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -444,7 +474,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Non-Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Build 0.1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -504,7 +540,13 @@ No live measurements in this run — every configuration was fixtured or errored
 | Gemini 3.1 Flash-Lite [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Gemini 3.1 Flash-Lite [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| Grok Code Fast 1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.3 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok 4.20 Non-Reasoning [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| Grok Build 0.1 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 
 No live measurements in this run — every configuration was fixtured or errored, so this aspect has no comparison.
 
@@ -824,7 +866,43 @@ Each review is written by the LLM judge (`claude-opus-4-8`) from the configurati
 - **Weaknesses:** fixtured value 0
 - **Best for:** fixtured value 0
 
-### Grok Code Fast 1 [n/a] — xai · small {#xai-grok-code-fast-1-n/a} _(fixtured judge — a deterministic stand-in, not a live review)_
+### Grok 4.3 [none] — xai · frontier {#xai-grok-4-3-none} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Grok 4.3 [low] — xai · frontier {#xai-grok-4-3-low} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Grok 4.3 [medium] — xai · frontier {#xai-grok-4-3-medium} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Grok 4.3 [high] — xai · frontier {#xai-grok-4-3-high} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Grok 4.20 Reasoning [n/a] — xai · flagship {#xai-grok-4-20-0309-reasoning-n/a} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Grok 4.20 Non-Reasoning [n/a] — xai · mid {#xai-grok-4-20-0309-non-reasoning-n/a} _(fixtured judge — a deterministic stand-in, not a live review)_
+
+- **Strengths:** fixtured value 0
+- **Weaknesses:** fixtured value 0
+- **Best for:** fixtured value 0
+
+### Grok Build 0.1 [n/a] — xai · small {#xai-grok-build-0-1-n/a} _(fixtured judge — a deterministic stand-in, not a live review)_
 
 - **Strengths:** fixtured value 0
 - **Weaknesses:** fixtured value 0
