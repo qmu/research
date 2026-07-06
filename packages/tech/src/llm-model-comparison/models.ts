@@ -74,6 +74,12 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     source: "https://platform.claude.com/docs/en/about-claude/models/overview",
   },
   // ── OpenAI ─────────────────────────────────────────────────────────────────
+  // The GPT-5.x `reasoning_effort` levels are `none | low | medium | high | xhigh`
+  // — NOT `minimal`. A live probe confirmed the API rejects `minimal` with a 400
+  // ("does not support 'minimal' with this model"); the earlier sweep's four
+  // OpenAI "error" configs were exactly that. `none` is the fastest supported
+  // level (no reasoning), so it takes `minimal`'s place as the low end of the
+  // spread. o4-mini (a reasoning model) exposes only low/medium/high.
   {
     id: "openai-gpt-5-5",
     provider: "openai",
@@ -83,7 +89,7 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     released: "2026",
     inputCostPerMTok: 5,
     outputCostPerMTok: 30,
-    effortLevels: ["minimal", "low", "medium", "high"],
+    effortLevels: ["none", "low", "medium", "high"],
     source: "https://developers.openai.com/api/docs/pricing",
   },
   {
@@ -95,7 +101,7 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     released: "2026",
     inputCostPerMTok: 2.5,
     outputCostPerMTok: 15,
-    effortLevels: ["minimal", "low", "medium", "high"],
+    effortLevels: ["none", "low", "medium", "high"],
     source: "https://developers.openai.com/api/docs/pricing",
   },
   {
@@ -107,7 +113,7 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     released: "2026",
     inputCostPerMTok: 0.5,
     outputCostPerMTok: 2,
-    effortLevels: ["minimal", "low", "medium", "high"],
+    effortLevels: ["none", "low", "medium", "high"],
     source: "https://developers.openai.com/api/docs/pricing",
   },
   {
@@ -119,7 +125,7 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     released: "2026",
     inputCostPerMTok: 0.15,
     outputCostPerMTok: 0.6,
-    effortLevels: ["minimal", "low", "medium", "high"],
+    effortLevels: ["none", "low", "medium", "high"],
     source: "https://developers.openai.com/api/docs/pricing",
   },
   {

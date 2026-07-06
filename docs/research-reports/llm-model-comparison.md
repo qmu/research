@@ -98,19 +98,19 @@ per call in the run-artifact. CI never runs the real sweep — only the keyless
 | anthropic | Claude Sonnet 5 | mid | xhigh | $3.00 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | anthropic | Claude Sonnet 5 | mid | max | $3.00 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | anthropic | Claude Haiku 4.5 | small | n/a | $1.00 / $5.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.5 | flagship | minimal | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.5 | flagship | none | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.5 | flagship | low | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.5 | flagship | medium | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.5 | flagship | high | $5.00 / $30.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.4 | mid | minimal | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 | mid | none | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 | mid | low | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 | mid | medium | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 | mid | high | $2.50 / $15.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.4 mini | small | minimal | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 mini | small | none | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 mini | small | low | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 mini | small | medium | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 mini | small | high | $0.50 / $2.00 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| openai | GPT-5.4 nano | small | minimal | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| openai | GPT-5.4 nano | small | none | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 nano | small | low | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 nano | small | medium | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | openai | GPT-5.4 nano | small | high | $0.15 / $0.60 | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -160,19 +160,19 @@ deviation, the observed min–max, and the number of contributing trials.
 | Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -212,19 +212,19 @@ No live measurements in this run — every configuration was fixtured or errored
 | Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -264,19 +264,19 @@ No live measurements in this run — every configuration was fixtured or errored
 | Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -316,19 +316,19 @@ No live measurements in this run — every configuration was fixtured or errored
 | Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -368,19 +368,19 @@ No live measurements in this run — every configuration was fixtured or errored
 | Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -420,19 +420,19 @@ No live measurements in this run — every configuration was fixtured or errored
 | Claude Sonnet 5 [xhigh] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Sonnet 5 [max] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Haiku 4.5 [n/a] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.5 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.5 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 mini [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 mini [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 mini [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
-| GPT-5.4 nano [minimal] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
+| GPT-5.4 nano [none] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | GPT-5.4 nano [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -552,7 +552,7 @@ Each review is written by the LLM judge (`claude-opus-4-8`) from the configurati
 - **Weaknesses:** fixtured value 0
 - **Best for:** fixtured value 0
 
-### GPT-5.5 [minimal] — openai · flagship {#openai-gpt-5-5-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+### GPT-5.5 [none] — openai · flagship {#openai-gpt-5-5-none} _(fixtured judge — a deterministic stand-in, not a live review)_
 
 - **Strengths:** fixtured value 0
 - **Weaknesses:** fixtured value 0
@@ -576,7 +576,7 @@ Each review is written by the LLM judge (`claude-opus-4-8`) from the configurati
 - **Weaknesses:** fixtured value 0
 - **Best for:** fixtured value 0
 
-### GPT-5.4 [minimal] — openai · mid {#openai-gpt-5-4-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+### GPT-5.4 [none] — openai · mid {#openai-gpt-5-4-none} _(fixtured judge — a deterministic stand-in, not a live review)_
 
 - **Strengths:** fixtured value 0
 - **Weaknesses:** fixtured value 0
@@ -600,7 +600,7 @@ Each review is written by the LLM judge (`claude-opus-4-8`) from the configurati
 - **Weaknesses:** fixtured value 0
 - **Best for:** fixtured value 0
 
-### GPT-5.4 mini [minimal] — openai · small {#openai-gpt-5-4-mini-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+### GPT-5.4 mini [none] — openai · small {#openai-gpt-5-4-mini-none} _(fixtured judge — a deterministic stand-in, not a live review)_
 
 - **Strengths:** fixtured value 0
 - **Weaknesses:** fixtured value 0
@@ -624,7 +624,7 @@ Each review is written by the LLM judge (`claude-opus-4-8`) from the configurati
 - **Weaknesses:** fixtured value 0
 - **Best for:** fixtured value 0
 
-### GPT-5.4 nano [minimal] — openai · small {#openai-gpt-5-4-nano-minimal} _(fixtured judge — a deterministic stand-in, not a live review)_
+### GPT-5.4 nano [none] — openai · small {#openai-gpt-5-4-nano-none} _(fixtured judge — a deterministic stand-in, not a live review)_
 
 - **Strengths:** fixtured value 0
 - **Weaknesses:** fixtured value 0

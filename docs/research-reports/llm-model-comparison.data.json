@@ -13382,13 +13382,13 @@
       "inputCostPerMTok": 5,
       "outputCostPerMTok": 30,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
       ],
       "source": "https://developers.openai.com/api/docs/pricing",
-      "effort": "minimal",
+      "effort": "none",
       "provenance": "fixtured",
       "measuredAt": "2026-01-01T00:00:00.000Z",
       "trialsRequested": 3,
@@ -13408,7 +13408,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -13421,7 +13421,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 0.",
               "outputTokens": 9,
@@ -13434,7 +13434,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}",
               "outputTokens": 17,
@@ -13447,7 +13447,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}",
               "outputTokens": 36,
@@ -13460,7 +13460,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}}}}}",
               "outputTokens": 74,
@@ -13473,7 +13473,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13486,7 +13486,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13499,7 +13499,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 10 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13512,7 +13512,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 9 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13525,7 +13525,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\"}",
               "outputTokens": 15,
@@ -13538,7 +13538,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\"}",
               "outputTokens": 29,
@@ -13551,7 +13551,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\",\"field4\":\"fixtured value 0\",\"field5\":\"fixtured value 0\",\"field6\":\"fixtured value 0\",\"field7\":\"fixtured value 0\"}",
               "outputTokens": 57,
@@ -13564,7 +13564,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13577,7 +13577,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13590,7 +13590,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 10 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13603,7 +13603,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 9 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13616,7 +13616,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 124,
@@ -13644,7 +13644,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -13657,7 +13657,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 1.",
               "outputTokens": 9,
@@ -13670,7 +13670,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}",
               "outputTokens": 17,
@@ -13683,7 +13683,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}",
               "outputTokens": 36,
@@ -13696,7 +13696,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}",
               "outputTokens": 74,
@@ -13709,7 +13709,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13722,7 +13722,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}",
               "outputTokens": 112,
@@ -13735,7 +13735,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 14 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}}}",
               "outputTokens": 131,
@@ -13748,7 +13748,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 15 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13761,7 +13761,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\"}",
               "outputTokens": 15,
@@ -13774,7 +13774,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\"}",
               "outputTokens": 29,
@@ -13787,7 +13787,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\"}",
               "outputTokens": 57,
@@ -13800,7 +13800,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13813,7 +13813,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\"}",
               "outputTokens": 85,
@@ -13826,7 +13826,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 14 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\",\"field12\":\"fixtured value 1\",\"field13\":\"fixtured value 1\"}",
               "outputTokens": 100,
@@ -13839,7 +13839,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 15 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13852,7 +13852,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 125,
@@ -13880,7 +13880,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -13893,7 +13893,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 2.",
               "outputTokens": 9,
@@ -13906,7 +13906,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}",
               "outputTokens": 17,
@@ -13919,7 +13919,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}",
               "outputTokens": 36,
@@ -13932,7 +13932,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}",
               "outputTokens": 74,
@@ -13945,7 +13945,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}",
               "outputTokens": 150,
@@ -13958,7 +13958,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 32 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13971,7 +13971,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 24 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -13984,7 +13984,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 20 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}}}}}",
               "outputTokens": 188,
@@ -13997,7 +13997,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 22 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -14010,7 +14010,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 21 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -14023,7 +14023,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\"}",
               "outputTokens": 15,
@@ -14036,7 +14036,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\"}",
               "outputTokens": 29,
@@ -14049,7 +14049,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\"}",
               "outputTokens": 57,
@@ -14062,7 +14062,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\"}",
               "outputTokens": 114,
@@ -14075,7 +14075,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 32 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -14088,7 +14088,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 24 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -14101,7 +14101,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 20 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\",\"field16\":\"fixtured value 2\",\"field17\":\"fixtured value 2\",\"field18\":\"fixtured value 2\",\"field19\":\"fixtured value 2\"}",
               "outputTokens": 143,
@@ -14114,7 +14114,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 22 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -14127,7 +14127,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 21 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -14140,7 +14140,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 126,
@@ -14217,7 +14217,7 @@
       "inputCostPerMTok": 5,
       "outputCostPerMTok": 30,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -15052,7 +15052,7 @@
       "inputCostPerMTok": 5,
       "outputCostPerMTok": 30,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -15887,7 +15887,7 @@
       "inputCostPerMTok": 5,
       "outputCostPerMTok": 30,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -16722,13 +16722,13 @@
       "inputCostPerMTok": 2.5,
       "outputCostPerMTok": 15,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
       ],
       "source": "https://developers.openai.com/api/docs/pricing",
-      "effort": "minimal",
+      "effort": "none",
       "provenance": "fixtured",
       "measuredAt": "2026-01-01T00:00:00.000Z",
       "trialsRequested": 3,
@@ -16748,7 +16748,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -16761,7 +16761,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 0.",
               "outputTokens": 9,
@@ -16774,7 +16774,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}",
               "outputTokens": 17,
@@ -16787,7 +16787,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}",
               "outputTokens": 36,
@@ -16800,7 +16800,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}}}}}",
               "outputTokens": 74,
@@ -16813,7 +16813,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16826,7 +16826,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16839,7 +16839,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 10 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16852,7 +16852,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 9 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16865,7 +16865,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\"}",
               "outputTokens": 15,
@@ -16878,7 +16878,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\"}",
               "outputTokens": 29,
@@ -16891,7 +16891,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\",\"field4\":\"fixtured value 0\",\"field5\":\"fixtured value 0\",\"field6\":\"fixtured value 0\",\"field7\":\"fixtured value 0\"}",
               "outputTokens": 57,
@@ -16904,7 +16904,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16917,7 +16917,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16930,7 +16930,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 10 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16943,7 +16943,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 9 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -16956,7 +16956,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 124,
@@ -16984,7 +16984,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -16997,7 +16997,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 1.",
               "outputTokens": 9,
@@ -17010,7 +17010,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}",
               "outputTokens": 17,
@@ -17023,7 +17023,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}",
               "outputTokens": 36,
@@ -17036,7 +17036,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}",
               "outputTokens": 74,
@@ -17049,7 +17049,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17062,7 +17062,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}",
               "outputTokens": 112,
@@ -17075,7 +17075,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 14 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}}}",
               "outputTokens": 131,
@@ -17088,7 +17088,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 15 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17101,7 +17101,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\"}",
               "outputTokens": 15,
@@ -17114,7 +17114,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\"}",
               "outputTokens": 29,
@@ -17127,7 +17127,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\"}",
               "outputTokens": 57,
@@ -17140,7 +17140,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17153,7 +17153,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\"}",
               "outputTokens": 85,
@@ -17166,7 +17166,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 14 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\",\"field12\":\"fixtured value 1\",\"field13\":\"fixtured value 1\"}",
               "outputTokens": 100,
@@ -17179,7 +17179,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 15 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17192,7 +17192,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 125,
@@ -17220,7 +17220,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -17233,7 +17233,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 2.",
               "outputTokens": 9,
@@ -17246,7 +17246,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}",
               "outputTokens": 17,
@@ -17259,7 +17259,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}",
               "outputTokens": 36,
@@ -17272,7 +17272,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}",
               "outputTokens": 74,
@@ -17285,7 +17285,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}",
               "outputTokens": 150,
@@ -17298,7 +17298,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 32 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17311,7 +17311,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 24 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17324,7 +17324,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 20 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}}}}}",
               "outputTokens": 188,
@@ -17337,7 +17337,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 22 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17350,7 +17350,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 21 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17363,7 +17363,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\"}",
               "outputTokens": 15,
@@ -17376,7 +17376,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\"}",
               "outputTokens": 29,
@@ -17389,7 +17389,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\"}",
               "outputTokens": 57,
@@ -17402,7 +17402,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\"}",
               "outputTokens": 114,
@@ -17415,7 +17415,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 32 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17428,7 +17428,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 24 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17441,7 +17441,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 20 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\",\"field16\":\"fixtured value 2\",\"field17\":\"fixtured value 2\",\"field18\":\"fixtured value 2\",\"field19\":\"fixtured value 2\"}",
               "outputTokens": 143,
@@ -17454,7 +17454,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 22 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17467,7 +17467,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 21 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -17480,7 +17480,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 126,
@@ -17557,7 +17557,7 @@
       "inputCostPerMTok": 2.5,
       "outputCostPerMTok": 15,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -18392,7 +18392,7 @@
       "inputCostPerMTok": 2.5,
       "outputCostPerMTok": 15,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -19227,7 +19227,7 @@
       "inputCostPerMTok": 2.5,
       "outputCostPerMTok": 15,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -20062,13 +20062,13 @@
       "inputCostPerMTok": 0.5,
       "outputCostPerMTok": 2,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
       ],
       "source": "https://developers.openai.com/api/docs/pricing",
-      "effort": "minimal",
+      "effort": "none",
       "provenance": "fixtured",
       "measuredAt": "2026-01-01T00:00:00.000Z",
       "trialsRequested": 3,
@@ -20088,7 +20088,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -20101,7 +20101,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 0.",
               "outputTokens": 9,
@@ -20114,7 +20114,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}",
               "outputTokens": 17,
@@ -20127,7 +20127,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}",
               "outputTokens": 36,
@@ -20140,7 +20140,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}}}}}",
               "outputTokens": 74,
@@ -20153,7 +20153,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20166,7 +20166,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20179,7 +20179,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 10 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20192,7 +20192,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 9 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20205,7 +20205,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\"}",
               "outputTokens": 15,
@@ -20218,7 +20218,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\"}",
               "outputTokens": 29,
@@ -20231,7 +20231,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\",\"field4\":\"fixtured value 0\",\"field5\":\"fixtured value 0\",\"field6\":\"fixtured value 0\",\"field7\":\"fixtured value 0\"}",
               "outputTokens": 57,
@@ -20244,7 +20244,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20257,7 +20257,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20270,7 +20270,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 10 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20283,7 +20283,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 9 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20296,7 +20296,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 124,
@@ -20324,7 +20324,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -20337,7 +20337,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 1.",
               "outputTokens": 9,
@@ -20350,7 +20350,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}",
               "outputTokens": 17,
@@ -20363,7 +20363,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}",
               "outputTokens": 36,
@@ -20376,7 +20376,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}",
               "outputTokens": 74,
@@ -20389,7 +20389,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20402,7 +20402,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}",
               "outputTokens": 112,
@@ -20415,7 +20415,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 14 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}}}",
               "outputTokens": 131,
@@ -20428,7 +20428,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 15 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20441,7 +20441,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\"}",
               "outputTokens": 15,
@@ -20454,7 +20454,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\"}",
               "outputTokens": 29,
@@ -20467,7 +20467,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\"}",
               "outputTokens": 57,
@@ -20480,7 +20480,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20493,7 +20493,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\"}",
               "outputTokens": 85,
@@ -20506,7 +20506,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 14 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\",\"field12\":\"fixtured value 1\",\"field13\":\"fixtured value 1\"}",
               "outputTokens": 100,
@@ -20519,7 +20519,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 15 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20532,7 +20532,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 125,
@@ -20560,7 +20560,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -20573,7 +20573,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 2.",
               "outputTokens": 9,
@@ -20586,7 +20586,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}",
               "outputTokens": 17,
@@ -20599,7 +20599,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}",
               "outputTokens": 36,
@@ -20612,7 +20612,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}",
               "outputTokens": 74,
@@ -20625,7 +20625,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}",
               "outputTokens": 150,
@@ -20638,7 +20638,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 32 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20651,7 +20651,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 24 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20664,7 +20664,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 20 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}}}}}",
               "outputTokens": 188,
@@ -20677,7 +20677,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 22 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20690,7 +20690,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 21 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20703,7 +20703,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\"}",
               "outputTokens": 15,
@@ -20716,7 +20716,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\"}",
               "outputTokens": 29,
@@ -20729,7 +20729,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\"}",
               "outputTokens": 57,
@@ -20742,7 +20742,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\"}",
               "outputTokens": 114,
@@ -20755,7 +20755,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 32 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20768,7 +20768,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 24 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20781,7 +20781,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 20 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\",\"field16\":\"fixtured value 2\",\"field17\":\"fixtured value 2\",\"field18\":\"fixtured value 2\",\"field19\":\"fixtured value 2\"}",
               "outputTokens": 143,
@@ -20794,7 +20794,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 22 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20807,7 +20807,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 21 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -20820,7 +20820,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 126,
@@ -20897,7 +20897,7 @@
       "inputCostPerMTok": 0.5,
       "outputCostPerMTok": 2,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -21732,7 +21732,7 @@
       "inputCostPerMTok": 0.5,
       "outputCostPerMTok": 2,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -22567,7 +22567,7 @@
       "inputCostPerMTok": 0.5,
       "outputCostPerMTok": 2,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -23402,13 +23402,13 @@
       "inputCostPerMTok": 0.15,
       "outputCostPerMTok": 0.6,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
       ],
       "source": "https://developers.openai.com/api/docs/pricing",
-      "effort": "minimal",
+      "effort": "none",
       "provenance": "fixtured",
       "measuredAt": "2026-01-01T00:00:00.000Z",
       "trialsRequested": 3,
@@ -23428,7 +23428,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -23441,7 +23441,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 0.",
               "outputTokens": 9,
@@ -23454,7 +23454,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}",
               "outputTokens": 17,
@@ -23467,7 +23467,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}",
               "outputTokens": 36,
@@ -23480,7 +23480,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\",\"child\":{\"field0\":\"fixtured value 0\"}}}}}}}}",
               "outputTokens": 74,
@@ -23493,7 +23493,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23506,7 +23506,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23519,7 +23519,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 10 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23532,7 +23532,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 9 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23545,7 +23545,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\"}",
               "outputTokens": 15,
@@ -23558,7 +23558,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\"}",
               "outputTokens": 29,
@@ -23571,7 +23571,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 0\",\"field1\":\"fixtured value 0\",\"field2\":\"fixtured value 0\",\"field3\":\"fixtured value 0\",\"field4\":\"fixtured value 0\",\"field5\":\"fixtured value 0\",\"field6\":\"fixtured value 0\",\"field7\":\"fixtured value 0\"}",
               "outputTokens": 57,
@@ -23584,7 +23584,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23597,7 +23597,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23610,7 +23610,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 10 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23623,7 +23623,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 9 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23636,7 +23636,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 124,
@@ -23664,7 +23664,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -23677,7 +23677,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 1.",
               "outputTokens": 9,
@@ -23690,7 +23690,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}",
               "outputTokens": 17,
@@ -23703,7 +23703,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}",
               "outputTokens": 36,
@@ -23716,7 +23716,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}",
               "outputTokens": 74,
@@ -23729,7 +23729,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23742,7 +23742,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 12 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}",
               "outputTokens": 112,
@@ -23755,7 +23755,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 14 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\",\"child\":{\"field0\":\"fixtured value 1\"}}}}}}}}}}}}}}",
               "outputTokens": 131,
@@ -23768,7 +23768,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 15 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23781,7 +23781,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\"}",
               "outputTokens": 15,
@@ -23794,7 +23794,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\"}",
               "outputTokens": 29,
@@ -23807,7 +23807,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\"}",
               "outputTokens": 57,
@@ -23820,7 +23820,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23833,7 +23833,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 12 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\"}",
               "outputTokens": 85,
@@ -23846,7 +23846,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 14 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 1\",\"field1\":\"fixtured value 1\",\"field2\":\"fixtured value 1\",\"field3\":\"fixtured value 1\",\"field4\":\"fixtured value 1\",\"field5\":\"fixtured value 1\",\"field6\":\"fixtured value 1\",\"field7\":\"fixtured value 1\",\"field8\":\"fixtured value 1\",\"field9\":\"fixtured value 1\",\"field10\":\"fixtured value 1\",\"field11\":\"fixtured value 1\",\"field12\":\"fixtured value 1\",\"field13\":\"fixtured value 1\"}",
               "outputTokens": 100,
@@ -23859,7 +23859,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 15 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23872,7 +23872,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 125,
@@ -23900,7 +23900,7 @@
           "calls": [
             {
               "probe": "throughput",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 500,
@@ -23913,7 +23913,7 @@
             },
             {
               "probe": "latency",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "In one short sentence, state a single interesting fact about the water cycle.",
               "rawOutput": "A concise fixtured fact number 2.",
               "outputTokens": 9,
@@ -23926,7 +23926,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}",
               "outputTokens": 17,
@@ -23939,7 +23939,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 4 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}",
               "outputTokens": 36,
@@ -23952,7 +23952,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 8 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}",
               "outputTokens": 74,
@@ -23965,7 +23965,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 16 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}",
               "outputTokens": 150,
@@ -23978,7 +23978,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 32 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -23991,7 +23991,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 24 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -24004,7 +24004,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 20 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\",\"child\":{\"field0\":\"fixtured value 2\"}}}}}}}}}}}}}}}}}}}}",
               "outputTokens": 188,
@@ -24017,7 +24017,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 22 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -24030,7 +24030,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 21 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -24043,7 +24043,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 2 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\"}",
               "outputTokens": 15,
@@ -24056,7 +24056,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 4 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\"}",
               "outputTokens": 29,
@@ -24069,7 +24069,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 8 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\"}",
               "outputTokens": 57,
@@ -24082,7 +24082,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 16 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\"}",
               "outputTokens": 114,
@@ -24095,7 +24095,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 32 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -24108,7 +24108,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 24 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -24121,7 +24121,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 20 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{\"field0\":\"fixtured value 2\",\"field1\":\"fixtured value 2\",\"field2\":\"fixtured value 2\",\"field3\":\"fixtured value 2\",\"field4\":\"fixtured value 2\",\"field5\":\"fixtured value 2\",\"field6\":\"fixtured value 2\",\"field7\":\"fixtured value 2\",\"field8\":\"fixtured value 2\",\"field9\":\"fixtured value 2\",\"field10\":\"fixtured value 2\",\"field11\":\"fixtured value 2\",\"field12\":\"fixtured value 2\",\"field13\":\"fixtured value 2\",\"field14\":\"fixtured value 2\",\"field15\":\"fixtured value 2\",\"field16\":\"fixtured value 2\",\"field17\":\"fixtured value 2\",\"field18\":\"fixtured value 2\",\"field19\":\"fixtured value 2\"}",
               "outputTokens": 143,
@@ -24134,7 +24134,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 22 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -24147,7 +24147,7 @@
             },
             {
               "probe": "schema",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Produce a JSON object that conforms to the provided schema: an object nested 1 level(s) deep, each level containing 21 string field(s) (and, above the deepest level, a nested \"child\" object). Fill every string field with a one-or-two-word value.",
               "rawOutput": "{}",
               "outputTokens": 1,
@@ -24160,7 +24160,7 @@
             },
             {
               "probe": "length",
-              "effort": "minimal",
+              "effort": "none",
               "prompt": "Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.",
               "rawOutput": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word",
               "outputTokens": 126,
@@ -24237,7 +24237,7 @@
       "inputCostPerMTok": 0.15,
       "outputCostPerMTok": 0.6,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -25072,7 +25072,7 @@
       "inputCostPerMTok": 0.15,
       "outputCostPerMTok": 0.6,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
@@ -25907,7 +25907,7 @@
       "inputCostPerMTok": 0.15,
       "outputCostPerMTok": 0.6,
       "effortLevels": [
-        "minimal",
+        "none",
         "low",
         "medium",
         "high"
