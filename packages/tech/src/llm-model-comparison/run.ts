@@ -262,6 +262,9 @@ export type RunOptions = Readonly<{
   fixtureFor: (trialIndex: number) => CompletionClient;
   // The judge that reviews this configuration after its trials.
   judge: JudgeConfig;
+  // ISO timestamp of this run, stamped onto the config so a merged artifact
+  // records when each cell was measured (the entrypoint owns the clock).
+  measuredAt: string;
 }>;
 
 const zeroStat = { mean: 0, stdDev: 0, min: 0, max: 0, n: 0 } as const;
@@ -330,7 +333,7 @@ export const buildConfigRun = async (
   effort: string,
   opts: RunOptions,
 ): Promise<ConfigRun> => {
-  const { trials, probe, liveClient, fixtureFor, judge } = opts;
+  const { trials, probe, liveClient, fixtureFor, judge, measuredAt } = opts;
   const results: TrialResult[] = [];
   for (let i = 0; i < trials; i += 1) {
     const client = liveClient ?? fixtureFor(i);
@@ -355,6 +358,7 @@ export const buildConfigRun = async (
     ...card,
     effort,
     provenance,
+    measuredAt,
     trialsRequested: trials,
     trials: results,
     stats,
@@ -371,10 +375,12 @@ export const errorRun = (
   trials: number,
   reason: string,
   judgeModel: string,
+  measuredAt: string,
 ): ConfigRun => ({
   ...card,
   effort,
   provenance: "error",
+  measuredAt,
   trialsRequested: trials,
   trials: [
     {

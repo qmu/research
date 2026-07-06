@@ -65,7 +65,12 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     released: "2025-10",
     inputCostPerMTok: 1,
     outputCostPerMTok: 5,
-    effortLevels: ["low", "medium", "high"],
+    // Haiku 4.5 has no reasoning-effort knob: `output_config.effort` is rejected
+    // (400) on this tier — the earlier sweep's three Haiku "error" configs were
+    // exactly the effort levels it cannot honor. Declare the single no-effort
+    // configuration with the `n/a` sentinel (as the Realtime card does); the
+    // Anthropic adapter omits the `effort` field for it.
+    effortLevels: ["n/a"],
     source: "https://platform.claude.com/docs/en/about-claude/models/overview",
   },
   // ── OpenAI ─────────────────────────────────────────────────────────────────

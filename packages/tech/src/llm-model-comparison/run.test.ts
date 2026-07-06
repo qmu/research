@@ -173,8 +173,10 @@ describe("buildConfigRun failure isolation & judging", () => {
       liveClient: okClient,
       fixtureFor,
       judge: liveJudge,
+      measuredAt: "2026-01-01T00:00:00.000Z",
     });
     expect(run.provenance).toBe("measured");
+    expect(run.measuredAt).toBe("2026-01-01T00:00:00.000Z");
     expect(run.effort).toBe("low");
     expect(run.stats.throughputTokensPerSec.n).toBe(3);
     expect(run.stats.maxSchemaDepth.mean).toBe(4);
@@ -189,6 +191,7 @@ describe("buildConfigRun failure isolation & judging", () => {
       liveClient: throwingClient,
       fixtureFor,
       judge: liveJudge,
+      measuredAt: "2026-01-01T00:00:00.000Z",
     });
     expect(run.provenance).toBe("error");
     expect(run.trials.every((t) => !t.ok)).toBe(true);
@@ -203,6 +206,7 @@ describe("buildConfigRun failure isolation & judging", () => {
       liveClient: undefined,
       fixtureFor,
       judge: { client: judgeClient, live: false, model: "judge" },
+      measuredAt: "2026-01-01T00:00:00.000Z",
     });
     expect(run.provenance).toBe("fixtured");
     expect(run.review.provenance).toBe("fixtured");

@@ -55,7 +55,13 @@ const buildParams = (
   format?: unknown,
 ): Record<string, unknown> => {
   const outputConfig: Record<string, unknown> = {};
-  if (options?.effort) outputConfig.effort = options.effort;
+  // `n/a` is the registry sentinel for a model with no reasoning-effort knob
+  // (e.g. Haiku 4.5, which rejects `output_config.effort` with a 400). Omit the
+  // field for it — sending an effort the model doesn't support is a hard error,
+  // not a finding.
+  if (options?.effort && options.effort !== "n/a") {
+    outputConfig.effort = options.effort;
+  }
   if (format) outputConfig.format = format;
   const params: Record<string, unknown> = {
     model,

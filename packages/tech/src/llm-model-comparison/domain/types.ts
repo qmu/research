@@ -138,16 +138,57 @@ export type Review = Readonly<{
 }>;
 
 // The join: a curated card + a specific effort level (the configuration), its
-// measured trials and their aggregates, and its judge review.
+// measured trials and their aggregates, and its judge review. `measuredAt` is the
+// ISO timestamp of the run that produced THIS cell — a merged artifact holds cells
+// from several runs, so the per-config stamp (not the artifact's single
+// `generatedAt`) says when each number was actually measured.
 export type ConfigRun = ModelCard &
   Readonly<{
     effort: string; // the effort level this run measured
     provenance: Provenance;
+    measuredAt: string; // ISO timestamp of the run that measured this cell
     trialsRequested: number;
     trials: ReadonlyArray<TrialResult>; // all trials, including failed
     stats: ProbeStats; // aggregates over the ok trials
     review: Review; // per-configuration developer review
   }>;
+
+// --- historical benchmark series --------------------------------------------
+//
+// A recurring sweep keeps a time series, not a single snapshot. The latest full
+// `.data.json` stays the complete record (every call's raw capture); the history
+// is a COMPACT per-config projection — just the metric means + provenance +
+// measured-at — small and diff-friendly so trends render from git without
+// decompressing every archived run. Each history entry links back (by timestamp)
+// to a gzipped full-record archive, so nothing is lost.
+
+// One configuration's compact metric point in a recorded run.
+export type HistoryPoint = Readonly<{
+  id: string; // config slug (ModelCard.id)
+  provider: Provider;
+  modelName: string;
+  effort: string;
+  provenance: Provenance;
+  throughputTokensPerSec: number; // mean over the run's ok trials
+  ttftMs: number;
+  totalLatencyMs: number;
+  maxSchemaDepth: number;
+  maxSchemaBreadth: number;
+  lengthAccuracy: number; // 0..1
+  measuredAt: string; // when this cell was measured
+}>;
+
+// One recorded run: its wall-clock stamp, trial count, and every config's point.
+export type HistoryEntry = Readonly<{
+  generatedAt: string;
+  trials: number;
+  points: ReadonlyArray<HistoryPoint>;
+}>;
+
+// The append-only history file — one entry per recorded run, newest appended last.
+export type HistoryFile = Readonly<{
+  entries: ReadonlyArray<HistoryEntry>;
+}>;
 
 // One shape for the schema generator: an object nested `depth` levels, each
 // level carrying `breadth` scalar fields.

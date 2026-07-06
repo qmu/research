@@ -39,6 +39,7 @@ const config = (
   outputCostPerMTok: 25,
   effortLevels: ["low", "high"],
   source: "https://example.com",
+  measuredAt: "2026-01-01T00:00:00.000Z",
   trialsRequested: 3,
   trials: [],
   stats: {
