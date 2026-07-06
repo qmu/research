@@ -17,7 +17,8 @@
     "benchmark:fixture": "tsx src/entrypoints/run-llm-benchmark.ts --fixture",
     "compare": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts",
     "compare:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --fixture",
-    "compare:repair": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --only-errored"
+    "compare:repair": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --only-errored",
+    "compare:render": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --render-latest"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

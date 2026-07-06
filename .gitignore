@@ -13,3 +13,10 @@ docs/.vitepress/dist/
 .env.*
 !.env.example
 .DS_Store
+
+# Real-run comparison report + artifact are REGENERATED on demand
+# (`npm run compare:render`) from the committed history/ archives — the real-data
+# source of truth. The rendered `.real` outputs are non-deterministic and not
+# committed (unlike the byte-stable fixture `llm-model-comparison.md`/`.data.json`).
+docs/research-reports/*.real.md
+docs/research-reports/*.real.data.json

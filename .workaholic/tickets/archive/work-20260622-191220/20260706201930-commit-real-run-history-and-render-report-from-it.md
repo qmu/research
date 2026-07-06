@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain, Infrastructure, Config]
 effort: 4h
-commit_hash:
+commit_hash: 2aae800
 category: Added
 depends_on:
 ---

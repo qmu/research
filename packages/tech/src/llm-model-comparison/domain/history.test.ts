@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
   appendHistory,
+  archivesToPrune,
   buildHistoryEntry,
+  latestArchive,
   selectErrored,
   toHistoryPoint,
 } from "./history";
@@ -113,5 +115,38 @@ describe("selectErrored", () => {
       cfg("m4", "low", "fixtured"),
     ]);
     expect(errored.map((c) => c.id)).toEqual(["m2", "m3"]);
+  });
+});
+
+// ISO stamps (":" → "-") are fixed-width, so lexicographic order is chronological.
+const A = "2026-07-01T00-00-00.000Z.data.json.gz";
+const B = "2026-07-04T12-30-00.000Z.data.json.gz";
+const C = "2026-07-06T09-25-24.044Z.data.json.gz";
+
+describe("latestArchive", () => {
+  it("returns the newest by stamp regardless of input order", () => {
+    expect(latestArchive([B, A, C])).toBe(C);
+  });
+
+  it("returns null when there are no archives", () => {
+    expect(latestArchive([])).toBeNull();
+  });
+});
+
+describe("archivesToPrune", () => {
+  it("keeps the N most-recent and returns the older ones to delete", () => {
+    // keep 2 of 3 → the single oldest (A) is pruned.
+    expect(archivesToPrune([C, A, B], 2)).toEqual([A]);
+  });
+
+  it("prunes nothing when at or under the cap", () => {
+    expect(archivesToPrune([A, B], 2)).toEqual([]);
+    expect(archivesToPrune([A], 5)).toEqual([]);
+    expect(archivesToPrune([], 5)).toEqual([]);
+  });
+
+  it("prunes all when keep is 0 or negative", () => {
+    expect(archivesToPrune([A, B, C], 0)).toEqual([A, B, C]);
+    expect(archivesToPrune([A, B, C], -1)).toEqual([A, B, C]);
   });
 });

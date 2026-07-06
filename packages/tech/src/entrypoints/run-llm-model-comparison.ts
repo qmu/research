@@ -1,6 +1,6 @@
-import { writeFile, readFile, mkdir } from "node:fs/promises";
+import { writeFile, readFile, readdir, rm, mkdir } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
-import { gzipSync } from "node:zlib";
+import { gzipSync, gunzipSync } from "node:zlib";
 import { MODELS } from "../llm-model-comparison/models";
 import type {
   ComparisonResult,
@@ -15,7 +15,9 @@ import type { JudgeConfig } from "../llm-model-comparison/run";
 import { mergeConfigs } from "../llm-model-comparison/domain/merge";
 import {
   appendHistory,
+  archivesToPrune,
   buildHistoryEntry,
+  latestArchive,
   selectErrored,
 } from "../llm-model-comparison/domain/history";
 import { renderComparisonReport } from "../llm-model-comparison/domain/report";
@@ -73,6 +75,11 @@ const PROBE: ProbeParams = {
 };
 
 const DEFAULT_TRIALS = 3;
+
+// Retention: how many gzip full-record archives to keep under history/. The compact
+// history.json keeps every run's means regardless; only older raw full-records are
+// pruned, so committed repo growth stays bounded as real sweeps accumulate.
+const HISTORY_KEEP = 20;
 
 // The fixed LLM judge (a curated fact, recorded for real runs). Priced separately
 // in the estimate because it is one model, not the model under test.
@@ -146,6 +153,10 @@ type Args = Readonly<{
   // overwriting the whole matrix.
   onlyErrored: boolean; // repair: re-run the latest record's errored cells
   configs: ReadonlyArray<string> | null; // explicit "id:effort" keys, or null
+  // Render-only: make NO API calls; read the newest committed real archive under
+  // history/ and (re)render the real report from it. The "generate the report
+  // anytime from committed history" path.
+  renderLatest: boolean;
 }>;
 
 const parseList = (
@@ -182,6 +193,7 @@ const parseArgs = (argv: ReadonlyArray<string>): Args => {
     detail,
     onlyErrored: argv.includes("--only-errored"),
     configs: parseList(argv, "--configs"),
+    renderLatest: argv.includes("--render-latest"),
   };
 };
 
@@ -333,12 +345,12 @@ const printEstimate = (estimate: RunEstimate, trials: number): void => {
 // domain/history.ts. Called only on real runs — under --fixture the files would
 // grow per invocation and break the byte-stable CI self-test.
 const writeHistory = async (
-  outputPath: string,
+  historyBasePath: string, // canonical `.md` path — history.json + archives sit beside it
   core: ComparisonCore,
   runTimestamp: string,
   trials: number,
 ): Promise<void> => {
-  const historyPath = outputPath.replace(/\.md$/, ".history.json");
+  const historyPath = historyBasePath.replace(/\.md$/, ".history.json");
   let history: HistoryFile | null = null;
   try {
     history = JSON.parse(await readFile(historyPath, "utf8")) as HistoryFile;
@@ -353,29 +365,84 @@ const writeHistory = async (
 
   // Filenames can't carry ":"; ISO 2026-07-06T10:50:42.000Z → ...T10-50-42.000Z.
   const stamp = runTimestamp.replace(/:/g, "-");
-  const archiveDir = join(dirname(outputPath), "history");
+  const archiveDir = join(dirname(historyBasePath), "history");
   await mkdir(archiveDir, { recursive: true });
   await writeFile(
     join(archiveDir, `${stamp}.data.json.gz`),
     gzipSync(Buffer.from(`${JSON.stringify(core, null, 2)}\n`, "utf8")),
   );
+
+  // Retention: keep the HISTORY_KEEP most-recent full-record archives; prune the rest.
+  const archives = (await readdir(archiveDir)).filter((f) =>
+    f.endsWith(".data.json.gz"),
+  );
+  const pruned = archivesToPrune(archives, HISTORY_KEEP);
+  await Promise.all(pruned.map((f) => rm(join(archiveDir, f))));
+
   process.stdout.write(
-    `appended history point + archived full record for ${runTimestamp}\n`,
+    `appended history point + archived full record for ${runTimestamp}` +
+      (pruned.length > 0 ? ` (pruned ${pruned.length} old archive(s))` : "") +
+      "\n",
   );
 };
 
 const main = async (): Promise<void> => {
   const args = parseArgs(process.argv.slice(2));
 
-  // Output paths are needed up front: an incremental run reads the latest
-  // artifact to merge into, and --only-errored derives its work from it.
-  const outputPath =
+  // Path split: the FIXTURE report is the byte-stable committed CI self-test; a REAL
+  // run writes to a separate `.real.md` (gitignored, regenerable) so it never clobbers
+  // the fixture. The compact history.json + gzip archives — the committed real-data
+  // source of truth — always sit beside the canonical `.md`, regardless of which
+  // report this run writes. A real incremental run (--models/--only-errored) merges
+  // into the latest REAL artifact; a fixture run merges into the fixture artifact.
+  const canonicalMdPath = (
     process.env.OUTPUT_PATH ??
     resolve(
       process.cwd(),
       "../../docs/research-reports/llm-model-comparison.md",
+    )
+  ).replace(/\.real\.md$/, ".md");
+  const stem = canonicalMdPath.replace(/\.md$/, "");
+  const reportPath = args.forceFixture ? canonicalMdPath : `${stem}.real.md`;
+  const artifactPath = args.forceFixture
+    ? `${stem}.data.json`
+    : `${stem}.real.data.json`;
+
+  // --- render-only: regenerate the real report from the newest committed archive ---
+  // No API calls. Reads the latest history/<stamp>.data.json.gz, decompresses the full
+  // record, and (re)renders the real report — "generate the report anytime from
+  // committed history", independent of any session-local generator.
+  if (args.renderLatest) {
+    const archiveDir = join(dirname(canonicalMdPath), "history");
+    const archives = (await readdir(archiveDir).catch(() => [])).filter((f) =>
+      f.endsWith(".data.json.gz"),
     );
-  const artifactPath = outputPath.replace(/\.md$/, ".data.json");
+    const latest = latestArchive(archives);
+    if (!latest) {
+      process.stderr.write(
+        `--render-latest: no real archive under ${archiveDir}; run a real sweep first (npm run compare)\n`,
+      );
+      process.exitCode = 1;
+      return;
+    }
+    const core = JSON.parse(
+      gunzipSync(await readFile(join(archiveDir, latest))).toString("utf8"),
+    ) as ComparisonCore;
+    const rendered: ComparisonResult = {
+      ...core,
+      artifactPath: basename(artifactPath),
+    };
+    await mkdir(dirname(reportPath), { recursive: true });
+    await writeFile(
+      reportPath,
+      renderComparisonReport(rendered, args.detail),
+      "utf8",
+    );
+    process.stdout.write(
+      `rendered ${reportPath} from history archive ${latest} (measured ${core.generatedAt})\n`,
+    );
+    return;
+  }
 
   // A selector re-benchmarks a SUBSET and merges into the latest record; no
   // selector re-benchmarks the whole matrix and overwrites (the original flow).
@@ -521,10 +588,10 @@ const main = async (): Promise<void> => {
     artifactPath: basename(artifactPath),
   };
 
-  await mkdir(dirname(outputPath), { recursive: true });
+  await mkdir(dirname(reportPath), { recursive: true });
   await writeFile(artifactPath, `${JSON.stringify(core, null, 2)}\n`, "utf8");
   await writeFile(
-    outputPath,
+    reportPath,
     renderComparisonReport(result, args.detail),
     "utf8",
   );
@@ -532,8 +599,10 @@ const main = async (): Promise<void> => {
   // Historical benchmark: append a compact per-config point and archive the full
   // record gzipped, so the record is a time series, not a single snapshot — and
   // nothing is lost. Skipped under --fixture to keep the CI self-test byte-stable.
+  // history.json + archives sit beside the canonical .md even when this run wrote a
+  // `.real` report, so the committed real-data series has one stable location.
   if (!args.forceFixture) {
-    await writeHistory(outputPath, core, runTimestamp, args.trials);
+    await writeHistory(canonicalMdPath, core, runTimestamp, args.trials);
   }
 
   const measuredNow = fresh.filter((r) => r.provenance === "measured").length;
@@ -542,7 +611,7 @@ const main = async (): Promise<void> => {
     `done: ${measuredNow}/${fresh.length} configs measured live this run; ` +
       `${configs.length} total in record, ${erroredTotal} errored.\n`,
   );
-  process.stdout.write(`wrote ${outputPath}\n`);
+  process.stdout.write(`wrote ${reportPath}\n`);
   process.stdout.write(`wrote ${artifactPath}\n`);
 };
 
