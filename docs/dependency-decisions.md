@@ -92,6 +92,31 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 - **Exit strategy**: Replace only the `VectorStore` adapter and backend registry
   entry. Domain scoring, reports, and datasets do not depend on SQLite APIs.
 
+### @aws-sdk/client-s3vectors (packages/tech)
+
+- **Reason**: The `rag-benchmark` topic measures **AWS S3 Vectors** as a
+  self-managed, fixed-embedding backend. The official AWS SDK v3 client provides
+  typed commands for the vector bucket/index/put/query surface; hand-rolling a
+  SigV4 HTTP client would duplicate that. All access is isolated behind
+  `packages/tech/src/vendors/vectorstore/s3-vectors.ts`, which implements the
+  domain `VectorStore` port. Pinned to `3.1066.0` — the newest release that
+  clears the repo's `min-release-age=7` supply-chain gate (`.npmrc`); the S3
+  Vectors client is new and its later releases were younger than that floor when
+  this landed.
+- **Assessment**:
+  - License: Apache-2.0 — compatible with this MIT repo.
+  - Reputation: Official AWS SDK for JavaScript v3, vendored by AWS.
+  - Development status: Active; the S3 Vectors client tracks a newer AWS service,
+    so treat ids/limits as correct-as-of-source and re-verify against the live
+    API when bumping.
+  - Sustainability: Isolated behind the `VectorStore` ACL with a deterministic
+    fixture fallback; a credential-absent or region-unavailable run renders the
+    card `fixtured` / `error`, never faked.
+- **Monitoring**: Dependabot, `npm audit` in CI (`--audit-level=high`), and the
+  benchmark fixture stability check.
+- **Exit strategy**: Replace only the `VectorStore` adapter and the `s3-vectors`
+  registry card. Domain scoring, reports, and datasets do not depend on AWS APIs.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

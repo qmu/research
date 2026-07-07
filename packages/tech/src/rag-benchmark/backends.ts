@@ -25,4 +25,18 @@ export const BACKENDS: ReadonlyArray<Backend> = [
     ingestionNote:
       "File Search chunks documents server-side (default 800-token chunks, 400-token overlap) and embeds them internally; the indexed unit is OpenAI's chunk, not the committed document.",
   },
+  {
+    id: "s3-vectors",
+    name: "AWS S3 Vectors",
+    kind: "self-managed",
+    embeddingCoupling: "fixed",
+    isolatedStore: true,
+    source:
+      "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html",
+    costNote:
+      "Storage + PUT/query request pricing per AWS S3 Vectors (docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-pricing.html, 2026-07); this benchmark's volume is well under $0.01.",
+    metadataFiltering: true,
+    ingestionNote:
+      "Stores the fixed-embedding vectors we provide (float32, cosine); a self-managed, store-isolated reading. Requires AWS credentials and a region where S3 Vectors is available (verified in ap-northeast-1); IAM: s3vectors:CreateVectorBucket/CreateIndex/PutVectors/QueryVectors/DeleteIndex/DeleteVectorBucket.",
+  },
 ];

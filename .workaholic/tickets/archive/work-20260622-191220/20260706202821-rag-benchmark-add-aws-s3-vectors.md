@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Infrastructure, Config]
 effort: 2h
-commit_hash:
+commit_hash: 46249f8
 category: Added
 depends_on: 20260706202819-rag-benchmark-foundation-sqlite-vec.md
 ---
@@ -82,3 +82,33 @@ follow-up to be driven once AWS credentials + region availability are confirmed.
   region-unavailable run renders `fixtured` / `error` honestly.
 - `npm test` (tsc + vitest), `npm run lint`, `make build` all green;
   `dependency-decisions.md` updated with the AWS SDK assessment.
+
+## Final Report
+
+Development completed as planned. Verified the live S3 Vectors API before wiring
+(create-vector-bucket → create-index float32/cosine → put-vectors → query-vectors
+→ delete), then implemented the ACL against it. The live run measured the backend
+(store-isolated, recall/nDCG/MRR = 1.0, ingest ~1.0s, query p50/p95 ~99/105ms) and
+its test bucket + index were confirmed deleted afterward.
+
+### Discovered Insights
+
+- **Insight**: The AWS S3 Vectors SDK (`@aws-sdk/client-s3vectors`) could not be
+  installed at its current release: the repo's `.npmrc` sets `min-release-age=7`,
+  and every release newer than `3.1066.0` (2026-06-10) was younger than that
+  supply-chain floor. Pinned to `3.1066.0` rather than overriding the gate.
+  **Context**: This service client is new and ships frequent releases; a future
+  bump must still clear the 7-day floor, and ids/limits should be re-verified
+  against the live API (the surface moves).
+- **Insight**: S3 Vectors credential-gating can't key on a single env var —
+  credentials resolve from the AWS chain (named profile, explicit keys, or SSO).
+  The runner's `keyEnv` was generalized from a single string to a list matched
+  with "any present" (`AWS_PROFILE` | `AWS_ACCESS_KEY_ID`).
+  **Context**: Any future SDK-chain-authenticated backend should register its
+  candidate env vars the same way; a key-absent run then falls back to the
+  fixtured store honestly.
+- **Insight**: S3 Vectors returns cosine *distance* (smaller = closer), so the
+  ACL negates it to the domain's higher-is-better score — identical convention to
+  the sqlite-vec ACL, which keeps the two self-managed rows directly comparable.
+  **Context**: Any new distance-based store must negate to score, or its ranking
+  inverts silently (metrics would collapse without an error).

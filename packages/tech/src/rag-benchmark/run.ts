@@ -17,6 +17,7 @@ import type {
 import { createFixtureEmbeddingClient } from "../vendors/embedding/fixture";
 import { createFixtureVectorStore } from "../vendors/vectorstore/fixture";
 import { createOpenAiVectorStore } from "../vendors/vectorstore/openai";
+import { createS3VectorsStore } from "../vendors/vectorstore/s3-vectors";
 import { createSqliteVecStore } from "../vendors/vectorstore/sqlite-vec";
 
 type RunOptions = Readonly<{
@@ -28,19 +29,27 @@ type RunOptions = Readonly<{
 }>;
 
 type StoreFactory = Readonly<{
-  /** Env var whose presence gates a real run; null means keyless/local. */
-  keyEnv: string | null;
+  /**
+   * Env vars that gate a real run; a run is credentialed when ANY is set. An
+   * empty list means keyless/local. (AWS resolves credentials from a chain, so
+   * either a named profile or explicit access keys counts.)
+   */
+  keyEnv: ReadonlyArray<string>;
   create: (embedding: EmbeddingClient) => VectorStore;
 }>;
 
 const STORE_FACTORIES: Readonly<Record<string, StoreFactory>> = {
   "sqlite-vec": {
-    keyEnv: null,
+    keyEnv: [],
     create: (embedding) => createSqliteVecStore(embedding.dimensions),
   },
   "openai-vector-store": {
-    keyEnv: "OPENAI_API_KEY",
+    keyEnv: ["OPENAI_API_KEY"],
     create: () => createOpenAiVectorStore(),
+  },
+  "s3-vectors": {
+    keyEnv: ["AWS_PROFILE", "AWS_ACCESS_KEY_ID"],
+    create: (embedding) => createS3VectorsStore(embedding.dimensions),
   },
 };
 
@@ -52,7 +61,8 @@ const selectBackends = (
     : BACKENDS.filter((backend) => ids.includes(backend.id));
 
 const keyPresent = (factory: StoreFactory): boolean =>
-  factory.keyEnv === null || Boolean(process.env[factory.keyEnv]);
+  factory.keyEnv.length === 0 ||
+  factory.keyEnv.some((name) => Boolean(process.env[name]));
 
 const estimateBackendCostUsd = (backend: Backend, queries: number): number =>
   ((backend.searchCostPer1kCallsUsd ?? 0) * queries) / 1000;

@@ -268,6 +268,108 @@
           }
         }
       ]
+    },
+    {
+      "backend": {
+        "id": "s3-vectors",
+        "name": "AWS S3 Vectors",
+        "kind": "self-managed",
+        "embeddingCoupling": "fixed",
+        "isolatedStore": true,
+        "source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html",
+        "costNote": "Storage + PUT/query request pricing per AWS S3 Vectors (docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-pricing.html, 2026-07); this benchmark's volume is well under $0.01.",
+        "metadataFiltering": true,
+        "ingestionNote": "Stores the fixed-embedding vectors we provide (float32, cosine); a self-managed, store-isolated reading. Requires AWS credentials and a region where S3 Vectors is available (verified in ap-northeast-1); IAM: s3vectors:CreateVectorBucket/CreateIndex/PutVectors/QueryVectors/DeleteIndex/DeleteVectorBucket."
+      },
+      "provenance": "fixtured",
+      "embeddingModel": "fixed-hash-embedding-v1",
+      "datasetId": "scifact-mini",
+      "k": 3,
+      "retrieval": {
+        "recallAtK": 1,
+        "ndcgAtK": 1,
+        "mrr": 1
+      },
+      "operational": {
+        "ingestMs": 0,
+        "queryLatencyMs": [
+          0,
+          0,
+          0
+        ],
+        "queryLatencyP50Ms": 0,
+        "queryLatencyP95Ms": 0,
+        "costUsd": 0,
+        "maxScale": 5
+      },
+      "queryResults": [
+        {
+          "queryId": "Q1",
+          "results": [
+            {
+              "documentId": "D1",
+              "score": 0.4866642633922876
+            },
+            {
+              "documentId": "D5",
+              "score": 0.23210354127426377
+            },
+            {
+              "documentId": "D4",
+              "score": 0.15249857033260467
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q2",
+          "results": [
+            {
+              "documentId": "D3",
+              "score": 0.6374552583116767
+            },
+            {
+              "documentId": "D5",
+              "score": 0.08206099398622184
+            },
+            {
+              "documentId": "D4",
+              "score": 0.07188851546895896
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q3",
+          "results": [
+            {
+              "documentId": "D4",
+              "score": 0.6437206858203839
+            },
+            {
+              "documentId": "D5",
+              "score": 0.26243194054073904
+            },
+            {
+              "documentId": "D3",
+              "score": 0.25482359571881275
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        }
+      ]
     }
   ],
   "artifactPath": "rag-benchmark.data.json",

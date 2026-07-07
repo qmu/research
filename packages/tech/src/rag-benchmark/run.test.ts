@@ -42,4 +42,25 @@ describe("runRagBenchmark", () => {
       if (saved !== undefined) process.env.OPENAI_API_KEY = saved;
     }
   });
+
+  it("renders a credential-absent self-managed cloud backend as fixtured", async () => {
+    const savedProfile = process.env.AWS_PROFILE;
+    const savedKey = process.env.AWS_ACCESS_KEY_ID;
+    delete process.env.AWS_PROFILE;
+    delete process.env.AWS_ACCESS_KEY_ID;
+    try {
+      const result = await runRagBenchmark({
+        fixture: false,
+        k: 3,
+        trials: 1,
+        backends: ["s3-vectors"],
+      });
+      expect(result.runs[0]?.backend.id).toBe("s3-vectors");
+      expect(result.runs[0]?.backend.isolatedStore).toBe(true);
+      expect(result.runs[0]?.provenance).toBe("fixtured");
+    } finally {
+      if (savedProfile !== undefined) process.env.AWS_PROFILE = savedProfile;
+      if (savedKey !== undefined) process.env.AWS_ACCESS_KEY_ID = savedKey;
+    }
+  });
 });
