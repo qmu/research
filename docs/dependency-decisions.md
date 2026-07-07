@@ -117,6 +117,32 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 - **Exit strategy**: Replace only the `VectorStore` adapter and the `s3-vectors`
   registry card. Domain scoring, reports, and datasets do not depend on AWS APIs.
 
+### Cloudflare Vectorize / AutoRAG / R2 REST (packages/tech) — no new dependency
+
+- **Reason**: The `rag-benchmark` topic measures **Cloudflare Vectorize**
+  (self-managed, fixed embedding) and **Cloudflare AutoRAG** (fully-managed).
+  Both are reached over Cloudflare's REST API using the runtime's built-in
+  `fetch` — **no SDK dependency is taken on**. Access is isolated behind
+  `packages/tech/src/vendors/vectorstore/vectorize.ts` (Vectorize v2:
+  create/upsert/query/delete index) and `.../autorag.ts` (AutoRAG: R2 bucket +
+  object upload, instance create, sync, search), each implementing the domain
+  `VectorStore` port. Auth is `CLOUDFLARE_ACCOUNT_ID` + an API token.
+- **Assessment**:
+  - License / dependency: none added — native `fetch` only.
+  - Surface stability: these APIs are newer and move; ids/limits/pricing are
+    cited correct-as-of-source (2026-07) and were verified live before wiring.
+    Vectorize v2 requires index dimensions in `[32, 1536]` and its mutations are
+    eventually consistent (~5-15s). AutoRAG indexes asynchronously (6-hour cycle
+    / rate-limited force sync) and its R2 data-source binding is dashboard-
+    provisioned, so a REST-only live run renders an honest `error`, never faked.
+  - Sustainability: isolated behind the two `VectorStore` ACLs with a
+    deterministic fixture fallback; a credential-absent run renders `fixtured`.
+- **Monitoring**: `npm audit` in CI (no package added), and the benchmark
+  fixture stability check.
+- **Exit strategy**: Replace only the two `VectorStore` adapters and their
+  registry cards. Domain scoring, reports, and datasets do not depend on
+  Cloudflare APIs.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

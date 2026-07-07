@@ -22,12 +22,16 @@ This report records a benchmark harness for vector-store and RAG-database backen
 | sqlite-vec | self-managed | fixed | yes | fixtured | 100.0% | 100.0% | 1.000 | 0.00 | 0.00 | 0.00 | $0.0000 | Local SQLite extension; no API cost for benchmark queries. |
 | OpenAI vector store (File Search) | managed | managed | no | fixtured | 100.0% | 100.0% | 1.000 | 0.00 | 0.00 | 0.00 | $0.0000 | Storage $0.10/GB/day after the first free GB; search calls $2.50 per 1k (platform.openai.com/pricing, 2026-07). |
 | AWS S3 Vectors | self-managed | fixed | yes | fixtured | 100.0% | 100.0% | 1.000 | 0.00 | 0.00 | 0.00 | $0.0000 | Storage + PUT/query request pricing per AWS S3 Vectors (docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-pricing.html, 2026-07); this benchmark's volume is well under $0.01. |
+| Cloudflare Vectorize | self-managed | fixed | yes | fixtured | 100.0% | 100.0% | 1.000 | 0.00 | 0.00 | 0.00 | $0.0000 | Priced per stored-vector-dimension and per queried-vector-dimension (developers.cloudflare.com/vectorize/platform/pricing, 2026-07); this benchmark's volume is within the free allotment. |
+| Cloudflare AutoRAG | managed | managed | no | fixtured | 100.0% | 100.0% | 1.000 | 0.00 | 0.00 | 0.00 | $0.0000 | Managed pipeline priced on the underlying Workers AI + R2 + Vectorize usage (developers.cloudflare.com/autorag, 2026-07); no separate AutoRAG fee as of source. |
 
 ## Backend notes
 
 - **sqlite-vec** — store-isolated (fixed embedding).
 - **OpenAI vector store (File Search)** — whole-stack, not store-isolated (managed embedding). File Search chunks documents server-side (default 800-token chunks, 400-token overlap) and embeds them internally; the indexed unit is OpenAI's chunk, not the committed document.
 - **AWS S3 Vectors** — store-isolated (fixed embedding). Stores the fixed-embedding vectors we provide (float32, cosine); a self-managed, store-isolated reading. Requires AWS credentials and a region where S3 Vectors is available (verified in ap-northeast-1); IAM: s3vectors:CreateVectorBucket/CreateIndex/PutVectors/QueryVectors/DeleteIndex/DeleteVectorBucket.
+- **Cloudflare Vectorize** — store-isolated (fixed embedding). Stores the fixed-embedding vectors we provide (v2 index, cosine, dimensions in [32,1536]); a self-managed, store-isolated reading. Mutations are eventually consistent (~5-15s), so the polled propagation wait is included in measured ingest. Auth: CLOUDFLARE_ACCOUNT_ID + an API token with Vectorize edit.
+- **Cloudflare AutoRAG** — whole-stack, not store-isolated (managed embedding). Fully-managed: ingests from an R2 bucket and embeds/indexes internally (whole-stack, not store-isolated). Indexing is asynchronous (a 6-hour cycle or a rate-limited force sync); its R2 data-source binding is provisioned via the dashboard, so a live REST-only end-to-end run may render an honest `error` rather than `measured`.
 
 ## Data transparency
 

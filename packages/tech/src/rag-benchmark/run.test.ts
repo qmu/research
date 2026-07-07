@@ -43,24 +43,34 @@ describe("runRagBenchmark", () => {
     }
   });
 
-  it("renders a credential-absent self-managed cloud backend as fixtured", async () => {
-    const savedProfile = process.env.AWS_PROFILE;
-    const savedKey = process.env.AWS_ACCESS_KEY_ID;
-    delete process.env.AWS_PROFILE;
-    delete process.env.AWS_ACCESS_KEY_ID;
+  it("renders every credential-absent cloud backend as fixtured, never faked", async () => {
+    const gatedEnv = [
+      "AWS_PROFILE",
+      "AWS_ACCESS_KEY_ID",
+      "CLOUDFLARE_API_TOKEN",
+    ];
+    const saved = new Map(gatedEnv.map((name) => [name, process.env[name]]));
+    for (const name of gatedEnv) delete process.env[name];
     try {
       const result = await runRagBenchmark({
         fixture: false,
         k: 3,
         trials: 1,
-        backends: ["s3-vectors"],
+        backends: ["s3-vectors", "vectorize", "autorag"],
       });
-      expect(result.runs[0]?.backend.id).toBe("s3-vectors");
-      expect(result.runs[0]?.backend.isolatedStore).toBe(true);
-      expect(result.runs[0]?.provenance).toBe("fixtured");
+      expect(result.runs.map((run) => run.backend.id)).toEqual([
+        "s3-vectors",
+        "vectorize",
+        "autorag",
+      ]);
+      // Credential absent → deterministic fixture store, never a live call.
+      expect(result.runs.every((run) => run.provenance === "fixtured")).toBe(
+        true,
+      );
     } finally {
-      if (savedProfile !== undefined) process.env.AWS_PROFILE = savedProfile;
-      if (savedKey !== undefined) process.env.AWS_ACCESS_KEY_ID = savedKey;
+      for (const [name, value] of saved) {
+        if (value !== undefined) process.env[name] = value;
+      }
     }
   });
 });

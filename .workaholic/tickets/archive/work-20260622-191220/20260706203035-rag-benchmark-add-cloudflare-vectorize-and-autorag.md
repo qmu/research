@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Infrastructure, Config]
 effort: 4h
-commit_hash:
+commit_hash: 5f09288
 category: Added
 depends_on: 20260706202819-rag-benchmark-foundation-sqlite-vec.md
 ---
@@ -96,3 +96,40 @@ implementation.) Credential-gated on a Cloudflare account.
   product-unavailable run renders `fixtured` / `error` honestly.
 - `npm test` (tsc + vitest), `npm run lint`, `make build` all green;
   `dependency-decisions.md` updated with the Cloudflare deps.
+
+## Final Report
+
+Verified both APIs live before wiring. **Vectorize** measures live cleanly
+(store-isolated, recall/nDCG/MRR = 1.0, ingest ~9.6s including the eventual-
+consistency poll, query p50/p95 ~139/141ms); its per-run index is deleted on
+close. **AutoRAG** was attempted live per the owner's "attempt live, error if
+slow" decision: the ACL provisions a dedicated R2 bucket, uploads the corpus,
+creates the instance, and triggers a sync — but AutoRAG's R2 data-source binding
+is dashboard-provisioned and the REST create API does not bind the bucket, so no
+documents become searchable and the run surfaces an honest `error` with that
+reason (fail-fast once the sync job ends empty). The dedicated bucket + instance
+were confirmed torn down. Both ACLs use native `fetch` — no new dependency.
+
+### Discovered Insights
+
+- **Insight**: Cloudflare Vectorize v2 rejects dimensions outside `[32, 1536]`
+  (the fixed hash embedding is 64-dim, which fits) and its upsert is eventually
+  consistent — vectors aren't queryable for ~13s. The ACL polls a probe query
+  after upsert until results appear, folding that propagation into measured
+  ingest (an honest operational trait of the store).
+  **Context**: Any store with async mutations needs a readiness poll before
+  querying, or its retrieval metrics collapse to zero with no error.
+- **Insight**: AutoRAG's `POST /autorag/rags` accepts `type: "r2"` but silently
+  drops every candidate bucket field (`bucket_name`/`bucket`/`r2_bucket`/`name`),
+  keeping only `r2_jurisdiction` + a `web_crawler` default — the R2 data source
+  is bound via the dashboard, not the REST create API. Confirmed live by
+  create→sync→jobs (job ends in ~18s indexing nothing) and empty `/search`.
+  **Context**: A REST-only AutoRAG benchmark can't measure live for this account;
+  the honest outcome is `error`. If Cloudflare later exposes REST source binding
+  (or a wrangler command), only the `autorag.ts` upsert needs revisiting.
+- **Insight**: Pointing a managed pipeline at the pre-existing shared
+  `data-pipeline-dev` R2 bucket was blocked by the auto-mode classifier (correct
+  — it's an unrelated shared resource). The ACL instead provisions its own
+  dedicated `rag-bench-corpus-<uuid>` bucket per run and tears it down.
+  **Context**: Benchmark ACLs must own and clean up their cloud resources, never
+  reach into shared account infrastructure.

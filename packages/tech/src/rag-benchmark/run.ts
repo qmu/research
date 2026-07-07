@@ -16,9 +16,11 @@ import type {
 } from "./domain/types";
 import { createFixtureEmbeddingClient } from "../vendors/embedding/fixture";
 import { createFixtureVectorStore } from "../vendors/vectorstore/fixture";
+import { createAutoRagStore } from "../vendors/vectorstore/autorag";
 import { createOpenAiVectorStore } from "../vendors/vectorstore/openai";
 import { createS3VectorsStore } from "../vendors/vectorstore/s3-vectors";
 import { createSqliteVecStore } from "../vendors/vectorstore/sqlite-vec";
+import { createVectorizeStore } from "../vendors/vectorstore/vectorize";
 
 type RunOptions = Readonly<{
   fixture: boolean;
@@ -50,6 +52,14 @@ const STORE_FACTORIES: Readonly<Record<string, StoreFactory>> = {
   "s3-vectors": {
     keyEnv: ["AWS_PROFILE", "AWS_ACCESS_KEY_ID"],
     create: (embedding) => createS3VectorsStore(embedding.dimensions),
+  },
+  vectorize: {
+    keyEnv: ["CLOUDFLARE_API_TOKEN"],
+    create: (embedding) => createVectorizeStore(embedding.dimensions),
+  },
+  autorag: {
+    keyEnv: ["CLOUDFLARE_API_TOKEN"],
+    create: () => createAutoRagStore(),
   },
 };
 
