@@ -18,7 +18,10 @@
     "compare": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts",
     "compare:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --fixture",
     "compare:repair": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --only-errored",
-    "compare:render": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --render-latest"
+    "compare:render": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts --render-latest",
+    "rag": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-rag-benchmark.ts",
+    "rag:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-rag-benchmark.ts --fixture",
+    "rag:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-rag-benchmark.ts --estimate"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
@@ -32,6 +35,9 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.1",
     "@google/genai": "^2.8.0",
-    "openai": "^6.43.0"
+    "@types/better-sqlite3": "^7.6.13",
+    "better-sqlite3": "^12.11.1",
+    "openai": "^6.43.0",
+    "sqlite-vec": "^0.1.9"
   }
 }

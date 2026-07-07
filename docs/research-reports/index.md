@@ -13,5 +13,7 @@ exact steps to reproduce it.
 - [Fundamental LLM model comparison](./llm-model-comparison) — frontier models
   from Anthropic, OpenAI, and Google across eight aspects: five curated catalog
   facts and three live-measured behavioral probes.
+- [RAG vector store benchmark](./rag-benchmark) — a keyless retrieval harness
+  comparing vector-store behavior with a deterministic SciFact-style fixture.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

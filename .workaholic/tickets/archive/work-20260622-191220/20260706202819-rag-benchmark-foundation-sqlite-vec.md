@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain, Infrastructure, Config]
 effort: 4h
-commit_hash:
+commit_hash: 9b75a7d
 category: Added
 depends_on:
 ---
@@ -143,3 +143,23 @@ a reader can clone and reproduce.
 - `npm test` (tsc + vitest), `npm run lint`, `make build` all green;
   `dependency-decisions.md` updated; the report documents exact commands, credentials,
   and expected cost so a reader can reproduce.
+
+## Final Report
+
+Development completed as planned.
+
+### Discovered Insights
+
+- **Insight**: A real `npm run rag` overwrites the committed fixture baseline
+  `docs/research-reports/rag-benchmark.{md,data.json}` in place; run
+  `npm run rag:fixture` afterwards to restore the byte-stable artifact before
+  committing.
+  **Context**: The committed report doubles as the CI self-test — an accidental
+  commit of real-run timings would make `rag:fixture` byte-stability checks fail
+  and leak machine-dependent numbers into the reviewed baseline.
+- **Insight**: better-sqlite3 pulls a native prebuild chain (bindings,
+  prebuild-install, tar-fs …) into package-lock.json; the sqlite-vec extension
+  loads via `sqliteVec.load(db)` inside the ACL only, so CI without native
+  support degrades to the fixture store honestly.
+  **Context**: Future backend tickets should keep native/module concerns inside
+  `vendors/vectorstore/` so `domain/` stays portable.

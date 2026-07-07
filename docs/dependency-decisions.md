@@ -67,6 +67,31 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 - **Monitoring**: Dependabot, `npm audit` in CI.
 - **Exit strategy**: Reached only through the domain-named `CompletionClient` contract; `usageMetadata.candidatesTokenCount` is normalized to `Completion.outputTokens` in `vendors/llm/usage.ts`, so dropping the provider is a one-file change with no domain impact.
 
+### sqlite-vec, better-sqlite3, @types/better-sqlite3 (packages/tech)
+
+- **Reason**: The `rag-benchmark` topic needs a local, keyless vector-store
+  baseline before any managed retrieval provider is measured. Implementing an
+  approximate-nearest-neighbor index and SQLite binding ourselves would distract
+  from the benchmark objective. `sqlite-vec` provides the vector extension,
+  `better-sqlite3` provides an embedded database driver, and
+  `@types/better-sqlite3` keeps the driver boundary typed. All access is isolated
+  behind `packages/tech/src/vendors/vectorstore/sqlite-vec.ts`.
+- **Assessment**:
+  - License: `sqlite-vec` is MIT OR Apache-2.0, `better-sqlite3` is MIT, and
+    `@types/better-sqlite3` follows the DefinitelyTyped MIT license;
+    compatible with this MIT repo.
+  - Reputation: `sqlite-vec` is a focused SQLite extension by Alex Garcia;
+    `better-sqlite3` is widely adopted in Node.js projects.
+  - Development status: `sqlite-vec` is young but actively released;
+    `better-sqlite3` is mature and maintained.
+  - Sustainability: The benchmark is protected by a `VectorStore`
+    anti-corruption layer and keeps a deterministic fixture store for no-dependency
+    test runs.
+- **Monitoring**: Dependabot, `npm audit` in CI, and local benchmark fixture
+  stability checks.
+- **Exit strategy**: Replace only the `VectorStore` adapter and backend registry
+  entry. Domain scoring, reports, and datasets do not depend on SQLite APIs.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
