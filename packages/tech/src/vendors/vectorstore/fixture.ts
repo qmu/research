@@ -15,11 +15,11 @@ export const createFixtureVectorStore = (): VectorStore => {
     upsert: async (documents) => {
       rows.splice(0, rows.length, ...documents);
     },
-    query: async (vector, k): Promise<ReadonlyArray<QueryResult>> =>
+    query: async (query, k): Promise<ReadonlyArray<QueryResult>> =>
       [...rows]
         .map((row) => ({
           documentId: row.document.id,
-          score: dot(row.vector, vector),
+          score: dot(row.vector, query.vector),
         }))
         .sort((a, b) => b.score - a.score)
         .slice(0, k),

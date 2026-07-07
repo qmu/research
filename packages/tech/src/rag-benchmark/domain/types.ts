@@ -40,6 +40,10 @@ export type Backend = Readonly<{
   source: string;
   costNote: string;
   metadataFiltering: boolean;
+  /** Curated per-1k-search-calls price used to estimate a real run's cost. */
+  searchCostPer1kCallsUsd?: number;
+  /** Curated fact about what the provider actually indexes (e.g. server-side chunking). */
+  ingestionNote?: string;
 }>;
 
 export type Vector = ReadonlyArray<number>;
@@ -54,6 +58,15 @@ export type QueryResult = Readonly<{
   score: number;
 }>;
 
+/**
+ * A query carries both the raw text and the fixed-embedding vector: self-managed
+ * stores search by vector, managed stores (which embed internally) search by text.
+ */
+export type StoreQuery = Readonly<{
+  text: string;
+  vector: Vector;
+}>;
+
 export type EmbeddingClient = Readonly<{
   id: string;
   dimensions: number;
@@ -63,8 +76,8 @@ export type EmbeddingClient = Readonly<{
 export type VectorStore = Readonly<{
   id: string;
   upsert: (documents: ReadonlyArray<EmbeddedDocument>) => Promise<void>;
-  query: (vector: Vector, k: number) => Promise<ReadonlyArray<QueryResult>>;
-  close?: () => void;
+  query: (query: StoreQuery, k: number) => Promise<ReadonlyArray<QueryResult>>;
+  close?: () => void | Promise<void>;
 }>;
 
 export type RetrievalMetrics = Readonly<{

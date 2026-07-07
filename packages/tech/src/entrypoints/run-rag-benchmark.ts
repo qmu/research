@@ -5,6 +5,17 @@ import { renderRagBenchmarkReport } from "../rag-benchmark/domain/report";
 
 const hasArg = (name: string): boolean => process.argv.includes(name);
 
+const argValue = (name: string): string | undefined => {
+  const index = process.argv.indexOf(name);
+  return index >= 0 ? process.argv[index + 1] : undefined;
+};
+
+const parseBackends = (): ReadonlyArray<string> =>
+  argValue("--backends")
+    ?.split(",")
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0) ?? [];
+
 const writeOutputs = async (
   reportPath: string,
   artifactPath: string,
@@ -21,13 +32,19 @@ const writeOutputs = async (
 };
 
 const main = async (): Promise<void> => {
+  const backends = parseBackends();
+
   if (hasArg("--estimate")) {
-    process.stdout.write(`${estimateRagBenchmark()}\n`);
+    process.stdout.write(`${estimateRagBenchmark(backends)}\n`);
     return;
   }
 
   const fixture = hasArg("--fixture");
-  const result = await runRagBenchmark({ fixture, k: 3, trials: 1 });
+  // Print the cost estimate before any real (non-fixture) run touches a provider.
+  if (!fixture) {
+    process.stdout.write(`${estimateRagBenchmark(backends)}\n`);
+  }
+  const result = await runRagBenchmark({ fixture, k: 3, trials: 1, backends });
   const reportPath =
     process.env.OUTPUT_PATH ??
     resolve(process.cwd(), "../../docs/research-reports/rag-benchmark.md");

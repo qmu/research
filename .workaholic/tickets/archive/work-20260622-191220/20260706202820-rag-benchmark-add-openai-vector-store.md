@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Infrastructure, Config]
 effort: 2h
-commit_hash:
+commit_hash: 255226d
 category: Added
 depends_on: 20260706202819-rag-benchmark-foundation-sqlite-vec.md
 ---
@@ -89,3 +89,34 @@ the existing `OPENAI_API_KEY` (already funded and on hand).
   card `fixtured`, never faked.
 - `npm test` (tsc + vitest), `npm run lint`, `make build` all green;
   `dependency-decisions.md` updated.
+
+## Final Report
+
+Development completed as planned. The live run measured the backend correctly
+(recall/nDCG/MRR = 1.0 on the mini set, ingest ~38s, query p50/p95 ~1.5s, ~$0.0075)
+and its test vector store + uploaded files were confirmed deleted afterward.
+
+### Discovered Insights
+
+- **Insight**: The `VectorStore` port had to grow from `query(vector, k)` to
+  `query({ text, vector }, k)` to admit a managed store. Self-managed stores
+  (sqlite-vec, fixture) ignore `text`; the managed OpenAI store ignores `vector`
+  and searches by `text`. This is the one domain-type change the foundation seam
+  did not anticipate — every future managed backend reuses it, so no further port
+  change is expected.
+  **Context**: The foundation ticket claimed "a new backend is a thin ACL + one
+  card, no domain change." That held for a self-managed store but not for the
+  first managed one; the `StoreQuery` widening is a one-time cost now paid.
+- **Insight**: Credential-gating lives in the runner's `STORE_FACTORIES` map
+  (`keyEnv`), not the ACL. A backend whose `keyEnv` is unset falls back to the
+  deterministic fixture store and is flagged `fixtured` — so `rag:fixture` stays
+  byte-stable and a key-absent real run is honest rather than an error.
+  **Context**: Keeps the ACL free of env-var/branching concerns; the AWS and
+  Cloudflare backends should register the same way (their credential env var as
+  `keyEnv`).
+- **Insight**: OpenAI File Search chunks server-side (recorded as a curated
+  `ingestionNote`), so its indexed unit is a chunk, not the committed document —
+  surfaced in the report's "Backend notes" so the managed rows are never read as
+  a like-for-like store comparison.
+  **Context**: `objective-documentation` honesty: managed numbers cover the whole
+  stack, and the report says so explicitly next to the flag.

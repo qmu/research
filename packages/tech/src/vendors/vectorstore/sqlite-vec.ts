@@ -3,6 +3,7 @@ import { load as loadSqliteVec } from "sqlite-vec";
 import type {
   EmbeddedDocument,
   QueryResult,
+  StoreQuery,
   Vector,
   VectorStore,
 } from "../../rag-benchmark/domain/types";
@@ -40,13 +41,15 @@ export const createSqliteVecStore = (dimensions: number): VectorStore => {
       transaction(documents);
     },
     query: async (
-      vector: Vector,
+      query: StoreQuery,
       k: number,
     ): Promise<ReadonlyArray<QueryResult>> =>
-      search.all(toFloat32(vector), k).map((row) => ({
+      search.all(toFloat32(query.vector), k).map((row) => ({
         documentId: row.id,
         score: -row.distance,
       })),
-    close: () => db.close(),
+    close: () => {
+      db.close();
+    },
   };
 };
