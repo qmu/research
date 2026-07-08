@@ -12,6 +12,35 @@ mission: per-topic-research-pipeline-benchmark-llm-insights-jp-translation
 
 # VitePress サイトと公開を per-topic レポートに作り直す
 
+## 進捗メモ（2026-07-09 night /drive）— 一部完了・残りは owner-gated 実行待ち
+
+**このドライブで安全に完了した範囲:**
+
+- 孤立していた `docs/research-reports/llm-model-comparison.real.ja.md`
+  （2026-07-06 実測の手書き日本語版、`.real.md` は gitignore 対象）を撤去。
+- 今回のドライブで新設した per-topic の英語ソースレポート
+  （`foundation-models` / `llm-speed-comparison` / `llm-accuracy-comparison`）と
+  既存の `llm-availability` / `ocr-comparison` を、research-reports の索引と
+  VitePress サイドバーに追加し、per-topic の英語ソースへ到達できるようにした。
+  `make build` はリンク切れ・サイトマップエラーなしで緑。
+
+**残り（このドライブでは着手せず、owner-gated 実行待ちのためブロック）:**
+
+- サイト主線を「各トピックの**生成物**（英語 insights ＋日本語翻訳）」へ差し替える
+  中核作業は、その生成物が **real 経路・owner-gated（`ANTHROPIC_API_KEY` 必須）**で
+  しか作られず、本セッションにキーが無いため**未生成**。存在しないファイルへ nav を
+  向けると `make build` がリンク切れで落ちるため、メタ導入 `index.md` と区分スタブ
+  （`speed-comparison` / `accuracy-comparison` / `target-foundation-models` 等）の
+  撤去と、日本語版／English の 2 系統 nav 化は保留した。
+- 公開境界（`scripts/export-corporate-research.mjs` / `scripts/publish-research.sh`
+  / `docs/adr/0003-*`）の per-topic 成果物への作り替えも、上記生成物の形が確定して
+  から行う（手書き JP 記事前提の記述の撤去を含む）。手書き JP 記事群と `make publish`
+  境界は、生成物が揃うまで現状維持（外部公開面をキー無しで作り替えるのは避ける）。
+
+**再開の前提:** owner が `.env` にキーを入れて各トピックの `research <topic> --real`
+を流し、`<topic>.insights.md` と `<topic>.insights.ja.md` を生成・コミットする。
+その後に nav 主線の差し替え・メタ層撤去・公開境界の更新を行い、本チケットを archive する。
+
 ## Overview
 
 VitePress サイトを、**各トピックのレポート（英語 insights ＋日本語翻訳）を

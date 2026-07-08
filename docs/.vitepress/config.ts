@@ -95,16 +95,36 @@ export default defineConfig({
             link: "/research-reports/",
           },
           {
-            text: "LLM exact-match benchmark",
-            link: "/research-reports/llm-benchmark",
+            text: "Foundation model catalog",
+            link: "/research-reports/foundation-models",
+          },
+          {
+            text: "LLM response speed",
+            link: "/research-reports/llm-speed-comparison",
+          },
+          {
+            text: "LLM output accuracy",
+            link: "/research-reports/llm-accuracy-comparison",
           },
           {
             text: "LLM model comparison",
             link: "/research-reports/llm-model-comparison",
           },
           {
+            text: "LLM API availability",
+            link: "/research-reports/llm-availability",
+          },
+          {
+            text: "OCR capability comparison",
+            link: "/research-reports/ocr-comparison",
+          },
+          {
             text: "RAG vector store benchmark",
             link: "/research-reports/rag-benchmark",
+          },
+          {
+            text: "LLM exact-match benchmark",
+            link: "/research-reports/llm-benchmark",
           },
         ],
       },
