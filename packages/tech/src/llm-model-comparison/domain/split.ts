@@ -142,6 +142,12 @@ export type SplitArtifact = Readonly<{
   judgeModel: string;
   probe: ComparisonResult["probe"];
   metrics: ReadonlyArray<SplitMetricKey>;
+  /**
+   * Group metrics absent from the source artifact (e.g. a probe added after the
+   * sweep that produced the data). Reported as "not measured in this run" rather
+   * than crashing or fabricating a value.
+   */
+  omittedMetrics: ReadonlyArray<SplitMetricKey>;
   /** The compare artifact this view was projected from (provenance). */
   sourceArtifact: string;
   /** ConfigRun rows with each trial's calls filtered to this group's probes. */
@@ -165,12 +171,28 @@ const filterConfigToGroup = (
  * metrics, stats, provenance, trial count, and per-config timestamps are carried
  * across unchanged, so the projected values equal the combined run exactly.
  */
+/** Whether every config exposes a finite Aggregate for a metric (a metric added
+ * after the sweep that produced the data is absent from older artifacts). */
+const metricPresent = (
+  configs: ReadonlyArray<ConfigRun>,
+  key: SplitMetricKey,
+): boolean =>
+  configs.length > 0 &&
+  configs.every((config) => {
+    const stat = config.stats[key];
+    return stat !== undefined && typeof stat.n === "number";
+  });
+
 export const projectComparison = (
   result: ComparisonResult,
   group: ProbeGroup,
   sourceArtifact: string,
 ): SplitArtifact => {
   const spec = GROUP_SPECS[group];
+  const present = spec.metrics.filter((key) =>
+    metricPresent(result.configs, key),
+  );
+  const omitted = spec.metrics.filter((key) => !present.includes(key));
   return {
     group,
     title: spec.title,
@@ -179,7 +201,8 @@ export const projectComparison = (
     trials: result.trials,
     judgeModel: result.judgeModel,
     probe: result.probe,
-    metrics: spec.metrics,
+    metrics: present,
+    omittedMetrics: omitted,
     sourceArtifact,
     configs: result.configs.map((config) =>
       filterConfigToGroup(config, spec.probes),
@@ -192,3 +215,7 @@ export const aspectsForGroup = (
   group: ProbeGroup,
 ): ReadonlyArray<SplitAspect> =>
   GROUP_SPECS[group].metrics.map((key) => ASPECT_META[key]);
+
+export const aspectsForMetrics = (
+  metrics: ReadonlyArray<SplitMetricKey>,
+): ReadonlyArray<SplitAspect> => metrics.map((key) => ASPECT_META[key]);

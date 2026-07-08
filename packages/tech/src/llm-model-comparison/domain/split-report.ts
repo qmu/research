@@ -1,5 +1,10 @@
 import type { Aggregate, ConfigRun, Provenance } from "./types";
-import { aspectsForGroup, type SplitArtifact, type SplitAspect } from "./split";
+import {
+  ASPECT_META,
+  aspectsForMetrics,
+  type SplitArtifact,
+  type SplitAspect,
+} from "./split";
 import { buildThroughputPrompt } from "./throughput";
 import { buildSchemaPrompt } from "./json-schema";
 import { buildLengthPrompt } from "./length-accuracy";
@@ -58,7 +63,7 @@ const label = (run: ConfigRun): string =>
   `${escapeCell(run.modelName)} [${escapeCell(run.effort)}]`;
 
 const headlineTable = (artifact: SplitArtifact): string => {
-  const aspects = aspectsForGroup(artifact.group);
+  const aspects = aspectsForMetrics(artifact.metrics);
   const metricHeaders = aspects.map((a) => a.header).join(" | ");
   const metricDivider = aspects.map(() => "---").join(" | ");
   const header =
@@ -152,7 +157,7 @@ const accuracyTransparency = (artifact: SplitArtifact): string => {
     informationItem === undefined
       ? ""
       : buildInformationAccuracyPrompt(informationItem);
-  return `**Schema-complexity probe** (structured-output mode; each axis is
+  const base = `**Schema-complexity probe** (structured-output mode; each axis is
 escalated independently — depth up to ${sp.depth.cap} nesting levels, breadth up
 to ${sp.breadth.cap} fields — climbing geometrically then bisecting to the tested
 maximum. The first rung on the depth axis asks for):
@@ -165,11 +170,20 @@ ${schemaPrompt}
 
 \`\`\`text
 ${lengthPrompt}
-\`\`\`
+\`\`\``;
+  // The information-accuracy probe was added after some sweeps; only describe it
+  // when this run's data actually carries the metric (older artifacts omit both
+  // the metric and its probe params). Gating on the metric avoids reading probe
+  // params that a stale artifact lacks at runtime.
+  if (!artifact.metrics.includes("informationAccuracy")) {
+    return base;
+  }
+  const info = artifact.probe.informationAccuracy;
+  return `${base}
 
 **Information-accuracy probe** (TruthfulQA manifest
-${escapeCell(artifact.probe.informationAccuracy.manifestVersion)};
-${artifact.probe.informationAccuracy.questionCount} short factual questions;
+${escapeCell(info.manifestVersion)};
+${info.questionCount} short factual questions;
 headline score = deterministic alias/exact-match token F1):
 
 \`\`\`text
@@ -199,12 +213,21 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
   const anyNonMeasured = configs.some((r) => r.provenance !== "measured");
   const providers = [...new Set(configs.map((r) => r.provider))].length;
   const models = [...new Set(configs.map((r) => r.id))].length;
-  const aspects = aspectsForGroup(artifact.group);
+  const aspects = aspectsForMetrics(artifact.metrics);
   const trialCount = plural(artifact.trials, "trial");
 
   const aspectSections = aspects
     .map((aspect) => aspectSection(aspect, configs, measuredRuns))
     .join("\n\n");
+
+  const omittedNote =
+    artifact.omittedMetrics.length === 0
+      ? ""
+      : `\n**Not measured in this run.** ${artifact.omittedMetrics
+          .map((key) => ASPECT_META[key].title)
+          .join(
+            ", ",
+          )} — the source sweep (\`${escapeCell(artifact.sourceArtifact)}\`) predates this probe, so it is omitted here rather than shown as a value. Re-run \`compare\` to include it.\n`;
 
   return `---
 title: ${artifact.title}
@@ -234,6 +257,7 @@ interval (1.96 × sample standard deviation / √n) with n over ${trialCount}.
 \`n/a (fixtured)\` means the deterministic fixture client produced the cell (no
 API key was used); \`n/a (error)\` means every trial for that configuration
 failed. Provenance is written in the cell text, never encoded only by color.
+${omittedNote}
 
 ## Per-aspect measurements
 

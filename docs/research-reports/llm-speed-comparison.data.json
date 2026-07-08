@@ -36,6 +36,7 @@
     "ttftMs",
     "totalLatencyMs"
   ],
+  "omittedMetrics": [],
   "sourceArtifact": "llm-model-comparison.data.json",
   "configs": [
     {

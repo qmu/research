@@ -28,6 +28,26 @@ describe("extractNumbers", () => {
       extractNumbers("0.42, 5 trials, 95%, 1,536 dims, 0.42 again"),
     ).toEqual(["0.42", "5", "95%", "1,536"]);
   });
+
+  it("does not swallow a trailing list/sentence comma into the number", () => {
+    // "depth 10, breadth 32, 48 fields" must yield 10, 32, 48 — not "10," etc.
+    expect(extractNumbers("depth 10, breadth 32, 48 fields")).toEqual([
+      "10",
+      "32",
+      "48",
+    ]);
+    expect(extractNumbers("up to 21, then 1,234 more")).toEqual([
+      "21",
+      "1,234",
+    ]);
+  });
+
+  it("treats a word hyphen as text, not a minus sign (no spurious negatives)", () => {
+    // "per-1k-calls", "GPT-5", "top-1" must yield magnitudes, never "-1".
+    expect(extractNumbers("$2.50-per-1k-calls on GPT-5, top-1 recall")).toEqual(
+      ["2.50", "1", "5"],
+    );
+  });
 });
 
 describe("verifyNumbersPreserved", () => {
@@ -122,17 +142,18 @@ describe("translateInsights", () => {
     }
   });
 
-  it("throws when the model drops a number", async () => {
+  it("reports missing numbers (without throwing) when the model drops one", async () => {
     const dropping = {
       model: "bad-translate",
       generateAnswer: () => Promise.resolve("数値のない翻訳。"),
     };
-    await expect(
-      translateInsights({
-        client: dropping,
-        input,
-        generatedAt: "2026-07-09T00:00:00.000Z",
-      }),
-    ).rejects.toThrow(/dropped or altered number/);
+    const report = await translateInsights({
+      client: dropping,
+      input,
+      generatedAt: "2026-07-09T00:00:00.000Z",
+    });
+    // The source numbers 0.42, 5, 95(%) are all absent → all flagged, no throw.
+    expect(report.missingNumbers.length).toBeGreaterThan(0);
+    expect(report.missingNumbers).toContain("0.42");
   });
 });

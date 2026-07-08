@@ -84,9 +84,9 @@ describe("buildLegacyArgv", () => {
 
 describe("planPipeline", () => {
   it("runs only the benchmark stage for a benchmark-only topic, regardless of mode", () => {
-    const speed = requireTopic("speed");
-    expect(planPipeline(speed, "fixture")).toEqual(["benchmark"]);
-    expect(planPipeline(speed, "real")).toEqual(["benchmark"]);
+    const combined = requireTopic("llm-model-comparison");
+    expect(planPipeline(combined, "fixture")).toEqual(["benchmark"]);
+    expect(planPipeline(combined, "real")).toEqual(["benchmark"]);
   });
 
   it("runs the LLM stages on real for a migrated topic, but not on fixture", () => {

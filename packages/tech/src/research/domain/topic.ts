@@ -79,7 +79,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     artifactBase: "llm-speed-comparison",
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
-    stages: ["benchmark"],
+    stages: ["benchmark", "insights", "translation"],
   },
   {
     id: "accuracy",
@@ -88,7 +88,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     artifactBase: "llm-accuracy-comparison",
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
-    stages: ["benchmark"],
+    stages: ["benchmark", "insights", "translation"],
   },
   {
     id: "rag",
@@ -122,10 +122,12 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
       "Foundation model catalog: provider, tier, price, effort, API surface (reference catalog, not measured)",
     artifactBase: "foundation-models",
     // A catalog is generated deterministically from models.ts; every mode
-    // produces the same keyless reference table (no provider calls).
+    // produces the same keyless reference table (no provider calls). Insights
+    // and translation still run (real path) to give the catalog an
+    // interpretation layer and a Japanese version, marked catalog-provenance.
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: [], estimate: [], real: [] },
-    stages: ["benchmark"],
+    stages: ["benchmark", "insights", "translation"],
     kind: "catalog",
   },
   {

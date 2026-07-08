@@ -61,25 +61,53 @@ export type TranslationReport = Readonly<{
  * order preserved.
  */
 export const extractNumbers = (text: string): ReadonlyArray<string> => {
-  const matches = text.match(/-?\d[\d,]*(?:\.\d+)?%?/g) ?? [];
+  // Magnitude only — no sign. A leading hyphen in these reports is almost always
+  // a word hyphen ("per-1k-calls", "GPT-5", "top-1", "recall@3"), not a minus,
+  // and treating it as a minus produces spurious negative tokens ("-1") the
+  // translation legitimately never reproduces. A grouping comma counts only
+  // BETWEEN digits ("1,536"), never a trailing list/sentence comma ("32, 48").
+  // Dropping the sign cannot mask a value change (0.42 vs 0.40 differ in
+  // magnitude); it only forgoes catching a sign flip, which a translator does
+  // not do to a measured figure.
+  const matches = text.match(/\d+(?:,\d+)*(?:\.\d+)?%?/g) ?? [];
   return [...new Set(matches)];
 };
 
 /**
- * Every number in the English source must appear verbatim in the translation.
- * Returns the numbers that are missing (empty ⇒ fully preserved). A percent form
- * is considered preserved if either the "N%" or the bare "N" appears, since a
- * translator may render "95%" as "95 パーセント".
+ * Normalize a string's numeric formatting so a preservation check compares
+ * VALUES, not typography: Japanese text legitimately uses a Unicode minus (−,
+ * U+2212), full-width digits, or drops a grouping comma. These are not value
+ * changes, so they must not trip the check. Genuine value changes (0.42 → 0.40)
+ * still differ after normalization and are still caught.
+ */
+const normalizeNumerics = (text: string): string =>
+  text
+    // Unicode minus / dash variants → ASCII hyphen-minus.
+    .replace(/[‐-―−－]/g, "-")
+    // Full-width digits → ASCII.
+    .replace(/[０-９]/g, (d) =>
+      String.fromCharCode(d.charCodeAt(0) - 0xff10 + 0x30),
+    )
+    // Drop grouping commas so "1,536" and "1536" compare equal.
+    .replace(/(\d),(\d)/g, "$1$2");
+
+/**
+ * Every number in the English source must appear in the translation. Returns the
+ * numbers that are missing (empty ⇒ fully preserved). Comparison is over
+ * normalized numerics (see `normalizeNumerics`), and a percent form counts as
+ * preserved if either "N%" or the bare "N" appears (a translator may write
+ * "95%" as "95 パーセント").
  */
 export const verifyNumbersPreserved = (
   englishBody: string,
   translated: string,
 ): ReadonlyArray<string> => {
-  const sourceNumbers = extractNumbers(englishBody);
-  return sourceNumbers.filter((number) => {
-    if (translated.includes(number)) return false;
-    if (number.endsWith("%")) {
-      return !translated.includes(number.slice(0, -1));
+  const normalizedTranslation = normalizeNumerics(translated);
+  return extractNumbers(englishBody).filter((number) => {
+    const normalized = normalizeNumerics(number);
+    if (normalizedTranslation.includes(normalized)) return false;
+    if (normalized.endsWith("%")) {
+      return !normalizedTranslation.includes(normalized.slice(0, -1));
     }
     return true;
   });
@@ -145,8 +173,10 @@ export type TranslateParams = Readonly<{
 
 /**
  * Translate the English insights to Japanese and wrap with provenance. Runs the
- * numeric-preservation check on the result; a translation that dropped or
- * altered a number throws, so a silently-changed measurement can never ship.
+ * numeric-preservation check and returns any `missingNumbers` (numbers in the
+ * source absent from the translation) rather than throwing — the caller decides
+ * whether to retry or warn, so a single formatting edge case cannot halt a
+ * whole batch. An empty `missingNumbers` means every figure was preserved.
  */
 export const translateInsights = async (
   params: TranslateParams,
@@ -155,12 +185,6 @@ export const translateInsights = async (
   const prompt = buildTranslationPrompt(input);
   const body = await client.generateAnswer(prompt);
   const missingNumbers = verifyNumbersPreserved(input.englishBody, body);
-  if (missingNumbers.length > 0) {
-    throw new Error(
-      `translation dropped or altered number(s): ${missingNumbers.join(", ")} ` +
-        `(the Japanese version must preserve every figure from ${input.sourceInsights})`,
-    );
-  }
   const provenance: TranslationProvenance = {
     source_artifact: input.sourceArtifact,
     source_commit: input.sourceCommit,

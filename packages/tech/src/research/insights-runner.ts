@@ -25,18 +25,39 @@ const INSIGHTS_KEY_ENV = "ANTHROPIC_API_KEY";
 const docsReportDir = (): string =>
   resolve(process.cwd(), "../../docs/research-reports");
 
-const artifactPathFor = (spec: TopicSpec): string =>
-  resolve(docsReportDir(), `${spec.artifactBase}.data.json`);
-
 const insightsPathFor = (spec: TopicSpec): string =>
   resolve(docsReportDir(), `${spec.artifactBase}.insights.md`);
 
-const readArtifact = async (path: string): Promise<unknown | null> => {
-  try {
-    return JSON.parse(await readFile(path, "utf8")) as unknown;
-  } catch {
-    return null;
+/**
+ * The data artifact to interpret. On a real run the benchmark writes a
+ * `.real.data.json` (gitignored, non-deterministic) that must be preferred over
+ * the committed keyless fixture — insights must interpret the real numbers, not
+ * the placeholder fixture. On the estimate/fixture path (or when no real
+ * artifact exists, e.g. a deterministic catalog) the canonical artifact is used.
+ * Returns the parsed artifact and the basename it came from (for provenance).
+ */
+const resolveArtifact = async (
+  spec: TopicSpec,
+  mode: "real" | "estimate",
+): Promise<Readonly<{ artifact: unknown; sourceBasename: string }> | null> => {
+  const candidates =
+    mode === "real"
+      ? [
+          `${spec.artifactBase}.real.data.json`,
+          `${spec.artifactBase}.data.json`,
+        ]
+      : [`${spec.artifactBase}.data.json`];
+  for (const basename of candidates) {
+    try {
+      const artifact = JSON.parse(
+        await readFile(resolve(docsReportDir(), basename), "utf8"),
+      ) as unknown;
+      return { artifact, sourceBasename: basename };
+    } catch {
+      continue;
+    }
   }
+  return null;
 };
 
 /** Best-effort current commit for provenance; "uncommitted" when unavailable. */
@@ -75,10 +96,14 @@ const TOPIC_GUIDANCE: Readonly<Record<string, string>> = {
     "sample sizes, and their limits, and keep every statement observational.",
 };
 
-const buildInput = (spec: TopicSpec, artifact: unknown): InsightsInput => ({
+const buildInput = (
+  spec: TopicSpec,
+  artifact: unknown,
+  sourceBasename: string,
+): InsightsInput => ({
   topicId: spec.id,
   topicTitle: spec.title,
-  sourceArtifact: `${spec.artifactBase}.data.json`,
+  sourceArtifact: sourceBasename,
   sourceCommit: currentCommit(),
   trials: trialsOf(artifact),
   dataArtifact: artifact,
@@ -116,14 +141,14 @@ export const runInsightsStage = async (
   options: InsightsStageOptions,
 ): Promise<void> => {
   const { spec, mode, generatedAt } = options;
-  const artifact = await readArtifact(artifactPathFor(spec));
-  if (artifact === null) {
+  const resolved = await resolveArtifact(spec, mode);
+  if (resolved === null) {
     process.stdout.write(
-      `research ${spec.id}: insights skipped — no data artifact at ${spec.artifactBase}.data.json (run the benchmark first)\n`,
+      `research ${spec.id}: insights skipped — no data artifact for ${spec.artifactBase} (run the benchmark first)\n`,
     );
     return;
   }
-  const input = buildInput(spec, artifact);
+  const input = buildInput(spec, resolved.artifact, resolved.sourceBasename);
 
   if (mode === "estimate") {
     const estimate = estimateInsights(input);

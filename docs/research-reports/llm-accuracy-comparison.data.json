@@ -37,6 +37,7 @@
     "lengthAccuracy",
     "informationAccuracy"
   ],
+  "omittedMetrics": [],
   "sourceArtifact": "llm-model-comparison.data.json",
   "configs": [
     {

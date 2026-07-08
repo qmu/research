@@ -43,7 +43,7 @@ export const createFixtureInsightsClient = (model = "fixture"): LlmClient => ({
 // The numeric-token forms a measurement takes; kept in sync with the domain's
 // `extractNumbers` so the stub echoes exactly what the preservation check looks
 // for (inlined here to avoid a vendors→domain import).
-const FIXTURE_NUMBER_RE = /-?\d[\d,]*(?:\.\d+)?%?/g;
+const FIXTURE_NUMBER_RE = /\d+(?:,\d+)*(?:\.\d+)?%?/g;
 
 // A deterministic translation stub that ECHOES every number found in the prompt,
 // so the domain's numeric-preservation check passes on the keyless path. It is

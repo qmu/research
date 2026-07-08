@@ -170,6 +170,24 @@ describe("projectComparison", () => {
     ]);
   });
 
+  it("omits (rather than crashes on) a metric absent from the source data", () => {
+    // Simulate an older sweep whose configs lack informationAccuracy.
+    const older: ComparisonResult = {
+      ...result,
+      configs: result.configs.map((c) => {
+        const stats = { ...c.stats } as Record<string, unknown>;
+        delete stats.informationAccuracy;
+        return { ...c, stats } as (typeof result.configs)[number];
+      }),
+    };
+    const accuracy = projectComparison(older, "accuracy", "old.data.json");
+    expect(accuracy.metrics).not.toContain("informationAccuracy");
+    expect(accuracy.omittedMetrics).toEqual(["informationAccuracy"]);
+    // The metrics that ARE present survive.
+    expect(accuracy.metrics).toContain("maxSchemaDepth");
+    expect(accuracy.metrics).toContain("lengthAccuracy");
+  });
+
   it("splits the seven metrics with no overlap and no loss", () => {
     const speed = new Set(GROUP_SPECS.speed.metrics);
     const accuracy = new Set(GROUP_SPECS.accuracy.metrics);

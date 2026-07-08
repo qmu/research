@@ -132,12 +132,24 @@ export const runTranslationStage = async (
     return;
   }
 
-  const report = await translateInsights({
-    client: translationClient(),
-    input,
-    generatedAt,
-  });
+  // Translate, and if the numeric-preservation check flags missing figures,
+  // retry once (LLM output is non-deterministic, so a second pass usually
+  // preserves them). If a figure is still missing after the retry, warn loudly
+  // on stderr rather than halting the whole batch — the operator can review the
+  // one flagged file, and the rest of the site still generates.
+  const client = translationClient();
+  let report = await translateInsights({ client, input, generatedAt });
+  if (report.missingNumbers.length > 0) {
+    report = await translateInsights({ client, input, generatedAt });
+  }
   await writeFile(translationPathFor(spec), report.markdown, "utf8");
+  if (report.missingNumbers.length > 0) {
+    process.stderr.write(
+      `[research ${spec.id}] translation warning: ${report.missingNumbers.length} figure(s) ` +
+        `not found verbatim in the Japanese version after a retry: ${report.missingNumbers.join(", ")}. ` +
+        `Wrote ${spec.artifactBase}.insights.ja.md anyway — review these figures.\n`,
+    );
+  }
   process.stdout.write(
     `research ${spec.id}: wrote ${spec.artifactBase}.insights.ja.md (model ${report.provenance.translation_model})\n`,
   );

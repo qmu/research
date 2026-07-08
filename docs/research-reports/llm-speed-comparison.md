@@ -87,6 +87,7 @@ interval (1.96 × sample standard deviation / √n) with n over 3 trials.
 API key was used); `n/a (error)` means every trial for that configuration
 failed. Provenance is written in the cell text, never encoded only by color.
 
+
 ## Per-aspect measurements
 
 Each table reports the mean ± 95% confidence interval, observed min–max, and
