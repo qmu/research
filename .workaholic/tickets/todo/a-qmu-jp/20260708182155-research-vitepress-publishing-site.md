@@ -27,8 +27,9 @@ mission:
   読者が理解できる情報設計にする。法人サイトの IA と一貫させる。
 - `workaholic:design` / `policies/wcag-conformance.md` — 公開サイトとして到達可能性・可読性を担保する
   （見出し構造、リンク文言、コントラスト）。
-- `workaholic:operation` / `policies/ci-cd.md` — サイトビルドはローカル／既存 CI で検証する。`make docs` の
-  ビルドで内部リンク・サイトマップを死活確認し、壊れたリンクを持ち込まない。
+- `workaholic:operation` / `policies/ci-cd.md` — サイトビルドはローカル／既存 CI で検証する。`make build`
+  （VitePress ビルド）で内部リンク・サイトマップを死活確認し、壊れたリンクを持ち込まない（`make docs` は
+  `vitepress dev` でプレビュー用）。
 - `workaholic:implementation` / `policies/directory-structure.md` — サイト設定は `docs/.vitepress` に閉じ、
   記事は再編後の正本ディレクトリを指す。
 
@@ -55,7 +56,7 @@ mission:
    読み口を本リポジトリ側に持つ。
 3. サイトが指すのは再編後の**日本語清書記事（正本）**とし、英語レポート＋data.json＋history は再現可能ソースとして
    別扱いにする（サイトの主線からは区別して配置）。
-4. `make docs` でビルドし、内部リンク・サイトマップの死活を検証する。壊れたリンクを解消する。
+4. `make build`（VitePress を含む全ビルド）でビルドし、内部リンク・サイトマップの死活を検証する。壊れたリンクを解消する（`make docs` は `vitepress dev` でプレビュー用のため、検証ゲートには使わない）。
 5. 新規区分（情報精度・可用性・OCR）は、記事が入るまで索引にプレースホルダとして提示する。
 
 ## Quality Gate
@@ -64,17 +65,17 @@ mission:
 
 - VitePress の nav／sidebar／索引が、再編後の 6 区分 IA を法人サイトと一貫した形で提示する。
 - サイトの主線が日本語清書記事（正本）を指し、英語レポート／data.json／history は再現可能ソースとして区別される。
-- `make docs` のビルドが内部リンク切れ・サイトマップエラー無しで通る。
+- `make build` のビルドが内部リンク切れ・サイトマップエラー無しで通る。
 - 新規区分がプレースホルダとして索引に並ぶ。
 
 **Verification method**:
 
-- `make docs` を実行し、ビルド成功・内部リンク死活・サイトマップ生成を確認する。
+- `make build`（または `cd docs && npm run build`）を実行し、ビルド成功・内部リンク死活・サイトマップ生成を確認する（`make docs` はローカルプレビュー用で終了しない）。
 - ローカルプレビューで nav／sidebar／索引が 6 区分を正しく提示し、記事へ到達できることを確認する。
 
 **Gate**:
 
-- サイトが 6 区分 IA を提示し、正本記事へ到達でき、`make docs` がリンク・サイトマップともに緑。
+- サイトが 6 区分 IA を提示し、正本記事へ到達でき、`make build` がリンク・サイトマップともに緑。
 
 ## Considerations
 
