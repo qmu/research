@@ -1,46 +1,44 @@
 ---
-title: LLM基礎検証
-description: LLM基礎検証の日本語正本記事を、対象基盤モデル、速度、精度、可用性、OCR、ベクトルDB、Agent SDKの7区分で管理する。
+title: LLM基礎検証（日本語）
+description: 各トピックの日本語レポート（英語 insights の自動翻訳）を主線として並べる。数値・provenance は英語版と一致し、再現可能な英語ソース（レポート／data.json／history）は Research reports に置く。
 ---
 
-# LLM基礎検証
+# LLM基礎検証（日本語）
 
-LLM基礎検証は、qmu が公開する基盤モデル、RAG バックエンド、Agent SDKの比較記事群である。このサイトでは日本語の清書記事を正本として管理し、法人サイトへ同じ情報構造と記事内容を反映する。
+各トピックの読者向け主線は、この日本語レポートである。各レポートは、決定的な計測アーティファクトから生成した英語 insights を、数値と provenance を保持したまま日本語へ自動翻訳したものである（翻訳で数値は変えない）。再現可能な英語ソース（英語レポート・`data.json`・history）は [Research reports (source)](../research-reports/) に別立てで残す。
 
-英語レポート、JSON artifact、history は [Research reports (source)](../research-reports/) に残す。そちらは再現可能性のためのソースであり、読者向けの主線はこの LLM基礎検証である。
+各トピックには **英語版（English）** の生成レポートも対応する（[English reports](../research-reports/) 参照）。
 
-## 読む順序
+## トピック
 
-### [対象基盤モデル](./target-foundation-models)
+### [対象基盤モデル（カタログ）](../research-reports/foundation-models.insights.ja)
 
-検証対象にしたプロバイダー、モデル、価格、tier、effort 構成を確認する区分である。現在の正本記事は [基礎的LLMモデル比較（日本語版）](./foundation-model-comparison)。
+対象にした基盤モデルのプロバイダー・tier・価格・effort・API サーフェスの参照カタログ。`models.ts` を source of truth とする **カタログ（未測定）** であり、スループット等の実測値は含めない。表本体は [Foundation model catalog](../research-reports/foundation-models)。
 
-### [速度の比較](./speed-comparison)
+### [速度の比較](../research-reports/llm-speed-comparison.insights.ja)
 
-長いストリーミング生成の持続スループット、time-to-first-token、短い応答の合計レイテンシを見る区分である。現在の正本記事は [基礎的LLMモデル比較（日本語版）](./foundation-model-comparison)。
+持続スループット、time-to-first-token、合計レイテンシ。共有の compare sweep からの射影であり、実測値は英語ソース [LLM response speed](../research-reports/llm-speed-comparison) と一致する。
 
-### [精度の比較](./accuracy-comparison)
+### [精度の比較](../research-reports/llm-accuracy-comparison.insights.ja)
 
-長さ指示への追従性、JSONスキーマ構造化精度、情報精度を扱う区分である。長さ精度と JSONスキーマ構造化精度は [基礎的LLMモデル比較（日本語版）](./foundation-model-comparison) に掲載済みで、[情報精度の比較](./information-accuracy) は未測定の受け皿として置いている。
+長さ指示への追従性、JSONスキーマ構造化の限界、情報精度。英語ソース [LLM output accuracy](../research-reports/llm-accuracy-comparison) と一致する。情報精度は元 sweep が当該プローブより前の場合は「未測定」として明示する。
 
-### [可用性の比較](./availability-comparison)
+### [可用性の比較](../research-reports/llm-availability.insights.ja)
 
-成功率、失敗種別、連続失敗の観測を時系列に積む区分である。現時点では手動ヘルスプローブ観測として公開し、定常サンプリングが確立するまでダウン頻度・ダウンタイム長の断定的な比較は行わない。
+手動ヘルスプローブによる観測。観測窓・サンプル数を明示し、**断定的な可用性ランキングや SLA は出さない**（観測として提示する）。英語ソース [LLM API availability](../research-reports/llm-availability)。
 
-### [OCR能力の比較](./ocr-comparison)
+### [OCR能力の比較](../research-reports/ocr-comparison.insights.ja)
 
-文書画像を視覚対応モデルへ入力し、文字起こしの CER/WER と構造化抽出のフィールド精度を見る区分である。現時点では合成 fixture によるハーネス検証のみ公開し、実モデル数値は未測定として扱う。
+文書画像を視覚対応モデルへ入力した文字起こしの CER/WER と構造化抽出のフィールド精度。英語ソース [OCR capability comparison](../research-reports/ocr-comparison)。
 
-### [ベクトルDBの比較](./vector-db-comparison)
+### [ベクトルDB／RAGの比較](../research-reports/rag-benchmark.insights.ja)
 
-RAG システムで使うベクトルストアを、検索品質、取り込み時間、クエリレイテンシ、コスト、運用制約で比較する区分である。現在の正本記事は [RAG ベクトルDBの比較](./vector-db-comparison)。
+RAG で使うベクトルストアの検索品質・取り込み時間・クエリレイテンシ・コスト・運用制約。英語ソース [RAG vector store benchmark](../research-reports/rag-benchmark)。
 
 ### [Agent SDKの比較](./agent-sdk-comparison)
 
-LLMアプリケーションで使うAgent SDK / agent runtimeを、状態管理、ツール呼び出し、長時間実行、human-in-the-loop、observability、deployment/runtimeなどの設計軸で比較する区分である。初回版は公開ドキュメントに基づく設計比較であり、実測ベンチマークではない。
+Agent SDK / agent runtime の設計比較。公開ドキュメントに基づく **設計比較** であり実測ベンチマークではない（`設計比較` / `未測定` / `要確認` の provenance ラベルを保持する）。この 1 件は手書きの参照記事である。
 
-## 未測定のプレースホルダー
+## provenance について
 
-- [情報精度の比較](./information-accuracy): 未測定。対応チケット: 20260708182156。
-- [可用性の比較](./availability-comparison): 手動ヘルスプローブ観測。対応チケット: 20260708182157。
-- [OCR能力の比較](./ocr-comparison): 実モデル数値は未測定。対応チケット: 20260708182158。
+各レポートの frontmatter は、由来（`source_artifact`・`source_commit`・`insights_model`・`translation_model`・`generated_at`・`trials`）を持つ。insights と翻訳は LLM 生成のため非決定的であり、real 経路（owner-triggered）でのみ生成される。keyless の fixture data レポートは自己テストであり、この主線とは別扱いである。
