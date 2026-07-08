@@ -7,6 +7,7 @@ import type {
   StructuredCompletion,
 } from "./types";
 import { googleOutputTokens } from "./usage";
+import { isNoEffortLevel } from "../../llm-model-comparison/domain/effort";
 
 // Wrap the official @google/genai SDK behind the domain-named CompletionClient.
 // Effort maps to a thinking budget; structured output uses `responseJsonSchema`;
@@ -26,7 +27,7 @@ const EFFORT_BUDGET: Record<string, number> = {
   high: 16384,
 };
 
-const buildConfig = (
+export const buildGoogleConfig = (
   options: CompletionOptions | undefined,
   extra?: Record<string, unknown>,
 ): Record<string, unknown> => {
@@ -35,7 +36,11 @@ const buildConfig = (
     maxOutputTokens: options?.maxTokens ?? 2048,
     ...extra,
   };
-  if (options?.effort && options.effort in EFFORT_BUDGET) {
+  if (
+    options?.effort &&
+    !isNoEffortLevel(options.effort) &&
+    options.effort in EFFORT_BUDGET
+  ) {
     config.thinkingConfig = { thinkingBudget: EFFORT_BUDGET[options.effort] };
   }
   return config;
@@ -53,7 +58,7 @@ export const createGoogleCompletionClient = (
       const response = await client.models.generateContent({
         model: apiModelId,
         contents: prompt,
-        config: buildConfig(options) as unknown,
+        config: buildGoogleConfig(options) as unknown,
       } as unknown as Parameters<typeof client.models.generateContent>[0]);
       return {
         text: response.text ?? "",
@@ -67,7 +72,7 @@ export const createGoogleCompletionClient = (
       const stream = await client.models.generateContentStream({
         model: apiModelId,
         contents: prompt,
-        config: buildConfig(options) as unknown,
+        config: buildGoogleConfig(options) as unknown,
       } as unknown as Parameters<
         typeof client.models.generateContentStream
       >[0]);
@@ -101,7 +106,7 @@ export const createGoogleCompletionClient = (
       const response = await client.models.generateContent({
         model: apiModelId,
         contents: prompt,
-        config: buildConfig(options, {
+        config: buildGoogleConfig(options, {
           responseMimeType: "application/json",
           responseJsonSchema: schema,
         }) as unknown,

@@ -5,6 +5,7 @@
 // schema, and parsing the judge's response into a typed `Review`.
 
 import type { Review } from "./types";
+import type { EffortLevel } from "./effort";
 
 // Everything the judge is shown about one configuration: its identity, its
 // measured metrics (already aggregated to means), and a handful of its actual
@@ -12,7 +13,7 @@ import type { Review } from "./types";
 // produced.
 export type ReviewSubject = Readonly<{
   modelName: string;
-  effort: string;
+  effort: EffortLevel;
   throughputTokensPerSec: number;
   ttftMs: number;
   totalLatencyMs: number;

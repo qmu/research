@@ -41,6 +41,7 @@ import {
   skippedReview,
 } from "./domain/review";
 import { summarizeTrials } from "./domain/aggregate";
+import type { EffortLevel } from "./domain/effort";
 
 // The judge that reviews each configuration: a single fixed model behind the
 // port, whether it is `live` (a real judge) or the deterministic fixture judge.
@@ -77,7 +78,7 @@ export const runTrial = async (
   client: CompletionClient,
   trialNumber: number,
   probe: ProbeParams,
-  effort: string,
+  effort: EffortLevel,
 ): Promise<TrialResult> => {
   const calls: CallRecord[] = [];
   try {
@@ -289,7 +290,7 @@ const sampleOutputs = (trials: ReadonlyArray<TrialResult>): string[] => {
 // than aborting the run.
 const runJudge = async (
   card: ModelCard,
-  effort: string,
+  effort: EffortLevel,
   provenance: Provenance,
   stats: ConfigRun["stats"],
   trials: ReadonlyArray<TrialResult>,
@@ -330,7 +331,7 @@ const runJudge = async (
 // not fatal to the matrix), and `fixtured` for the keyless path.
 export const buildConfigRun = async (
   card: ModelCard,
-  effort: string,
+  effort: EffortLevel,
   opts: RunOptions,
 ): Promise<ConfigRun> => {
   const { trials, probe, liveClient, fixtureFor, judge, measuredAt } = opts;
@@ -371,7 +372,7 @@ export const buildConfigRun = async (
 // from aborting the whole matrix.
 export const errorRun = (
   card: ModelCard,
-  effort: string,
+  effort: EffortLevel,
   trials: number,
   reason: string,
   judgeModel: string,

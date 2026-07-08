@@ -7,6 +7,7 @@ import type {
   StructuredCompletion,
 } from "./types";
 import { openAiOutputTokens } from "./usage";
+import { isNoEffortLevel } from "../../llm-model-comparison/domain/effort";
 
 // Wrap the official OpenAI SDK behind the domain-named CompletionClient. Effort
 // maps to OpenAI's `reasoning_effort`; structured output uses
@@ -25,7 +26,7 @@ const messages = (prompt: string) => [
 // Base request body. `reasoning_effort` is added when an effort level is
 // requested; the double cast at each call site keeps the exact wire shape (and
 // any fields the installed SDK types don't cover) confined to this adapter.
-const baseBody = (
+export const buildOpenAiChatBody = (
   model: string,
   prompt: string,
   options: CompletionOptions | undefined,
@@ -38,7 +39,7 @@ const baseBody = (
   // `n/a` is the registry sentinel for a model with no reasoning-effort knob;
   // omit the field for it (sending an unsupported effort is a hard 400, not a
   // finding). Applies to OpenAI-compatible endpoints reached through this adapter.
-  if (options?.effort && options.effort !== "n/a") {
+  if (options?.effort && !isNoEffortLevel(options.effort)) {
     body.reasoning_effort = options.effort;
   }
   return body;
@@ -67,7 +68,7 @@ export const createOpenAiCompatibleCompletionClient = (
     complete: async (prompt, options) => {
       const startedAt = Date.now();
       const response = await client.chat.completions.create(
-        baseBody(
+        buildOpenAiChatBody(
           apiModelId,
           prompt,
           options,
@@ -82,7 +83,7 @@ export const createOpenAiCompatibleCompletionClient = (
     },
     completeStreaming: async (prompt, options): Promise<StreamedCompletion> => {
       const startedAt = Date.now();
-      const body = baseBody(apiModelId, prompt, options);
+      const body = buildOpenAiChatBody(apiModelId, prompt, options);
       body.stream = true;
       body.stream_options = { include_usage: true };
       const stream = await client.chat.completions.create(
@@ -113,7 +114,7 @@ export const createOpenAiCompatibleCompletionClient = (
       options,
     ): Promise<StructuredCompletion> => {
       const startedAt = Date.now();
-      const body = baseBody(apiModelId, prompt, options);
+      const body = buildOpenAiChatBody(apiModelId, prompt, options);
       body.response_format = {
         type: "json_schema",
         json_schema: { name: "probe", schema, strict: true },

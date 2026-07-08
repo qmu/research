@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { configKey, mergeConfigs } from "./merge";
 import type { Aggregate, ConfigRun, Provenance } from "./types";
+import type { EffortLevel } from "./effort";
 
 // A minimal ConfigRun factory — only the fields the merge policy keys on
 // (id, effort, provenance) plus enough shape to be a valid ConfigRun. The `tag`
@@ -8,7 +9,7 @@ import type { Aggregate, ConfigRun, Provenance } from "./types";
 const zero: Aggregate = { mean: 0, stdDev: 0, min: 0, max: 0, n: 0 };
 const cfg = (
   id: string,
-  effort: string,
+  effort: EffortLevel,
   provenance: Provenance,
   tag: string,
 ): ConfigRun => ({
@@ -45,13 +46,13 @@ const cfg = (
   },
 });
 
-const tagAt = (runs: ConfigRun[], id: string, effort: string): string =>
+const tagAt = (runs: ConfigRun[], id: string, effort: EffortLevel): string =>
   runs.find((r) => r.id === id && r.effort === effort)?.apiModelId ?? "MISSING";
 
 describe("configKey", () => {
   it("distinguishes (id, effort) even when a slug contains hyphens", () => {
-    expect(configKey({ id: "a-b", effort: "c" })).not.toBe(
-      configKey({ id: "a", effort: "b-c" }),
+    expect(configKey({ id: "a-b", effort: "low" })).not.toBe(
+      configKey({ id: "a", effort: "high" }),
     );
   });
 });

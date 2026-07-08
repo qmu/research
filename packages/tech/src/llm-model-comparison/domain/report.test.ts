@@ -8,6 +8,7 @@ import type {
   Provenance,
   Review,
 } from "./types";
+import type { EffortLevel } from "./effort";
 
 const agg = (mean: number, n: number): Aggregate => ({
   mean,
@@ -27,7 +28,10 @@ const review = (provenance: Review["provenance"]): Review => ({
 });
 
 const config = (
-  overrides: Partial<ConfigRun> & { effort: string; provenance: Provenance },
+  overrides: Partial<ConfigRun> & {
+    effort: EffortLevel;
+    provenance: Provenance;
+  },
 ): ConfigRun => ({
   id: "test-model",
   provider: "anthropic",
@@ -110,7 +114,7 @@ describe("renderComparisonReport", () => {
     const md = renderComparisonReport(
       result([config({ effort: "low", provenance: "measured" })]),
     );
-    expect(md).toContain("## Cost & time");
+    expect(md).toContain("## Cost and time");
     expect(md).toContain("--estimate");
     expect(md).toContain("API calls");
   });
@@ -127,10 +131,10 @@ describe("renderComparisonReport", () => {
   it("summary detail omits the per-aspect distributions; full adds per-trial tables", () => {
     const one = result([config({ effort: "low", provenance: "measured" })]);
     expect(renderComparisonReport(one, "summary")).not.toContain(
-      "Per-aspect analysis",
+      "Per-aspect measurements",
     );
     expect(renderComparisonReport(one, "standard")).toContain(
-      "Per-aspect analysis",
+      "Per-aspect measurements",
     );
     expect(renderComparisonReport(one, "full")).toContain(
       "Per-trial measured values",

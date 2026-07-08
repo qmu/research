@@ -5,6 +5,7 @@ import {
   reviewSchema,
   skippedReview,
 } from "./review";
+import type { ReviewSubject } from "./review";
 
 const subject = {
   modelName: "Test Model",
@@ -16,7 +17,7 @@ const subject = {
   maxSchemaBreadth: 24,
   lengthAccuracy: 0.92,
   sampleOutputs: ["Some sample output about the water cycle."],
-};
+} satisfies ReviewSubject;
 
 describe("buildReviewPrompt", () => {
   it("embeds the identity, metrics, and sample outputs", () => {

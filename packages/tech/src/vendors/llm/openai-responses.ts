@@ -7,6 +7,7 @@ import type {
   StructuredCompletion,
 } from "./types";
 import { openAiResponsesOutputTokens } from "./usage";
+import { isNoEffortLevel } from "../../llm-model-comparison/domain/effort";
 
 // Wrap the OpenAI Responses API (`/v1/responses`) behind the domain-named
 // CompletionClient. This is a SEPARATE surface from Chat Completions (`openai.ts`):
@@ -26,7 +27,7 @@ const SYSTEM_FINAL_ANSWER_ONLY =
 // Base request body. `reasoning.effort` is added only when a real effort level is
 // requested; the `n/a` sentinel (a model with no reasoning-effort knob) omits it,
 // since an unsupported effort is a hard 400 rather than a finding.
-const baseBody = (
+export const buildOpenAiResponsesBody = (
   model: string,
   prompt: string,
   options: CompletionOptions | undefined,
@@ -37,7 +38,7 @@ const baseBody = (
     input: prompt,
     max_output_tokens: options?.maxTokens ?? 2048,
   };
-  if (options?.effort && options.effort !== "n/a") {
+  if (options?.effort && !isNoEffortLevel(options.effort)) {
     body.reasoning = { effort: options.effort };
   }
   return body;
@@ -72,7 +73,11 @@ export const createOpenAiResponsesCompletionClient = (
     complete: async (prompt, options) => {
       const startedAt = Date.now();
       const response = (await client.responses.create(
-        baseBody(apiModelId, prompt, options) as unknown as CreateParams,
+        buildOpenAiResponsesBody(
+          apiModelId,
+          prompt,
+          options,
+        ) as unknown as CreateParams,
       )) as unknown as ResponseLike;
       return {
         text: response.output_text ?? "",
@@ -83,7 +88,7 @@ export const createOpenAiResponsesCompletionClient = (
     },
     completeStreaming: async (prompt, options): Promise<StreamedCompletion> => {
       const startedAt = Date.now();
-      const body = baseBody(apiModelId, prompt, options);
+      const body = buildOpenAiResponsesBody(apiModelId, prompt, options);
       body.stream = true;
       const stream = (await client.responses.create(
         body as unknown as CreateParams,
@@ -118,7 +123,7 @@ export const createOpenAiResponsesCompletionClient = (
       options,
     ): Promise<StructuredCompletion> => {
       const startedAt = Date.now();
-      const body = baseBody(apiModelId, prompt, options);
+      const body = buildOpenAiResponsesBody(apiModelId, prompt, options);
       // Responses structured output: json-schema goes under `text.format` (flat
       // name/schema/strict), unlike Chat Completions' nested `response_format`.
       body.text = {

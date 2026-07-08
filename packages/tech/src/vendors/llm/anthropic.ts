@@ -8,6 +8,7 @@ import type {
   StructuredCompletion,
 } from "./types";
 import { anthropicOutputTokens } from "./usage";
+import { isNoEffortLevel } from "../../llm-model-comparison/domain/effort";
 
 // Default to the latest Claude model. Override with ANTHROPIC_MODEL to benchmark
 // a specific model; pin the id in any published comparison.
@@ -48,7 +49,7 @@ const textOf = (content: Anthropic.Messages.ContentBlock[]): string =>
 // here from the provider-neutral options; the double cast keeps this the ONLY
 // place that knows the wire shape, regardless of how completely the installed SDK
 // types cover these fields.
-const buildParams = (
+export const buildAnthropicParams = (
   model: string,
   prompt: string,
   options: CompletionOptions | undefined,
@@ -59,7 +60,7 @@ const buildParams = (
   // (e.g. Haiku 4.5, which rejects `output_config.effort` with a 400). Omit the
   // field for it — sending an effort the model doesn't support is a hard error,
   // not a finding.
-  if (options?.effort && options.effort !== "n/a") {
+  if (options?.effort && !isNoEffortLevel(options.effort)) {
     outputConfig.effort = options.effort;
   }
   if (format) outputConfig.format = format;
@@ -89,7 +90,7 @@ export const createAnthropicCompletionClient = (
     complete: async (prompt, options) => {
       const startedAt = Date.now();
       const response = await client.messages.create(
-        buildParams(
+        buildAnthropicParams(
           apiModelId,
           prompt,
           options,
@@ -105,7 +106,7 @@ export const createAnthropicCompletionClient = (
     completeStreaming: async (prompt, options): Promise<StreamedCompletion> => {
       const startedAt = Date.now();
       const stream = client.messages.stream(
-        buildParams(
+        buildAnthropicParams(
           apiModelId,
           prompt,
           options,
@@ -137,7 +138,7 @@ export const createAnthropicCompletionClient = (
     ): Promise<StructuredCompletion> => {
       const startedAt = Date.now();
       const response = await client.messages.create(
-        buildParams(apiModelId, prompt, options, {
+        buildAnthropicParams(apiModelId, prompt, options, {
           type: "json_schema",
           schema,
         }) as unknown as Anthropic.Messages.MessageCreateParamsNonStreaming,

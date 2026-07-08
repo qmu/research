@@ -2,6 +2,8 @@
 // depends only on this shape, never on a provider SDK — so a model can be
 // swapped without touching benchmark logic.
 
+import type { EffortLevel } from "../../llm-model-comparison/domain/effort";
+
 export type LlmClient = Readonly<{
   model: string;
   generateAnswer: (prompt: string) => Promise<string>;
@@ -16,7 +18,7 @@ export type LlmClient = Readonly<{
 //
 //  - `topic` is passed through for probes that need a subject.
 //  - `effort` is a provider-neutral effort/reasoning label (e.g. "low", "high",
-//    "max", "minimal"). Each adapter maps it to that provider's own knob
+//    "max", "n/a"). Each adapter maps it to that provider's own knob
 //    (OpenAI `reasoning_effort`, Anthropic `output_config.effort`, Google
 //    thinking budget); a value a model does not support is surfaced as a failed
 //    call, never silently dropped.
@@ -25,7 +27,7 @@ export type LlmClient = Readonly<{
 export type CompletionOptions = Readonly<{
   maxTokens?: number;
   topic?: string;
-  effort?: string;
+  effort?: EffortLevel;
 }>;
 
 // The normalized result of one completion. The adapter measures `elapsedMs`

@@ -4,6 +4,7 @@ import type { RealtimeClientEvent } from "openai/resources/realtime/realtime";
 import type {
   CompletionClient,
   Completion,
+  CompletionOptions,
   StreamedCompletion,
   StructuredCompletion,
 } from "./types";
@@ -34,10 +35,18 @@ type Exchange = Readonly<{
   ttftMs: number;
 }>;
 
+// Realtime has no effort/reasoning parameter. Keep the event construction
+// explicit and shared with tests so provider-neutral `effort: "n/a"` cannot leak
+// into a WebSocket event body.
+export const buildOpenAiRealtimeResponseCreateEvent = (
+  _options?: CompletionOptions,
+): RealtimeClientEvent => ({ type: "response.create" }) as RealtimeClientEvent;
+
 const runExchange = (
   client: OpenAI,
   apiModelId: string,
   prompt: string,
+  options?: CompletionOptions,
 ): Promise<Exchange> =>
   new Promise<Exchange>((resolve, reject) => {
     const startedAt = Date.now();
@@ -87,7 +96,7 @@ const runExchange = (
           content: [{ type: "input_text", text: prompt }],
         },
       } as RealtimeClientEvent);
-      rt.send({ type: "response.create" } as RealtimeClientEvent);
+      rt.send(buildOpenAiRealtimeResponseCreateEvent(options));
     });
 
     rt.on("response.output_text.delta", (event) => {
@@ -117,8 +126,8 @@ export const createOpenAiRealtimeCompletionClient = (
   const client = new OpenAI({ apiKey });
   return {
     model: apiModelId,
-    complete: async (prompt): Promise<Completion> => {
-      const ex = await runExchange(client, apiModelId, prompt);
+    complete: async (prompt, options): Promise<Completion> => {
+      const ex = await runExchange(client, apiModelId, prompt, options);
       return {
         text: ex.text,
         outputTokens: ex.outputTokens,
@@ -126,8 +135,8 @@ export const createOpenAiRealtimeCompletionClient = (
         model: apiModelId,
       };
     },
-    completeStreaming: async (prompt): Promise<StreamedCompletion> => {
-      const ex = await runExchange(client, apiModelId, prompt);
+    completeStreaming: async (prompt, options): Promise<StreamedCompletion> => {
+      const ex = await runExchange(client, apiModelId, prompt, options);
       return {
         text: ex.text,
         outputTokens: ex.outputTokens,
@@ -136,10 +145,14 @@ export const createOpenAiRealtimeCompletionClient = (
         model: apiModelId,
       };
     },
-    completeStructured: async (prompt): Promise<StructuredCompletion> => {
+    completeStructured: async (
+      prompt,
+      _schema,
+      options,
+    ): Promise<StructuredCompletion> => {
       // No schema-enforcement surface on realtime; the schema prompt already asks
       // for conforming JSON, so return the raw text for the domain to grade.
-      const ex = await runExchange(client, apiModelId, prompt);
+      const ex = await runExchange(client, apiModelId, prompt, options);
       return {
         raw: ex.text,
         outputTokens: ex.outputTokens,

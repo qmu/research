@@ -1,3 +1,5 @@
+import type { EffortLevel } from "./effort";
+
 // Pure domain types for the fundamental LLM model comparison. No vendor or
 // entrypoint types appear here — this module depends on nothing external.
 //
@@ -38,7 +40,7 @@ export type ModelCard = Readonly<{
   released: string; // ISO date or YYYY-MM, curated
   inputCostPerMTok: number; // USD per 1M input tokens
   outputCostPerMTok: number; // USD per 1M output tokens
-  effortLevels: ReadonlyArray<string>; // the effort levels swept — a configuration axis
+  effortLevels: ReadonlyArray<EffortLevel>; // the effort levels swept — a configuration axis
   source: string; // citation URL — provenance is part of the type
 }>;
 
@@ -61,7 +63,7 @@ export type Probe = "throughput" | "latency" | "schema" | "length";
 //    from a transient network failure.
 export type CallRecord = Readonly<{
   probe: Probe;
-  effort: string; // the configuration's effort level
+  effort: EffortLevel; // the configuration's effort level
   prompt: string; // exact prompt sent, verbatim
   rawOutput: string; // exact model output, verbatim
   outputTokens: number;
@@ -147,7 +149,7 @@ export type Review = Readonly<{
 // `generatedAt`) says when each number was actually measured.
 export type ConfigRun = ModelCard &
   Readonly<{
-    effort: string; // the effort level this run measured
+    effort: EffortLevel; // the effort level this run measured
     provenance: Provenance;
     measuredAt: string; // ISO timestamp of the run that measured this cell
     trialsRequested: number;
@@ -170,7 +172,7 @@ export type HistoryPoint = Readonly<{
   id: string; // config slug (ModelCard.id)
   provider: Provider;
   modelName: string;
-  effort: string;
+  effort: EffortLevel;
   provenance: Provenance;
   throughputTokensPerSec: number; // mean over the run's ok trials
   ttftMs: number;

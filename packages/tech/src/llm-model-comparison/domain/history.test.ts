@@ -8,6 +8,7 @@ import {
   toHistoryPoint,
 } from "./history";
 import type { Aggregate, ConfigRun, HistoryFile, Provenance } from "./types";
+import type { EffortLevel } from "./effort";
 
 const agg = (mean: number): Aggregate => ({
   mean,
@@ -19,7 +20,7 @@ const agg = (mean: number): Aggregate => ({
 
 const cfg = (
   id: string,
-  effort: string,
+  effort: EffortLevel,
   provenance: Provenance,
   measuredAt = "2026-01-01T00:00:00.000Z",
 ): ConfigRun => ({

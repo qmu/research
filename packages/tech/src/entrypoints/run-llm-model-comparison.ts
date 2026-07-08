@@ -24,6 +24,11 @@ import { renderComparisonReport } from "../llm-model-comparison/domain/report";
 import type { DetailLevel } from "../llm-model-comparison/domain/report";
 import { buildLatencyPrompt } from "../llm-model-comparison/domain/latency";
 import { estimateRun } from "../llm-model-comparison/domain/estimate";
+import { isDeclaredEffortLevel } from "../llm-model-comparison/domain/effort";
+import {
+  buildComparisonMatrix,
+  type Configuration,
+} from "../llm-model-comparison/domain/matrix";
 import type { CompletionClient } from "../vendors/llm/types";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
 import { createOpenAiCompletionClient } from "../vendors/llm/openai";
@@ -210,23 +215,6 @@ const selectModels = (
   return chosen;
 };
 
-// One (model, effort) configuration to run.
-type Configuration = Readonly<{ card: ModelCard; effort: string }>;
-
-// Expand the selected models into the configuration matrix, honoring an optional
-// --effort filter (intersected with each card's declared levels).
-const buildMatrix = (
-  cards: ReadonlyArray<ModelCard>,
-  efforts: ReadonlyArray<string> | null,
-): ReadonlyArray<Configuration> =>
-  cards.flatMap((card) => {
-    const levels =
-      efforts === null
-        ? card.effortLevels
-        : card.effortLevels.filter((e) => efforts.includes(e));
-    return levels.map((effort) => ({ card, effort }));
-  });
-
 // --- incremental (merge-into-latest) selection -------------------------------
 
 // The on-disk artifact shape (the `core` object written below): the complete
@@ -285,6 +273,12 @@ const configurationsFromKeys = (
     if (!card) {
       process.stderr.write(
         `${label}: no model with id "${id}"; skipping ${id}:${effort}\n`,
+      );
+      continue;
+    }
+    if (!isDeclaredEffortLevel(card.effortLevels, effort)) {
+      process.stderr.write(
+        `${label}: model "${id}" does not declare effort "${effort}"; skipping ${id}:${effort}\n`,
       );
       continue;
     }
@@ -479,7 +473,7 @@ const main = async (): Promise<void> => {
   } else if (args.configs !== null) {
     matrix = configurationsFromKeys(parseConfigKeys(args.configs), "--configs");
   } else {
-    matrix = buildMatrix(selectModels(args.modelIds), args.efforts);
+    matrix = buildComparisonMatrix(selectModels(args.modelIds), args.efforts);
   }
   if (matrix.length === 0) {
     process.stderr.write("no configurations selected; nothing to do\n");
