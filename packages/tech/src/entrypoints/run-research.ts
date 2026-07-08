@@ -9,6 +9,7 @@ import {
 } from "../research/domain/topic";
 import { runInsightsStage } from "../research/insights-runner";
 import { runTranslationStage } from "../research/translate-runner";
+import { runSplitTopic } from "./run-split-topic";
 
 // Fixed provenance timestamp is not needed here — insights only run on real
 // mode, where a live clock is correct. estimate never writes, so its output is
@@ -28,6 +29,10 @@ type TopicModule = Readonly<{ main: () => Promise<void> }>;
 
 const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   "llm-model-comparison": () => import("./run-llm-model-comparison"),
+  // speed / accuracy are projections of the compare sweep, not separate
+  // benchmarks — their "benchmark" stage re-projects the compare artifact.
+  speed: () => Promise.resolve({ main: () => runSplitTopic("speed") }),
+  accuracy: () => Promise.resolve({ main: () => runSplitTopic("accuracy") }),
   rag: () => import("./run-rag-benchmark"),
   ocr: () => import("./run-ocr-comparison"),
   availability: () => import("./run-llm-availability"),

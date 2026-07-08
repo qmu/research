@@ -64,6 +64,24 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     stages: ["benchmark"],
   },
   {
+    id: "speed",
+    title:
+      "LLM response speed: sustained throughput, time-to-first-token, and total latency (projection of the compare sweep)",
+    artifactBase: "llm-speed-comparison",
+    modes: ["fixture", "estimate", "real"],
+    modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
+    stages: ["benchmark"],
+  },
+  {
+    id: "accuracy",
+    title:
+      "LLM output accuracy: JSON-schema limits, length-instruction following, and information accuracy (projection of the compare sweep)",
+    artifactBase: "llm-accuracy-comparison",
+    modes: ["fixture", "estimate", "real"],
+    modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
+    stages: ["benchmark"],
+  },
+  {
     id: "rag",
     title: "RAG / vector store benchmark: retrieval quality and operations",
     artifactBase: "rag-benchmark",
