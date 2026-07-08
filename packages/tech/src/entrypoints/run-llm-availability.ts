@@ -1,5 +1,6 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
+import { isDirectRun } from "./direct-run";
 import { MODELS } from "../llm-model-comparison/models";
 import type {
   HistoryFile,
@@ -294,7 +295,7 @@ const writeHistoryFile = async (
   );
 };
 
-const main = async (): Promise<void> => {
+export const main = async (): Promise<void> => {
   const args = parseArgs(process.argv.slice(2));
   const targets = availabilityTargets();
   const spec = buildSamplingSpec(args);
@@ -372,7 +373,9 @@ const main = async (): Promise<void> => {
   process.stdout.write(`wrote ${artifactPath}\n`);
 };
 
-main().catch((error: unknown) => {
-  process.stderr.write(`availability probe failed: ${String(error)}\n`);
-  process.exitCode = 1;
-});
+if (isDirectRun(import.meta.url)) {
+  main().catch((error: unknown) => {
+    process.stderr.write(`availability probe failed: ${String(error)}\n`);
+    process.exitCode = 1;
+  });
+}

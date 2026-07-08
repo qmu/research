@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { isDirectRun } from "./direct-run";
 import { estimateOcrComparison, runOcrComparison } from "../ocr-comparison/run";
 import { renderOcrComparisonReport } from "../ocr-comparison/domain/report";
 
@@ -36,7 +37,7 @@ const writeOutputs = async (
   );
 };
 
-const main = async (): Promise<void> => {
+export const main = async (): Promise<void> => {
   const trials = parseTrials();
   const modelIds = parseList("--models");
 
@@ -77,7 +78,9 @@ const main = async (): Promise<void> => {
   );
 };
 
-main().catch((error: unknown) => {
-  process.stderr.write(`ocr comparison failed: ${String(error)}\n`);
-  process.exitCode = 1;
-});
+if (isDirectRun(import.meta.url)) {
+  main().catch((error: unknown) => {
+    process.stderr.write(`ocr comparison failed: ${String(error)}\n`);
+    process.exitCode = 1;
+  });
+}

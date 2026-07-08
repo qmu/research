@@ -7,11 +7,11 @@
 const main = (): void => {
   process.stdout.write(
     "qmu technical research.\n" +
-      "Topics live under src/. Try:\n" +
-      "  npm run benchmark:fixture  (the llm-benchmark topic)\n" +
-      "  npm run compare:fixture    (the llm-model-comparison topic)\n" +
-      "  npm run rag:fixture        (the rag-benchmark topic)\n" +
-      "  npm run ocr:fixture        (the ocr-comparison topic)\n" +
+      "Topics live under src/ and run through the unified CLI. Try:\n" +
+      "  npm run research -- --list          (list all topics)\n" +
+      "  npm run research -- <topic>         (keyless fixture by default)\n" +
+      "  npm run research -- <topic> --real  (owner-triggered real run)\n" +
+      "Back-compat aliases stay: compare / rag / ocr / availability.\n" +
       "See TEMPLATE.md to add a topic, or run an entrypoint under src/entrypoints/.\n",
   );
 };

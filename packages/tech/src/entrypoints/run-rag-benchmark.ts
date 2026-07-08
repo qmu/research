@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { gzipSync } from "node:zlib";
+import { isDirectRun } from "./direct-run";
 import { estimateRagBenchmark, runRagBenchmark } from "../rag-benchmark/run";
 import { sweepAutoRagOrphans } from "../vendors/vectorstore/autorag";
 import { renderRagBenchmarkReport } from "../rag-benchmark/domain/report";
@@ -78,7 +79,7 @@ const writeHistory = async (
   );
 };
 
-const main = async (): Promise<void> => {
+export const main = async (): Promise<void> => {
   const backends = parseBackends();
   const corpus = argValue("--corpus") === "scifact" ? "scifact" : "mini";
   const trials = parseTrials();
@@ -147,7 +148,9 @@ const main = async (): Promise<void> => {
   );
 };
 
-main().catch((error: unknown) => {
-  process.stderr.write(`rag benchmark failed: ${String(error)}\n`);
-  process.exitCode = 1;
-});
+if (isDirectRun(import.meta.url)) {
+  main().catch((error: unknown) => {
+    process.stderr.write(`rag benchmark failed: ${String(error)}\n`);
+    process.exitCode = 1;
+  });
+}

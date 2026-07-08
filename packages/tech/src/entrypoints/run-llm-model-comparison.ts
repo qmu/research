@@ -1,6 +1,7 @@
 import { writeFile, readFile, readdir, rm, mkdir } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { gzipSync, gunzipSync } from "node:zlib";
+import { isDirectRun } from "./direct-run";
 import { MODELS } from "../llm-model-comparison/models";
 import type {
   ComparisonResult,
@@ -395,7 +396,7 @@ const writeHistory = async (
   );
 };
 
-const main = async (): Promise<void> => {
+export const main = async (): Promise<void> => {
   const args = parseArgs(process.argv.slice(2));
 
   // Path split: the FIXTURE report is the byte-stable committed CI self-test; a REAL
@@ -633,7 +634,9 @@ const main = async (): Promise<void> => {
   process.stdout.write(`wrote ${artifactPath}\n`);
 };
 
-main().catch((error: unknown) => {
-  process.stderr.write(`comparison failed: ${String(error)}\n`);
-  process.exitCode = 1;
-});
+if (isDirectRun(import.meta.url)) {
+  main().catch((error: unknown) => {
+    process.stderr.write(`comparison failed: ${String(error)}\n`);
+    process.exitCode = 1;
+  });
+}

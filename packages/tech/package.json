@@ -13,6 +13,7 @@
     "test": "tsc --noEmit && vitest --run --passWithNoTests",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
+    "research": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-research.ts",
     "benchmark": "tsx src/entrypoints/run-llm-benchmark.ts",
     "benchmark:fixture": "tsx src/entrypoints/run-llm-benchmark.ts --fixture",
     "compare": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-model-comparison.ts",
