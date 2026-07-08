@@ -299,6 +299,7 @@ export const runRagBenchmark = async (
       runs.push({
         backend,
         provenance: "error",
+        measuredAt: generatedAt,
         embeddingModel: "n/a",
         datasetId: dataset.id,
         k: options.k,
@@ -383,6 +384,7 @@ export const runRagBenchmark = async (
       runs.push({
         backend,
         provenance: fixtured ? "fixtured" : "measured",
+        measuredAt: generatedAt,
         embeddingModel,
         datasetId: dataset.id,
         k: options.k,
@@ -402,6 +404,7 @@ export const runRagBenchmark = async (
       runs.push({
         backend,
         provenance: "error",
+        measuredAt: generatedAt,
         embeddingModel,
         datasetId: dataset.id,
         k: options.k,

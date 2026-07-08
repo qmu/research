@@ -126,6 +126,7 @@ export type OperationalMetrics = Readonly<{
 export type BackendRun = Readonly<{
   backend: Backend;
   provenance: Provenance;
+  measuredAt: string;
   embeddingModel: string;
   datasetId: string;
   k: number;
@@ -148,4 +149,65 @@ export type BenchmarkResult = Readonly<{
   artifactPath: string;
   fixture: boolean;
   trials: number;
+}>;
+
+export type ArchiveDocumentRecord = Readonly<Pick<DocumentRecord, "id">>;
+
+export type ArchiveQueryRecord = Readonly<Pick<QueryRecord, "id">>;
+
+export type ArchiveBenchmarkDataset = Readonly<
+  Omit<BenchmarkDataset, "documents" | "queries"> & {
+    documents: ReadonlyArray<ArchiveDocumentRecord>;
+    queries: ReadonlyArray<ArchiveQueryRecord>;
+  }
+>;
+
+export type ArchiveBenchmarkResult = Readonly<
+  Omit<BenchmarkResult, "dataset"> & {
+    dataset: ArchiveBenchmarkDataset;
+  }
+>;
+
+// --- historical benchmark series --------------------------------------------
+//
+// Real RAG benchmark runs append compact backend points to a history file while
+// preserving the complete run artifact separately. Each metric keeps the inputs a
+// trend chart needs: mean, spread, sample count, and the method that produced the
+// spread. The full artifact remains the source for query-level rows and raw
+// backend details.
+
+export type HistoryMetricMethod =
+  | "trial-sample-std-dev"
+  | "single-trial"
+  | "run-total"
+  | "error-zero";
+
+export type HistoryMetricStat = Readonly<{
+  mean: number;
+  stdDev: number;
+  n: number;
+  method: HistoryMetricMethod;
+}>;
+
+export type HistoryPoint = Readonly<{
+  id: string;
+  provenance: Provenance;
+  recallAtK: HistoryMetricStat;
+  ndcgAtK: HistoryMetricStat;
+  mrr: HistoryMetricStat;
+  ingestMs: HistoryMetricStat;
+  p50Ms: HistoryMetricStat;
+  p95Ms: HistoryMetricStat;
+  costUsd: HistoryMetricStat;
+  measuredAt: string;
+}>;
+
+export type HistoryEntry = Readonly<{
+  generatedAt: string;
+  trials: number;
+  points: ReadonlyArray<HistoryPoint>;
+}>;
+
+export type HistoryFile = Readonly<{
+  entries: ReadonlyArray<HistoryEntry>;
 }>;

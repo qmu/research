@@ -78,6 +78,7 @@
         "metadataFiltering": false
       },
       "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
       "embeddingModel": "fixed-hash-embedding-v1",
       "datasetId": "scifact-mini",
       "k": 3,
@@ -213,6 +214,7 @@
         "ingestionNote": "File Search chunks documents server-side (default 800-token chunks, 400-token overlap) and embeds them internally; the indexed unit is OpenAI's chunk, not the committed document."
       },
       "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
       "embeddingModel": "fixed-hash-embedding-v1",
       "datasetId": "scifact-mini",
       "k": 3,
@@ -347,6 +349,7 @@
         "ingestionNote": "Stores the fixed-embedding vectors we provide (float32, cosine); a self-managed, store-isolated reading. Requires AWS credentials and a region where S3 Vectors is available (verified in ap-northeast-1); IAM: s3vectors:CreateVectorBucket/CreateIndex/PutVectors/QueryVectors/DeleteIndex/DeleteVectorBucket."
       },
       "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
       "embeddingModel": "fixed-hash-embedding-v1",
       "datasetId": "scifact-mini",
       "k": 3,
@@ -481,6 +484,7 @@
         "ingestionNote": "Stores the fixed-embedding vectors we provide (v2 index, cosine, dimensions in [32,1536]); a self-managed, store-isolated reading. Mutations are eventually consistent (~5-15s), so the polled propagation wait is included in measured ingest. Auth: CLOUDFLARE_ACCOUNT_ID + an API token with Vectorize edit."
       },
       "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
       "embeddingModel": "fixed-hash-embedding-v1",
       "datasetId": "scifact-mini",
       "k": 3,
@@ -615,6 +619,7 @@
         "ingestionNote": "Fully-managed: ingests from an R2 bucket and embeds/indexes internally (whole-stack, not store-isolated). Indexing is asynchronous (a 6-hour cycle or a rate-limited force sync); its R2 data-source binding is provisioned via the dashboard, so a live REST-only end-to-end run may render an honest `error` rather than `measured`."
       },
       "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
       "embeddingModel": "fixed-hash-embedding-v1",
       "datasetId": "scifact-mini",
       "k": 3,

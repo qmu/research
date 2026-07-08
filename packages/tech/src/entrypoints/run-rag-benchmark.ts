@@ -1,7 +1,17 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
+import { gzipSync } from "node:zlib";
 import { estimateRagBenchmark, runRagBenchmark } from "../rag-benchmark/run";
 import { renderRagBenchmarkReport } from "../rag-benchmark/domain/report";
+import {
+  appendHistory,
+  buildHistoryEntry,
+  redactBenchmarkResultForArchive,
+} from "../rag-benchmark/domain/history";
+import type {
+  BenchmarkResult,
+  HistoryFile,
+} from "../rag-benchmark/domain/types";
 
 const hasArg = (name: string): boolean => process.argv.includes(name);
 
@@ -33,6 +43,41 @@ const writeOutputs = async (
     artifactPath,
     `${JSON.stringify(artifact, null, 2)}\n`,
     "utf8",
+  );
+};
+
+const readHistory = async (
+  historyPath: string,
+): Promise<HistoryFile | null> => {
+  try {
+    return JSON.parse(await readFile(historyPath, "utf8")) as HistoryFile;
+  } catch {
+    return null;
+  }
+};
+
+// Real RAG runs append a compact per-backend point and keep the full artifact
+// gzipped beside the LLM archives. Fixture runs skip this path so the committed
+// fixture report/data pair stays byte-stable and keyless.
+const writeHistory = async (
+  historyBasePath: string,
+  result: BenchmarkResult,
+): Promise<void> => {
+  const historyPath = historyBasePath.replace(/\.md$/, ".history.json");
+  const history = await readHistory(historyPath);
+  const updated = appendHistory(
+    history,
+    buildHistoryEntry(result.runs, result.generatedAt, result.trials),
+  );
+  await writeFile(historyPath, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
+
+  const stamp = result.generatedAt.replace(/:/g, "-");
+  const archiveDir = join(dirname(historyBasePath), "history");
+  await mkdir(archiveDir, { recursive: true });
+  const archive = redactBenchmarkResultForArchive(result);
+  await writeFile(
+    join(archiveDir, `rag-benchmark-${stamp}.data.json.gz`),
+    gzipSync(Buffer.from(`${JSON.stringify(archive, null, 2)}\n`, "utf8")),
   );
 };
 
@@ -78,6 +123,9 @@ const main = async (): Promise<void> => {
     renderRagBenchmarkReport(rendered),
     rendered,
   );
+  if (!fixture) {
+    await writeHistory(canonicalPath, rendered);
+  }
   process.stdout.write(
     `rag-benchmark: ${result.runs.length} backend(s), fixture=${fixture}\nwrote ${reportPath}\nwrote ${artifactPath}\n`,
   );
