@@ -27,67 +27,34 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       {
-        // The main reading line: per-topic generated Japanese reports.
+        // The main reading line: the generated structured Japanese reports
+        // (data tables + LLM 考察), produced by the exporter from real data.
         text: "LLM基礎検証（日本語）",
         items: [
           { text: "はじめに", link: "/llm-foundation/" },
+          {
+            text: "基盤モデルの比較",
+            link: "/llm-foundation/foundation-model-comparison",
+          },
+          {
+            text: "ベクトルDB／RAGの比較",
+            link: "/llm-foundation/vector-db-comparison",
+          },
+          {
+            text: "可用性の観測",
+            link: "/llm-foundation/availability-comparison",
+          },
+          {
+            text: "OCR能力の比較",
+            link: "/llm-foundation/ocr-comparison",
+          },
           {
             text: "対象基盤モデル（カタログ）",
             link: "/research-reports/foundation-models.insights.ja",
           },
           {
-            text: "速度の比較",
-            link: "/research-reports/llm-speed-comparison.insights.ja",
-          },
-          {
-            text: "精度の比較",
-            link: "/research-reports/llm-accuracy-comparison.insights.ja",
-          },
-          {
-            text: "可用性の比較",
-            link: "/research-reports/llm-availability.insights.ja",
-          },
-          {
-            text: "OCR能力の比較",
-            link: "/research-reports/ocr-comparison.insights.ja",
-          },
-          {
-            text: "ベクトルDB／RAGの比較",
-            link: "/research-reports/rag-benchmark.insights.ja",
-          },
-          {
             text: "Agent SDKの比較",
             link: "/llm-foundation/agent-sdk-comparison",
-          },
-        ],
-      },
-      {
-        // The same per-topic reports in English (the insights source of truth).
-        text: "Reports (English)",
-        items: [
-          {
-            text: "Foundation model catalog",
-            link: "/research-reports/foundation-models.insights",
-          },
-          {
-            text: "LLM response speed",
-            link: "/research-reports/llm-speed-comparison.insights",
-          },
-          {
-            text: "LLM output accuracy",
-            link: "/research-reports/llm-accuracy-comparison.insights",
-          },
-          {
-            text: "LLM API availability",
-            link: "/research-reports/llm-availability.insights",
-          },
-          {
-            text: "OCR capability comparison",
-            link: "/research-reports/ocr-comparison.insights",
-          },
-          {
-            text: "RAG / vector store",
-            link: "/research-reports/rag-benchmark.insights",
           },
         ],
       },
@@ -100,85 +67,28 @@ export default defineConfig({
         items: [
           { text: "はじめに", link: "/llm-foundation/" },
           {
+            text: "基盤モデルの比較",
+            link: "/llm-foundation/foundation-model-comparison",
+          },
+          {
+            text: "ベクトルDB／RAGの比較",
+            link: "/llm-foundation/vector-db-comparison",
+          },
+          {
+            text: "可用性の観測",
+            link: "/llm-foundation/availability-comparison",
+          },
+          {
+            text: "OCR能力の比較",
+            link: "/llm-foundation/ocr-comparison",
+          },
+          {
             text: "対象基盤モデル（カタログ）",
             link: "/research-reports/foundation-models.insights.ja",
           },
           {
-            text: "速度の比較",
-            link: "/research-reports/llm-speed-comparison.insights.ja",
-          },
-          {
-            text: "精度の比較",
-            link: "/research-reports/llm-accuracy-comparison.insights.ja",
-          },
-          {
-            text: "可用性の比較",
-            link: "/research-reports/llm-availability.insights.ja",
-          },
-          {
-            text: "OCR能力の比較",
-            link: "/research-reports/ocr-comparison.insights.ja",
-          },
-          {
-            text: "ベクトルDB／RAGの比較",
-            link: "/research-reports/rag-benchmark.insights.ja",
-          },
-          {
             text: "Agent SDKの比較",
             link: "/llm-foundation/agent-sdk-comparison",
-          },
-        ],
-      },
-      {
-        text: "Reports (English)",
-        items: [
-          {
-            text: "Foundation model catalog",
-            link: "/research-reports/foundation-models.insights",
-          },
-          {
-            text: "LLM response speed",
-            link: "/research-reports/llm-speed-comparison.insights",
-          },
-          {
-            text: "LLM output accuracy",
-            link: "/research-reports/llm-accuracy-comparison.insights",
-          },
-          {
-            text: "LLM API availability",
-            link: "/research-reports/llm-availability.insights",
-          },
-          {
-            text: "OCR capability comparison",
-            link: "/research-reports/ocr-comparison.insights",
-          },
-          {
-            text: "RAG / vector store",
-            link: "/research-reports/rag-benchmark.insights",
-          },
-        ],
-      },
-      {
-        // Detailed hand-written Japanese write-ups from the earlier IA. Kept as
-        // reference; the generated per-topic reports above are the main line.
-        text: "詳細記事（手書き・参考）",
-        collapsed: true,
-        items: [
-          {
-            text: "基礎的LLMモデル比較",
-            link: "/llm-foundation/foundation-model-comparison",
-          },
-          {
-            text: "ベクトルDBの比較（詳細）",
-            link: "/llm-foundation/vector-db-comparison",
-          },
-          {
-            text: "可用性の比較（詳細）",
-            link: "/llm-foundation/availability-comparison",
-          },
-          {
-            text: "OCR能力の比較（詳細）",
-            link: "/llm-foundation/ocr-comparison",
           },
         ],
       },

@@ -1,100 +1,112 @@
 ---
-title: OCR能力の比較
-description: LLM基礎検証におけるOCR能力の比較。文書画像を視覚対応モデルへ入力し、CER/WERと構造化抽出のフィールド精度で測る。
+source_artifact: docs/research-reports/ocr-comparison.real.data.json
+source_commit: 834ade815730cfceb6a1d908e56d78d97d3cb17f
+generated_at: "2026-07-08T19:33:48.414Z"
+trials: 1
+provenance: measured
+copied_to_corporate_at: null
 ---
 
-# OCR能力の比較
+# OCR 能力比較調査
 
-OCR能力の比較は、文書画像を入力できる基盤モデルを対象に、文字起こしと構造化抽出を分けて測る検証区分である。既存のテキスト probe とは別のモダリティとして扱い、画像入力は `VisionClient` ポートだけを通る。
+この調査は `2026-07-08T19:33:48.414Z` に生成したレポートです。19 モデルを対象に、そのうち 4 件をライブ測定しました。文書画像を視覚対応モデルへ入力し、文字起こしの正確さ（CER / WER）と、構造化抽出のフィールド精度を測ります。データセットは合成文書フィクスチャ `qmu-synthetic-document-ocr-v1`（— 文書）です。
 
-現時点の実モデル数値は **未測定** である。コミット済みの結果は、決定的な合成文書画像と fixture vision client によるハーネス検証であり、実モデルのOCR性能として読んではならない。
+## 1. 調査の目的
 
-## データセット
+文書 OCR / 視覚読み取りを行うモデルを、文字起こしの正確さと構造化抽出の正確さから選ぶための再現可能な測定表を作ることを目的としています。一般的な優劣ではなく、用途ごとの制約に対して候補を絞るための資料として扱います。
 
-この区分の実装前ゲートとして、`qmu-synthetic-document-ocr-v1` manifest を先に固定した。manifest は `packages/tech/src/ocr-comparison/domain/data/synthetic-document-ocr.manifest.json` に置き、次を含む。
+## 2. 測定対象
 
-- 文書ID
-- 参照文字起こし
-- 構造化フィールド正解
-- ライセンス
-- 正規化ルール
-- 画像レンダリング条件
-
-採用したデータはリポジトリ作成の合成 receipt / invoice で、ライセンスは MIT である。第三者の文書画像、スキャン画像、大規模OCRコーパスはコミットしていない。画像は manifest の `render.lines` から実行時に PNG として決定的に生成する。
-
-将来、実画像データセットを採用する場合は SciFact と同じ方式にする。つまり、画像や大きな本文はコミットせず、選定ID・参照文字起こし・構造化フィールド正解・正規化・ライセンスだけを manifest としてコミットし、画像バイトは gitignored cache へ fetch する。
-
-## 前処理
-
-現在の fixture 画像は、次の条件で生成する。
-
-| 項目 | 内容 |
-| --- | --- |
-| 形式 | PNG |
-| 解像度 | 960×640px |
-| DPI | 150 |
-| ページ分割 | 1 manifest item = 1 image/page |
-| レンダリング | 白背景、黒の固定 5×7 bitmap text、回転なし、ぼかしなし、非可逆圧縮なし |
-| 文字種 | Latin uppercase letters、Arabic numerals、ASCII punctuation、ISO date、currency code |
-| レイアウト | receipt / invoice の単一ページ。見出し、ラベル、明細行、合計欄を含む |
-
-日本語文字、手書き、傾き、スタンプ、写真、複数ページ分割はこの v1 fixture の範囲外である。
-
-## 採点
-
-文字起こしは参照文字列に対する edit distance で採点する。
-
-| 指標 | 定義 |
-| --- | --- |
-| CER | 文字単位 edit distance ÷ 参照文字数 |
-| WER | 空白区切り token の edit distance ÷ 参照 token 数 |
-| Field accuracy | 必須フィールドの正規化後完全一致数 ÷ 必須フィールド数 |
-
-正規化は Unicode NFKC、改行正規化、空白 collapse を行う。CER/WER では句読点を残す。構造化フィールドでは、`document_id` と `currency` は uppercase、`date` は ISO date、`total` は decimal string として比較する。
-
-構造化抽出の必須フィールドは次の6つである。
-
-| Field | 内容 |
-| --- | --- |
-| `document_type` | `RECEIPT` または `INVOICE` |
-| `vendor` | 発行元 |
-| `document_id` | receipt / invoice ID |
-| `date` | `YYYY-MM-DD` |
-| `currency` | ISO currency code |
-| `total` | 小数2桁の合計金額 |
-
-## モデル範囲
-
-実行時に画像を送る対象は、明示的に `VisionClient` adapter があるモデルだけである。現在は Anthropic vision ACL が実装済みなので、Anthropic の vision-capable model card が実測候補である。
-
-OpenAI、Google、xAI、OpenAI Realtime、Responses API の text/coding model card は、この区分では **対象外** として扱う。VisionClient adapter がない provider/API surface へ画像を誤送信しない。
-
-## 現在の結果
-
-実モデルの OCR 数値は **未測定**。
-
-| 種別 | 状態 | Provenance |
+| 測定対象 | 測っているもの | 読み方 |
 | --- | --- | --- |
-| 合成 fixture | 測定済み。CER/WER/field accuracy が決定的に計算される | `fixtured` |
-| Anthropic vision 実測 | 未測定。owner が `ocr:estimate` 確認後に `ocr:real` を実行する | `measured` 予定 |
-| VisionClient 未実装の provider/API | 対象外 | `out-of-scope` |
+| 文字誤り率 (CER) | 正解文字列に対する編集距離ベースの文字単位誤り率 | 低いほど文字起こしが正確 |
+| 単語誤り率 (WER) | 単語単位の誤り率 | 低いほど語の取りこぼし・誤りが少ない |
+| フィールド精度 | 構造化抽出で正しく取れたフィールドの割合 | 高いほど帳票項目の抽出が正確 |
 
-fixture の report と JSON artifact は [OCR comparison report](../research-reports/ocr-comparison) に置く。fixture の数値はハーネス検証であり、実モデルの優劣を示さない。
+## 3. 範囲と制約
 
-## 再現
+- 各モデル×文書は 1 試行です。CER / WER / フィールド精度は平均 ± 95% 信頼区間で示します。
+- データセットはリポジトリ生成の**合成文書フィクスチャ**であり、実文書の難易度・多様性を代表しません。値は相対比較の目安です。
+- 視覚入力に対応しないモデル、および API キーのないモデルは fixture 行として扱い、実測と混同しません。
+- 結果は `2026-07-08T19:33:48.414Z` 時点のモデルと API の挙動です。
+
+## 4. 指標別の観測（文字誤り率 CER・低いほど良い）
+
+| 順位 | Provider | Model | CER | フィールド精度 |
+| ---: | --- | --- | ---: | ---: |
+| 1 | Anthropic | Claude Fable 5 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 100.0% ± 0.0pp (95%信頼区間, n=2) |
+| 2 | Anthropic | Claude Opus 4.8 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 100.0% ± 0.0pp (95%信頼区間, n=2) |
+| 3 | Anthropic | Claude Sonnet 5 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 100.0% ± 0.0pp (95%信頼区間, n=2) |
+| 4 | Anthropic | Claude Haiku 4.5 | 1.1% ± 0.1pp (95%信頼区間, n=2) | 83.3% ± 0.0pp (95%信頼区間, n=2) |
+
+## 5. 指標別の観測（単語誤り率 WER・低いほど良い）
+
+| 順位 | Provider | Model | WER | CER |
+| ---: | --- | --- | ---: | ---: |
+| 1 | Anthropic | Claude Fable 5 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) |
+| 2 | Anthropic | Claude Opus 4.8 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) |
+| 3 | Anthropic | Claude Sonnet 5 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) |
+| 4 | Anthropic | Claude Haiku 4.5 | 5.1% ± 3.6pp (95%信頼区間, n=2) | 1.1% ± 0.1pp (95%信頼区間, n=2) |
+
+## 6. 指標別の観測（フィールド精度・高いほど良い）
+
+| 順位 | Provider | Model | フィールド精度 | CER |
+| ---: | --- | --- | ---: | ---: |
+| 1 | Anthropic | Claude Fable 5 | 100.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) |
+| 2 | Anthropic | Claude Opus 4.8 | 100.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) |
+| 3 | Anthropic | Claude Sonnet 5 | 100.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) |
+| 4 | Anthropic | Claude Haiku 4.5 | 83.3% ± 0.0pp (95%信頼区間, n=2) | 1.1% ± 0.1pp (95%信頼区間, n=2) |
+
+## 7. 全モデルの測定結果
+
+ライブ測定した全 4 件に加え、視覚未対応・キー不在の fixture 行も含めて一覧します。
+
+| Provider | Model | 測定 | CER | WER | フィールド精度 |
+| --- | --- | --- | ---: | ---: | ---: |
+| Anthropic | Claude Fable 5 | 実測 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) | 100.0% ± 0.0pp (95%信頼区間, n=2) |
+| Anthropic | Claude Haiku 4.5 | 実測 | 1.1% ± 0.1pp (95%信頼区間, n=2) | 5.1% ± 3.6pp (95%信頼区間, n=2) | 83.3% ± 0.0pp (95%信頼区間, n=2) |
+| Anthropic | Claude Opus 4.8 | 実測 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) | 100.0% ± 0.0pp (95%信頼区間, n=2) |
+| Anthropic | Claude Sonnet 5 | 実測 | 0.0% ± 0.0pp (95%信頼区間, n=2) | 0.0% ± 0.0pp (95%信頼区間, n=2) | 100.0% ± 0.0pp (95%信頼区間, n=2) |
+| Google | Gemini 3.1 Flash-Lite | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| Google | Gemini 3.1 Pro | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| Google | Gemini 3.5 Flash | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | GPT Realtime | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | GPT-5.1 Codex mini | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | GPT-5.3 Codex | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | GPT-5.4 | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | GPT-5.4 mini | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | GPT-5.4 nano | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | GPT-5.5 | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| OpenAI | o4-mini | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| xAI | Grok 4.20 Non-Reasoning | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| xAI | Grok 4.20 Reasoning | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| xAI | Grok 4.3 | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+| xAI | Grok Build 0.1 | out-of-scope | 0.0% (n=0) | 0.0% (n=0) | 0.0% (n=0) |
+
+## 8. 考察
+
+この2文書構成の合成OCRフィクスチャにおいて、Claude Fable 5、Claude Opus 4.8、Claude Sonnet 5というAnthropicの3モデルは、文字誤り率・単語誤り率ともにゼロを達成し、領収書と請求書の両文書において全6項目のスキーマフィールドにわたって完全な(1.0)フィールド抽出精度を示した。Claude Haiku 4.5は、何らかの誤りを示した唯一の計測対象モデルであり、平均CERは約0.011、平均WERは約0.051、フィールド精度は0.833(6分の5フィールド)であった。これは、領収書上でのベンダー名の誤読("KANDA STATIONERY"の代わりに"OMU OFFICE SUPPLY")と、請求書上での文書IDの転置("INV-2026-0142"の代わりに"IMU-2026-0142")によるものである。その他のリストに挙がっている全モデル(OpenAIのGPT-5.x/o4-miniファミリー、GoogleのGemini 3.xファミリー、およびxAIのGrokモデル)は「対象外(out-of-scope)」とされ、試行回数ゼロで「No VisionClient adapter is registered for this provider/API surface」というエラーで失敗している。これらは統合上の欠落であって、計測された精度の下限を示すものではなく、OCRの失敗として読み取るべきではない。
+
+実務上の示唆は限定的である。このハーネスが実際に実行できたモデルの中では、より大規模・フラッグシップ級のClaude系ティアが、クリーンで機械描画された合成テキスト(5x7ビットマップフォント、傾きやノイズなし)上で文字起こしと構造化フィールド抽出を完璧にこなした一方、より小型のHaikuティアは、固有名詞と英数字IDに集中した、計測可能ではあるが軽微な精度低下を示した——これはまさに視覚的な曖昧さに最も敏感なトークン群である(例:「N」対「M」、「K」対「Q/O」)。これは、Claiveライン内における能力とコストのトレードオフを示唆している。Haikuは1回あたりの呼び出しコストが低く、(呼び出しにおけるelapsedMsによれば)応答時間もより速い(Sonnet/Opus/Fableの5~15秒範囲に対しておおよそ6~11秒)が、その代わりに完全一致でのフィールド精度に対する小さいながらもゼロではないリスクを伴う。これは、ベンダー名や文書IDのような下流フィールドにおいて重要であり、曖昧に正しいだけでは不十分な場面である。
+
+これらの結果は過度に一般化すべきではない。このフィクスチャは、単一の決定論的でリポジトリ内で作成された合成コーパス(文書2件、モデルごとに試行1回)であり、150 DPI、固定ビットマップフォントでレンダリングされ、回転、ブラー、手書き、スタンプ、レイアウトの重なりは一切ない——これは実世界のスキャン文書に比べてかなり容易な条件である。モデルごとにn=2文書、要求された試行が1回のみであることから、完璧な結果を示した3モデルにおける標準偏差0という値は、この極めて小さいサンプルにおける分散の不在を反映しているにすぎず、大規模運用時のゼロ誤り保証を意味するものではない。同様に、HaikuのCER/WERにおけるゼロではない標準偏差も、わずか2つのデータ点から生じたものである。この改訂版には実画像OCRコーパスが存在しないため、これらの数値はいずれも手書き文字、ノイズを含むスキャン、非ラテン文字、複数ページ文書へ外挿すべきではない。
+
+最後に、この比較で名目上カバーされているモデルのおよそ半数(OpenAI、Google、xAIの全エントリ)は、精度の低さではなく、視覚クライアントアダプターの欠落により、使用可能なOCRデータを一切生成しなかった。この成果物のみに基づいて選定を行う読者は、Anthropicのモデル群内でのみ比較が可能であり、OpenAI/Google/xAIの不在は、ベンダー横断的な精度に関する主張がなされる前に解消されるべきインフラ・統合上のギャップとして扱うべきである。アダプターのカバレッジが整備され、より多くの試行を伴う実画像データセットが追加されるまでは、この成果物が支持するのは限定的かつ暫定的な結論のみである。すなわち、フラッグシップ級のClaudeモデルはこのクリーンな合成レイアウトを計測可能な文字起こしやフィールド誤りなしに処理できる一方、より小型のHaikuモデルはフィールドレベルの精度をいくらか犠牲にして、より速い応答時間を得ているということである。
+
+_この節は、上表の実測データを固定入力として LLM が生成した分析です（考察のみ非決定的で、数値は上表と一致します）。_
+
+## 9. 再現方法
+
+調査は公開リポジトリ `qmu/research` で再生成できます。API キー不要の合成フィクスチャ生成と、実モデルでの測定が分かれています。
 
 ```sh
-cd packages/tech
+git clone https://github.com/qmu/research
+cd research/packages/tech
 npm install
 
-# keyless fixture
 npm run ocr:fixture
-
-# 実測前の見積もり
 npm run ocr:estimate
-
-# owner-gated real path
 npm run ocr:real
 ```
 
-実測はこのページではまだ公開しない。実測結果を公開する場合は、artifact の `provenance: measured`、`measuredAt`、dataset manifest version、model id、実行時点を記事内に反映する。
+公開判断に使う場合は、データセット・モデル・生成日時・provenance を記録し、fixture 行と実測行を分けて扱います。

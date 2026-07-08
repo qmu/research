@@ -8,14 +8,13 @@
 # Stages:
 #   generate          Read committed/local artifacts and write regenerable drafts
 #                     under docs/llm-foundation/_generated/.
-#   copy              Copy the per-topic published reports to qmu-co-jp as plain
-#                     Markdown. The published set is the generated per-topic
-#                     reports under docs/research-reports/*.insights.md (English)
-#                     and *.insights.ja.md (Japanese), plus the hand-written
-#                     design article docs/llm-foundation/agent-sdk-comparison.md.
-#                     The keyless fixture data reports and the detailed
-#                     hand-written articles are NOT published — they are the
-#                     reproducible source, not the reader-facing line.
+#   copy              Copy the published reports to qmu-co-jp as plain Markdown.
+#                     The published set is the generated structured Japanese
+#                     reports under docs/llm-foundation/ (foundation-model,
+#                     vector-db, availability, ocr — data tables + LLM 考察),
+#                     the design article agent-sdk-comparison, and the Japanese
+#                     model catalog. The keyless fixture data reports are NOT
+#                     published — they are the reproducible source.
 #
 # Options:
 #   --all             With copy, copy every per-topic published report (the set
@@ -36,8 +35,9 @@ REPORTS_DIR="$REPO_ROOT/docs/research-reports"
 FOUNDATION_DIR="$REPO_ROOT/docs/llm-foundation"
 QMU_DIR="${QMU_DIR:-$REPO_ROOT/../qmu-co-jp}"
 
-# The per-topic published set, as repo-docs-relative paths (no .md extension).
-PUBLISHED_TOPICS="foundation-models llm-speed-comparison llm-accuracy-comparison llm-availability ocr-comparison rag-benchmark"
+# The published set, as repo-docs-relative paths (no .md extension): the four
+# generated structured Japanese reports, the design article, and the JP catalog.
+PUBLISHED_REPORTS="llm-foundation/foundation-model-comparison llm-foundation/vector-db-comparison llm-foundation/availability-comparison llm-foundation/ocr-comparison llm-foundation/agent-sdk-comparison research-reports/foundation-models.insights.ja"
 COMMAND=""
 ALL=0
 DRY=0
@@ -106,11 +106,7 @@ case "$COMMAND" in
 esac
 
 if [ "$ALL" -eq 1 ]; then
-  for topic in $PUBLISHED_TOPICS; do
-    SLUGS="$SLUGS research-reports/$topic.insights research-reports/$topic.insights.ja"
-  done
-  # The one hand-written design article (no benchmark, so no generated report).
-  SLUGS="$SLUGS llm-foundation/agent-sdk-comparison"
+  SLUGS="$SLUGS $PUBLISHED_REPORTS"
 fi
 
 if [ -z "$(echo "$SLUGS" | tr -d ' ')" ]; then

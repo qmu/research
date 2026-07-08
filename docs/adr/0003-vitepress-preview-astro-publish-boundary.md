@@ -19,31 +19,34 @@ not hand-written articles.
 
 ## Decision
 
-- Each research topic's reader-facing pages are **generated** from its data
-  artifact: `docs/research-reports/<topic>.insights.md` (English insights) and
-  `docs/research-reports/<topic>.insights.ja.md` (its Japanese translation).
-  These are produced by the `research <topic> --real` pipeline
-  (`insights` + `translation` stages), are non-deterministic and owner-gated,
-  and carry provenance frontmatter (`source_artifact`, `source_commit`,
-  `insights_model`, `translation_model`, `generated_at`, `trials`).
+- The reader-facing pages are **generated structured Japanese reports** under
+  `docs/llm-foundation/`: `foundation-model-comparison`, `vector-db-comparison`,
+  `availability-comparison`, and `ocr-comparison`. Each is produced by
+  `scripts/export-corporate-research.mjs` from the real measurement artifact and
+  follows a fixed structure — numbered sections, per-metric ranked tables, a full
+  measurement table, reading guidance — ending with a `考察` section.
+- The `考察` section is the only non-deterministic part: it is the topic's
+  LLM-generated Japanese analysis (from the `research <topic>` insights/translation
+  pipeline, read from `docs/research-reports/<topic>.insights.ja.md`), spliced in
+  over data tables that are deterministic from the artifact. The report thus
+  carries both verifiable numbers and an interpretation, and its frontmatter
+  records `source_artifact`, `source_commit`, `generated_at`, `trials`, and
+  `provenance`.
 - The keyless-fixture data reports, `*.data.json` artifacts, and `*.history.json`
   under `docs/research-reports/` are the **reproducible source** — the CI
   self-test and the record each generated report is derived from. They are not
   the published reader-facing line.
-- The one exception is `docs/llm-foundation/agent-sdk-comparison.md`, a
-  hand-written design-comparison article with no benchmark; it is published
-  as-is and keeps its `設計比較` / `未測定` / `要確認` provenance labels.
-- `scripts/export-corporate-research.mjs` remains an artifact-to-draft generator
-  writing regenerable data skeletons to `docs/llm-foundation/_generated/*.md`
-  (gitignored). It predates the pipeline's insights/translation stages and is now
-  a data-skeleton helper, not the reader-facing generator.
+- `docs/llm-foundation/agent-sdk-comparison.md` is a hand-written
+  design-comparison article with no benchmark; it is published as-is and keeps
+  its `設計比較` / `未測定` / `要確認` provenance labels. The Japanese model
+  catalog (`foundation-models.insights.ja`) is also published.
 - Publishing is a separate one-directional plain-Markdown copy:
-  `scripts/publish-research.sh copy --all` copies the generated per-topic reports
-  (English + Japanese) plus the agent-sdk article to
+  `scripts/publish-research.sh copy --all` copies the four structured reports,
+  the agent-sdk article, and the catalog to
   `../qmu-co-jp/docs/llm-foundation-research/<name>.md`. It never copies the
-  fixture data reports or the detailed hand-written articles.
+  fixture data reports.
 - The corporate site remains the rendering target. It does not own the report
-  prose or the artifact-to-report generation step.
+  content or the artifact-to-report generation step.
 
 ## Alternatives considered
 

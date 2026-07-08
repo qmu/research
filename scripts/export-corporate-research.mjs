@@ -5,7 +5,9 @@ import { dirname, resolve } from "node:path";
 import { renderTimeSeriesChart } from "../packages/tech/src/research-report/domain/chart.js";
 
 const repoRoot = resolve(import.meta.dirname, "..");
-const draftDir = resolve(repoRoot, "docs/llm-foundation/_generated");
+// The structured reports are the committed, reader-facing product (site main
+// line + corporate publish source), generated from the real data artifacts.
+const draftDir = resolve(repoRoot, "docs/llm-foundation");
 const gitRevParseHead = () => {
   try {
     return execFileSync("git", ["rev-parse", "HEAD"], {
@@ -62,7 +64,36 @@ const writeDraft = (slug, body) => {
   const path = resolve(draftDir, relativePath);
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, `${body.trim()}\n`, "utf8");
-  console.log(`generated docs/llm-foundation/_generated/${relativePath}`);
+  console.log(`generated docs/llm-foundation/${relativePath}`);
+};
+
+// The LLM-generated Japanese analysis for a topic, read from its committed
+// insight file (produced by the research <topic> pipeline). Strips the
+// frontmatter and returns the prose body, or "" when no insight exists. This
+// becomes the "考察" section — the interpretation layer over the data tables.
+const insightBody = (insightsBase) => {
+  try {
+    const raw = readFileSync(
+      resolve(repoRoot, `docs/research-reports/${insightsBase}.insights.ja.md`),
+      "utf8",
+    );
+    const match = raw.match(/^---\n[\s\S]*?\n---\n?([\s\S]*)$/);
+    return (match ? match[1] : raw).trim();
+  } catch {
+    return "";
+  }
+};
+
+// Render the "考察" section: the LLM analysis when present, else a short note.
+const kousatsuSection = (number, insightsBase, fallback) => {
+  const body = insightBody(insightsBase);
+  return `## ${number}. 考察
+
+${
+  body === ""
+    ? fallback
+    : `${body}\n\n_この節は、上表の実測データを固定入力として LLM が生成した分析です（考察のみ非決定的で、数値は上表と一致します）。_`
+}`;
 };
 
 const yen = (value) => String(value).replace(/\.0+$/, "");
@@ -502,11 +533,11 @@ ${topRows(
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 ${completeRows(configs)}
 
-## 11. 総合比較
-
-モデル選択では、まず用途の失敗条件を決めます。長い生成を大量に回す用途ではスループットと output cost を優先し、短い対話 UI では TTFT と合計レイテンシを優先します。深い JSON や広い JSON を返す処理では構造化出力の深度・幅を先に見ます。厳密な語数制約がある出力では、長さ精度の低い構成を候補から外します。
-
-この調査はモデルの一般能力を測っていません。価格、速度、構造化出力、長さ制約というアプリケーション実装上の制約に対して、候補を絞るための基礎資料です。
+${kousatsuSection(
+  11,
+  "llm-model-comparison",
+  "モデル選択では、まず用途の失敗条件を決めます。長い生成を大量に回す用途ではスループットと output cost を優先し、短い対話 UI では TTFT と合計レイテンシを優先します。深い JSON や広い JSON を返す処理では構造化出力の深度・幅を先に見ます。厳密な語数制約がある出力では、長さ精度の低い構成を候補から外します。この調査はモデルの一般能力を測っていません。",
+)}
 
 ## 12. 再現方法
 
@@ -727,16 +758,11 @@ ${opsRows}
 
 ${erroredNote}
 
-## 9. 総合比較
-
-ストア選択では、まず用途の失敗条件を決めます。検索品質は固定 embedding を共有する自己管理ストア間ではほぼ同水準に収束するため、実運用の差はレイテンシ・取り込み時間・コスト・メタデータフィルタ・スケール上限に表れます。
-
-- 低レイテンシと単純な運用を優先する場合は、ローカルの sqlite-vec や、リクエスト単価の低い自己管理ストアを検討します。
-- エッジ配信や Workers との結合を重視する場合は Cloudflare Vectorize を候補にしますが、書き込みが eventually-consistent である点を取り込み時間として見込みます。
-- embedding からチャンク分割・索引までをプロバイダー側に委ねたい場合は、OpenAI Vector Store や AutoRAG などの whole-stack を選びます。この場合の数値はストア単体ではなくスタック全体の挙動です。
-- AutoRAG のように索引が非同期（ダッシュボード連携やスケジュール同期）なサービスは、同期的なベンチマークでは実測が難しく、その場合はエラーとして正直に記録します。
-
-この調査はベクトルストアの一般的な優劣を決めるものではなく、固定 embedding を前提とした検索品質と、実運用で効く運用指標に対して候補を絞るための基礎資料です。
+${kousatsuSection(
+  9,
+  "rag-benchmark",
+  "ストア選択では、まず用途の失敗条件を決めます。検索品質は固定 embedding を共有する自己管理ストア間ではほぼ同水準に収束するため、実運用の差はレイテンシ・取り込み時間・コスト・メタデータフィルタ・スケール上限に表れます。この調査はベクトルストアの一般的な優劣を決めるものではなく、固定 embedding を前提とした検索品質と、実運用で効く運用指標に対して候補を絞るための基礎資料です。",
+)}
 
 ## 10. 再現方法
 
@@ -762,5 +788,275 @@ npm run rag:real -- --trials 5
   );
 };
 
+// --- OCR ---------------------------------------------------------------------
+
+const ocrStat = (stat, asPercent) => {
+  if (!stat || !Number.isFinite(stat.mean)) return "n/a";
+  const mean = asPercent
+    ? `${(stat.mean * 100).toFixed(1)}%`
+    : `${(stat.mean * 100).toFixed(1)}%`;
+  return stat.n < 2
+    ? `${mean} (n=${stat.n})`
+    : `${mean} ± ${(llmCi95HalfWidth(stat) * 100).toFixed(1)}pp (95%信頼区間, n=${stat.n})`;
+};
+
+const exportOcr = () => {
+  const { sourceArtifact, result } = readArtifact(
+    "docs/research-reports/ocr-comparison.real.data.json",
+    "docs/research-reports/ocr-comparison.data.json",
+  );
+  const runs = result.runs;
+  const measured = runs.filter((r) => r.provenance === "measured");
+  const providers = new Set(runs.map((r) => r.provider)).size;
+  const doc = result.dataset?.dataset ?? result.dataset ?? {};
+  const docCount = doc.documents?.length ?? doc.documentCount ?? "—";
+
+  const byCer = measured.toSorted(
+    (a, b) => a.stats.characterErrorRate.mean - b.stats.characterErrorRate.mean,
+  );
+  const byWer = measured.toSorted(
+    (a, b) => a.stats.wordErrorRate.mean - b.stats.wordErrorRate.mean,
+  );
+  const byField = measured.toSorted(
+    (a, b) => b.stats.fieldAccuracy.mean - a.stats.fieldAccuracy.mean,
+  );
+
+  const rankRows = (rows, columns) =>
+    rows
+      .map(
+        (r, i) => `| ${i + 1} | ${columns.map((c) => c(r)).join(" | ")} |`,
+      )
+      .join("\n");
+
+  const completeOcrRows = runs
+    .toSorted(
+      (a, b) =>
+        a.provider.localeCompare(b.provider) ||
+        a.modelName.localeCompare(b.modelName),
+    )
+    .map(
+      (r) =>
+        `| ${providerName(r.provider)} | ${r.modelName} | ${provLabel(r.provenance)} | ${ocrStat(r.stats.characterErrorRate)} | ${ocrStat(r.stats.wordErrorRate)} | ${ocrStat(r.stats.fieldAccuracy)} |`,
+    )
+    .join("\n");
+
+  writeDraft(
+    "ocr-comparison",
+    `${frontmatter({
+      sourceArtifact,
+      generatedAt: result.generatedAt,
+      trials: result.trials,
+      provenance: provenanceFor(runs),
+    })}
+
+# OCR 能力比較調査
+
+この調査は \`${result.generatedAt}\` に生成したレポートです。${runs.length} モデルを対象に、そのうち ${measured.length} 件をライブ測定しました。文書画像を視覚対応モデルへ入力し、文字起こしの正確さ（CER / WER）と、構造化抽出のフィールド精度を測ります。データセットは合成文書フィクスチャ \`${doc.id ?? "n/a"}\`（${docCount} 文書）です。
+
+## 1. 調査の目的
+
+文書 OCR / 視覚読み取りを行うモデルを、文字起こしの正確さと構造化抽出の正確さから選ぶための再現可能な測定表を作ることを目的としています。一般的な優劣ではなく、用途ごとの制約に対して候補を絞るための資料として扱います。
+
+## 2. 測定対象
+
+| 測定対象 | 測っているもの | 読み方 |
+| --- | --- | --- |
+| 文字誤り率 (CER) | 正解文字列に対する編集距離ベースの文字単位誤り率 | 低いほど文字起こしが正確 |
+| 単語誤り率 (WER) | 単語単位の誤り率 | 低いほど語の取りこぼし・誤りが少ない |
+| フィールド精度 | 構造化抽出で正しく取れたフィールドの割合 | 高いほど帳票項目の抽出が正確 |
+
+## 3. 範囲と制約
+
+- 各モデル×文書は ${result.trials} 試行です。CER / WER / フィールド精度は平均 ± 95% 信頼区間で示します。
+- データセットはリポジトリ生成の**合成文書フィクスチャ**であり、実文書の難易度・多様性を代表しません。値は相対比較の目安です。
+- 視覚入力に対応しないモデル、および API キーのないモデルは fixture 行として扱い、実測と混同しません。
+- 結果は \`${result.generatedAt}\` 時点のモデルと API の挙動です。
+
+## 4. 指標別の観測（文字誤り率 CER・低いほど良い）
+
+| 順位 | Provider | Model | CER | フィールド精度 |
+| ---: | --- | --- | ---: | ---: |
+${rankRows(byCer, [
+  (r) => providerName(r.provider),
+  (r) => r.modelName,
+  (r) => ocrStat(r.stats.characterErrorRate),
+  (r) => ocrStat(r.stats.fieldAccuracy),
+])}
+
+## 5. 指標別の観測（単語誤り率 WER・低いほど良い）
+
+| 順位 | Provider | Model | WER | CER |
+| ---: | --- | --- | ---: | ---: |
+${rankRows(byWer, [
+  (r) => providerName(r.provider),
+  (r) => r.modelName,
+  (r) => ocrStat(r.stats.wordErrorRate),
+  (r) => ocrStat(r.stats.characterErrorRate),
+])}
+
+## 6. 指標別の観測（フィールド精度・高いほど良い）
+
+| 順位 | Provider | Model | フィールド精度 | CER |
+| ---: | --- | --- | ---: | ---: |
+${rankRows(byField, [
+  (r) => providerName(r.provider),
+  (r) => r.modelName,
+  (r) => ocrStat(r.stats.fieldAccuracy),
+  (r) => ocrStat(r.stats.characterErrorRate),
+])}
+
+## 7. 全モデルの測定結果
+
+ライブ測定した全 ${measured.length} 件に加え、視覚未対応・キー不在の fixture 行も含めて一覧します。
+
+| Provider | Model | 測定 | CER | WER | フィールド精度 |
+| --- | --- | --- | ---: | ---: | ---: |
+${completeOcrRows}
+
+${kousatsuSection(
+  8,
+  "ocr-comparison",
+  "合成フィクスチャ上では多くの視覚対応モデルが CER / WER をほぼ 0、フィールド精度をほぼ 100% に収束させます。実運用では文書の劣化・レイアウト・多言語で差が開くため、この表は相対比較の出発点として扱い、対象文書に近いサンプルでの再測定を前提にします。",
+)}
+
+## 9. 再現方法
+
+調査は公開リポジトリ \`qmu/research\` で再生成できます。API キー不要の合成フィクスチャ生成と、実モデルでの測定が分かれています。
+
+\`\`\`sh
+git clone https://github.com/qmu/research
+cd research/packages/tech
+npm install
+
+npm run ocr:fixture
+npm run ocr:estimate
+npm run ocr:real
+\`\`\`
+
+公開判断に使う場合は、データセット・モデル・生成日時・provenance を記録し、fixture 行と実測行を分けて扱います。`,
+  );
+};
+
+// --- Availability ------------------------------------------------------------
+
+const availPercent = (value) => `${(value * 100).toFixed(1)}%`;
+
+const exportAvailability = () => {
+  const { sourceArtifact, result } = readArtifact(
+    "docs/research-reports/llm-availability.real.data.json",
+    "docs/research-reports/llm-availability.data.json",
+  );
+  const summaries = result.summaries ?? [];
+  const spec = result.samplingSpec ?? {};
+  const measuredNote = result.fixture
+    ? "現在の公開データはキー不要の fixture であり、実サービスの可用性ではありません。"
+    : "手動ヘルスプローブによる観測です。";
+  const totalSamples = summaries.reduce((sum, s) => sum + (s.n ?? 0), 0);
+
+  const observationRows = summaries
+    .toSorted(
+      (a, b) =>
+        a.provider.localeCompare(b.provider) ||
+        a.targetModelName.localeCompare(b.targetModelName),
+    )
+    .map(
+      (s) =>
+        `| ${providerName(s.provider)} | ${s.targetModelName} | ${s.n} | ${availPercent(s.successRate)} | ${s.successCount}/${s.n} | ${Number(s.meanResponseTimeMs).toFixed(0)} |`,
+    )
+    .join("\n");
+
+  const failureRows = summaries
+    .toSorted((a, b) => a.provider.localeCompare(b.provider))
+    .map((s) => {
+      const f = s.failureTypeBreakdown ?? {};
+      return `| ${providerName(s.provider)} | ${s.targetModelName} | ${f.timeout ?? 0} | ${f.server_error ?? 0} | ${f.rate_limit ?? 0} | ${f.network_error ?? 0} | ${(f.client_error ?? 0) + (f.unknown_error ?? 0)} |`;
+    })
+    .join("\n");
+
+  const window = summaries[0]?.observationWindow;
+  const windowNote = window
+    ? `観測窓は \`${window.startedAt}\` から \`${window.endedAt}\`（約 ${(window.durationMs / 1000).toFixed(0)} 秒）です。`
+    : "";
+
+  writeDraft(
+    "availability-comparison",
+    `${frontmatter({
+      sourceArtifact,
+      generatedAt: result.generatedAt,
+      trials: spec.samplesPerTarget ?? spec.samples ?? summaries[0]?.n ?? 0,
+      provenance: result.fixture ? "fixtured" : "measured",
+    })}
+
+# 可用性の観測（手動ヘルスプローブ）
+
+この観測は \`${result.generatedAt}\` に生成しました。${summaries.length} 個のプロバイダー／モデルのヘルスエンドポイントに対し、限定した観測窓で ${totalSamples} サンプルのプローブを行い、成功率・応答時間・失敗種別を記録します。${measuredNote}${windowNote}
+
+> **これはランキングではありません。** 観測窓・サンプル数が小さい手動観測であり、定常的なアップタイム測定や SLA ではありません。「どのプロバイダーがより信頼できる」といった断定は行わず、観測値としてのみ提示します。
+
+## 1. 観測の目的
+
+各プロバイダーの API が、限定した観測窓でどのように応答したかを、成功率・応答時間・失敗種別として記録することを目的とします。ダウン頻度やダウンタイム長の断定的な比較は、定常サンプリングが確立するまで行いません。
+
+## 2. 測定対象
+
+| 測定対象 | 測っているもの | 読み方 |
+| --- | --- | --- |
+| 成功率 | 観測窓内のプローブ成功割合 | 観測値。サンプル数と観測窓に依存する |
+| 平均応答時間 | 成功プローブの平均レイテンシ (ms) | 観測時点のネットワーク・負荷に依存する |
+| 失敗種別 | timeout / server_error / rate_limit / network_error / client 他の内訳 | 失敗の性質を分けて見る |
+
+## 3. 観測条件
+
+- サンプル数: 各ターゲット ${summaries[0]?.n ?? "—"} プローブ。
+- 観測窓: ${windowNote || "生成物の frontmatter を参照。"}
+- サンプリングは手動オンデマンドであり、定常スケジュールではありません。
+
+## 4. 範囲と制約
+
+- 小さな観測窓・サンプル数のため、統計的な可用性の主張はできません。
+- 応答時間は実行環境・ネットワーク・時間帯で変動します。
+- 断定的な可用性ランキングや SLA は提示しません（観測として扱います）。
+- 結果は \`${result.generatedAt}\` 時点の観測です。
+
+## 5. プロバイダー別の観測
+
+プロバイダー名の昇順で並べます（順位づけはしません）。
+
+| Provider | Model | サンプル数 | 成功率 | 成功/試行 | 平均応答 (ms) |
+| --- | --- | ---: | ---: | ---: | ---: |
+${observationRows}
+
+## 6. 失敗種別の内訳
+
+| Provider | Model | timeout | server_error | rate_limit | network_error | その他 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+${failureRows}
+
+${kousatsuSection(
+  7,
+  "llm-availability",
+  "この観測は限定した窓での手動プローブであり、可用性の断定的な比較には使えません。継続的なアップタイム評価には、定常サンプリングと長期の観測窓が必要です。",
+)}
+
+## 8. 再現方法
+
+調査は公開リポジトリ \`qmu/research\` で再生成できます。API キー不要の fixture 観測と、実エンドポイントへのプローブが分かれています。
+
+\`\`\`sh
+git clone https://github.com/qmu/research
+cd research/packages/tech
+npm install
+
+npm run availability:fixture
+npm run availability:estimate
+npm run availability
+\`\`\`
+
+公開判断に使う場合は、観測窓・サンプル数・生成日時・provenance を記録し、手動観測であることを明記します。`,
+  );
+};
+
 exportLlm();
 exportRag();
+exportOcr();
+exportAvailability();
