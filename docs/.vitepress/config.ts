@@ -48,6 +48,10 @@ export default defineConfig({
             text: "ベクトルDBの比較",
             link: "/llm-foundation/vector-db-comparison",
           },
+          {
+            text: "Agent SDKの比較",
+            link: "/llm-foundation/agent-sdk-comparison",
+          },
         ],
       },
       { text: "Research reports (source)", link: "/research-reports/" },
@@ -75,6 +79,10 @@ export default defineConfig({
           {
             text: "ベクトルDBの比較",
             link: "/llm-foundation/vector-db-comparison",
+          },
+          {
+            text: "Agent SDKの比較",
+            link: "/llm-foundation/agent-sdk-comparison",
           },
         ],
       },
