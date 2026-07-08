@@ -10,6 +10,7 @@ import {
 import { runInsightsStage } from "../research/insights-runner";
 import { runTranslationStage } from "../research/translate-runner";
 import { runSplitTopic } from "./run-split-topic";
+import { runReferenceTopic } from "./run-reference-topic";
 
 // Fixed provenance timestamp is not needed here — insights only run on real
 // mode, where a live clock is correct. estimate never writes, so its output is
@@ -38,7 +39,9 @@ const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   availability: () => import("./run-llm-availability"),
 };
 
-/** Exported so a test can hold the runner map and the registry in sync. */
+/** Exported so a test can hold the benchmark-runner map and the benchmark-kind
+ * topics in sync. Reference topics (catalog/article) dispatch by `kind`, not
+ * through this map. */
 export const RUNNER_TOPIC_IDS: ReadonlyArray<string> =
   Object.keys(RUNNERS).sort();
 
@@ -92,7 +95,15 @@ export const main = async (): Promise<void> => {
 
   const legacyArgv = buildLegacyArgv(spec, mode, rest);
   for (const stage of planPipeline(spec, mode)) {
-    if (stage === "benchmark") {
+    if (stage === "benchmark" && spec.kind === "catalog") {
+      await runReferenceTopic({ topicId: spec.id, kind: "catalog" });
+    } else if (stage === "benchmark" && spec.kind === "article") {
+      await runReferenceTopic({
+        topicId: spec.id,
+        kind: "article",
+        articlePath: spec.articlePath,
+      });
+    } else if (stage === "benchmark") {
       const load = RUNNERS[spec.id];
       if (load === undefined) {
         throw new Error(`no runner bound for topic '${spec.id}'`);

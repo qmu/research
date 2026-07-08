@@ -24,6 +24,7 @@
     "speed:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-split-topic.ts --group speed --fixture",
     "accuracy": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-split-topic.ts --group accuracy",
     "accuracy:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-split-topic.ts --group accuracy --fixture",
+    "catalog": "node --import tsx/esm src/entrypoints/run-reference-topic.ts",
     "availability": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-availability.ts",
     "availability:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-availability.ts --fixture",
     "availability:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-llm-availability.ts --estimate",

@@ -46,6 +46,15 @@ export type TopicSpec = Readonly<{
   modeArgv: Readonly<Partial<Record<TopicMode, ReadonlyArray<string>>>>;
   /** Stages this topic's pipeline runs, in `STAGE_ORDER` order. */
   stages: ReadonlyArray<TopicStage>;
+  /**
+   * What the "benchmark" stage does. `benchmark` (default) runs a live probe
+   * sweep; `catalog` generates a reference table from a source of truth (no
+   * measurement); `article` points at a hand-written reference article. The
+   * last two are non-measured REFERENCE topics whose provenance says so.
+   */
+  kind?: "benchmark" | "catalog" | "article";
+  /** For `article` topics: repo-relative path to the hand-written article. */
+  articlePath?: string;
 }>;
 
 /**
@@ -106,6 +115,29 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
     stages: ["benchmark", "insights", "translation"],
+  },
+  {
+    id: "foundation-models",
+    title:
+      "Foundation model catalog: provider, tier, price, effort, API surface (reference catalog, not measured)",
+    artifactBase: "foundation-models",
+    // A catalog is generated deterministically from models.ts; every mode
+    // produces the same keyless reference table (no provider calls).
+    modes: ["fixture", "estimate", "real"],
+    modeArgv: { fixture: [], estimate: [], real: [] },
+    stages: ["benchmark"],
+    kind: "catalog",
+  },
+  {
+    id: "agent-sdk",
+    title:
+      "Agent SDK comparison: agent framework/runtime design comparison (design-comparison, not measured)",
+    artifactBase: "agent-sdk-comparison",
+    modes: ["fixture", "estimate", "real"],
+    modeArgv: { fixture: [], estimate: [], real: [] },
+    stages: ["benchmark"],
+    kind: "article",
+    articlePath: "docs/llm-foundation/agent-sdk-comparison.md",
   },
 ];
 
