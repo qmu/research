@@ -1,4 +1,5 @@
 import type { EffortLevel } from "./effort";
+import type { AvailabilityHistoryPoint } from "./availability";
 
 // Pure domain types for the fundamental LLM model comparison. No vendor or
 // entrypoint types appear here — this module depends on nothing external.
@@ -212,6 +213,7 @@ export type HistoryEntry = Readonly<{
   generatedAt: string;
   trials: number;
   points: ReadonlyArray<HistoryPoint>;
+  availability?: ReadonlyArray<AvailabilityHistoryPoint>;
 }>;
 
 // The append-only history file — one entry per recorded run, newest appended last.

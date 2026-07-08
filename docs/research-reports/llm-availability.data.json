@@ -1,0 +1,266 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "samplingSpec": {
+    "version": "manual-health-probe-v1",
+    "cadence": "manual-on-demand",
+    "intervalMs": 60000,
+    "timeoutMs": 10000,
+    "samplesPerProvider": 3,
+    "consecutiveFailureThreshold": 2,
+    "requestOrigin": "Manual operator environment running packages/tech. Record the concrete region/network with --origin or AVAILABILITY_REQUEST_ORIGIN for every real run.",
+    "rateLimitClassification": "HTTP 429 / provider quota errors are recorded as rate_limit and excluded from service-outage down runs.",
+    "censoring": "Unknown gaps before the first sample, after the last sample, and between separate manual runs are censored; no uptime or downtime is inferred across those gaps.",
+    "downDefinition": "A provider is counted as down only after at least two consecutive non-rate-limit outage-eligible failures (timeout, 5xx/server_error, or network_error) within one defined observation window. Client errors and rate limits are not service downtime."
+  },
+  "targets": [
+    {
+      "provider": "anthropic",
+      "modelId": "anthropic-claude-haiku-4-5",
+      "modelName": "Claude Haiku 4.5",
+      "apiModelId": "claude-haiku-4-5-20251001",
+      "effort": "n/a"
+    },
+    {
+      "provider": "google",
+      "modelId": "google-gemini-3-1-flash-lite",
+      "modelName": "Gemini 3.1 Flash-Lite",
+      "apiModelId": "gemini-3.1-flash-lite",
+      "effort": "low"
+    },
+    {
+      "provider": "openai",
+      "modelId": "openai-gpt-5-4-nano",
+      "modelName": "GPT-5.4 nano",
+      "apiModelId": "gpt-5.4-nano",
+      "effort": "none"
+    },
+    {
+      "provider": "xai",
+      "modelId": "xai-grok-build-0-1",
+      "modelName": "Grok Build 0.1",
+      "apiModelId": "grok-build-0.1",
+      "effort": "n/a"
+    }
+  ],
+  "samples": [
+    {
+      "provider": "anthropic",
+      "targetModelId": "anthropic-claude-haiku-4-5",
+      "targetModelName": "Claude Haiku 4.5",
+      "observedAt": "2026-01-01T00:00:00.000Z",
+      "ok": true,
+      "responseTimeMs": 90,
+      "failureType": null
+    },
+    {
+      "provider": "anthropic",
+      "targetModelId": "anthropic-claude-haiku-4-5",
+      "targetModelName": "Claude Haiku 4.5",
+      "observedAt": "2026-01-01T00:01:00.000Z",
+      "ok": true,
+      "responseTimeMs": 95,
+      "failureType": null
+    },
+    {
+      "provider": "anthropic",
+      "targetModelId": "anthropic-claude-haiku-4-5",
+      "targetModelName": "Claude Haiku 4.5",
+      "observedAt": "2026-01-01T00:02:00.000Z",
+      "ok": true,
+      "responseTimeMs": 100,
+      "failureType": null
+    },
+    {
+      "provider": "google",
+      "targetModelId": "google-gemini-3-1-flash-lite",
+      "targetModelName": "Gemini 3.1 Flash-Lite",
+      "observedAt": "2026-01-01T00:00:00.000Z",
+      "ok": true,
+      "responseTimeMs": 107,
+      "failureType": null
+    },
+    {
+      "provider": "google",
+      "targetModelId": "google-gemini-3-1-flash-lite",
+      "targetModelName": "Gemini 3.1 Flash-Lite",
+      "observedAt": "2026-01-01T00:01:00.000Z",
+      "ok": true,
+      "responseTimeMs": 112,
+      "failureType": null
+    },
+    {
+      "provider": "google",
+      "targetModelId": "google-gemini-3-1-flash-lite",
+      "targetModelName": "Gemini 3.1 Flash-Lite",
+      "observedAt": "2026-01-01T00:02:00.000Z",
+      "ok": true,
+      "responseTimeMs": 117,
+      "failureType": null
+    },
+    {
+      "provider": "openai",
+      "targetModelId": "openai-gpt-5-4-nano",
+      "targetModelName": "GPT-5.4 nano",
+      "observedAt": "2026-01-01T00:00:00.000Z",
+      "ok": true,
+      "responseTimeMs": 124,
+      "failureType": null
+    },
+    {
+      "provider": "openai",
+      "targetModelId": "openai-gpt-5-4-nano",
+      "targetModelName": "GPT-5.4 nano",
+      "observedAt": "2026-01-01T00:01:00.000Z",
+      "ok": true,
+      "responseTimeMs": 129,
+      "failureType": null
+    },
+    {
+      "provider": "openai",
+      "targetModelId": "openai-gpt-5-4-nano",
+      "targetModelName": "GPT-5.4 nano",
+      "observedAt": "2026-01-01T00:02:00.000Z",
+      "ok": true,
+      "responseTimeMs": 134,
+      "failureType": null
+    },
+    {
+      "provider": "xai",
+      "targetModelId": "xai-grok-build-0-1",
+      "targetModelName": "Grok Build 0.1",
+      "observedAt": "2026-01-01T00:00:00.000Z",
+      "ok": true,
+      "responseTimeMs": 141,
+      "failureType": null
+    },
+    {
+      "provider": "xai",
+      "targetModelId": "xai-grok-build-0-1",
+      "targetModelName": "Grok Build 0.1",
+      "observedAt": "2026-01-01T00:01:00.000Z",
+      "ok": true,
+      "responseTimeMs": 146,
+      "failureType": null
+    },
+    {
+      "provider": "xai",
+      "targetModelId": "xai-grok-build-0-1",
+      "targetModelName": "Grok Build 0.1",
+      "observedAt": "2026-01-01T00:02:00.000Z",
+      "ok": true,
+      "responseTimeMs": 151,
+      "failureType": null
+    }
+  ],
+  "summaries": [
+    {
+      "provider": "anthropic",
+      "targetModelId": "anthropic-claude-haiku-4-5",
+      "targetModelName": "Claude Haiku 4.5",
+      "n": 3,
+      "observationWindow": {
+        "startedAt": "2026-01-01T00:00:00.000Z",
+        "endedAt": "2026-01-01T00:02:00.000Z",
+        "durationMs": 120100
+      },
+      "successCount": 3,
+      "failureCount": 0,
+      "successRate": 1,
+      "meanResponseTimeMs": 95,
+      "failureTypeBreakdown": {
+        "timeout": 0,
+        "server_error": 0,
+        "rate_limit": 0,
+        "network_error": 0,
+        "client_error": 0,
+        "unknown_error": 0
+      },
+      "rateLimitCount": 0,
+      "downFrequency": 0,
+      "downtimeDurationMs": 0,
+      "downRuns": []
+    },
+    {
+      "provider": "google",
+      "targetModelId": "google-gemini-3-1-flash-lite",
+      "targetModelName": "Gemini 3.1 Flash-Lite",
+      "n": 3,
+      "observationWindow": {
+        "startedAt": "2026-01-01T00:00:00.000Z",
+        "endedAt": "2026-01-01T00:02:00.000Z",
+        "durationMs": 120117
+      },
+      "successCount": 3,
+      "failureCount": 0,
+      "successRate": 1,
+      "meanResponseTimeMs": 112,
+      "failureTypeBreakdown": {
+        "timeout": 0,
+        "server_error": 0,
+        "rate_limit": 0,
+        "network_error": 0,
+        "client_error": 0,
+        "unknown_error": 0
+      },
+      "rateLimitCount": 0,
+      "downFrequency": 0,
+      "downtimeDurationMs": 0,
+      "downRuns": []
+    },
+    {
+      "provider": "openai",
+      "targetModelId": "openai-gpt-5-4-nano",
+      "targetModelName": "GPT-5.4 nano",
+      "n": 3,
+      "observationWindow": {
+        "startedAt": "2026-01-01T00:00:00.000Z",
+        "endedAt": "2026-01-01T00:02:00.000Z",
+        "durationMs": 120134
+      },
+      "successCount": 3,
+      "failureCount": 0,
+      "successRate": 1,
+      "meanResponseTimeMs": 129,
+      "failureTypeBreakdown": {
+        "timeout": 0,
+        "server_error": 0,
+        "rate_limit": 0,
+        "network_error": 0,
+        "client_error": 0,
+        "unknown_error": 0
+      },
+      "rateLimitCount": 0,
+      "downFrequency": 0,
+      "downtimeDurationMs": 0,
+      "downRuns": []
+    },
+    {
+      "provider": "xai",
+      "targetModelId": "xai-grok-build-0-1",
+      "targetModelName": "Grok Build 0.1",
+      "n": 3,
+      "observationWindow": {
+        "startedAt": "2026-01-01T00:00:00.000Z",
+        "endedAt": "2026-01-01T00:02:00.000Z",
+        "durationMs": 120151
+      },
+      "successCount": 3,
+      "failureCount": 0,
+      "successRate": 1,
+      "meanResponseTimeMs": 146,
+      "failureTypeBreakdown": {
+        "timeout": 0,
+        "server_error": 0,
+        "rate_limit": 0,
+        "network_error": 0,
+        "client_error": 0,
+        "unknown_error": 0
+      },
+      "rateLimitCount": 0,
+      "downFrequency": 0,
+      "downtimeDurationMs": 0,
+      "downRuns": []
+    }
+  ],
+  "fixture": true
+}
