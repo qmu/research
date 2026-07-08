@@ -1,12 +1,13 @@
 ---
-title: Research reports
-description: Finished, reproducible research studies.
+title: Research reports (source)
+description: English reports, data artifacts, and history kept as reproducible source material.
 ---
 
-# Research reports
+# Research reports (source)
 
-Finished research studies. Each page documents what was measured, how, and the
-exact steps to reproduce it.
+English reports, data artifacts, and history are kept here as reproducible
+source material. The public reading line for the Japanese canonical articles is
+[LLM基礎検証](../llm-foundation/).
 
 - [LLM exact-match benchmark](./llm-benchmark) — a small, reproducible
   exact-match accuracy benchmark, runnable in seconds from a clone.

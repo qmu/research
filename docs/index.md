@@ -10,9 +10,10 @@ this repository; the pages here are the written-up results.
 
 ## Browse
 
-- [Research reports](/research-reports/) — finished studies.
 - [LLM基礎検証](/llm-foundation/) — canonical Japanese articles for
   foundation-model and RAG backend comparisons.
+- [Research reports (source)](/research-reports/) — English reports, data
+  artifacts, and history kept as reproducible source material.
 - [Glossary](/glossary) — the project's shared vocabulary.
 - [Dependency decisions](/dependency-decisions) — why each external dependency
   was adopted.

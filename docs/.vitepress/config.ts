@@ -26,14 +26,66 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "Home", link: "/" },
-      { text: "Research reports", link: "/research-reports/" },
-      { text: "LLM基礎検証", link: "/llm-foundation/" },
+      {
+        text: "LLM基礎検証",
+        items: [
+          { text: "LLM基礎検証について", link: "/llm-foundation/" },
+          {
+            text: "対象基盤モデル",
+            link: "/llm-foundation/target-foundation-models",
+          },
+          { text: "速度の比較", link: "/llm-foundation/speed-comparison" },
+          { text: "精度の比較", link: "/llm-foundation/accuracy-comparison" },
+          {
+            text: "可用性の比較（準備中）",
+            link: "/llm-foundation/availability-comparison",
+          },
+          {
+            text: "OCR能力の比較（準備中）",
+            link: "/llm-foundation/ocr-comparison",
+          },
+          {
+            text: "ベクトルDBの比較",
+            link: "/llm-foundation/vector-db-comparison",
+          },
+        ],
+      },
+      { text: "Research reports (source)", link: "/research-reports/" },
     ],
     sidebar: [
       {
-        text: "Research reports",
+        text: "LLM基礎検証",
+        link: "/llm-foundation/",
+        items: [
+          { text: "LLM基礎検証について", link: "/llm-foundation/" },
+          {
+            text: "対象基盤モデル",
+            link: "/llm-foundation/target-foundation-models",
+          },
+          { text: "速度の比較", link: "/llm-foundation/speed-comparison" },
+          { text: "精度の比較", link: "/llm-foundation/accuracy-comparison" },
+          {
+            text: "可用性の比較（準備中）",
+            link: "/llm-foundation/availability-comparison",
+          },
+          {
+            text: "OCR能力の比較（準備中）",
+            link: "/llm-foundation/ocr-comparison",
+          },
+          {
+            text: "ベクトルDBの比較",
+            link: "/llm-foundation/vector-db-comparison",
+          },
+        ],
+      },
+      {
+        text: "Research reports (source)",
         link: "/research-reports/",
         items: [
+          {
+            text: "Research reports index",
+            link: "/research-reports/",
+          },
           {
             text: "LLM exact-match benchmark",
             link: "/research-reports/llm-benchmark",
@@ -43,8 +95,8 @@ export default defineConfig({
             link: "/research-reports/llm-model-comparison",
           },
           {
-            text: "LLM基礎検証",
-            link: "/llm-foundation/",
+            text: "RAG vector store benchmark",
+            link: "/research-reports/rag-benchmark",
           },
         ],
       },
