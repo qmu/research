@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { gzipSync } from "node:zlib";
 import { estimateRagBenchmark, runRagBenchmark } from "../rag-benchmark/run";
+import { sweepAutoRagOrphans } from "../vendors/vectorstore/autorag";
 import { renderRagBenchmarkReport } from "../rag-benchmark/domain/report";
 import {
   appendHistory,
@@ -84,6 +85,18 @@ const main = async (): Promise<void> => {
 
   if (hasArg("--estimate")) {
     process.stdout.write(`${estimateRagBenchmark(backends, corpus, trials)}\n`);
+    return;
+  }
+
+  // Reclaim rag-bench-* AutoRAG instances / R2 buckets left by an earlier run
+  // whose teardown failed part-way (teardown warnings point here).
+  if (hasArg("--sweep-orphans")) {
+    const summary = await sweepAutoRagOrphans();
+    process.stdout.write(
+      `autorag orphan sweep: ${summary.ragsDeleted} instance(s), ` +
+        `${summary.bucketsDeleted} bucket(s) removed` +
+        `${summary.clean ? "" : " — some deletions failed, see warnings above"}\n`,
+    );
     return;
   }
 

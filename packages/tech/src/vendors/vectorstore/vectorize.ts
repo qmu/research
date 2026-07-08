@@ -7,6 +7,7 @@ import type {
   Vector,
   VectorStore,
 } from "../../rag-benchmark/domain/types";
+import { warnTeardownFailure } from "./teardown";
 
 /**
  * Anti-corruption layer for Cloudflare Vectorize (v2 REST) — a self-managed
@@ -141,7 +142,7 @@ export const createVectorizeStore = (dimensions: number): VectorStore => {
     },
     close: async () => {
       await request(`/${indexName}`, { method: "DELETE" }).catch(
-        () => undefined,
+        warnTeardownFailure("vectorize", `index ${indexName}`),
       );
     },
   };

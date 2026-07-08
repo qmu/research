@@ -210,7 +210,13 @@ const retrievalIntervalNote = (
     ? `Retrieval quality is deterministic for this run; the 95% interval is over the ${queryCount}-query sample, not trial variance.`
     : "Retrieval queries were repeated across operational trials; the 95% interval is over the query sample and run-to-run spread is reported separately.";
 
-const measureBackendTrial = async (
+/**
+ * One backend trial: create the store, ingest, query, and always close. The
+ * `finally` guarantees teardown on every error path; a close() failure is
+ * reported as a stderr warning and never masks the measurement error (nor turns
+ * a measured run into an error). Exported for the close-on-error tests.
+ */
+export const measureBackendTrial = async (
   backend: Backend,
   factory: StoreFactory,
   embedding: EmbeddingClient,
@@ -268,7 +274,13 @@ const measureBackendTrial = async (
         scored.length > 0 ? averageRetrievalMetrics(scored) : undefined,
     };
   } finally {
-    await store.close?.();
+    try {
+      await store.close?.();
+    } catch (error) {
+      process.stderr.write(
+        `[rag-benchmark] teardown warning (${backend.id}): close() failed: ${String(error)}\n`,
+      );
+    }
   }
 };
 

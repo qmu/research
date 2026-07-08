@@ -26,6 +26,7 @@
     "rag:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-rag-benchmark.ts --fixture",
     "rag:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-rag-benchmark.ts --corpus scifact",
     "rag:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-rag-benchmark.ts --estimate --corpus scifact --trials 5",
+    "rag:sweep": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-rag-benchmark.ts --sweep-orphans",
     "ocr": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts",
     "ocr:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts",
     "ocr:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts --real",

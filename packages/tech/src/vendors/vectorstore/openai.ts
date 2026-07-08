@@ -5,6 +5,7 @@ import type {
   StoreQuery,
   VectorStore,
 } from "../../rag-benchmark/domain/types";
+import { warnTeardownFailure } from "./teardown";
 
 /**
  * Anti-corruption layer for OpenAI's managed vector store (File Search).
@@ -63,12 +64,22 @@ export const createOpenAiVectorStore = (): VectorStore => {
     },
     close: async () => {
       // Best-effort cleanup: a failed delete must not turn a measured run into
-      // an error; the expiry policy set at creation reclaims stragglers.
+      // an error; the expiry policy set at creation reclaims stragglers, and
+      // every failure is a visible stderr warning rather than a silent leak.
       if (vectorStoreId !== null) {
-        await client.vectorStores.delete(vectorStoreId).catch(() => undefined);
+        await client.vectorStores
+          .delete(vectorStoreId)
+          .catch(
+            warnTeardownFailure(
+              "openai-vector-store",
+              `vector store ${vectorStoreId}`,
+            ),
+          );
       }
       for (const fileId of fileIds) {
-        await client.files.delete(fileId).catch(() => undefined);
+        await client.files
+          .delete(fileId)
+          .catch(warnTeardownFailure("openai-vector-store", `file ${fileId}`));
       }
     },
   };

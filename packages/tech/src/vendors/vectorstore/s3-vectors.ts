@@ -14,6 +14,7 @@ import type {
   StoreQuery,
   VectorStore,
 } from "../../rag-benchmark/domain/types";
+import { warnTeardownFailure } from "./teardown";
 
 /**
  * Anti-corruption layer for AWS S3 Vectors — a self-managed store: we provide
@@ -72,13 +73,19 @@ export const createS3VectorsStore = (dimensions: number): VectorStore => {
     },
     close: async () => {
       // Best-effort cleanup so a failed delete does not turn a measured run into
-      // an error; a leftover bucket/index would otherwise accrue storage cost.
+      // an error; a leftover bucket/index would otherwise accrue storage cost,
+      // so every failure is a visible stderr warning rather than a silent leak.
       await client
         .send(new DeleteIndexCommand({ vectorBucketName, indexName }))
-        .catch(() => undefined);
+        .catch(warnTeardownFailure("s3-vectors", `index ${indexName}`));
       await client
         .send(new DeleteVectorBucketCommand({ vectorBucketName }))
-        .catch(() => undefined);
+        .catch(
+          warnTeardownFailure(
+            "s3-vectors",
+            `vector bucket ${vectorBucketName}`,
+          ),
+        );
     },
   };
 };
