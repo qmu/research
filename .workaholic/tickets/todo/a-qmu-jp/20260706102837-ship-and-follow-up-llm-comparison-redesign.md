@@ -11,17 +11,37 @@ depends_on:
 
 # Ship the LLM-comparison redesign branch, then optional research follow-ups
 
-## Resume context (carry checkpoint)
+## Ship deferred by owner — 2026-07-08
 
-This is a `/carry` handoff written from a context-exhausted session. **The
-redesign work is finished and committed; nothing is half-written.** A fresh
-session should (1) ship the branch and (2) optionally act on the research
-follow-ups below. **Do NOT re-implement the redesign — it is done.**
+**Decision (owner, 2026-07-08 drive):** shipping is **deferred**. PR #15 stays
+open; do **not** merge mid-drive. The ship decision re-queues to **after the
+current drive lands more of the research-platform queue**. This satisfies the
+Quality Gate's "OR the owner explicitly defers shipping" branch — the ticket
+stays in `todo/` as a standing ship decision, not archived, until the owner
+ships.
+
+Several of the optional follow-ups below have since been split into their own
+dedicated tickets and are being worked in this drive:
+
+- **Step 2 (7 honest error configs):** the Haiku-4.5 `effort` rejection is
+  **resolved** by `20260707195944-cover-llm-effort-na-foundation-models` (Haiku
+  now uses `effort: "n/a"`; adapters omit the param). The OpenAI `minimal`
+  streaming+structured failure is still open.
+- **Step 4 (statistical rigor / 3-trial sweep):** now
+  `20260708143652-llm-comparison-multi-trial-confidence`.
+- **Step 5 (publish decision):** now the publishing/IA tickets
+  `20260708182154` (IA reorg), `20260708182159` (boundary reversal),
+  `20260708182155` (VitePress canonical site).
 
 ### Position (verify first)
 
-- Branch `work-20260622-191220`, working tree **clean**, todo queue otherwise
-  empty. **24 commits ahead of `main`, and there is NO PR yet.**
+- Branch `work-20260622-191220`; **PR #15 is OPEN** ("Initialize research
+  monorepo and build the LLM model-comparison instrument"). As of 2026-07-08 the
+  branch is **~45 commits ahead of `main`** (was 24 at carry time; the count
+  keeps growing as this drive commits — a merge-risk argument for shipping
+  sooner rather than later, but the owner has chosen to defer).
+- Original carry note (stale): "24 commits ahead of `main`, and there is NO PR
+  yet." Superseded — PR #15 now exists.
 - The redesign ticket
   `.workaholic/tickets/archive/work-20260622-191220/20260705001543-redesign-llm-comparison-probes.md`
   is implemented and archived. Relevant commits (newest first):
