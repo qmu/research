@@ -42,6 +42,12 @@ export type InsightsInput = Readonly<{
   trials?: number;
   /** The parsed data artifact — embedded verbatim so the model reads real numbers. */
   dataArtifact: unknown;
+  /**
+   * Optional topic-specific guardrails woven into the prompt — e.g. availability
+   * is a manual observation window and must not be presented as an assertive
+   * uptime ranking. Kept as data so each topic states its own caveats.
+   */
+  guidance?: string;
 }>;
 
 export type InsightsProvenance = Readonly<{
@@ -95,6 +101,9 @@ export const buildInsightsPrompt = (input: InsightsInput): string => {
     `restate the raw numbers exhaustively — interpret them.`,
     ``,
     `Trial count behind these measurements: ${input.trials ?? "unspecified"}.`,
+    ...(input.guidance === undefined
+      ? []
+      : ["", `Topic-specific constraints you MUST honor: ${input.guidance}`]),
     ``,
     `Measurement artifact:`,
     "```json",

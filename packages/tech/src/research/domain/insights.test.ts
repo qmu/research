@@ -35,6 +35,18 @@ describe("buildInsightsPrompt", () => {
     expect(prompt).toContain("MUST come from this artifact");
     expect(prompt).toContain("RAG / vector store benchmark");
   });
+
+  it("weaves in topic-specific guidance when provided, and omits it otherwise", () => {
+    expect(buildInsightsPrompt(input)).not.toContain(
+      "Topic-specific constraints",
+    );
+    const guided = buildInsightsPrompt({
+      ...input,
+      guidance: "Do not produce an assertive availability ranking.",
+    });
+    expect(guided).toContain("Topic-specific constraints you MUST honor");
+    expect(guided).toContain("assertive availability ranking");
+  });
 });
 
 describe("renderInsightsMarkdown", () => {

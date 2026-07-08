@@ -87,7 +87,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     artifactBase: "rag-benchmark",
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
-    stages: ["benchmark"],
+    stages: ["benchmark", "insights", "translation"],
   },
   {
     id: "ocr",
@@ -97,7 +97,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // The OCR entrypoint defaults to its keyless fixture and switches to a
     // real run with --real (the reverse of the other topics).
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
-    stages: ["benchmark"],
+    stages: ["benchmark", "insights", "translation"],
   },
   {
     id: "availability",
@@ -105,7 +105,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     artifactBase: "llm-availability",
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
-    stages: ["benchmark"],
+    stages: ["benchmark", "insights", "translation"],
   },
 ];
 

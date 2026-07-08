@@ -22,15 +22,24 @@ describe("topic registry", () => {
     expect(ids.every((id) => id.length > 0)).toBe(true);
   });
 
-  it("registers the four existing topics", () => {
+  it("registers the existing topics plus the speed/accuracy split", () => {
     expect(topicIds()).toEqual(
       expect.arrayContaining([
         "llm-model-comparison",
+        "speed",
+        "accuracy",
         "rag",
         "ocr",
         "availability",
       ]),
     );
+  });
+
+  it("runs insights + translation for the migrated benchmark topics", () => {
+    for (const id of ["rag", "ocr", "availability"]) {
+      const topic = findTopic(id);
+      expect(topic?.stages).toEqual(["benchmark", "insights", "translation"]);
+    }
   });
 
   it("finds a topic by id and misses cleanly", () => {
@@ -74,10 +83,20 @@ describe("buildLegacyArgv", () => {
 });
 
 describe("planPipeline", () => {
-  it("runs only the benchmark stage today, regardless of mode", () => {
+  it("runs only the benchmark stage for a benchmark-only topic, regardless of mode", () => {
+    const speed = requireTopic("speed");
+    expect(planPipeline(speed, "fixture")).toEqual(["benchmark"]);
+    expect(planPipeline(speed, "real")).toEqual(["benchmark"]);
+  });
+
+  it("runs the LLM stages on real for a migrated topic, but not on fixture", () => {
     const rag = requireTopic("rag");
     expect(planPipeline(rag, "fixture")).toEqual(["benchmark"]);
-    expect(planPipeline(rag, "real")).toEqual(["benchmark"]);
+    expect(planPipeline(rag, "real")).toEqual([
+      "benchmark",
+      "insights",
+      "translation",
+    ]);
   });
 
   it("keeps declared LLM stages off the keyless fixture path but prices them on estimate", () => {

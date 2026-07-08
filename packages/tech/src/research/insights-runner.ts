@@ -60,6 +60,21 @@ const trialsOf = (artifact: unknown): number | undefined => {
   return undefined;
 };
 
+/**
+ * Topic-specific guardrails for the insights prompt. Availability is a manual
+ * health-probe observation over a limited window, so its insights must not read
+ * as an assertive uptime ranking or SLA claim — the observation-policy caveat,
+ * carried into the interpretation layer.
+ */
+const TOPIC_GUIDANCE: Readonly<Record<string, string>> = {
+  availability:
+    "These figures are a manual health-probe observation over a limited, " +
+    "explicitly-bounded window and sample count — NOT a scheduled uptime " +
+    "measurement or SLA. Do not produce an assertive availability ranking or " +
+    "claim one provider is 'more reliable'. Describe the observation window, " +
+    "sample sizes, and their limits, and keep every statement observational.",
+};
+
 const buildInput = (spec: TopicSpec, artifact: unknown): InsightsInput => ({
   topicId: spec.id,
   topicTitle: spec.title,
@@ -67,6 +82,7 @@ const buildInput = (spec: TopicSpec, artifact: unknown): InsightsInput => ({
   sourceCommit: currentCommit(),
   trials: trialsOf(artifact),
   dataArtifact: artifact,
+  guidance: TOPIC_GUIDANCE[spec.id],
 });
 
 /** The live insights client, or the deterministic stub when no key is set. */
