@@ -2,6 +2,7 @@
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { renderTimeSeriesChart } from "../packages/tech/src/research-report/domain/chart.js";
 
 const repoRoot = resolve(import.meta.dirname, "..");
 const draftDir = resolve(repoRoot, "docs/llm-foundation/_generated");
@@ -91,6 +92,195 @@ const uniqueBy = (items, key) => {
   });
 };
 
+const metricStat = (value) => {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return { mean: value, stdDev: 0, n: 1 };
+  }
+  if (
+    value &&
+    typeof value === "object" &&
+    Number.isFinite(value.mean) &&
+    Number.isFinite(value.stdDev) &&
+    Number.isFinite(value.n)
+  ) {
+    return { mean: value.mean, stdDev: value.stdDev, n: value.n };
+  }
+  return undefined;
+};
+
+const intervalForStat = (stat) =>
+  stat.n < 2
+    ? undefined
+    : {
+        lower: stat.mean - (1.96 * stat.stdDev) / Math.sqrt(stat.n),
+        upper: stat.mean + (1.96 * stat.stdDev) / Math.sqrt(stat.n),
+      };
+
+const chartCaption = (series) => {
+  const points = series.flatMap((s) => s.points);
+  const dates = new Set(points.map((point) => point.measuredAt));
+  const ns = points.map((point) => point.n);
+  const minN = Math.min(...ns);
+  const maxN = Math.max(...ns);
+  const nText = minN === maxN ? `n=${minN}` : `n range ${minN}-${maxN}`;
+  return `Caption: sample count ${points.length} plotted point(s) across ${dates.size} manual run date(s); metric sample ${nText}. Cadence: manual on-demand runs only, not scheduled. Numeric tables remain the accessible text alternative.`;
+};
+
+const isRealArtifact = (sourceArtifact) => sourceArtifact.includes(".real.");
+
+const llmHistoryMetrics = [
+  {
+    key: "throughputTokensPerSec",
+    title: "スループット履歴",
+    yLabel: "Tokens/sec",
+    valueDigits: 1,
+  },
+  { key: "ttftMs", title: "TTFT 履歴", yLabel: "Milliseconds", valueDigits: 0 },
+  {
+    key: "totalLatencyMs",
+    title: "合計レイテンシ履歴",
+    yLabel: "Milliseconds",
+    valueDigits: 0,
+  },
+  {
+    key: "maxSchemaDepth",
+    title: "JSON スキーマ深度履歴",
+    yLabel: "Maximum accepted depth",
+    valueDigits: 0,
+  },
+  {
+    key: "maxSchemaBreadth",
+    title: "JSON スキーマ幅履歴",
+    yLabel: "Maximum accepted fields",
+    valueDigits: 0,
+  },
+  {
+    key: "lengthAccuracy",
+    title: "長さ精度履歴",
+    yLabel: "Accuracy",
+    valueDigits: 2,
+  },
+];
+
+const ragHistoryMetrics = [
+  {
+    key: "recallAtK",
+    title: "Recall@k 履歴",
+    yLabel: "Recall",
+    valueDigits: 2,
+  },
+  { key: "ndcgAtK", title: "nDCG@k 履歴", yLabel: "nDCG", valueDigits: 2 },
+  { key: "mrr", title: "MRR 履歴", yLabel: "MRR", valueDigits: 2 },
+  {
+    key: "ingestMs",
+    title: "取り込み時間履歴",
+    yLabel: "Milliseconds",
+    valueDigits: 1,
+  },
+  {
+    key: "p50Ms",
+    title: "クエリ p50 履歴",
+    yLabel: "Milliseconds",
+    valueDigits: 1,
+  },
+  {
+    key: "p95Ms",
+    title: "クエリ p95 履歴",
+    yLabel: "Milliseconds",
+    valueDigits: 1,
+  },
+  { key: "costUsd", title: "実行コスト履歴", yLabel: "USD", valueDigits: 4 },
+];
+
+const llmHistorySeries = (history, metric) => {
+  const grouped = new Map();
+  for (const entry of history.entries ?? []) {
+    for (const point of entry.points ?? []) {
+      if (point.provenance !== "measured") continue;
+      const stat = metricStat(point[metric.key]);
+      if (!stat) continue;
+      const id = `${point.id}-${point.effort}`;
+      if (!grouped.has(id)) {
+        grouped.set(id, {
+          id,
+          label: `${point.modelName} [${point.effort}]`,
+          points: [],
+        });
+      }
+      grouped.get(id).points.push({
+        measuredAt: point.measuredAt,
+        value: stat.mean,
+        n: stat.n,
+        interval: intervalForStat(stat),
+      });
+    }
+  }
+  return [...grouped.values()];
+};
+
+const ragHistorySeries = (history, metric, labels) => {
+  const grouped = new Map();
+  for (const entry of history.entries ?? []) {
+    for (const point of entry.points ?? []) {
+      if (point.provenance !== "measured") continue;
+      const stat = point[metric.key];
+      if (!stat) continue;
+      if (!grouped.has(point.id)) {
+        grouped.set(point.id, {
+          id: point.id,
+          label: labels.get(point.id) ?? point.id,
+          points: [],
+        });
+      }
+      grouped.get(point.id).points.push({
+        measuredAt: point.measuredAt,
+        value: stat.mean,
+        n: stat.n,
+        interval: intervalForStat(stat),
+      });
+    }
+  }
+  return [...grouped.values()];
+};
+
+const renderHistoryCharts = ({
+  idPrefix,
+  titlePrefix,
+  history,
+  metrics,
+  seriesFor,
+}) => {
+  if (!history) return "";
+  const charts = metrics
+    .map((metric) => {
+      const series = seriesFor(metric);
+      const pointCount = series.reduce((sum, s) => sum + s.points.length, 0);
+      if (pointCount === 0) return "";
+      return `### ${metric.title}
+
+${renderTimeSeriesChart({
+  id: `${idPrefix}-${metric.key}-history`,
+  title: `${titlePrefix} ${metric.title}`,
+  description: `${metric.title} by measured series over manual measurement history. Single-date histories are marked as one data point and do not draw a trend line.`,
+  xLabel: "Measured at",
+  yLabel: metric.yLabel,
+  valueDigits: metric.valueDigits,
+  series,
+})}
+
+_${chartCaption(series)}_`;
+    })
+    .filter((chart) => chart !== "");
+  return charts.length === 0
+    ? ""
+    : `## 履歴チャート
+
+以下のインライン SVG は実測履歴から生成します。fixture 経路では出力しません。
+
+${charts.join("\n\n")}
+`;
+};
+
 const top = (configs, key, direction = "desc", count = 8) =>
   configs
     .filter((config) => config.provenance === "measured")
@@ -161,6 +351,16 @@ const exportLlm = () => {
   const measured = configs.filter(
     (config) => config.provenance === "measured",
   ).length;
+  const history = isRealArtifact(sourceArtifact)
+    ? existsJson("docs/research-reports/llm-model-comparison.history.json")
+    : undefined;
+  const historyCharts = renderHistoryCharts({
+    idPrefix: "export-llm",
+    titlePrefix: "LLM",
+    history,
+    metrics: llmHistoryMetrics,
+    seriesFor: (metric) => llmHistorySeries(history, metric),
+  });
 
   writeDraft(
     "foundation-model-comparison",
@@ -209,6 +409,7 @@ ${modelRows(configs)}
 - effort の意味はプロバイダーごとに異なるため、横断比較では慎重に扱います。
 - この測定は狭い挙動だけを測り、一般能力や推論品質を測りません。
 
+${historyCharts}
 ## 5. 指標別の観測（スループット）
 
 長いストリーミング生成で、生成開始後に継続して出るトークン数を測ります。
@@ -362,6 +563,17 @@ const exportRag = () => {
       ?.embeddingModel ?? "n/a";
   const k = runs[0]?.k ?? 3;
   const isReal = result.dataset.id !== "scifact-mini";
+  const history = isRealArtifact(sourceArtifact)
+    ? existsJson("docs/research-reports/rag-benchmark.history.json")
+    : undefined;
+  const labels = new Map(runs.map((run) => [run.backend.id, run.backend.name]));
+  const historyCharts = renderHistoryCharts({
+    idPrefix: "export-rag",
+    titlePrefix: "RAG",
+    history,
+    metrics: ragHistoryMetrics,
+    seriesFor: (metric) => ragHistorySeries(history, metric, labels),
+  });
 
   const catalogRows = runs
     .map(
@@ -455,6 +667,7 @@ ${catalogRows}
 - マネージドストアは内部 embedding とチャンク分割を含む whole-stack の測定であり、固定 embedding 行と同列には比較しません。
 - 価格は生成日時点のカタログ値を引用しており、実費は入力量・保存量・クエリ数で変わります。
 
+${historyCharts}
 ## 5. 指標別の観測（検索品質）
 
 固定 embedding を与えた自己管理ストアと、内部 embedding のマネージドストアを、recall@${k} / nDCG@${k} / MRR で比較します。実測したバックエンドのみを掲載します。

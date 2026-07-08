@@ -68,12 +68,17 @@ describe("toHistoryPoint", () => {
       modelName: "m1",
       effort: "high",
       provenance: "measured",
-      throughputTokensPerSec: { mean: 150, stdDev: 12, n: 3 },
-      ttftMs: { mean: 300, stdDev: 0, n: 1 },
-      totalLatencyMs: { mean: 900, stdDev: 0, n: 1 },
-      maxSchemaDepth: { mean: 12, stdDev: 0, n: 1 },
-      maxSchemaBreadth: { mean: 48, stdDev: 0, n: 1 },
-      lengthAccuracy: { mean: 0.9, stdDev: 0, n: 1 },
+      throughputTokensPerSec: {
+        mean: 150,
+        stdDev: 12,
+        n: 3,
+        method: "trial-sample-std-dev",
+      },
+      ttftMs: { mean: 300, stdDev: 0, n: 1, method: "single-trial" },
+      totalLatencyMs: { mean: 900, stdDev: 0, n: 1, method: "single-trial" },
+      maxSchemaDepth: { mean: 12, stdDev: 0, n: 1, method: "single-trial" },
+      maxSchemaBreadth: { mean: 48, stdDev: 0, n: 1, method: "single-trial" },
+      lengthAccuracy: { mean: 0.9, stdDev: 0, n: 1, method: "single-trial" },
       measuredAt: "2026-02-02T00:00:00.000Z",
     });
   });

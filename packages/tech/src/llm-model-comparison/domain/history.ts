@@ -10,13 +10,30 @@ import type {
   HistoryEntry,
   HistoryFile,
   HistoryPoint,
+  HistoryMetricMethod,
   MetricStat,
+  Provenance,
 } from "./types";
 
-const toMetricStat = (aggregate: Aggregate): MetricStat => ({
+const metricMethod = (
+  provenance: Provenance,
+  n: number,
+  stdDev: number,
+): HistoryMetricMethod =>
+  provenance === "error"
+    ? "error-zero"
+    : n > 1 || stdDev !== 0
+      ? "trial-sample-std-dev"
+      : "single-trial";
+
+const toMetricStat = (
+  aggregate: Aggregate,
+  provenance: Provenance,
+): MetricStat => ({
   mean: aggregate.mean,
   stdDev: aggregate.stdDev,
   n: aggregate.n,
+  method: metricMethod(provenance, aggregate.n, aggregate.stdDev),
 });
 
 // Project one configuration's aggregates into its compact history point. The full
@@ -28,12 +45,15 @@ export const toHistoryPoint = (run: ConfigRun): HistoryPoint => ({
   modelName: run.modelName,
   effort: run.effort,
   provenance: run.provenance,
-  throughputTokensPerSec: toMetricStat(run.stats.throughputTokensPerSec),
-  ttftMs: toMetricStat(run.stats.ttftMs),
-  totalLatencyMs: toMetricStat(run.stats.totalLatencyMs),
-  maxSchemaDepth: toMetricStat(run.stats.maxSchemaDepth),
-  maxSchemaBreadth: toMetricStat(run.stats.maxSchemaBreadth),
-  lengthAccuracy: toMetricStat(run.stats.lengthAccuracy),
+  throughputTokensPerSec: toMetricStat(
+    run.stats.throughputTokensPerSec,
+    run.provenance,
+  ),
+  ttftMs: toMetricStat(run.stats.ttftMs, run.provenance),
+  totalLatencyMs: toMetricStat(run.stats.totalLatencyMs, run.provenance),
+  maxSchemaDepth: toMetricStat(run.stats.maxSchemaDepth, run.provenance),
+  maxSchemaBreadth: toMetricStat(run.stats.maxSchemaBreadth, run.provenance),
+  lengthAccuracy: toMetricStat(run.stats.lengthAccuracy, run.provenance),
   measuredAt: run.measuredAt,
 });
 

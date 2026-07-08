@@ -116,10 +116,16 @@ export type Aggregate = Readonly<{
 // The compact metric shape stored in history/trend projections. The full
 // artifact keeps min/max as `Aggregate`; history keeps the interval inputs needed
 // for charts without copying every raw trial.
+export type HistoryMetricMethod =
+  | "trial-sample-std-dev"
+  | "single-trial"
+  | "error-zero";
+
 export type MetricStat = Readonly<{
   mean: number;
   stdDev: number;
   n: number;
+  method: HistoryMetricMethod;
 }>;
 
 // The aggregated metrics for one configuration across its trials.

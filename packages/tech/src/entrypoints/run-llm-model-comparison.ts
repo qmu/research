@@ -86,6 +86,9 @@ const DEFAULT_TRIALS = 3;
 // pruned, so committed repo growth stays bounded as real sweeps accumulate.
 const HISTORY_KEEP = 20;
 
+const isLlmArchive = (filename: string): boolean =>
+  filename.endsWith(".data.json.gz") && !filename.startsWith("rag-benchmark-");
+
 // The fixed LLM judge (a curated fact, recorded for real runs). Priced separately
 // in the estimate because it is one model, not the model under test.
 const JUDGE = {
@@ -248,6 +251,21 @@ const loadPreviousCore = async (
   return { ...parsed, configs };
 };
 
+const historyPathFor = (historyBasePath: string): string =>
+  historyBasePath.replace(/\.md$/, ".history.json");
+
+const readHistoryFile = async (
+  historyBasePath: string,
+): Promise<HistoryFile | null> => {
+  try {
+    return JSON.parse(
+      await readFile(historyPathFor(historyBasePath), "utf8"),
+    ) as HistoryFile;
+  } catch {
+    return null;
+  }
+};
+
 // Parse "id:effort" selector keys. id slugs and effort levels never contain ":",
 // so splitting on the first ":" is unambiguous.
 const parseConfigKeys = (
@@ -342,19 +360,9 @@ const writeHistory = async (
   historyBasePath: string, // canonical `.md` path — history.json + archives sit beside it
   core: ComparisonCore,
   runTimestamp: string,
-  trials: number,
+  updated: HistoryFile,
 ): Promise<void> => {
-  const historyPath = historyBasePath.replace(/\.md$/, ".history.json");
-  let history: HistoryFile | null = null;
-  try {
-    history = JSON.parse(await readFile(historyPath, "utf8")) as HistoryFile;
-  } catch {
-    history = null;
-  }
-  const updated = appendHistory(
-    history,
-    buildHistoryEntry(core.configs, runTimestamp, trials),
-  );
+  const historyPath = historyPathFor(historyBasePath);
   await writeFile(historyPath, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
 
   // Filenames can't carry ":"; ISO 2026-07-06T10:50:42.000Z → ...T10-50-42.000Z.
@@ -367,9 +375,7 @@ const writeHistory = async (
   );
 
   // Retention: keep the HISTORY_KEEP most-recent full-record archives; prune the rest.
-  const archives = (await readdir(archiveDir)).filter((f) =>
-    f.endsWith(".data.json.gz"),
-  );
+  const archives = (await readdir(archiveDir)).filter(isLlmArchive);
   const pruned = archivesToPrune(archives, HISTORY_KEEP);
   await Promise.all(pruned.map((f) => rm(join(archiveDir, f))));
 
@@ -408,8 +414,8 @@ const main = async (): Promise<void> => {
   // committed history", independent of any session-local generator.
   if (args.renderLatest) {
     const archiveDir = join(dirname(canonicalMdPath), "history");
-    const archives = (await readdir(archiveDir).catch(() => [])).filter((f) =>
-      f.endsWith(".data.json.gz"),
+    const archives = (await readdir(archiveDir).catch(() => [])).filter(
+      isLlmArchive,
     );
     const latest = latestArchive(archives);
     if (!latest) {
@@ -427,9 +433,12 @@ const main = async (): Promise<void> => {
       artifactPath: basename(artifactPath),
     };
     await mkdir(dirname(reportPath), { recursive: true });
+    const history = await readHistoryFile(canonicalMdPath);
     await writeFile(
       reportPath,
-      renderComparisonReport(rendered, args.detail),
+      renderComparisonReport(rendered, args.detail, {
+        history: history ?? undefined,
+      }),
       "utf8",
     );
     process.stdout.write(
@@ -581,12 +590,18 @@ const main = async (): Promise<void> => {
     ...core,
     artifactPath: basename(artifactPath),
   };
+  const history = args.forceFixture
+    ? undefined
+    : appendHistory(
+        await readHistoryFile(canonicalMdPath),
+        buildHistoryEntry(core.configs, runTimestamp, args.trials),
+      );
 
   await mkdir(dirname(reportPath), { recursive: true });
   await writeFile(artifactPath, `${JSON.stringify(core, null, 2)}\n`, "utf8");
   await writeFile(
     reportPath,
-    renderComparisonReport(result, args.detail),
+    renderComparisonReport(result, args.detail, { history }),
     "utf8",
   );
 
@@ -595,8 +610,8 @@ const main = async (): Promise<void> => {
   // nothing is lost. Skipped under --fixture to keep the CI self-test byte-stable.
   // history.json + archives sit beside the canonical .md even when this run wrote a
   // `.real` report, so the committed real-data series has one stable location.
-  if (!args.forceFixture) {
-    await writeHistory(canonicalMdPath, core, runTimestamp, args.trials);
+  if (!args.forceFixture && history !== undefined) {
+    await writeHistory(canonicalMdPath, core, runTimestamp, history);
   }
 
   const measuredNow = fresh.filter((r) => r.provenance === "measured").length;

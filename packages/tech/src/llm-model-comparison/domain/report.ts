@@ -2,10 +2,13 @@ import type {
   Aggregate,
   ComparisonResult,
   ConfigRun,
+  HistoryFile,
+  HistoryPoint,
   Provenance,
   Review,
   TrialResult,
 } from "./types";
+import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import { buildThroughputPrompt } from "./throughput";
 import { buildSchemaPrompt } from "./json-schema";
 import { buildLengthPrompt } from "./length-accuracy";
@@ -27,6 +30,10 @@ import { isNoEffortLevel } from "./effort";
 //  - "full"     — + per-trial tables and inline sample raw outputs.
 
 export type DetailLevel = "summary" | "standard" | "full";
+
+export type ReportRenderOptions = Readonly<{
+  history?: HistoryFile;
+}>;
 
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
@@ -151,6 +158,187 @@ const ASPECTS: ReadonlyArray<Aspect> = [
     better: "higher",
   },
 ];
+
+type HistoryMetricKey =
+  | "throughputTokensPerSec"
+  | "ttftMs"
+  | "totalLatencyMs"
+  | "maxSchemaDepth"
+  | "maxSchemaBreadth"
+  | "lengthAccuracy";
+
+type HistoryMetric = Readonly<{
+  key: HistoryMetricKey;
+  title: string;
+  yLabel: string;
+  valueDigits: number;
+}>;
+
+type ChartPoint = Readonly<{
+  measuredAt: string;
+  value: number;
+  n: number;
+  interval?: Readonly<{ lower: number; upper: number }>;
+}>;
+
+type ChartSeries = Readonly<{
+  id: string;
+  label: string;
+  points: ReadonlyArray<ChartPoint>;
+}>;
+
+const HISTORY_METRICS: ReadonlyArray<HistoryMetric> = [
+  {
+    key: "throughputTokensPerSec",
+    title: "Throughput history",
+    yLabel: "Tokens/sec",
+    valueDigits: 1,
+  },
+  {
+    key: "ttftMs",
+    title: "TTFT history",
+    yLabel: "Milliseconds",
+    valueDigits: 0,
+  },
+  {
+    key: "totalLatencyMs",
+    title: "Total latency history",
+    yLabel: "Milliseconds",
+    valueDigits: 0,
+  },
+  {
+    key: "maxSchemaDepth",
+    title: "Schema depth history",
+    yLabel: "Maximum accepted depth",
+    valueDigits: 0,
+  },
+  {
+    key: "maxSchemaBreadth",
+    title: "Schema breadth history",
+    yLabel: "Maximum accepted fields",
+    valueDigits: 0,
+  },
+  {
+    key: "lengthAccuracy",
+    title: "Length accuracy history",
+    yLabel: "Accuracy",
+    valueDigits: 2,
+  },
+];
+
+const metricStat = (
+  value: unknown,
+): Readonly<{ mean: number; stdDev: number; n: number }> | undefined => {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return { mean: value, stdDev: 0, n: 1 };
+  }
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "mean" in value &&
+    "stdDev" in value &&
+    "n" in value &&
+    typeof value.mean === "number" &&
+    typeof value.stdDev === "number" &&
+    typeof value.n === "number" &&
+    Number.isFinite(value.mean) &&
+    Number.isFinite(value.stdDev) &&
+    Number.isFinite(value.n)
+  ) {
+    return { mean: value.mean, stdDev: value.stdDev, n: value.n };
+  }
+  return undefined;
+};
+
+const historyPointLabel = (point: HistoryPoint): string =>
+  `${point.modelName} [${point.effort}]`;
+
+const intervalFor = (
+  stat: Readonly<{ mean: number; stdDev: number; n: number }>,
+): ChartPoint["interval"] =>
+  stat.n < 2
+    ? undefined
+    : {
+        lower: stat.mean - (1.96 * stat.stdDev) / Math.sqrt(stat.n),
+        upper: stat.mean + (1.96 * stat.stdDev) / Math.sqrt(stat.n),
+      };
+
+const historySeries = (
+  history: HistoryFile,
+  metric: HistoryMetric,
+): ChartSeries[] => {
+  const grouped = new Map<
+    string,
+    { id: string; label: string; points: ChartPoint[] }
+  >();
+  for (const entry of history.entries) {
+    for (const point of entry.points) {
+      if (point.provenance !== "measured") continue;
+      const stat = metricStat(point[metric.key]);
+      if (stat === undefined) continue;
+      const id = `${point.id}-${point.effort}`;
+      let series = grouped.get(id);
+      if (series === undefined) {
+        series = { id, label: historyPointLabel(point), points: [] };
+        grouped.set(id, series);
+      }
+      series.points.push({
+        measuredAt: point.measuredAt,
+        value: stat.mean,
+        n: stat.n,
+        interval: intervalFor(stat),
+      });
+    }
+  }
+  return [...grouped.values()];
+};
+
+const historyCaption = (series: ReadonlyArray<ChartSeries>): string => {
+  const points = series.flatMap((s) => s.points);
+  const dates = new Set(points.map((point) => point.measuredAt));
+  const ns = points.map((point) => point.n);
+  const minN = Math.min(...ns);
+  const maxN = Math.max(...ns);
+  const nText = minN === maxN ? `n=${minN}` : `n range ${minN}-${maxN}`;
+  return (
+    `Sample count: ${plural(points.length, "plotted point")} across ` +
+    `${plural(dates.size, "manual run date")}; metric sample ${nText}. ` +
+    `Cadence: manual on-demand runs only, not scheduled. The numeric tables ` +
+    `below remain the accessible text alternative.`
+  );
+};
+
+const historyChartsSection = (history: HistoryFile | undefined): string => {
+  if (history === undefined) {
+    return "";
+  }
+  const charts = HISTORY_METRICS.map((metric) => {
+    const series = historySeries(history, metric);
+    const pointCount = series.reduce((sum, s) => sum + s.points.length, 0);
+    if (pointCount === 0) return "";
+    return `### ${metric.title}
+
+${renderTimeSeriesChart({
+  id: `llm-${metric.key}-history`,
+  title: `LLM ${metric.title}`,
+  description: `${metric.title} by model and effort over manual measurement history. Single-date histories are marked as one data point and do not draw a trend line.`,
+  xLabel: "Measured at",
+  yLabel: metric.yLabel,
+  valueDigits: metric.valueDigits,
+  series,
+})}
+
+_Caption: ${historyCaption(series)}_`;
+  }).filter((chart) => chart !== "");
+
+  return charts.length === 0
+    ? ""
+    : `## Measurement history charts
+
+These inline SVG charts are generated from committed measurement history and are additive to the numeric tables. They are not used on the fixture path.
+
+${charts.join("\n\n")}\n`;
+};
 
 const label = (run: ConfigRun): string =>
   `${escapeCell(run.modelName)} [${escapeCell(run.effort)}]`;
@@ -346,6 +534,7 @@ self-test, not a real provider sweep.`;
 export const renderComparisonReport = (
   result: ComparisonResult,
   detail: DetailLevel = "standard",
+  options: ReportRenderOptions = {},
 ): string => {
   const configs = result.configs;
   const measuredRuns = configs.filter((r) => r.provenance === "measured");
@@ -368,6 +557,7 @@ export const renderComparisonReport = (
         ).join("\n\n")}\n`;
 
   const perTrial = detail === "full" ? `\n${perTrialSection(configs)}\n` : "";
+  const historyCharts = historyChartsSection(options.history);
 
   return `---
 title: LLM model comparison
@@ -456,7 +646,7 @@ means the deterministic fixture client produced the metric cell because no API k
 was used. \`n/a (error)\` means every trial for that
 configuration failed. Provenance is written in the cell text rather than encoded
 only by color.
-${aspects}
+${historyCharts}${aspects}
 ${reviewsSection(configs, detail)}
 ${perTrial}
 ${transparencySection(result)}

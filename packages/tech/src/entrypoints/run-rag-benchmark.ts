@@ -62,13 +62,9 @@ const readHistory = async (
 const writeHistory = async (
   historyBasePath: string,
   result: BenchmarkResult,
+  updated: HistoryFile,
 ): Promise<void> => {
   const historyPath = historyBasePath.replace(/\.md$/, ".history.json");
-  const history = await readHistory(historyPath);
-  const updated = appendHistory(
-    history,
-    buildHistoryEntry(result.runs, result.generatedAt, result.trials),
-  );
   await writeFile(historyPath, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
 
   const stamp = result.generatedAt.replace(/:/g, "-");
@@ -117,14 +113,21 @@ const main = async (): Promise<void> => {
     ...result,
     artifactPath: artifactPath.split("/").at(-1) ?? "rag-benchmark.data.json",
   };
+  const historyPath = canonicalPath.replace(/\.md$/, ".history.json");
+  const history = fixture
+    ? undefined
+    : appendHistory(
+        await readHistory(historyPath),
+        buildHistoryEntry(rendered.runs, rendered.generatedAt, rendered.trials),
+      );
   await writeOutputs(
     reportPath,
     artifactPath,
-    renderRagBenchmarkReport(rendered),
+    renderRagBenchmarkReport(rendered, { history }),
     rendered,
   );
-  if (!fixture) {
-    await writeHistory(canonicalPath, rendered);
+  if (!fixture && history !== undefined) {
+    await writeHistory(canonicalPath, rendered, history);
   }
   process.stdout.write(
     `rag-benchmark: ${result.runs.length} backend(s), fixture=${fixture}\nwrote ${reportPath}\nwrote ${artifactPath}\n`,

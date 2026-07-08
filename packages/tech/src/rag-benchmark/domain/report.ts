@@ -1,4 +1,9 @@
-import type { BenchmarkResult } from "./types";
+import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
+import type { BenchmarkResult, HistoryFile } from "./types";
+
+export type RagReportRenderOptions = Readonly<{
+  history?: HistoryFile;
+}>;
 
 const pct = (value: number): string => `${(value * 100).toFixed(1)}%`;
 
@@ -19,7 +24,163 @@ const msWithStdDev = (mean: number, deviation: number): string =>
 const sentence = (value: string): string =>
   value.endsWith(".") ? value : `${value}.`;
 
-export const renderRagBenchmarkReport = (result: BenchmarkResult): string => {
+type HistoryMetricKey =
+  | "recallAtK"
+  | "ndcgAtK"
+  | "mrr"
+  | "ingestMs"
+  | "p50Ms"
+  | "p95Ms"
+  | "costUsd";
+
+type HistoryMetric = Readonly<{
+  key: HistoryMetricKey;
+  title: string;
+  yLabel: string;
+  valueDigits: number;
+}>;
+
+type ChartPoint = Readonly<{
+  measuredAt: string;
+  value: number;
+  n: number;
+  interval?: Readonly<{ lower: number; upper: number }>;
+}>;
+
+type ChartSeries = Readonly<{
+  id: string;
+  label: string;
+  points: ReadonlyArray<ChartPoint>;
+}>;
+
+const HISTORY_METRICS: ReadonlyArray<HistoryMetric> = [
+  {
+    key: "recallAtK",
+    title: "Recall@k history",
+    yLabel: "Recall",
+    valueDigits: 2,
+  },
+  { key: "ndcgAtK", title: "nDCG@k history", yLabel: "nDCG", valueDigits: 2 },
+  { key: "mrr", title: "MRR history", yLabel: "MRR", valueDigits: 2 },
+  {
+    key: "ingestMs",
+    title: "Ingest latency history",
+    yLabel: "Milliseconds",
+    valueDigits: 1,
+  },
+  {
+    key: "p50Ms",
+    title: "Query p50 history",
+    yLabel: "Milliseconds",
+    valueDigits: 1,
+  },
+  {
+    key: "p95Ms",
+    title: "Query p95 history",
+    yLabel: "Milliseconds",
+    valueDigits: 1,
+  },
+  { key: "costUsd", title: "Run cost history", yLabel: "USD", valueDigits: 4 },
+];
+
+const intervalFor = (
+  stat: Readonly<{ mean: number; stdDev: number; n: number }>,
+): ChartPoint["interval"] =>
+  stat.n < 2
+    ? undefined
+    : {
+        lower: stat.mean - (1.96 * stat.stdDev) / Math.sqrt(stat.n),
+        upper: stat.mean + (1.96 * stat.stdDev) / Math.sqrt(stat.n),
+      };
+
+const backendLabels = (result: BenchmarkResult): ReadonlyMap<string, string> =>
+  new Map(result.runs.map((run) => [run.backend.id, run.backend.name]));
+
+const historySeries = (
+  history: HistoryFile,
+  metric: HistoryMetric,
+  labels: ReadonlyMap<string, string>,
+): ChartSeries[] => {
+  const grouped = new Map<
+    string,
+    { id: string; label: string; points: ChartPoint[] }
+  >();
+  for (const entry of history.entries) {
+    for (const point of entry.points) {
+      if (point.provenance !== "measured") continue;
+      const stat = point[metric.key];
+      const label = labels.get(point.id) ?? point.id;
+      let series = grouped.get(point.id);
+      if (series === undefined) {
+        series = { id: point.id, label, points: [] };
+        grouped.set(point.id, series);
+      }
+      series.points.push({
+        measuredAt: point.measuredAt,
+        value: stat.mean,
+        n: stat.n,
+        interval: intervalFor(stat),
+      });
+    }
+  }
+  return [...grouped.values()];
+};
+
+const historyCaption = (series: ReadonlyArray<ChartSeries>): string => {
+  const points = series.flatMap((s) => s.points);
+  const dates = new Set(points.map((point) => point.measuredAt));
+  const ns = points.map((point) => point.n);
+  const minN = Math.min(...ns);
+  const maxN = Math.max(...ns);
+  const nText = minN === maxN ? `n=${minN}` : `n range ${minN}-${maxN}`;
+  return (
+    `Sample count: ${points.length} plotted point(s) across ` +
+    `${dates.size} manual run date(s); metric sample ${nText}. Cadence: ` +
+    `manual on-demand runs only, not scheduled. The numeric tables above and ` +
+    `below remain the accessible text alternative.`
+  );
+};
+
+const historyChartsSection = (
+  result: BenchmarkResult,
+  history: HistoryFile | undefined,
+): string => {
+  if (history === undefined) {
+    return "";
+  }
+  const labels = backendLabels(result);
+  const charts = HISTORY_METRICS.map((metric) => {
+    const series = historySeries(history, metric, labels);
+    const pointCount = series.reduce((sum, s) => sum + s.points.length, 0);
+    if (pointCount === 0) return "";
+    return `### ${metric.title}
+
+${renderTimeSeriesChart({
+  id: `rag-${metric.key}-history`,
+  title: `RAG ${metric.title}`,
+  description: `${metric.title} by backend over manual measurement history. Single-date histories are marked as one data point and do not draw a trend line.`,
+  xLabel: "Measured at",
+  yLabel: metric.yLabel,
+  valueDigits: metric.valueDigits,
+  series,
+})}
+
+_Caption: ${historyCaption(series)}_`;
+  }).filter((chart) => chart !== "");
+
+  return charts.length === 0
+    ? ""
+    : `## Measurement history charts
+
+These inline SVG charts are generated from committed measurement history and are additive to the numeric tables. They are not used on the fixture path.
+
+${charts.join("\n\n")}\n`;
+};
+
+export const renderRagBenchmarkReport = (
+  result: BenchmarkResult,
+  options: RagReportRenderOptions = {},
+): string => {
   const rows = result.runs
     .map(
       (run) =>
@@ -58,6 +219,7 @@ export const renderRagBenchmarkReport = (result: BenchmarkResult): string => {
       return `- **${run.backend.name}** — ${isolation}.${details}`;
     })
     .join("\n");
+  const historyCharts = historyChartsSection(result, options.history);
 
   return `---
 title: RAG backend benchmark
@@ -81,7 +243,7 @@ This report records a benchmark harness for vector-store and RAG-database backen
 | Backend | Kind | Embedding | Store isolated | Provenance | Recall@k (95% CI) | nDCG@k (95% CI) | MRR (95% CI) | Ingest ms (mean±sd) | Query p50 ms (mean±sd) | Query p95 ms (mean±sd) | Cost | Cost note |
 | ------- | ---- | --------- | -------------- | ---------- | -------- | ------ | --- | --------- | ------------ | ------------ | ---- | --------- |
 ${rows}
-
+${historyCharts}
 ## Backend notes
 
 ${backendNotes}
