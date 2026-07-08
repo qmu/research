@@ -21,5 +21,8 @@ docs/.vitepress/dist/
 docs/research-reports/*.real.md
 docs/research-reports/*.real.data.json
 
+# Regenerable artifact-to-draft skeletons for the canonical LLM foundation IA.
+docs/llm-foundation/_generated/
+
 # BEIR/SciFact corpus cache (fetched, CC BY-NC — never committed; see scripts/fetch-scifact.sh)
 packages/tech/.cache/
