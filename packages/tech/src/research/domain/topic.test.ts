@@ -80,12 +80,17 @@ describe("planPipeline", () => {
     expect(planPipeline(rag, "real")).toEqual(["benchmark"]);
   });
 
-  it("keeps declared LLM stages off the keyless fixture path", () => {
+  it("keeps declared LLM stages off the keyless fixture path but prices them on estimate", () => {
     const withStages = {
       ...requireTopic("rag"),
       stages: ["benchmark", "insights", "translation"] as const,
     };
     expect(planPipeline(withStages, "fixture")).toEqual(["benchmark"]);
+    expect(planPipeline(withStages, "estimate")).toEqual([
+      "benchmark",
+      "insights",
+      "translation",
+    ]);
     expect(planPipeline(withStages, "real")).toEqual([
       "benchmark",
       "insights",

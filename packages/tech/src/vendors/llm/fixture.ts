@@ -28,6 +28,21 @@ export const createFixtureClient = (
     Promise.resolve(answers.get(prompt) ?? ""),
 });
 
+// A deterministic LlmClient for the insights/translation pipeline stages on the
+// keyless path. It answers with a stable stub keyed on a marker line in the
+// prompt (insights vs translation) so a keyless run is reproducible and clearly
+// labelled — never presented as a real reading. Real insights/translation use a
+// live client; this exists for tests and keyless demonstrations.
+export const createFixtureInsightsClient = (model = "fixture"): LlmClient => ({
+  model,
+  generateAnswer: (prompt: string): Promise<string> =>
+    Promise.resolve(
+      prompt.includes("translate")
+        ? "_Fixtured translation stub — deterministic placeholder._"
+        : "_Fixtured insights stub — deterministic placeholder, not a real analysis._",
+    ),
+});
+
 // A deterministic CompletionClient for the comparison pipeline's keyless path.
 //
 // It is a pure function of (prompt, schema, seed): the SAME seed reproduces

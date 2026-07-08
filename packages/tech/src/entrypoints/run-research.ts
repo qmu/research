@@ -7,6 +7,12 @@ import {
   TOPICS,
   type TopicMode,
 } from "../research/domain/topic";
+import { runInsightsStage } from "../research/insights-runner";
+
+// Fixed provenance timestamp is not needed here — insights only run on real
+// mode, where a live clock is correct. estimate never writes, so its output is
+// deterministic regardless.
+const nowIso = (): string => new Date().toISOString();
 
 /**
  * Unified research CLI: `research <topic> [--fixture|--estimate|--real] [...]`.
@@ -93,9 +99,14 @@ export const main = async (): Promise<void> => {
         ...legacyArgv,
       ];
       await (await load()).main();
+    } else if (
+      stage === "insights" &&
+      (mode === "real" || mode === "estimate")
+    ) {
+      await runInsightsStage({ spec, mode, generatedAt: nowIso() });
     } else {
-      // Declared pipeline slots (insights, translation) whose generators land
-      // in follow-up tickets; running them today is an explicit no-op.
+      // Declared pipeline slots (translation) whose generator lands in a
+      // follow-up ticket; running it today is an explicit no-op.
       process.stdout.write(
         `research ${spec.id}: stage '${stage}' is not implemented yet (skipped)\n`,
       );

@@ -117,10 +117,11 @@ export const buildLegacyArgv = (
 };
 
 /**
- * The stages a run executes, in canonical order. Insights and translation are
- * declared slots: until their generators land (follow-up tickets), executing
- * them is a no-op, and they never run on the keyless fixture path — LLM
- * generation is non-deterministic and would break byte-stability.
+ * The stages a run plans, in canonical order. The LLM stages (insights,
+ * translation) are non-deterministic and key-gated, so they never run on the
+ * keyless `fixture` path (that would break byte-stability). They ARE included
+ * for `estimate` — which is `real`'s dry run and must price them — and for
+ * `real`, where they execute. The caller distinguishes execute-vs-price by mode.
  */
 export const planPipeline = (
   spec: TopicSpec,
@@ -128,5 +129,6 @@ export const planPipeline = (
 ): ReadonlyArray<TopicStage> =>
   STAGE_ORDER.filter(
     (stage) =>
-      spec.stages.includes(stage) && (stage === "benchmark" || mode === "real"),
+      spec.stages.includes(stage) &&
+      (stage === "benchmark" || mode === "real" || mode === "estimate"),
   );
