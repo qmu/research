@@ -71,6 +71,37 @@ export type StructuredCompletion = Readonly<{
   model: string;
 }>;
 
+// Provider-neutral image input for vision-capable models. Images are passed as
+// base64 bytes plus a MIME type; adapters translate this into each provider's
+// content-block shape. A request carries one text instruction and one or more
+// images/pages so OCR-style callers can keep page ordering without leaking SDK
+// types into the domain/vendors boundary.
+export type VisionMimeType =
+  | "image/png"
+  | "image/jpeg"
+  | "image/webp"
+  | "image/gif";
+
+export type VisionImageInput = Readonly<{
+  base64: string;
+  mimeType: VisionMimeType;
+  pageNumber?: number;
+  label?: string;
+}>;
+
+export type VisionInput = Readonly<{
+  instruction: string;
+  images: ReadonlyArray<VisionImageInput>;
+}>;
+
+export type VisionCapability = Readonly<{
+  imageInput: true;
+  structuredOutput: boolean;
+  supportedMimeTypes: ReadonlyArray<VisionMimeType>;
+}>;
+
+export type VisionOptions = CompletionOptions;
+
 // The richer completion port for the comparison topic. Three capabilities beyond
 // a plain text completion, all provider-neutral:
 //
@@ -97,5 +128,22 @@ export type CompletionClient = Readonly<{
     prompt: string,
     schema: JsonSchema,
     options?: CompletionOptions,
+  ) => Promise<StructuredCompletion>;
+}>;
+
+// Separate from `CompletionClient` so text-only probes keep their existing
+// contract. Vision callers opt into this port explicitly, with a typed capability
+// record showing that image input is supported for the chosen model/configuration.
+export type VisionClient = Readonly<{
+  model: string;
+  capability: VisionCapability;
+  completeVision: (
+    input: VisionInput,
+    options?: VisionOptions,
+  ) => Promise<Completion>;
+  completeVisionStructured: (
+    input: VisionInput,
+    schema: JsonSchema,
+    options?: VisionOptions,
   ) => Promise<StructuredCompletion>;
 }>;

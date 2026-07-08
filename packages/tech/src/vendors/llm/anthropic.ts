@@ -1,11 +1,16 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type {
+  Completion,
   CompletionClient,
   CompletionOptions,
   JsonSchema,
   LlmClient,
   StreamedCompletion,
   StructuredCompletion,
+  VisionCapability,
+  VisionClient,
+  VisionInput,
+  VisionOptions,
 } from "./types";
 import { anthropicOutputTokens } from "./usage";
 import { isNoEffortLevel } from "../../llm-model-comparison/domain/effort";
@@ -44,6 +49,50 @@ const SYSTEM_FINAL_ANSWER_ONLY =
 const textOf = (content: Anthropic.Messages.ContentBlock[]): string =>
   content.map((block) => (block.type === "text" ? block.text : "")).join("");
 
+export const ANTHROPIC_VISION_CAPABILITY: VisionCapability = {
+  imageInput: true,
+  structuredOutput: true,
+  supportedMimeTypes: ["image/png", "image/jpeg", "image/webp", "image/gif"],
+};
+
+const requireVisionCapability = (
+  model: string,
+  capability: VisionCapability | undefined,
+): VisionCapability => {
+  if (!capability) {
+    throw new Error(`${model} is not configured as vision-capable`);
+  }
+  return capability;
+};
+
+const requireVisionInput = (
+  input: VisionInput,
+  capability: VisionCapability,
+): VisionInput => {
+  if (input.images.length === 0) {
+    throw new Error("Vision input requires at least one image");
+  }
+  const unsupported = input.images.find(
+    (image) => !capability.supportedMimeTypes.includes(image.mimeType),
+  );
+  if (unsupported) {
+    throw new Error(`Unsupported vision MIME type: ${unsupported.mimeType}`);
+  }
+  return input;
+};
+
+const imageBlocks = (
+  input: VisionInput,
+): ReadonlyArray<Record<string, unknown>> =>
+  input.images.map((image) => ({
+    type: "image",
+    source: {
+      type: "base64",
+      media_type: image.mimeType,
+      data: image.base64,
+    },
+  }));
+
 // Assemble the Messages request. The reasoning-effort knob (`output_config.effort`)
 // and structured-output format (`output_config.format`) are Anthropic's, mapped
 // here from the provider-neutral options; the double cast keeps this the ONLY
@@ -73,6 +122,30 @@ export const buildAnthropicParams = (
   if (Object.keys(outputConfig).length > 0) {
     params.output_config = outputConfig;
   }
+  return params;
+};
+
+export const buildAnthropicVisionParams = (
+  model: string,
+  input: VisionInput,
+  options: VisionOptions | undefined,
+  capability: VisionCapability | undefined,
+  format?: unknown,
+): Record<string, unknown> => {
+  const verifiedInput = requireVisionInput(
+    input,
+    requireVisionCapability(model, capability),
+  );
+  const params = buildAnthropicParams(model, "", options, format);
+  params.messages = [
+    {
+      role: "user",
+      content: [
+        ...imageBlocks(verifiedInput),
+        { type: "text", text: verifiedInput.instruction },
+      ],
+    },
+  ];
   return params;
 };
 
@@ -142,6 +215,61 @@ export const createAnthropicCompletionClient = (
           type: "json_schema",
           schema,
         }) as unknown as Anthropic.Messages.MessageCreateParamsNonStreaming,
+      );
+      return {
+        raw: textOf(response.content),
+        outputTokens: anthropicOutputTokens(response.usage),
+        elapsedMs: Date.now() - startedAt,
+        model: apiModelId,
+      };
+    },
+  };
+};
+
+export const createAnthropicVisionClient = (
+  apiModelId: string,
+  apiKey: string,
+  capability: VisionCapability | undefined,
+): VisionClient => {
+  const verifiedCapability = requireVisionCapability(apiModelId, capability);
+  const client = new Anthropic({ apiKey });
+  return {
+    model: apiModelId,
+    capability: verifiedCapability,
+    completeVision: async (input, options): Promise<Completion> => {
+      const startedAt = Date.now();
+      const response = await client.messages.create(
+        buildAnthropicVisionParams(
+          apiModelId,
+          input,
+          options,
+          verifiedCapability,
+        ) as unknown as Anthropic.Messages.MessageCreateParamsNonStreaming,
+      );
+      return {
+        text: textOf(response.content),
+        outputTokens: anthropicOutputTokens(response.usage),
+        elapsedMs: Date.now() - startedAt,
+        model: apiModelId,
+      };
+    },
+    completeVisionStructured: async (
+      input,
+      schema: JsonSchema,
+      options,
+    ): Promise<StructuredCompletion> => {
+      const startedAt = Date.now();
+      const response = await client.messages.create(
+        buildAnthropicVisionParams(
+          apiModelId,
+          input,
+          options,
+          verifiedCapability,
+          {
+            type: "json_schema",
+            schema,
+          },
+        ) as unknown as Anthropic.Messages.MessageCreateParamsNonStreaming,
       );
       return {
         raw: textOf(response.content),

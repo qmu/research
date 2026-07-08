@@ -6,6 +6,11 @@ import type {
   LlmClient,
   StreamedCompletion,
   StructuredCompletion,
+  VisionCapability,
+  VisionClient,
+  VisionImageInput,
+  VisionInput,
+  VisionOptions,
 } from "./types";
 
 // A deterministic client that returns canned answers keyed by prompt. It calls
@@ -50,6 +55,50 @@ export const createFixtureCompletionClient = (
     Promise.resolve(buildStructured(schema, model, seed)),
 });
 
+export const FIXTURE_VISION_IMAGE: VisionImageInput = {
+  // A committed 1x1 transparent PNG, encoded once and kept inline so the keyless
+  // path does not depend on filesystem reads or image codecs.
+  base64:
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/lK3Q6wAAAABJRU5ErkJggg==",
+  mimeType: "image/png",
+  pageNumber: 1,
+  label: "fixture-1x1-transparent-png",
+};
+
+export const FIXTURE_VISION_INSTRUCTION = "Describe the fixture image.";
+
+const FIXTURE_VISION_TEXT =
+  "Fixture vision response: one transparent 1x1 PNG page.";
+
+export const FIXTURE_VISION_CAPABILITY: VisionCapability = {
+  imageInput: true,
+  structuredOutput: true,
+  supportedMimeTypes: ["image/png", "image/jpeg", "image/webp", "image/gif"],
+};
+
+export const createFixtureVisionClient = (
+  model = "fixture-vision",
+): VisionClient => ({
+  model,
+  capability: FIXTURE_VISION_CAPABILITY,
+  completeVision: (
+    input: VisionInput,
+    _options?: VisionOptions,
+  ): Promise<Completion> =>
+    Promise.resolve({
+      text: visionTextFor(input),
+      outputTokens: tokensOf(visionTextFor(input)),
+      elapsedMs: 9,
+      model,
+    }),
+  completeVisionStructured: (
+    _input: VisionInput,
+    schema: JsonSchema,
+    _options?: VisionOptions,
+  ): Promise<StructuredCompletion> =>
+    Promise.resolve(buildStructured(schema, model, 0)),
+});
+
 const wordCountFor = (
   regex: RegExp,
   prompt: string,
@@ -61,6 +110,17 @@ const wordCountFor = (
 
 const tokensOf = (text: string): number =>
   Math.max(1, Math.ceil(text.length / 4));
+
+const isFixtureVisionInput = (input: VisionInput): boolean =>
+  input.instruction === FIXTURE_VISION_INSTRUCTION &&
+  input.images.length === 1 &&
+  input.images[0]?.base64 === FIXTURE_VISION_IMAGE.base64 &&
+  input.images[0]?.mimeType === FIXTURE_VISION_IMAGE.mimeType;
+
+const visionTextFor = (input: VisionInput): string =>
+  isFixtureVisionInput(input)
+    ? FIXTURE_VISION_TEXT
+    : `Fixture vision response: ${input.images.length} image(s), ${input.instruction.length} instruction character(s).`;
 
 // --- text completion (the length probe uses this non-streamed path) -----------
 
