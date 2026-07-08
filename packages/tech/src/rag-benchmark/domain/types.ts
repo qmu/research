@@ -37,6 +37,7 @@ export type Backend = Readonly<{
   kind: BackendKind;
   embeddingCoupling: EmbeddingCoupling;
   isolatedStore: boolean;
+  retrievalDeterministic: boolean;
   source: string;
   costNote: string;
   metadataFiltering: boolean;
@@ -80,7 +81,30 @@ export type VectorStore = Readonly<{
   close?: () => void | Promise<void>;
 }>;
 
-export type RetrievalMetrics = Readonly<{
+export type RetrievalMetricValues = Readonly<{
+  recallAtK: number;
+  ndcgAtK: number;
+  mrr: number;
+}>;
+
+export type RetrievalMetrics = Readonly<
+  RetrievalMetricValues & {
+    recallAtKCi95: ConfidenceInterval;
+    ndcgAtKCi95: ConfidenceInterval;
+    mrrCi95: ConfidenceInterval;
+    queryCount: number;
+    trialCount: number;
+    trialStdDev?: RetrievalMetricStdDev;
+    intervalNote: string;
+  }
+>;
+
+export type ConfidenceInterval = Readonly<{
+  lower: number;
+  upper: number;
+}>;
+
+export type RetrievalMetricStdDev = Readonly<{
   recallAtK: number;
   ndcgAtK: number;
   mrr: number;
@@ -88,9 +112,13 @@ export type RetrievalMetrics = Readonly<{
 
 export type OperationalMetrics = Readonly<{
   ingestMs: number;
+  ingestMsStdDev: number;
   queryLatencyMs: ReadonlyArray<number>;
   queryLatencyP50Ms: number;
+  queryLatencyP50MsStdDev: number;
   queryLatencyP95Ms: number;
+  queryLatencyP95MsStdDev: number;
+  trialCount: number;
   costUsd: number;
   maxScale: number;
 }>;
@@ -107,7 +135,7 @@ export type BackendRun = Readonly<{
     Readonly<{
       queryId: string;
       results: ReadonlyArray<QueryResult>;
-      metrics: RetrievalMetrics;
+      metrics: RetrievalMetricValues;
     }>
   >;
   error?: string;

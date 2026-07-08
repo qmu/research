@@ -1,4 +1,11 @@
-import type { BenchmarkDataset } from "./types";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import type {
+  BenchmarkDataset,
+  DocumentRecord,
+  QueryRecord,
+  RelevanceJudgment,
+} from "./types";
 
 export const SCIFACT_MINI: BenchmarkDataset = {
   id: "scifact-mini",
@@ -55,3 +62,76 @@ export const SCIFACT_MINI: BenchmarkDataset = {
 };
 
 export const loadDataset = (): BenchmarkDataset => SCIFACT_MINI;
+
+// --- Real SciFact subset (BEIR) -------------------------------------------
+//
+// The subset is pinned by a committed manifest of ids + qrels (facts). The
+// corpus text itself is CC BY-NC and NEVER committed; it is fetched into a
+// gitignored cache by scripts/fetch-scifact.sh and filtered to the manifest
+// here at real-run time.
+
+type ScifactManifest = Readonly<{
+  source: string;
+  origin: string;
+  seed: number;
+  queryIds: ReadonlyArray<string>;
+  documentIds: ReadonlyArray<string>;
+  qrels: ReadonlyArray<RelevanceJudgment>;
+}>;
+
+const MANIFEST_PATH = resolve(
+  import.meta.dirname,
+  "data/scifact-subset.manifest.json",
+);
+const CACHE_DIR = resolve(import.meta.dirname, "../../../.cache/scifact");
+
+const loadScifactManifest = (): ScifactManifest =>
+  JSON.parse(readFileSync(MANIFEST_PATH, "utf8")) as ScifactManifest;
+
+export const scifactSubsetQueryCount = (): number =>
+  loadScifactManifest().queryIds.length;
+
+const readJsonl = (path: string): ReadonlyArray<Record<string, unknown>> =>
+  readFileSync(path, "utf8")
+    .split("\n")
+    .filter((line) => line.trim().length > 0)
+    .map((line) => JSON.parse(line) as Record<string, unknown>);
+
+export const loadScifactSubset = (): BenchmarkDataset => {
+  const manifest = loadScifactManifest();
+
+  let corpusRows: ReadonlyArray<Record<string, unknown>>;
+  let queryRows: ReadonlyArray<Record<string, unknown>>;
+  try {
+    corpusRows = readJsonl(resolve(CACHE_DIR, "corpus.jsonl"));
+    queryRows = readJsonl(resolve(CACHE_DIR, "queries.jsonl"));
+  } catch {
+    throw new Error(
+      "SciFact cache missing. Run scripts/fetch-scifact.sh once to download the " +
+        "CC BY-NC corpus into packages/tech/.cache/scifact/ (never committed).",
+    );
+  }
+
+  const wantedDocs = new Set(manifest.documentIds);
+  const wantedQueries = new Set(manifest.queryIds);
+  const documents: ReadonlyArray<DocumentRecord> = corpusRows
+    .filter((row) => wantedDocs.has(String(row._id)))
+    .map((row) => ({
+      id: String(row._id),
+      title: String(row.title ?? ""),
+      text: String(row.text ?? ""),
+    }));
+  const queries: ReadonlyArray<QueryRecord> = queryRows
+    .filter((row) => wantedQueries.has(String(row._id)))
+    .map((row) => ({ id: String(row._id), text: String(row.text ?? "") }));
+
+  return {
+    id: "scifact-beir-subset",
+    name: "SciFact (BEIR) subset",
+    source: manifest.source,
+    license: manifest.origin,
+    documents,
+    queries,
+    qrels: manifest.qrels,
+  };
+};

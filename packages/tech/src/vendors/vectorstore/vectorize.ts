@@ -22,8 +22,14 @@ import type {
  */
 const ACCOUNT_ID_ENV = "CLOUDFLARE_ACCOUNT_ID";
 const API_TOKEN_ENV = "CLOUDFLARE_API_TOKEN";
-const READINESS_TIMEOUT_MS = 60_000;
+const READINESS_TIMEOUT_MS = 120_000;
 const READINESS_POLL_MS = 2_000;
+// Vectorize upserts are eventually consistent per-vector: the first vector can
+// become queryable well before the whole batch finishes indexing. After the
+// probe is queryable we settle until a full-batch readiness check stops growing,
+// so queries run against the complete index (otherwise recall is understated).
+const SETTLE_POLL_MS = 3_000;
+const SETTLE_STABLE_ROUNDS = 3;
 
 type VectorizeMatch = Readonly<{ id: string; score: number }>;
 
@@ -96,13 +102,30 @@ export const createVectorizeStore = (dimensions: number): VectorStore => {
       const deadline = Date.now() + READINESS_TIMEOUT_MS;
       for (;;) {
         const matches = await runQuery(probe.vector, 1);
-        if (matches.length > 0) return;
+        if (matches.length > 0) break;
         if (Date.now() >= deadline) {
           throw new Error(
             `Vectorize index ${indexName} did not become queryable within ${READINESS_TIMEOUT_MS}ms`,
           );
         }
         await delay(READINESS_POLL_MS);
+      }
+
+      // Settle: the batch keeps indexing after the first vector is queryable, so
+      // wait until a top-N probe stops growing (all vectors indexed) before
+      // returning — measuring against a partially-indexed store understates recall.
+      let lastCount = -1;
+      let stable = 0;
+      const probeK = Math.min(documents.length, 100); // Vectorize caps topK at 100
+      while (Date.now() < deadline) {
+        const seen = await runQuery(probe.vector, probeK);
+        if (seen.length === lastCount) {
+          if (++stable >= SETTLE_STABLE_ROUNDS) return;
+        } else {
+          stable = 0;
+          lastCount = seen.length;
+        }
+        await delay(SETTLE_POLL_MS);
       }
     },
     query: async (

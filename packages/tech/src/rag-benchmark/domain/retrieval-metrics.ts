@@ -1,4 +1,10 @@
-import type { QueryResult, RelevanceJudgment, RetrievalMetrics } from "./types";
+import { average, normalInterval, stdDev, wilsonInterval } from "./aggregate";
+import type {
+  QueryResult,
+  RelevanceJudgment,
+  RetrievalMetricValues,
+  RetrievalMetrics,
+} from "./types";
 
 const relevantForQuery = (
   qrels: ReadonlyArray<RelevanceJudgment>,
@@ -23,10 +29,9 @@ export const recallAtK = (
   const retrieved = new Set(
     results.slice(0, k).map((result) => result.documentId),
   );
-  const hits = [...relevant.keys()].filter((documentId) =>
-    retrieved.has(documentId),
-  ).length;
-  return hits / relevant.size;
+  return [...relevant.keys()].some((documentId) => retrieved.has(documentId))
+    ? 1
+    : 0;
 };
 
 export const ndcgAtK = (
@@ -65,29 +70,51 @@ export const scoreQuery = (
   qrels: ReadonlyArray<RelevanceJudgment>,
   queryId: string,
   k: number,
-): RetrievalMetrics => ({
+): RetrievalMetricValues => ({
   recallAtK: recallAtK(results, qrels, queryId, k),
   ndcgAtK: ndcgAtK(results, qrels, queryId, k),
   mrr: reciprocalRank(results, qrels, queryId),
 });
 
 export const averageRetrievalMetrics = (
-  metrics: ReadonlyArray<RetrievalMetrics>,
-): RetrievalMetrics => {
+  metrics: ReadonlyArray<RetrievalMetricValues>,
+): RetrievalMetricValues => {
   if (metrics.length === 0) {
     return { recallAtK: 0, ndcgAtK: 0, mrr: 0 };
   }
-  const total = metrics.reduce(
-    (acc, metric) => ({
-      recallAtK: acc.recallAtK + metric.recallAtK,
-      ndcgAtK: acc.ndcgAtK + metric.ndcgAtK,
-      mrr: acc.mrr + metric.mrr,
-    }),
-    { recallAtK: 0, ndcgAtK: 0, mrr: 0 },
-  );
   return {
-    recallAtK: total.recallAtK / metrics.length,
-    ndcgAtK: total.ndcgAtK / metrics.length,
-    mrr: total.mrr / metrics.length,
+    recallAtK: average(metrics.map((metric) => metric.recallAtK)),
+    ndcgAtK: average(metrics.map((metric) => metric.ndcgAtK)),
+    mrr: average(metrics.map((metric) => metric.mrr)),
+  };
+};
+
+export const summarizeRetrievalMetrics = (
+  queryMetrics: ReadonlyArray<RetrievalMetricValues>,
+  trialMetrics: ReadonlyArray<RetrievalMetricValues>,
+  intervalNote: string,
+): RetrievalMetrics => {
+  const summary = averageRetrievalMetrics(queryMetrics);
+  const recallSuccesses = queryMetrics.filter(
+    (metric) => metric.recallAtK > 0,
+  ).length;
+  const trialCount = Math.max(1, trialMetrics.length);
+  const spread =
+    trialMetrics.length > 1
+      ? {
+          recallAtK: stdDev(trialMetrics.map((metric) => metric.recallAtK)),
+          ndcgAtK: stdDev(trialMetrics.map((metric) => metric.ndcgAtK)),
+          mrr: stdDev(trialMetrics.map((metric) => metric.mrr)),
+        }
+      : undefined;
+  return {
+    ...summary,
+    recallAtKCi95: wilsonInterval(recallSuccesses, queryMetrics.length),
+    ndcgAtKCi95: normalInterval(queryMetrics.map((metric) => metric.ndcgAtK)),
+    mrrCi95: normalInterval(queryMetrics.map((metric) => metric.mrr)),
+    queryCount: queryMetrics.length,
+    trialCount,
+    trialStdDev: spread,
+    intervalNote,
   };
 };

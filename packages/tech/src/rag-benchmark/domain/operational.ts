@@ -1,12 +1,42 @@
-export const percentile = (
-  values: ReadonlyArray<number>,
-  percentileValue: number,
-): number => {
-  if (values.length === 0) return 0;
-  const sorted = [...values].sort((a, b) => a - b);
-  const index = Math.ceil((percentileValue / 100) * sorted.length) - 1;
-  return sorted[Math.max(0, Math.min(sorted.length - 1, index))];
+import {
+  average,
+  percentile as calculatePercentile,
+  stdDev,
+} from "./aggregate";
+import type { OperationalMetrics } from "./types";
+
+export type OperationalTrial = Readonly<{
+  ingestMs: number;
+  queryLatencyMs: ReadonlyArray<number>;
+  costUsd: number;
+  maxScale: number;
+}>;
+
+export const summarizeOperationalTrials = (
+  trials: ReadonlyArray<OperationalTrial>,
+): OperationalMetrics => {
+  const ingestValues = trials.map((trial) => trial.ingestMs);
+  const p50Values = trials.map((trial) =>
+    calculatePercentile(trial.queryLatencyMs, 50),
+  );
+  const p95Values = trials.map((trial) =>
+    calculatePercentile(trial.queryLatencyMs, 95),
+  );
+  return {
+    ingestMs: average(ingestValues),
+    ingestMsStdDev: stdDev(ingestValues),
+    queryLatencyMs: trials.flatMap((trial) => trial.queryLatencyMs),
+    queryLatencyP50Ms: average(p50Values),
+    queryLatencyP50MsStdDev: stdDev(p50Values),
+    queryLatencyP95Ms: average(p95Values),
+    queryLatencyP95MsStdDev: stdDev(p95Values),
+    trialCount: trials.length,
+    costUsd: trials.reduce((sum, trial) => sum + trial.costUsd, 0),
+    maxScale: Math.max(0, ...trials.map((trial) => trial.maxScale)),
+  };
 };
+
+export const percentile = calculatePercentile;
 
 export const elapsedMs = (start: bigint, end: bigint): number =>
   Number(end - start) / 1_000_000;

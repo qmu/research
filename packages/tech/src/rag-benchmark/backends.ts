@@ -7,6 +7,7 @@ export const BACKENDS: ReadonlyArray<Backend> = [
     kind: "self-managed",
     embeddingCoupling: "fixed",
     isolatedStore: true,
+    retrievalDeterministic: true,
     source: "https://github.com/asg017/sqlite-vec",
     costNote: "Local SQLite extension; no API cost for benchmark queries.",
     metadataFiltering: false,
@@ -17,6 +18,7 @@ export const BACKENDS: ReadonlyArray<Backend> = [
     kind: "managed",
     embeddingCoupling: "managed",
     isolatedStore: false,
+    retrievalDeterministic: false,
     source: "https://platform.openai.com/docs/guides/retrieval",
     costNote:
       "Storage $0.10/GB/day after the first free GB; search calls $2.50 per 1k (platform.openai.com/pricing, 2026-07).",
@@ -31,6 +33,7 @@ export const BACKENDS: ReadonlyArray<Backend> = [
     kind: "self-managed",
     embeddingCoupling: "fixed",
     isolatedStore: true,
+    retrievalDeterministic: true,
     source:
       "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html",
     costNote:
@@ -45,6 +48,7 @@ export const BACKENDS: ReadonlyArray<Backend> = [
     kind: "self-managed",
     embeddingCoupling: "fixed",
     isolatedStore: true,
+    retrievalDeterministic: true,
     source: "https://developers.cloudflare.com/vectorize/",
     costNote:
       "Priced per stored-vector-dimension and per queried-vector-dimension (developers.cloudflare.com/vectorize/platform/pricing, 2026-07); this benchmark's volume is within the free allotment.",
@@ -58,6 +62,7 @@ export const BACKENDS: ReadonlyArray<Backend> = [
     kind: "managed",
     embeddingCoupling: "managed",
     isolatedStore: false,
+    retrievalDeterministic: false,
     source: "https://developers.cloudflare.com/autorag/",
     costNote:
       "Managed pipeline priced on the underlying Workers AI + R2 + Vectorize usage (developers.cloudflare.com/autorag, 2026-07); no separate AutoRAG fee as of source.",

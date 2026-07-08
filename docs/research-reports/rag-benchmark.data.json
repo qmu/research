@@ -72,6 +72,7 @@
         "kind": "self-managed",
         "embeddingCoupling": "fixed",
         "isolatedStore": true,
+        "retrievalDeterministic": true,
         "source": "https://github.com/asg017/sqlite-vec",
         "costNote": "Local SQLite extension; no API cost for benchmark queries.",
         "metadataFiltering": false
@@ -83,17 +84,48 @@
       "retrieval": {
         "recallAtK": 1,
         "ndcgAtK": 1,
-        "mrr": 1
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
       },
       "operational": {
         "ingestMs": 0,
+        "ingestMsStdDev": 0,
         "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0
         ],
         "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
         "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
         "costUsd": 0,
         "maxScale": 5
       },
@@ -173,6 +205,7 @@
         "kind": "managed",
         "embeddingCoupling": "managed",
         "isolatedStore": false,
+        "retrievalDeterministic": false,
         "source": "https://platform.openai.com/docs/guides/retrieval",
         "costNote": "Storage $0.10/GB/day after the first free GB; search calls $2.50 per 1k (platform.openai.com/pricing, 2026-07).",
         "metadataFiltering": true,
@@ -186,17 +219,48 @@
       "retrieval": {
         "recallAtK": 1,
         "ndcgAtK": 1,
-        "mrr": 1
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
       },
       "operational": {
         "ingestMs": 0,
+        "ingestMsStdDev": 0,
         "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0
         ],
         "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
         "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
         "costUsd": 0,
         "maxScale": 5
       },
@@ -276,6 +340,7 @@
         "kind": "self-managed",
         "embeddingCoupling": "fixed",
         "isolatedStore": true,
+        "retrievalDeterministic": true,
         "source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html",
         "costNote": "Storage + PUT/query request pricing per AWS S3 Vectors (docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-pricing.html, 2026-07); this benchmark's volume is well under $0.01.",
         "metadataFiltering": true,
@@ -288,17 +353,48 @@
       "retrieval": {
         "recallAtK": 1,
         "ndcgAtK": 1,
-        "mrr": 1
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
       },
       "operational": {
         "ingestMs": 0,
+        "ingestMsStdDev": 0,
         "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0
         ],
         "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
         "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
         "costUsd": 0,
         "maxScale": 5
       },
@@ -378,6 +474,7 @@
         "kind": "self-managed",
         "embeddingCoupling": "fixed",
         "isolatedStore": true,
+        "retrievalDeterministic": true,
         "source": "https://developers.cloudflare.com/vectorize/",
         "costNote": "Priced per stored-vector-dimension and per queried-vector-dimension (developers.cloudflare.com/vectorize/platform/pricing, 2026-07); this benchmark's volume is within the free allotment.",
         "metadataFiltering": true,
@@ -390,17 +487,48 @@
       "retrieval": {
         "recallAtK": 1,
         "ndcgAtK": 1,
-        "mrr": 1
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
       },
       "operational": {
         "ingestMs": 0,
+        "ingestMsStdDev": 0,
         "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0
         ],
         "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
         "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
         "costUsd": 0,
         "maxScale": 5
       },
@@ -480,6 +608,7 @@
         "kind": "managed",
         "embeddingCoupling": "managed",
         "isolatedStore": false,
+        "retrievalDeterministic": false,
         "source": "https://developers.cloudflare.com/autorag/",
         "costNote": "Managed pipeline priced on the underlying Workers AI + R2 + Vectorize usage (developers.cloudflare.com/autorag, 2026-07); no separate AutoRAG fee as of source.",
         "metadataFiltering": true,
@@ -492,17 +621,48 @@
       "retrieval": {
         "recallAtK": 1,
         "ndcgAtK": 1,
-        "mrr": 1
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
       },
       "operational": {
         "ingestMs": 0,
+        "ingestMsStdDev": 0,
         "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0
         ],
         "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
         "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
         "costUsd": 0,
         "maxScale": 5
       },
@@ -578,5 +738,5 @@
   ],
   "artifactPath": "rag-benchmark.data.json",
   "fixture": true,
-  "trials": 1
+  "trials": 5
 }

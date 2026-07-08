@@ -47,7 +47,7 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 
 ### openai (packages/tech)
 
-- **Reason**: The `llm-model-comparison` topic measures OpenAI models live. The official SDK provides typed request/response and usage shapes; hand-rolling an HTTP client would duplicate that. Isolated behind `packages/tech/src/vendors/llm/openai.ts` (Chat Completions) and `packages/tech/src/vendors/llm/openai-responses.ts` (the Responses API, for the `-codex` coding models). The **same SDK also fronts the xAI OpenAI-compatible endpoint** (the Grok lineup — `grok-4.3`, the `grok-4.20-0309` reasoning/non-reasoning pair, and the `grok-build-0.1` coding model) via a base-URL variant in `vendors/llm/xai.ts` — no new dependency is taken on for xAI; only a base URL differs. The `rag-benchmark` topic reuses the **same already-present SDK** for a second surface — OpenAI's managed **vector store / File Search** — isolated behind `packages/tech/src/vendors/vectorstore/openai.ts` (create store, upload+poll files, `vectorStores.search`); no new dependency is taken on, and that ACL implements the domain `VectorStore` port.
+- **Reason**: The `llm-model-comparison` topic measures OpenAI models live. The official SDK provides typed request/response and usage shapes; hand-rolling an HTTP client would duplicate that. Isolated behind `packages/tech/src/vendors/llm/openai.ts` (Chat Completions) and `packages/tech/src/vendors/llm/openai-responses.ts` (the Responses API, for the `-codex` coding models). The **same SDK also fronts the xAI OpenAI-compatible endpoint** (the Grok lineup — `grok-4.3`, the `grok-4.20-0309` reasoning/non-reasoning pair, and the `grok-build-0.1` coding model) via a base-URL variant in `vendors/llm/xai.ts` — no new dependency is taken on for xAI; only a base URL differs. The `rag-benchmark` topic reuses the **same already-present SDK** for two more surfaces — OpenAI's managed **vector store / File Search** (isolated behind `packages/tech/src/vendors/vectorstore/openai.ts`) and the **embeddings** endpoint (`text-embedding-3-small`, behind `packages/tech/src/vendors/embedding/openai.ts`, the fixed embedding for the self-managed store-isolated comparison). No new dependency is taken on; both ACLs implement domain ports (`VectorStore` / `EmbeddingClient`).
 - **Assessment**:
   - License: Apache-2.0 — compatible with this MIT repo.
   - Reputation: Official OpenAI SDK; broad adoption, actively maintained.
@@ -142,6 +142,22 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 - **Exit strategy**: Replace only the two `VectorStore` adapters and their
   registry cards. Domain scoring, reports, and datasets do not depend on
   Cloudflare APIs.
+
+### SciFact (BEIR) dataset — fetched, not committed, not a package
+
+- **Reason**: The `rag-benchmark` real run needs a citable public IR dataset with
+  qrels so retrieval quality (recall/nDCG/MRR) genuinely differentiates. SciFact
+  (allenai/scifact, redistributed via BEIR) is used as a subset.
+- **License**: SciFact is **CC BY-NC 2.0**. To stay clear of redistributing
+  NC-licensed corpus text from this MIT repo, the **corpus text is never
+  committed**. Only a manifest of selected query/document ids + qrels (facts) is
+  committed at `packages/tech/src/rag-benchmark/domain/data/scifact-subset.manifest.json`.
+  `scripts/fetch-scifact.sh` downloads the corpus into a **gitignored** cache
+  (`packages/tech/.cache/`), and `domain/dataset.ts` filters it to the manifest at
+  real-run time. The keyless CI path uses the repository-authored `scifact-mini`
+  fixture instead, so no fetch or license surface touches CI.
+- **Exit strategy**: The manifest + fetch script are self-contained; swapping in a
+  different BEIR dataset is a manifest + loader change, no code elsewhere.
 
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`

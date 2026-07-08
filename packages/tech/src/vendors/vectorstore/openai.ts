@@ -15,10 +15,13 @@ import type {
  * Every created resource is deleted in close(); a one-day expiry policy on the
  * vector store is the safety net if cleanup is interrupted.
  */
+const documentIdFromFilename = (filename: string): string =>
+  filename.replace(/\.[^.]+$/, "");
+
 export const createOpenAiVectorStore = (): VectorStore => {
   const client = new OpenAI();
   let vectorStoreId: string | null = null;
-  const documentIdByFileId = new Map<string, string>();
+  const fileIds: Array<string> = [];
 
   return {
     id: "openai-vector-store",
@@ -28,15 +31,20 @@ export const createOpenAiVectorStore = (): VectorStore => {
         expires_after: { anchor: "last_active_at", days: 1 },
       });
       vectorStoreId = store.id;
-      for (const { document } of documents) {
-        const file = await client.vectorStores.files.uploadAndPoll(
-          store.id,
-          await toFile(
+      // Batch upload: one uploadAndPoll for the whole corpus (one index-build
+      // wait) instead of a per-document round trip. The filename carries the
+      // document id back through search results.
+      const files = await Promise.all(
+        documents.map(({ document }) =>
+          toFile(
             Buffer.from(`${document.title}\n${document.text}`, "utf8"),
             `${document.id}.txt`,
           ),
-        );
-        documentIdByFileId.set(file.id, document.id);
+        ),
+      );
+      await client.vectorStores.fileBatches.uploadAndPoll(store.id, { files });
+      for await (const file of client.vectorStores.files.list(store.id)) {
+        fileIds.push(file.id);
       }
     },
     query: async (
@@ -49,7 +57,7 @@ export const createOpenAiVectorStore = (): VectorStore => {
         max_num_results: k,
       });
       return page.data.map((result) => ({
-        documentId: documentIdByFileId.get(result.file_id) ?? result.file_id,
+        documentId: documentIdFromFilename(result.filename),
         score: result.score,
       }));
     },
@@ -59,7 +67,7 @@ export const createOpenAiVectorStore = (): VectorStore => {
       if (vectorStoreId !== null) {
         await client.vectorStores.delete(vectorStoreId).catch(() => undefined);
       }
-      for (const fileId of documentIdByFileId.keys()) {
+      for (const fileId of fileIds) {
         await client.files.delete(fileId).catch(() => undefined);
       }
     },

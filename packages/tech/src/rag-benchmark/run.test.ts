@@ -10,6 +10,8 @@ describe("runRagBenchmark", () => {
       true,
     );
     expect(result.runs[0]?.retrieval.recallAtK).toBeGreaterThan(0);
+    expect(result.runs[0]?.retrieval.queryCount).toBe(3);
+    expect(result.runs[0]?.operational.trialCount).toBe(1);
   });
 
   it("runs sqlite-vec locally without API credentials", async () => {
@@ -22,6 +24,7 @@ describe("runRagBenchmark", () => {
     expect(result.runs[0]?.backend.id).toBe("sqlite-vec");
     expect(result.runs[0]?.provenance).toBe("measured");
     expect(result.runs[0]?.operational.costUsd).toBe(0);
+    expect(result.runs[0]?.retrieval.trialStdDev).toBeUndefined();
   });
 
   it("renders a key-absent managed backend as fixtured, never faked", async () => {
@@ -38,6 +41,7 @@ describe("runRagBenchmark", () => {
       expect(result.runs[0]?.backend.isolatedStore).toBe(false);
       expect(result.runs[0]?.provenance).toBe("fixtured");
       expect(result.runs[0]?.operational.costUsd).toBe(0);
+      expect(result.runs[0]?.retrieval.intervalNote).toContain("deterministic");
     } finally {
       if (saved !== undefined) process.env.OPENAI_API_KEY = saved;
     }

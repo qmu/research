@@ -20,3 +20,6 @@ docs/.vitepress/dist/
 # committed (unlike the byte-stable fixture `llm-model-comparison.md`/`.data.json`).
 docs/research-reports/*.real.md
 docs/research-reports/*.real.data.json
+
+# BEIR/SciFact corpus cache (fetched, CC BY-NC — never committed; see scripts/fetch-scifact.sh)
+packages/tech/.cache/

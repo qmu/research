@@ -4,6 +4,18 @@ const pct = (value: number): string => `${(value * 100).toFixed(1)}%`;
 
 const ms = (value: number): string => value.toFixed(2);
 
+const ciHalfWidth = (lower: number, upper: number): number =>
+  Math.max(0, (upper - lower) / 2);
+
+const pctWithCi = (value: number, lower: number, upper: number): string =>
+  `${pct(value)} ± ${(ciHalfWidth(lower, upper) * 100).toFixed(1)}pp`;
+
+const decimalWithCi = (value: number, lower: number, upper: number): string =>
+  `${value.toFixed(3)} ± ${ciHalfWidth(lower, upper).toFixed(3)}`;
+
+const msWithStdDev = (mean: number, deviation: number): string =>
+  `${ms(mean)} ± ${ms(deviation)}`;
+
 const sentence = (value: string): string =>
   value.endsWith(".") ? value : `${value}.`;
 
@@ -13,8 +25,12 @@ export const renderRagBenchmarkReport = (result: BenchmarkResult): string => {
       (run) =>
         `| ${run.backend.name} | ${run.backend.kind} | ${run.backend.embeddingCoupling} | ` +
         `${run.backend.isolatedStore ? "yes" : "no"} | ${run.provenance} | ` +
-        `${pct(run.retrieval.recallAtK)} | ${pct(run.retrieval.ndcgAtK)} | ${run.retrieval.mrr.toFixed(3)} | ` +
-        `${ms(run.operational.ingestMs)} | ${ms(run.operational.queryLatencyP50Ms)} | ${ms(run.operational.queryLatencyP95Ms)} | ` +
+        `${pctWithCi(run.retrieval.recallAtK, run.retrieval.recallAtKCi95.lower, run.retrieval.recallAtKCi95.upper)} | ` +
+        `${pctWithCi(run.retrieval.ndcgAtK, run.retrieval.ndcgAtKCi95.lower, run.retrieval.ndcgAtKCi95.upper)} | ` +
+        `${decimalWithCi(run.retrieval.mrr, run.retrieval.mrrCi95.lower, run.retrieval.mrrCi95.upper)} | ` +
+        `${msWithStdDev(run.operational.ingestMs, run.operational.ingestMsStdDev)} | ` +
+        `${msWithStdDev(run.operational.queryLatencyP50Ms, run.operational.queryLatencyP50MsStdDev)} | ` +
+        `${msWithStdDev(run.operational.queryLatencyP95Ms, run.operational.queryLatencyP95MsStdDev)} | ` +
         `$${run.operational.costUsd.toFixed(4)} | ${run.backend.costNote} |`,
     )
     .join("\n");
@@ -24,8 +40,14 @@ export const renderRagBenchmarkReport = (result: BenchmarkResult): string => {
       const isolation = run.backend.isolatedStore
         ? "store-isolated (fixed embedding)"
         : "whole-stack, not store-isolated (managed embedding)";
+      const spread = run.retrieval.trialStdDev
+        ? ` Run-to-run retrieval stdDev across ${run.retrieval.trialCount} trials: recall ${(run.retrieval.trialStdDev.recallAtK * 100).toFixed(1)}pp, nDCG ${(run.retrieval.trialStdDev.ndcgAtK * 100).toFixed(1)}pp, MRR ${run.retrieval.trialStdDev.mrr.toFixed(3)}.`
+        : "";
       const details = [
         run.backend.ingestionNote,
+        run.retrieval.intervalNote,
+        `Operational metrics are mean ± sample stdDev across ${run.operational.trialCount} trial(s).`,
+        spread,
         run.provenance === "error" && run.error
           ? `Run errored: ${run.error}`
           : undefined,
@@ -48,15 +70,15 @@ This report records a benchmark harness for vector-store and RAG-database backen
 
 ## Methodology
 
-**Dataset.** The benchmark uses ${result.dataset.name} (\`${result.dataset.id}\`), a committed miniature subset shaped after SciFact. Source: ${result.dataset.source}. License note: ${sentence(result.dataset.license)} The fixture contains ${result.dataset.documents.length} documents, ${result.dataset.queries.length} queries, and ${result.dataset.qrels.length} relevance judgments.
+**Dataset.** The benchmark uses ${result.dataset.name} (\`${result.dataset.id}\`). Source: ${result.dataset.source}. License note: ${sentence(result.dataset.license)} The run contains ${result.dataset.documents.length} documents, ${result.dataset.queries.length} queries, and ${result.dataset.qrels.length} relevance judgments.
 
-**Metrics.** Retrieval quality is recall@${result.runs[0]?.k ?? 3}, nDCG@${result.runs[0]?.k ?? 3}, and MRR against the committed qrels. Operational measurements are ingest time, query latency p50/p95, measured scale, and estimated cost.
+**Metrics.** Retrieval quality is recall@${result.runs[0]?.k ?? 3}, nDCG@${result.runs[0]?.k ?? 3}, and MRR against the committed qrels, shown as value ± 95% confidence interval over ${result.dataset.queries.length} queries. Operational measurements are ingest time and query latency p50/p95, shown as mean ± sample standard deviation across ${result.trials} trial(s), plus measured scale and estimated cost.
 
 **Embedding boundary.** Self-managed stores use one fixed local embedding model (\`${result.runs.find((run) => run.backend.embeddingCoupling === "fixed")?.embeddingModel ?? "n/a"}\`) so the store comparison is isolated from embedding-provider behavior. Fully-managed stores (marked \`isolatedStore: no\` below) embed and index internally: their rows measure the **whole managed stack, not the store in isolation**, and must never be read as a like-for-like comparison against the fixed-embedding rows.
 
 ## Results
 
-| Backend | Kind | Embedding | Store isolated | Provenance | Recall@k | nDCG@k | MRR | Ingest ms | Query p50 ms | Query p95 ms | Cost | Cost note |
+| Backend | Kind | Embedding | Store isolated | Provenance | Recall@k (95% CI) | nDCG@k (95% CI) | MRR (95% CI) | Ingest ms (mean±sd) | Query p50 ms (mean±sd) | Query p95 ms (mean±sd) | Cost | Cost note |
 | ------- | ---- | --------- | -------------- | ---------- | -------- | ------ | --- | --------- | ------------ | ------------ | ---- | --------- |
 ${rows}
 

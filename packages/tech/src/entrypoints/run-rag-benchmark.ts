@@ -16,6 +16,11 @@ const parseBackends = (): ReadonlyArray<string> =>
     .map((id) => id.trim())
     .filter((id) => id.length > 0) ?? [];
 
+const parseTrials = (): number => {
+  const value = Number(argValue("--trials") ?? "5");
+  return Number.isFinite(value) && value > 0 ? Math.trunc(value) : 5;
+};
+
 const writeOutputs = async (
   reportPath: string,
   artifactPath: string,
@@ -33,21 +38,35 @@ const writeOutputs = async (
 
 const main = async (): Promise<void> => {
   const backends = parseBackends();
+  const corpus = argValue("--corpus") === "scifact" ? "scifact" : "mini";
+  const trials = parseTrials();
 
   if (hasArg("--estimate")) {
-    process.stdout.write(`${estimateRagBenchmark(backends)}\n`);
+    process.stdout.write(`${estimateRagBenchmark(backends, corpus, trials)}\n`);
     return;
   }
 
   const fixture = hasArg("--fixture");
   // Print the cost estimate before any real (non-fixture) run touches a provider.
   if (!fixture) {
-    process.stdout.write(`${estimateRagBenchmark(backends)}\n`);
+    process.stdout.write(`${estimateRagBenchmark(backends, corpus, trials)}\n`);
   }
-  const result = await runRagBenchmark({ fixture, k: 3, trials: 1, backends });
-  const reportPath =
+  const result = await runRagBenchmark({
+    fixture,
+    k: 3,
+    trials,
+    backends,
+    corpus,
+  });
+  // --fixture writes the committed, byte-stable canonical pair (the CI self-test);
+  // a real run writes a separate `.real.*` pair (gitignored, regenerable) so it
+  // never clobbers the committed fixture baseline.
+  const canonicalPath =
     process.env.OUTPUT_PATH ??
     resolve(process.cwd(), "../../docs/research-reports/rag-benchmark.md");
+  const reportPath = fixture
+    ? canonicalPath
+    : canonicalPath.replace(/\.md$/, ".real.md");
   const artifactPath = reportPath.replace(/\.md$/, ".data.json");
   const rendered = {
     ...result,
