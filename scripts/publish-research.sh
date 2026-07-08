@@ -1,5 +1,5 @@
 #!/bin/sh
-# Generate research data-skeleton drafts or copy canonical articles to qmu-co-jp.
+# Generate research data-skeleton drafts or copy per-topic reports to qmu-co-jp.
 #
 # Usage:
 #   publish-research.sh generate
@@ -8,28 +8,43 @@
 # Stages:
 #   generate          Read committed/local artifacts and write regenerable drafts
 #                     under docs/llm-foundation/_generated/.
-#   copy              Copy canonical docs/llm-foundation/*.md files, never
-#                     _generated drafts, to qmu-co-jp as plain Markdown.
+#   copy              Copy the per-topic published reports to qmu-co-jp as plain
+#                     Markdown. The published set is the generated per-topic
+#                     reports under docs/research-reports/*.insights.md (English)
+#                     and *.insights.ja.md (Japanese), plus the hand-written
+#                     design article docs/llm-foundation/agent-sdk-comparison.md.
+#                     The keyless fixture data reports and the detailed
+#                     hand-written articles are NOT published — they are the
+#                     reproducible source, not the reader-facing line.
 #
 # Options:
-#   --all             With copy, copy every top-level docs/llm-foundation/*.md.
+#   --all             With copy, copy every per-topic published report (the set
+#                     above).
 #   --qmu-dir DIR     Path to the qmu-co-jp checkout (default: ../qmu-co-jp,
 #                     overridable with the QMU_DIR environment variable).
 #   --dry-run         With copy, print what would be copied without writing.
 #   -h, --help        Show this help.
+#
+# A <slug> is a path relative to the repo's docs/ (e.g.
+# research-reports/llm-speed-comparison.insights.ja). Bare names are resolved
+# against docs/research-reports/ then docs/llm-foundation/.
 
 set -eu
 
 REPO_ROOT=$(cd "$(dirname "$0")/.." && pwd)
-SRC_DIR="$REPO_ROOT/docs/llm-foundation"
+REPORTS_DIR="$REPO_ROOT/docs/research-reports"
+FOUNDATION_DIR="$REPO_ROOT/docs/llm-foundation"
 QMU_DIR="${QMU_DIR:-$REPO_ROOT/../qmu-co-jp}"
+
+# The per-topic published set, as repo-docs-relative paths (no .md extension).
+PUBLISHED_TOPICS="foundation-models llm-speed-comparison llm-accuracy-comparison llm-availability ocr-comparison rag-benchmark"
 COMMAND=""
 ALL=0
 DRY=0
 SLUGS=""
 
 usage() {
-  sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,33p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 if [ $# -gt 0 ]; then
@@ -91,14 +106,15 @@ case "$COMMAND" in
 esac
 
 if [ "$ALL" -eq 1 ]; then
-  for f in "$SRC_DIR"/*.md; do
-    [ -f "$f" ] || continue
-    SLUGS="$SLUGS $(basename "$f" .md)"
+  for topic in $PUBLISHED_TOPICS; do
+    SLUGS="$SLUGS research-reports/$topic.insights research-reports/$topic.insights.ja"
   done
+  # The one hand-written design article (no benchmark, so no generated report).
+  SLUGS="$SLUGS llm-foundation/agent-sdk-comparison"
 fi
 
 if [ -z "$(echo "$SLUGS" | tr -d ' ')" ]; then
-  echo "No canonical articles to copy. Pass a slug or --all." >&2
+  echo "No reports to copy. Pass a slug or --all." >&2
   exit 0
 fi
 
@@ -112,26 +128,39 @@ fi
 DEST_DIR="$QMU_DIR/docs/llm-foundation-research"
 copied=0
 for slug in $SLUGS; do
-  SRC="$SRC_DIR/$slug.md"
-  DEST="$DEST_DIR/$slug.md"
+  # A slug is either a docs-relative path (research-reports/... or
+  # llm-foundation/...) or a bare name resolved against research-reports first,
+  # then llm-foundation. The destination keeps the basename.
+  case "$slug" in
+    */*) SRC="$REPO_ROOT/docs/$slug.md" ;;
+    *)
+      if [ -f "$REPORTS_DIR/$slug.md" ]; then
+        SRC="$REPORTS_DIR/$slug.md"
+      else
+        SRC="$FOUNDATION_DIR/$slug.md"
+      fi
+      ;;
+  esac
+  REL=${SRC#"$REPO_ROOT"/}
+  DEST="$DEST_DIR/$(basename "$slug").md"
 
   if [ ! -f "$SRC" ]; then
-    echo "Error: canonical article not found: docs/llm-foundation/$slug.md" >&2
+    echo "Error: report not found: $REL" >&2
     exit 1
   fi
 
   if [ "$DRY" -eq 1 ]; then
-    echo "would copy: docs/llm-foundation/$slug.md -> $DEST"
+    echo "would copy: $REL -> $DEST"
     continue
   fi
 
   mkdir -p "$DEST_DIR"
   cp "$SRC" "$DEST"
-  echo "copied: docs/llm-foundation/$slug.md -> docs/llm-foundation-research/$slug.md"
+  echo "copied: $REL -> docs/llm-foundation-research/$(basename "$slug").md"
   copied=$((copied + 1))
 done
 
 if [ "$DRY" -eq 0 ]; then
-  echo "Done. $copied canonical article(s) copied to $QMU_DIR/docs/llm-foundation-research/."
+  echo "Done. $copied per-topic report(s) copied to $QMU_DIR/docs/llm-foundation-research/."
   echo "Review and commit the changes in the qmu-co-jp repository to deploy."
 fi

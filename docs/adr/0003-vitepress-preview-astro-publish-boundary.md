@@ -10,28 +10,40 @@ frontmatter (`description`, optional `title`).
 
 The first publishing boundary treated this repository as a VitePress preview
 source and copied finished generated pages into `../qmu-co-jp/docs/research/`.
-The LLM foundation IA now makes this repository the source of truth for the
-canonical Japanese articles under `docs/llm-foundation/`, so the direction and
-ownership of the publishing boundary are reversed.
+A second iteration made this repository the source of truth for hand-written
+canonical Japanese articles under `docs/llm-foundation/`. The per-topic research
+pipeline supersedes that: each topic now produces a **generated** English
+insights report and its Japanese translation from the decisive measurement
+artifact, so the published reader-facing line is per-topic generated products,
+not hand-written articles.
 
 ## Decision
 
-- The research repository owns the canonical Japanese LLM foundation articles in
-  `docs/llm-foundation/*.md`. These files are hand-polished article sources, not
-  exporter output.
-- `scripts/export-corporate-research.mjs` is an artifact-to-draft generator. It
-  reads measurement artifacts under `docs/research-reports/` and writes
-  regenerable data skeletons with tables, numbers, intervals, and provenance to
-  `docs/llm-foundation/_generated/*.md`.
-- Generated drafts are not committed. `docs/llm-foundation/_generated/` is
-  ignored because its contents are reproducible from the artifacts and current
-  commit.
+- Each research topic's reader-facing pages are **generated** from its data
+  artifact: `docs/research-reports/<topic>.insights.md` (English insights) and
+  `docs/research-reports/<topic>.insights.ja.md` (its Japanese translation).
+  These are produced by the `research <topic> --real` pipeline
+  (`insights` + `translation` stages), are non-deterministic and owner-gated,
+  and carry provenance frontmatter (`source_artifact`, `source_commit`,
+  `insights_model`, `translation_model`, `generated_at`, `trials`).
+- The keyless-fixture data reports, `*.data.json` artifacts, and `*.history.json`
+  under `docs/research-reports/` are the **reproducible source** — the CI
+  self-test and the record each generated report is derived from. They are not
+  the published reader-facing line.
+- The one exception is `docs/llm-foundation/agent-sdk-comparison.md`, a
+  hand-written design-comparison article with no benchmark; it is published
+  as-is and keeps its `設計比較` / `未測定` / `要確認` provenance labels.
+- `scripts/export-corporate-research.mjs` remains an artifact-to-draft generator
+  writing regenerable data skeletons to `docs/llm-foundation/_generated/*.md`
+  (gitignored). It predates the pipeline's insights/translation stages and is now
+  a data-skeleton helper, not the reader-facing generator.
 - Publishing is a separate one-directional plain-Markdown copy:
-  `scripts/publish-research.sh copy --all` copies canonical
-  `docs/llm-foundation/*.md` files, not `_generated` drafts, to
-  `../qmu-co-jp/docs/llm-foundation-research/<slug>.md`.
-- The corporate site remains the rendering target. It does not own the article
-  prose or the artifact-to-draft generation step.
+  `scripts/publish-research.sh copy --all` copies the generated per-topic reports
+  (English + Japanese) plus the agent-sdk article to
+  `../qmu-co-jp/docs/llm-foundation-research/<name>.md`. It never copies the
+  fixture data reports or the detailed hand-written articles.
+- The corporate site remains the rendering target. It does not own the report
+  prose or the artifact-to-report generation step.
 
 ## Alternatives considered
 
