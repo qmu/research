@@ -8,6 +8,7 @@ import {
   type TopicMode,
 } from "../research/domain/topic";
 import { runInsightsStage } from "../research/insights-runner";
+import { runTranslationStage } from "../research/translate-runner";
 
 // Fixed provenance timestamp is not needed here — insights only run on real
 // mode, where a live clock is correct. estimate never writes, so its output is
@@ -104,11 +105,16 @@ export const main = async (): Promise<void> => {
       (mode === "real" || mode === "estimate")
     ) {
       await runInsightsStage({ spec, mode, generatedAt: nowIso() });
+    } else if (
+      stage === "translation" &&
+      (mode === "real" || mode === "estimate")
+    ) {
+      await runTranslationStage({ spec, mode, generatedAt: nowIso() });
     } else {
-      // Declared pipeline slots (translation) whose generator lands in a
-      // follow-up ticket; running it today is an explicit no-op.
+      // No stage should reach here: planPipeline only emits benchmark on the
+      // fixture path, and both LLM stages are handled above for real/estimate.
       process.stdout.write(
-        `research ${spec.id}: stage '${stage}' is not implemented yet (skipped)\n`,
+        `research ${spec.id}: stage '${stage}' skipped (mode ${mode})\n`,
       );
     }
   }

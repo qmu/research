@@ -28,19 +28,37 @@ export const createFixtureClient = (
     Promise.resolve(answers.get(prompt) ?? ""),
 });
 
-// A deterministic LlmClient for the insights/translation pipeline stages on the
-// keyless path. It answers with a stable stub keyed on a marker line in the
-// prompt (insights vs translation) so a keyless run is reproducible and clearly
-// labelled — never presented as a real reading. Real insights/translation use a
-// live client; this exists for tests and keyless demonstrations.
+// A deterministic LlmClient for the insights pipeline stage on the keyless path.
+// It answers with a stable, clearly-labelled stub so a keyless run is
+// reproducible and never presented as a real reading. Real insights use a live
+// client; this exists for tests and keyless demonstrations.
 export const createFixtureInsightsClient = (model = "fixture"): LlmClient => ({
   model,
-  generateAnswer: (prompt: string): Promise<string> =>
+  generateAnswer: (_prompt: string): Promise<string> =>
     Promise.resolve(
-      prompt.includes("translate")
-        ? "_Fixtured translation stub — deterministic placeholder._"
-        : "_Fixtured insights stub — deterministic placeholder, not a real analysis._",
+      "_Fixtured insights stub — deterministic placeholder, not a real analysis._",
     ),
+});
+
+// The numeric-token forms a measurement takes; kept in sync with the domain's
+// `extractNumbers` so the stub echoes exactly what the preservation check looks
+// for (inlined here to avoid a vendors→domain import).
+const FIXTURE_NUMBER_RE = /-?\d[\d,]*(?:\.\d+)?%?/g;
+
+// A deterministic translation stub that ECHOES every number found in the prompt,
+// so the domain's numeric-preservation check passes on the keyless path. It is
+// clearly labelled as a stub and does not attempt real Japanese prose.
+export const createFixtureTranslationClient = (
+  model = "fixture",
+): LlmClient => ({
+  model,
+  generateAnswer: (prompt: string): Promise<string> => {
+    const numbers = [...new Set(prompt.match(FIXTURE_NUMBER_RE) ?? [])];
+    const preserved = numbers.length > 0 ? ` 数値: ${numbers.join(", ")}` : "";
+    return Promise.resolve(
+      `_Fixtured 翻訳スタブ — 決定的プレースホルダ。_${preserved}`,
+    );
+  },
 });
 
 // A deterministic CompletionClient for the comparison pipeline's keyless path.
