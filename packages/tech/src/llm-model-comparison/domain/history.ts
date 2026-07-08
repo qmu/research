@@ -5,11 +5,19 @@
 // data, so it is deterministic and unit-testable.
 
 import type {
+  Aggregate,
   ConfigRun,
   HistoryEntry,
   HistoryFile,
   HistoryPoint,
+  MetricStat,
 } from "./types";
+
+const toMetricStat = (aggregate: Aggregate): MetricStat => ({
+  mean: aggregate.mean,
+  stdDev: aggregate.stdDev,
+  n: aggregate.n,
+});
 
 // Project one configuration's aggregates into its compact history point. The full
 // per-call raw capture is NOT copied here — the point is the small, trend-able
@@ -20,12 +28,12 @@ export const toHistoryPoint = (run: ConfigRun): HistoryPoint => ({
   modelName: run.modelName,
   effort: run.effort,
   provenance: run.provenance,
-  throughputTokensPerSec: run.stats.throughputTokensPerSec.mean,
-  ttftMs: run.stats.ttftMs.mean,
-  totalLatencyMs: run.stats.totalLatencyMs.mean,
-  maxSchemaDepth: run.stats.maxSchemaDepth.mean,
-  maxSchemaBreadth: run.stats.maxSchemaBreadth.mean,
-  lengthAccuracy: run.stats.lengthAccuracy.mean,
+  throughputTokensPerSec: toMetricStat(run.stats.throughputTokensPerSec),
+  ttftMs: toMetricStat(run.stats.ttftMs),
+  totalLatencyMs: toMetricStat(run.stats.totalLatencyMs),
+  maxSchemaDepth: toMetricStat(run.stats.maxSchemaDepth),
+  maxSchemaBreadth: toMetricStat(run.stats.maxSchemaBreadth),
+  lengthAccuracy: toMetricStat(run.stats.lengthAccuracy),
   measuredAt: run.measuredAt,
 });
 

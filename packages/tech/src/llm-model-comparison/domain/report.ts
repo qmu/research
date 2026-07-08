@@ -44,9 +44,29 @@ const notMeasured = (p: Provenance): string =>
 const measured = (run: ConfigRun, value: string): string =>
   run.provenance === "measured" ? value : notMeasured(run.provenance);
 
-// "14.4 ± 2.2" — a mean with its sample spread, at a fixed precision.
-const meanSd = (a: Aggregate, digits: number): string =>
-  `${a.mean.toFixed(digits)} ± ${a.stdDev.toFixed(digits)}`;
+const ci95HalfWidth = (a: Aggregate): number =>
+  a.n < 2 ? 0 : (1.96 * a.stdDev) / Math.sqrt(a.n);
+
+const numberWithCi = (a: Aggregate, digits: number, unit = ""): string => {
+  const suffix = unit === "" ? "" : ` ${unit}`;
+  const meanText = `${a.mean.toFixed(digits)}${suffix}`;
+  if (a.n < 2) {
+    return `${meanText} (n=${a.n})`;
+  }
+  return `${a.mean.toFixed(digits)} ± ${ci95HalfWidth(a).toFixed(
+    digits,
+  )}${suffix} (95% CI, n=${a.n})`;
+};
+
+const percentWithCi = (a: Aggregate, digits: number): string => {
+  const meanText = `${(a.mean * 100).toFixed(digits)}%`;
+  if (a.n < 2) {
+    return `${meanText} (n=${a.n})`;
+  }
+  return `${meanText} ± ${(ci95HalfWidth(a) * 100).toFixed(
+    digits,
+  )}pp (95% CI, n=${a.n})`;
+};
 
 // "12.0–16.0" — the observed extent.
 const range = (a: Aggregate, digits: number): string =>
@@ -66,12 +86,12 @@ const comparisonTable = (configs: ReadonlyArray<ConfigRun>): string => {
     return (
       `| ${escapeCell(run.provider)} | ${escapeCell(run.modelName)} | ${run.tier} | ` +
       `${escapeCell(run.effort)} | ${usd(run.inputCostPerMTok)} / ${usd(run.outputCostPerMTok)} | ` +
-      `${measured(run, s.throughputTokensPerSec.mean.toFixed(0))} | ` +
-      `${measured(run, s.ttftMs.mean.toFixed(0))} | ` +
-      `${measured(run, s.totalLatencyMs.mean.toFixed(0))} | ` +
-      `${measured(run, s.maxSchemaDepth.mean.toFixed(0))} | ` +
-      `${measured(run, s.maxSchemaBreadth.mean.toFixed(0))} | ` +
-      `${measured(run, pct(s.lengthAccuracy.mean))} |`
+      `${measured(run, numberWithCi(s.throughputTokensPerSec, 0))} | ` +
+      `${measured(run, numberWithCi(s.ttftMs, 0))} | ` +
+      `${measured(run, numberWithCi(s.totalLatencyMs, 0))} | ` +
+      `${measured(run, numberWithCi(s.maxSchemaDepth, 0))} | ` +
+      `${measured(run, numberWithCi(s.maxSchemaBreadth, 0))} | ` +
+      `${measured(run, percentWithCi(s.lengthAccuracy, 0))} |`
     );
   });
   return `${header}\n${rows.join("\n")}`;
@@ -92,42 +112,42 @@ const ASPECTS: ReadonlyArray<Aspect> = [
     key: "throughputTokensPerSec",
     title: "Sustained throughput during generation",
     digits: 1,
-    format: (a) => `${a.mean.toFixed(0)} tok/s`,
+    format: (a) => numberWithCi(a, 0, "tok/s"),
     better: "higher",
   },
   {
     key: "ttftMs",
     title: "Time to first token",
     digits: 0,
-    format: (a) => `${a.mean.toFixed(0)} ms`,
+    format: (a) => numberWithCi(a, 0, "ms"),
     better: "lower",
   },
   {
     key: "totalLatencyMs",
     title: "Total response time",
     digits: 0,
-    format: (a) => `${a.mean.toFixed(0)} ms`,
+    format: (a) => numberWithCi(a, 0, "ms"),
     better: "lower",
   },
   {
     key: "maxSchemaDepth",
     title: "Maximum schema nesting depth accepted",
     digits: 0,
-    format: (a) => a.mean.toFixed(0),
+    format: (a) => numberWithCi(a, 0),
     better: "higher",
   },
   {
     key: "maxSchemaBreadth",
     title: "Maximum schema field breadth accepted",
     digits: 0,
-    format: (a) => a.mean.toFixed(0),
+    format: (a) => numberWithCi(a, 0),
     better: "higher",
   },
   {
     key: "lengthAccuracy",
     title: "Length instruction accuracy",
     digits: 3,
-    format: (a) => pct(a.mean),
+    format: (a) => percentWithCi(a, 0),
     better: "higher",
   },
 ];
@@ -169,11 +189,11 @@ const aspectSection = (
   measuredRuns: ReadonlyArray<ConfigRun>,
 ): string => {
   const header =
-    "| Configuration | Mean ± SD | Min–Max | n |\n| ------------- | --------- | ------- | - |";
+    "| Configuration | Mean ± 95% CI | Min–Max | n |\n| ------------- | ------------ | ------- | - |";
   const rows = configs.map((run) => {
     const a = run.stats[aspect.key];
     return (
-      `| ${label(run)} | ${measured(run, meanSd(a, aspect.digits))} | ` +
+      `| ${label(run)} | ${measured(run, aspect.format(a))} | ` +
       `${measured(run, range(a, aspect.digits))} | ${measured(run, String(a.n))} |`
     );
   });
@@ -343,7 +363,7 @@ export const renderComparisonReport = (
   const aspects =
     detail === "summary"
       ? ""
-      : `\n## Per-aspect measurements\n\nEach table reports the mean, sample standard deviation, observed min–max, and contributing trial count for one measured aspect.\n\n${ASPECTS.map(
+      : `\n## Per-aspect measurements\n\nEach table reports the mean ± 95% confidence interval (1.96 × sample standard deviation / √n), observed min–max, and contributing trial count for one measured aspect. A metric with n < 2 is shown as a mean only and labelled with its n.\n\n${ASPECTS.map(
           (a) => aspectSection(a, configs, measuredRuns),
         ).join("\n\n")}\n`;
 
@@ -379,9 +399,10 @@ unsupported rather than substituted.${noEffortText}
 **Trials and statistics.** Every probe runs **${trialCount}** per
 configuration. The pure functions in
 \`packages/tech/src/llm-model-comparison/domain/aggregate.ts\` reduce successful
-trial values to a mean and sample standard deviation (Bessel's n−1). Failed
-trials are excluded from aggregates, not counted as zero, and each table reports
-\`n\` beside the mean.
+trial values to mean, sample standard deviation (Bessel's n−1), and \`n\`.
+Tables render measured metrics as mean ± 95% confidence interval
+(1.96 × sample standard deviation / √n). Failed trials are excluded from
+aggregates, not counted as zero, and n < 2 metrics are shown without an interval.
 
 **Probes.** Each configuration is sent four probes through a provider-neutral
 \`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`:
@@ -428,7 +449,8 @@ ${comparisonTable(configs)}
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
 Throughput, TTFT, total latency, max schema depth, max schema breadth, and length
-accuracy are measured values, each reported as a mean over ${trialCount}. Effort
+accuracy are measured values, each reported as mean ± 95% confidence interval
+with n over ${trialCount}. Effort
 \`n/a\` means the model has no user-selectable effort control. \`n/a (fixtured)\`
 means the deterministic fixture client produced the metric cell because no API key
 was used. \`n/a (error)\` means every trial for that

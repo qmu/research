@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { configKey, mergeConfigs } from "./merge";
-import type { Aggregate, ConfigRun, Provenance } from "./types";
+import type { Aggregate, ConfigRun, Provenance, TrialResult } from "./types";
 import type { EffortLevel } from "./effort";
 
 // A minimal ConfigRun factory — only the fields the merge policy keys on
@@ -12,6 +12,7 @@ const cfg = (
   effort: EffortLevel,
   provenance: Provenance,
   tag: string,
+  trials: ReadonlyArray<TrialResult> = [],
 ): ConfigRun => ({
   id,
   provider: "anthropic",
@@ -27,7 +28,7 @@ const cfg = (
   provenance,
   measuredAt: "2026-01-01T00:00:00.000Z",
   trialsRequested: 1,
-  trials: [],
+  trials,
   stats: {
     throughputTokensPerSec: zero,
     ttftMs: zero,
@@ -44,6 +45,24 @@ const cfg = (
     bestFor: "",
     raw: "",
   },
+});
+
+const trial = (
+  trialNumber: number,
+  throughputTokensPerSec: number,
+): TrialResult => ({
+  trial: trialNumber,
+  ok: true,
+  error: null,
+  metrics: {
+    throughputTokensPerSec,
+    ttftMs: 100 * trialNumber,
+    totalLatencyMs: 300 * trialNumber,
+    maxSchemaDepth: 10 * trialNumber,
+    maxSchemaBreadth: 20 * trialNumber,
+    lengthAccuracy: 0.8 + trialNumber / 100,
+  },
+  calls: [],
 });
 
 const tagAt = (runs: ConfigRun[], id: string, effort: EffortLevel): string =>
@@ -117,5 +136,26 @@ describe("mergeConfigs", () => {
     expect(tagAt(merged, "m1", "low")).toBe("low-old");
     expect(tagAt(merged, "m1", "high")).toBe("high-fixed");
     expect(merged).toHaveLength(2);
+  });
+
+  it("recomputes merged stats from the artifact trial set", () => {
+    const merged = mergeConfigs(
+      [],
+      [cfg("m1", "low", "measured", "stale", [trial(1, 10), trial(2, 20)])],
+    );
+    const stat = merged[0]?.stats.throughputTokensPerSec;
+    expect(stat?.mean).toBe(15);
+    expect(stat?.n).toBe(2);
+    expect(stat?.stdDev).toBeCloseTo(Math.sqrt(50), 10);
+  });
+
+  it("preserves n=1 when merging a single successful trial", () => {
+    const merged = mergeConfigs(
+      [cfg("m1", "low", "error", "old-error")],
+      [cfg("m1", "low", "measured", "single", [trial(1, 42)])],
+    );
+    const stat = merged[0]?.stats.throughputTokensPerSec;
+    expect(tagAt(merged, "m1", "low")).toBe("single");
+    expect(stat).toMatchObject({ mean: 42, stdDev: 0, n: 1 });
   });
 });

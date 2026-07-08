@@ -10,12 +10,12 @@ import {
 import type { Aggregate, ConfigRun, HistoryFile, Provenance } from "./types";
 import type { EffortLevel } from "./effort";
 
-const agg = (mean: number): Aggregate => ({
+const agg = (mean: number, stdDev = 0, n = 1): Aggregate => ({
   mean,
-  stdDev: 0,
+  stdDev,
   min: mean,
   max: mean,
-  n: 1,
+  n,
 });
 
 const cfg = (
@@ -40,7 +40,7 @@ const cfg = (
   trialsRequested: 1,
   trials: [],
   stats: {
-    throughputTokensPerSec: agg(150),
+    throughputTokensPerSec: agg(150, 12, 3),
     ttftMs: agg(300),
     totalLatencyMs: agg(900),
     maxSchemaDepth: agg(12),
@@ -58,7 +58,7 @@ const cfg = (
 });
 
 describe("toHistoryPoint", () => {
-  it("projects the metric means + provenance + measuredAt, dropping raw trials", () => {
+  it("projects metric interval inputs + provenance + measuredAt, dropping raw trials", () => {
     const point = toHistoryPoint(
       cfg("m1", "high", "measured", "2026-02-02T00:00:00.000Z"),
     );
@@ -68,12 +68,12 @@ describe("toHistoryPoint", () => {
       modelName: "m1",
       effort: "high",
       provenance: "measured",
-      throughputTokensPerSec: 150,
-      ttftMs: 300,
-      totalLatencyMs: 900,
-      maxSchemaDepth: 12,
-      maxSchemaBreadth: 48,
-      lengthAccuracy: 0.9,
+      throughputTokensPerSec: { mean: 150, stdDev: 12, n: 3 },
+      ttftMs: { mean: 300, stdDev: 0, n: 1 },
+      totalLatencyMs: { mean: 900, stdDev: 0, n: 1 },
+      maxSchemaDepth: { mean: 12, stdDev: 0, n: 1 },
+      maxSchemaBreadth: { mean: 48, stdDev: 0, n: 1 },
+      lengthAccuracy: { mean: 0.9, stdDev: 0, n: 1 },
       measuredAt: "2026-02-02T00:00:00.000Z",
     });
   });

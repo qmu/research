@@ -28,9 +28,10 @@ unsupported rather than substituted. 5 configurations use Effort = `n/a`; those 
 **Trials and statistics.** Every probe runs **3 trials** per
 configuration. The pure functions in
 `packages/tech/src/llm-model-comparison/domain/aggregate.ts` reduce successful
-trial values to a mean and sample standard deviation (Bessel's n−1). Failed
-trials are excluded from aggregates, not counted as zero, and each table reports
-`n` beside the mean.
+trial values to mean, sample standard deviation (Bessel's n−1), and `n`.
+Tables render measured metrics as mean ± 95% confidence interval
+(1.96 × sample standard deviation / √n). Failed trials are excluded from
+aggregates, not counted as zero, and n < 2 metrics are shown without an interval.
 
 **Probes.** Each configuration is sent four probes through a provider-neutral
 `CompletionClient` anti-corruption layer in `packages/tech/src/vendors/llm/`:
@@ -146,7 +147,8 @@ self-test, not a real provider sweep.
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
 Throughput, TTFT, total latency, max schema depth, max schema breadth, and length
-accuracy are measured values, each reported as a mean over 3 trials. Effort
+accuracy are measured values, each reported as mean ± 95% confidence interval
+with n over 3 trials. Effort
 `n/a` means the model has no user-selectable effort control. `n/a (fixtured)`
 means the deterministic fixture client produced the metric cell because no API key
 was used. `n/a (error)` means every trial for that
@@ -155,12 +157,12 @@ only by color.
 
 ## Per-aspect measurements
 
-Each table reports the mean, sample standard deviation, observed min–max, and contributing trial count for one measured aspect.
+Each table reports the mean ± 95% confidence interval (1.96 × sample standard deviation / √n), observed min–max, and contributing trial count for one measured aspect. A metric with n < 2 is shown as a mean only and labelled with its n.
 
 ### Sustained throughput during generation
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -225,8 +227,8 @@ This run has no measured values for this aspect; every configuration was fixture
 
 ### Time to first token
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -291,8 +293,8 @@ This run has no measured values for this aspect; every configuration was fixture
 
 ### Total response time
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -357,8 +359,8 @@ This run has no measured values for this aspect; every configuration was fixture
 
 ### Maximum schema nesting depth accepted
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -423,8 +425,8 @@ This run has no measured values for this aspect; every configuration was fixture
 
 ### Maximum schema field breadth accepted
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
@@ -489,8 +491,8 @@ This run has no measured values for this aspect; every configuration was fixture
 
 ### Length instruction accuracy
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [medium] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |
 | Claude Fable 5 [high] | n/a (fixtured) | n/a (fixtured) | n/a (fixtured) |

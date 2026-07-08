@@ -10,9 +10,9 @@ import type {
 } from "./types";
 import type { EffortLevel } from "./effort";
 
-const agg = (mean: number, n: number): Aggregate => ({
+const agg = (mean: number, n: number, stdDev = 0): Aggregate => ({
   mean,
-  stdDev: 0,
+  stdDev,
   min: mean,
   max: mean,
   n,
@@ -117,6 +117,47 @@ describe("renderComparisonReport", () => {
     expect(md).toContain("## Cost and time");
     expect(md).toContain("--estimate");
     expect(md).toContain("API calls");
+  });
+
+  it("renders measured metrics as mean plus 95% confidence interval and n", () => {
+    const md = renderComparisonReport(
+      result([
+        config({
+          effort: "low",
+          provenance: "measured",
+          stats: {
+            throughputTokensPerSec: agg(150, 3, 10),
+            ttftMs: agg(320, 3),
+            totalLatencyMs: agg(900, 3),
+            maxSchemaDepth: agg(12, 3),
+            maxSchemaBreadth: agg(48, 3),
+            lengthAccuracy: agg(0.92, 3),
+          },
+        }),
+      ]),
+    );
+    expect(md).toContain("150 ± 11 (95% CI, n=3)");
+  });
+
+  it("labels n=1 metrics without fabricating an interval", () => {
+    const md = renderComparisonReport(
+      result([
+        config({
+          effort: "low",
+          provenance: "measured",
+          stats: {
+            throughputTokensPerSec: agg(150, 1),
+            ttftMs: agg(320, 1),
+            totalLatencyMs: agg(900, 1),
+            maxSchemaDepth: agg(12, 1),
+            maxSchemaBreadth: agg(48, 1),
+            lengthAccuracy: agg(0.92, 1),
+          },
+        }),
+      ]),
+    );
+    expect(md).toContain("150 (n=1)");
+    expect(md).not.toContain("150 ± 0 (95% CI, n=1)");
   });
 
   it("links the complete raw record artifact and renders per-config reviews", () => {

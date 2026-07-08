@@ -31,9 +31,10 @@ unsupported rather than substituted.
 **Trials and statistics.** Every probe runs **3 trials** per
 configuration. The pure functions in
 \`packages/tech/src/llm-model-comparison/domain/aggregate.ts\` reduce successful
-trial values to a mean and sample standard deviation (Bessel's n−1). Failed
-trials are excluded from aggregates, not counted as zero, and each table reports
-\`n\` beside the mean.
+trial values to mean, sample standard deviation (Bessel's n−1), and \`n\`.
+Tables render measured metrics as mean ± 95% confidence interval
+(1.96 × sample standard deviation / √n). Failed trials are excluded from
+aggregates, not counted as zero, and n < 2 metrics are shown without an interval.
 
 **Probes.** Each configuration is sent four probes through a provider-neutral
 \`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`:
@@ -87,12 +88,13 @@ self-test, not a real provider sweep.
 
 | Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy |
 | -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- |
-| anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 | 320 | 900 | 12 | 48 | 92% |
-| anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 | 320 | 900 | 12 | 48 | 92% |
+| anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) |
+| anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
 Throughput, TTFT, total latency, max schema depth, max schema breadth, and length
-accuracy are measured values, each reported as a mean over 3 trials. Effort
+accuracy are measured values, each reported as mean ± 95% confidence interval
+with n over 3 trials. Effort
 \`n/a\` means the model has no user-selectable effort control. \`n/a (fixtured)\`
 means the deterministic fixture client produced the metric cell because no API key
 was used. \`n/a (error)\` means every trial for that
@@ -101,61 +103,61 @@ only by color.
 
 ## Per-aspect measurements
 
-Each table reports the mean, sample standard deviation, observed min–max, and contributing trial count for one measured aspect.
+Each table reports the mean ± 95% confidence interval (1.96 × sample standard deviation / √n), observed min–max, and contributing trial count for one measured aspect. A metric with n < 2 is shown as a mean only and labelled with its n.
 
 ### Sustained throughput during generation
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
-| Test Model [low] | 150.0 ± 0.0 | 150.0–150.0 | 3 |
-| Test Model [high] | 150.0 ± 0.0 | 150.0–150.0 | 3 |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
+| Test Model [low] | 150 ± 0 tok/s (95% CI, n=3) | 150.0–150.0 | 3 |
+| Test Model [high] | 150 ± 0 tok/s (95% CI, n=3) | 150.0–150.0 | 3 |
 
-Highest measured of the 2 measured configuration(s): **Test Model [low]** at 150 tok/s. Opposite end of this measurement: Test Model [high] at 150 tok/s.
+Highest measured of the 2 measured configuration(s): **Test Model [low]** at 150 ± 0 tok/s (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 150 ± 0 tok/s (95% CI, n=3).
 
 ### Time to first token
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
-| Test Model [low] | 320 ± 0 | 320–320 | 3 |
-| Test Model [high] | 320 ± 0 | 320–320 | 3 |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
+| Test Model [low] | 320 ± 0 ms (95% CI, n=3) | 320–320 | 3 |
+| Test Model [high] | 320 ± 0 ms (95% CI, n=3) | 320–320 | 3 |
 
-Lowest measured of the 2 measured configuration(s): **Test Model [low]** at 320 ms. Opposite end of this measurement: Test Model [high] at 320 ms.
+Lowest measured of the 2 measured configuration(s): **Test Model [low]** at 320 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 320 ± 0 ms (95% CI, n=3).
 
 ### Total response time
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
-| Test Model [low] | 900 ± 0 | 900–900 | 3 |
-| Test Model [high] | 900 ± 0 | 900–900 | 3 |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
+| Test Model [low] | 900 ± 0 ms (95% CI, n=3) | 900–900 | 3 |
+| Test Model [high] | 900 ± 0 ms (95% CI, n=3) | 900–900 | 3 |
 
-Lowest measured of the 2 measured configuration(s): **Test Model [low]** at 900 ms. Opposite end of this measurement: Test Model [high] at 900 ms.
+Lowest measured of the 2 measured configuration(s): **Test Model [low]** at 900 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 900 ± 0 ms (95% CI, n=3).
 
 ### Maximum schema nesting depth accepted
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
-| Test Model [low] | 12 ± 0 | 12–12 | 3 |
-| Test Model [high] | 12 ± 0 | 12–12 | 3 |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
+| Test Model [low] | 12 ± 0 (95% CI, n=3) | 12–12 | 3 |
+| Test Model [high] | 12 ± 0 (95% CI, n=3) | 12–12 | 3 |
 
-Highest measured of the 2 measured configuration(s): **Test Model [low]** at 12. Opposite end of this measurement: Test Model [high] at 12.
+Highest measured of the 2 measured configuration(s): **Test Model [low]** at 12 ± 0 (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 12 ± 0 (95% CI, n=3).
 
 ### Maximum schema field breadth accepted
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
-| Test Model [low] | 48 ± 0 | 48–48 | 3 |
-| Test Model [high] | 48 ± 0 | 48–48 | 3 |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
+| Test Model [low] | 48 ± 0 (95% CI, n=3) | 48–48 | 3 |
+| Test Model [high] | 48 ± 0 (95% CI, n=3) | 48–48 | 3 |
 
-Highest measured of the 2 measured configuration(s): **Test Model [low]** at 48. Opposite end of this measurement: Test Model [high] at 48.
+Highest measured of the 2 measured configuration(s): **Test Model [low]** at 48 ± 0 (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 48 ± 0 (95% CI, n=3).
 
 ### Length instruction accuracy
 
-| Configuration | Mean ± SD | Min–Max | n |
-| ------------- | --------- | ------- | - |
-| Test Model [low] | 0.920 ± 0.000 | 0.920–0.920 | 3 |
-| Test Model [high] | 0.920 ± 0.000 | 0.920–0.920 | 3 |
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
+| Test Model [low] | 92% ± 0pp (95% CI, n=3) | 0.920–0.920 | 3 |
+| Test Model [high] | 92% ± 0pp (95% CI, n=3) | 0.920–0.920 | 3 |
 
-Highest measured of the 2 measured configuration(s): **Test Model [low]** at 92%. Opposite end of this measurement: Test Model [high] at 92%.
+Highest measured of the 2 measured configuration(s): **Test Model [low]** at 92% ± 0pp (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 92% ± 0pp (95% CI, n=3).
 
 ## Per-configuration developer reviews
 

@@ -113,6 +113,15 @@ export type Aggregate = Readonly<{
   n: number;
 }>;
 
+// The compact metric shape stored in history/trend projections. The full
+// artifact keeps min/max as `Aggregate`; history keeps the interval inputs needed
+// for charts without copying every raw trial.
+export type MetricStat = Readonly<{
+  mean: number;
+  stdDev: number;
+  n: number;
+}>;
+
 // The aggregated metrics for one configuration across its trials.
 export type ProbeStats = Readonly<{
   throughputTokensPerSec: Aggregate;
@@ -162,7 +171,7 @@ export type ConfigRun = ModelCard &
 //
 // A recurring sweep keeps a time series, not a single snapshot. The latest full
 // `.data.json` stays the complete record (every call's raw capture); the history
-// is a COMPACT per-config projection — just the metric means + provenance +
+// is a COMPACT per-config projection — metric mean/spread/n + provenance +
 // measured-at — small and diff-friendly so trends render from git without
 // decompressing every archived run. Each history entry links back (by timestamp)
 // to a gzipped full-record archive, so nothing is lost.
@@ -174,12 +183,12 @@ export type HistoryPoint = Readonly<{
   modelName: string;
   effort: EffortLevel;
   provenance: Provenance;
-  throughputTokensPerSec: number; // mean over the run's ok trials
-  ttftMs: number;
-  totalLatencyMs: number;
-  maxSchemaDepth: number;
-  maxSchemaBreadth: number;
-  lengthAccuracy: number; // 0..1
+  throughputTokensPerSec: MetricStat; // mean/spread over the run's ok trials
+  ttftMs: MetricStat;
+  totalLatencyMs: MetricStat;
+  maxSchemaDepth: MetricStat;
+  maxSchemaBreadth: MetricStat;
+  lengthAccuracy: MetricStat; // 0..1
   measuredAt: string; // when this cell was measured
 }>;
 
