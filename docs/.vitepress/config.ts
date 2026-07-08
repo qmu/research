@@ -27,6 +27,7 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Research reports", link: "/research-reports/" },
+      { text: "LLM基礎検証", link: "/llm-foundation/" },
     ],
     sidebar: [
       {
@@ -40,6 +41,10 @@ export default defineConfig({
           {
             text: "LLM model comparison",
             link: "/research-reports/llm-model-comparison",
+          },
+          {
+            text: "LLM基礎検証",
+            link: "/llm-foundation/",
           },
         ],
       },
