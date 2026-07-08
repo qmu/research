@@ -33,13 +33,20 @@ Run `make help`. Common: `make install`, `make build`, `make test`, `make lint`,
 
 This repository has two delivery surfaces:
 
-1. **Preview site** — `make docs` builds the VitePress site under `docs/`. It is a
-   static site; deploy the build output to the configured static host.
-2. **Foundational research** — `make publish` runs `scripts/publish-research.sh`,
-   which copies finished `docs/research-reports/<slug>.md` into
-   `../qmu-co-jp/docs/research/<slug>.md`. The corporate site (Astro) then renders
-   it at `/research/<slug>`. Commit and deploy `qmu-co-jp` separately from its own
-   repository.
+1. **Preview site** — `make docs` builds the VitePress site under `docs/`, which
+   is the canonical public home of the `LLM基礎検証` Japanese articles
+   (`docs/llm-foundation/`). It is a static site; deploy the build output to the
+   configured static host.
+2. **Foundational research** — this repository holds the source of truth for the
+   finished Japanese articles; publishing to the corporate site is a
+   one-directional copy. `scripts/publish-research.sh generate` runs the exporter
+   (`scripts/export-corporate-research.mjs`) to write regenerable data-skeleton
+   drafts into `docs/llm-foundation/_generated/` (gitignored), and
+   `scripts/publish-research.sh copy [--all|<slug>]` copies the canonical
+   `docs/llm-foundation/<slug>.md` articles into
+   `../qmu-co-jp/docs/llm-foundation-research/<slug>.md` as plain Markdown. The
+   corporate site (Astro) then renders them; commit and deploy `qmu-co-jp`
+   separately from its own repository. See `docs/adr/0003-*` for the boundary.
 
 CI must be green before merge to `main` (type-check, tests, lint, dependency
 audit, and — once the site lands — an accessibility check).
