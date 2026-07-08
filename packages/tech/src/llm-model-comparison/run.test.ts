@@ -31,6 +31,13 @@ const PROBE: ProbeParams = {
   },
   lengthTargetWords: 100,
   lengthTopic: "the water cycle",
+  informationAccuracy: {
+    dataset: "TruthfulQA",
+    manifestVersion: "test",
+    license: "Apache-2.0",
+    questionCount: 6,
+    scoring: "test",
+  },
 };
 
 const CARD: ModelCard = {
@@ -121,14 +128,16 @@ describe("runTrial", () => {
     const t = await runTrial(okClient, 1, PROBE, "low");
     expect(t.ok).toBe(true);
     expect(t.error).toBeNull();
-    // throughput + latency + depth axis (2,4) + breadth axis (2,4) + length
-    expect(t.calls).toHaveLength(7);
+    // throughput + latency + depth axis (2,4) + breadth axis (2,4) + length +
+    // six information-accuracy questions
+    expect(t.calls).toHaveLength(13);
     expect(t.calls[0].probe).toBe("throughput");
     expect(t.calls[0].ttftMs).toBe(20);
     expect(t.metrics.throughputTokensPerSec).toBeCloseTo(300, 6); // 30 / ((120-20)/1000)
     // Always conforms → each axis reaches its cap.
     expect(t.metrics.maxSchemaDepth).toBe(4);
     expect(t.metrics.maxSchemaBreadth).toBe(4);
+    expect(t.calls.filter((c) => c.probe === "information")).toHaveLength(6);
     const schemaCalls = t.calls.filter((c) => c.probe === "schema");
     expect(schemaCalls.some((c) => c.schemaAxis === "depth")).toBe(true);
     expect(schemaCalls.some((c) => c.schemaAxis === "breadth")).toBe(true);

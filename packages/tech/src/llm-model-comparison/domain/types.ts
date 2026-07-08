@@ -6,7 +6,7 @@ import type { EffortLevel } from "./effort";
 // The comparison scores each model over a MATRIX of configurations. A
 // configuration is a (model × effort level) pair: the same model at "low" and at
 // "high" reasoning effort is two configurations, measured independently. For each
-// configuration the runner measures four behaviors live, over MULTIPLE TRIALS, so
+// configuration the runner measures five behaviors live, over MULTIPLE TRIALS, so
 // each metric is a distribution (mean + spread), and an LLM judge reads the actual
 // trial outputs and writes a developer-facing review.
 //
@@ -46,7 +46,12 @@ export type ModelCard = Readonly<{
 
 // Which probe a captured call belongs to. Each probe exercises a distinct,
 // separately-reported behavior.
-export type Probe = "throughput" | "latency" | "schema" | "length";
+export type Probe =
+  | "throughput"
+  | "latency"
+  | "schema"
+  | "length"
+  | "information";
 
 // One API call made during a trial, captured verbatim. This is the transparency
 // substrate the report surfaces and the JSON run-artifact preserves in full — it
@@ -72,6 +77,7 @@ export type CallRecord = Readonly<{
   schemaAxis: "depth" | "breadth" | null; // schema calls: the escalated axis
   schemaValue: number | null; // schema calls: the depth/breadth attempted
   schemaConforms: boolean | null; // schema calls: did the output conform
+  informationQuestionId: string | null; // information calls: stable manifest id
   error: string | null; // the failure/rejection, verbatim, when the call failed
 }>;
 
@@ -87,6 +93,7 @@ export type TrialMetrics = Readonly<{
   maxSchemaDepth: number; // deepest conforming nesting (breadth 1)
   maxSchemaBreadth: number; // widest conforming field count (depth 1)
   lengthAccuracy: number; // 0..1
+  informationAccuracy: number; // deterministic alias/exact-match token F1, 0..1
 }>;
 
 // One trial: a full probe pass (throughput, latency, schema escalation, length)
@@ -136,6 +143,7 @@ export type ProbeStats = Readonly<{
   maxSchemaDepth: Aggregate;
   maxSchemaBreadth: Aggregate;
   lengthAccuracy: Aggregate;
+  informationAccuracy: Aggregate;
 }>;
 
 // How a configuration's measured columns were produced. `measured` = live API
@@ -195,6 +203,7 @@ export type HistoryPoint = Readonly<{
   maxSchemaDepth: MetricStat;
   maxSchemaBreadth: MetricStat;
   lengthAccuracy: MetricStat; // 0..1
+  informationAccuracy: MetricStat; // 0..1 deterministic factual QA F1
   measuredAt: string; // when this cell was measured
 }>;
 
@@ -236,6 +245,14 @@ export type SchemaProbeParams = Readonly<{
   maxTokens: number; // output budget for structured-output calls
 }>;
 
+export type InformationAccuracyProbeParams = Readonly<{
+  dataset: string;
+  manifestVersion: string;
+  license: string;
+  questionCount: number;
+  scoring: string;
+}>;
+
 // Probe parameters the runner owns and echoes here for the Method section. The
 // domain does not decide these — they are orchestration policy, kept out of the
 // pure graders.
@@ -246,6 +263,7 @@ export type ProbeParams = Readonly<{
   schemaProbe: SchemaProbeParams; // adaptive per-axis escalation
   lengthTargetWords: number;
   lengthTopic: string;
+  informationAccuracy: InformationAccuracyProbeParams;
 }>;
 
 // A pre-run estimate of the cost of a real sweep: how many configurations, how

@@ -54,6 +54,10 @@ export const toHistoryPoint = (run: ConfigRun): HistoryPoint => ({
   maxSchemaDepth: toMetricStat(run.stats.maxSchemaDepth, run.provenance),
   maxSchemaBreadth: toMetricStat(run.stats.maxSchemaBreadth, run.provenance),
   lengthAccuracy: toMetricStat(run.stats.lengthAccuracy, run.provenance),
+  informationAccuracy: toMetricStat(
+    run.stats.informationAccuracy,
+    run.provenance,
+  ),
   measuredAt: run.measuredAt,
 });
 

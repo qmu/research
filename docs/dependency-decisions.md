@@ -159,6 +159,23 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 - **Exit strategy**: The manifest + fetch script are self-contained; swapping in a
   different BEIR dataset is a manifest + loader change, no code elsewhere.
 
+### TruthfulQA dataset — small manifest subset, not a package
+
+- **Reason**: The `llm-model-comparison` real run needs a citable public factual
+  QA dataset with reference answers so information accuracy can be scored by a
+  deterministic exact-match/F1 scorer, not by an LLM judge. TruthfulQA is used as
+  a small short-answer subset for the information-accuracy probe.
+- **License**: TruthfulQA is **Apache-2.0**. The upstream repository states that
+  `TruthfulQA.csv` contains the full benchmark questions and reference answers.
+  Because the selected QA items are short and permissively licensed, this repo
+  commits only a pinned subset manifest of question ids + question text +
+  reference answers + accepted aliases + normalization rules at
+  `packages/tech/src/llm-model-comparison/domain/data/truthfulqa-information-accuracy.manifest.json`.
+  No large corpus text or generated model outputs are redistributed.
+- **Exit strategy**: The manifest and scorer are self-contained; swapping in a
+  different permissive factual-QA dataset is a manifest + prompt/scorer fixture
+  change, no provider adapter change.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

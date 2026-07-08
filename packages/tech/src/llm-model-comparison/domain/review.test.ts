@@ -16,6 +16,7 @@ const subject = {
   maxSchemaDepth: 8,
   maxSchemaBreadth: 24,
   lengthAccuracy: 0.92,
+  informationAccuracy: 0.75,
   sampleOutputs: ["Some sample output about the water cycle."],
 } satisfies ReviewSubject;
 
@@ -25,6 +26,7 @@ describe("buildReviewPrompt", () => {
     expect(p).toContain("Test Model");
     expect(p).toContain("high");
     expect(p).toContain("120.4 tokens/sec");
+    expect(p).toContain("75%");
     expect(p).toContain("water cycle");
     expect(p).toContain("strengths");
   });

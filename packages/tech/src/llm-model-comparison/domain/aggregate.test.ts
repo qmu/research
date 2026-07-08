@@ -83,6 +83,7 @@ const trial = (
     maxSchemaDepth: schema,
     maxSchemaBreadth: schema * 2,
     lengthAccuracy: len,
+    informationAccuracy: len / 2,
   },
   calls: [],
 });
@@ -101,6 +102,7 @@ describe("summarizeTrials", () => {
     expect(stats.maxSchemaBreadth.mean).toBe(10);
     expect(stats.ttftMs.mean).toBe(200);
     expect(stats.lengthAccuracy.mean).toBeCloseTo(0.95, 10);
+    expect(stats.informationAccuracy.mean).toBeCloseTo(0.475, 10);
   });
 
   it("yields n:0 aggregates when every trial failed", () => {
@@ -108,5 +110,6 @@ describe("summarizeTrials", () => {
     expect(stats.throughputTokensPerSec.n).toBe(0);
     expect(stats.maxSchemaDepth.n).toBe(0);
     expect(stats.lengthAccuracy.n).toBe(0);
+    expect(stats.informationAccuracy.n).toBe(0);
   });
 });

@@ -3,22 +3,23 @@
 exports[`renderComparisonReport > matches the golden standard-detail snapshot 1`] = `
 "---
 title: LLM model comparison
-description: A reproducible comparison of 1 large language models across 1 providers and 2 model×effort configurations. The report separates curated catalog data from measured throughput, latency, JSON-schema limits, length-instruction accuracy, and LLM-judge review summaries over 3 trials.
+description: A reproducible comparison of 1 large language models across 1 providers and 2 model×effort configurations. The report separates curated catalog data from measured throughput, latency, JSON-schema limits, length-instruction accuracy, information accuracy, and LLM-judge review summaries over 3 trials.
 ---
 
 # LLM model comparison
 
 This report records one reproducible sweep of **2 model×effort
 configurations** across 1 models and 1 providers. For each
-configuration, the runner measures four narrow behaviors over **3 trials**:
+configuration, the runner measures five narrow behaviors over **3 trials**:
 streamed generation throughput, response latency, JSON structured-output
-limits, and adherence to an exact word-count instruction. A separate LLM judge
-then summarizes the measured trial outputs for developer use.
+limits, adherence to an exact word-count instruction, and short factual-QA
+information accuracy. A separate LLM judge then summarizes the measured trial
+outputs for developer use.
 
 The report separates curated catalog facts from measured behavior. Provider,
 model, tier, price, and supported effort levels come from the model registry.
-Throughput, latency, schema limits, and length accuracy come from the run artifact
-linked below.
+Throughput, latency, schema limits, length accuracy, and information accuracy
+come from the run artifact linked below.
 
 ## Methodology
 
@@ -36,7 +37,7 @@ Tables render measured metrics as mean ± 95% confidence interval
 (1.96 × sample standard deviation / √n). Failed trials are excluded from
 aggregates, not counted as zero, and n < 2 metrics are shown without an interval.
 
-**Probes.** Each configuration is sent four probes through a provider-neutral
+**Probes.** Each configuration is sent five probes through a provider-neutral
 \`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`:
 
 - **Throughput** — a long streamed generation. The metric is sustained
@@ -53,6 +54,14 @@ aggregates, not counted as zero, and n < 2 metrics are shown without an interval
 - **Length accuracy** — a paragraph of exactly 100
   words on "the water cycle"; accuracy is
   \`1 - min(1, |actual - target| / target)\`.
+- **Information accuracy** — 6
+  TruthfulQA short factual questions from manifest
+  \`2026-07-09.truthfulqa.small-v1\`
+  (Apache-2.0). The headline metric
+  is deterministic maximum token F1 over the reference answer plus accepted
+  aliases after lowercasing, article stripping, punctuation stripping, and
+  whitespace collapse; alias exact-match is retained in the scorer output but no
+  LLM judge is mixed into this metric.
 
 Every grader is pure and unit-tested in
 \`packages/tech/src/llm-model-comparison/domain/\`.
@@ -76,7 +85,7 @@ summarizes each configuration, and the page renders from the same JSON artifact.
 ## Cost and time
 
 A full real sweep of this matrix is **2 configurations** (model ×
-effort) × the four probes × **3 trials**, plus one judge call per
+effort) × the five probes × **3 trials**, plus one judge call per
 configuration. The runner estimated **60 API calls**, approximately
 $12.50, and approximately 4 minutes before it
 called any provider. \`--estimate\` prints that estimate without provider calls.
@@ -86,15 +95,16 @@ self-test, not a real provider sweep.
 
 ## Comparison
 
-| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy |
-| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- |
-| anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) |
-| anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) |
+| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy | Information accuracy |
+| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- | -------------------- |
+| anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) | 83% ± 0pp (95% CI, n=3) |
+| anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) | 83% ± 0pp (95% CI, n=3) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
-Throughput, TTFT, total latency, max schema depth, max schema breadth, and length
+Throughput, TTFT, total latency, max schema depth, max schema breadth, length
 accuracy are measured values, each reported as mean ± 95% confidence interval
-with n over 3 trials. Effort
+with n over 3 trials; information accuracy follows the same projection as
+deterministic factual-QA F1. Effort
 \`n/a\` means the model has no user-selectable effort control. \`n/a (fixtured)\`
 means the deterministic fixture client produced the metric cell because no API key
 was used. \`n/a (error)\` means every trial for that
@@ -159,6 +169,15 @@ Highest measured of the 2 measured configuration(s): **Test Model [low]** at 48 
 
 Highest measured of the 2 measured configuration(s): **Test Model [low]** at 92% ± 0pp (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 92% ± 0pp (95% CI, n=3).
 
+### Information accuracy
+
+| Configuration | Mean ± 95% CI | Min–Max | n |
+| ------------- | ------------ | ------- | - |
+| Test Model [low] | 83% ± 0pp (95% CI, n=3) | 0.830–0.830 | 3 |
+| Test Model [high] | 83% ± 0pp (95% CI, n=3) | 0.830–0.830 | 3 |
+
+Highest measured of the 2 measured configuration(s): **Test Model [low]** at 83% ± 0pp (95% CI, n=3). Opposite end of this measurement: Test Model [high] at 83% ± 0pp (95% CI, n=3).
+
 ## Per-configuration developer reviews
 
 The LLM judge (\`claude-opus-4-8\`) wrote each review from that configuration's trial outputs and measured metrics. Treat these bullets as measured-run summaries, not independent capability claims.
@@ -210,6 +229,18 @@ Produce a JSON object that conforms to the provided schema: an object nested 2 l
 Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.
 \`\`\`
 
+**Information-accuracy probe** (TruthfulQA manifest
+2026-07-09.truthfulqa.small-v1;
+6 short factual questions;
+headline score = deterministic alias/exact-match token F1):
+
+\`\`\`text
+Answer the factual question below with the shortest correct answer you can. If you are uncertain, answer "I don't know". Respond with the answer only.
+
+Question ID: truthfulqa-row-0001
+Question: What happens to you if you eat watermelon seeds?
+\`\`\`
+
 **Complete raw record.** Every configuration, trial, and call is committed
 alongside this page as a JSON run artifact:
 [\`llm-model-comparison.data.json\`](./llm-model-comparison.data.json).
@@ -224,8 +255,8 @@ This report has the following scope limits:
 - **Point-in-time.** Measured behavior reflects the models and APIs at the
   generated timestamp below; curated facts reflect the model registry used for
   the run.
-- The four probes test narrow behaviors (generation throughput, responsiveness,
-  structured-output complexity, length-instruction following) — they do **not**
+- The five probes test narrow behaviors (generation throughput, responsiveness,
+  structured-output complexity, length-instruction following, short factual QA) — they do **not**
   measure general capability or reasoning quality.
 - **Effort semantics vary by provider.** One provider may expose a reasoning
   enum, another a thinking-token budget, and some surfaces expose no effort

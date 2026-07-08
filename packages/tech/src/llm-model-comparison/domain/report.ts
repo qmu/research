@@ -12,6 +12,10 @@ import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import { buildThroughputPrompt } from "./throughput";
 import { buildSchemaPrompt } from "./json-schema";
 import { buildLengthPrompt } from "./length-accuracy";
+import {
+  INFORMATION_ACCURACY_MANIFEST,
+  buildInformationAccuracyPrompt,
+} from "./information-accuracy";
 import { isNoEffortLevel } from "./effort";
 
 // Render the comparison result page as Markdown — a comprehensive, objective
@@ -86,8 +90,8 @@ const configKey = (run: ConfigRun): string => `${run.id}-${run.effort}`;
 
 const comparisonTable = (configs: ReadonlyArray<ConfigRun>): string => {
   const header =
-    "| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy |\n" +
-    "| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- |";
+    "| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy | Information accuracy |\n" +
+    "| -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- | -------------------- |";
   const rows = configs.map((run) => {
     const s = run.stats;
     return (
@@ -98,7 +102,8 @@ const comparisonTable = (configs: ReadonlyArray<ConfigRun>): string => {
       `${measured(run, numberWithCi(s.totalLatencyMs, 0))} | ` +
       `${measured(run, numberWithCi(s.maxSchemaDepth, 0))} | ` +
       `${measured(run, numberWithCi(s.maxSchemaBreadth, 0))} | ` +
-      `${measured(run, percentWithCi(s.lengthAccuracy, 0))} |`
+      `${measured(run, percentWithCi(s.lengthAccuracy, 0))} | ` +
+      `${measured(run, percentWithCi(s.informationAccuracy, 0))} |`
     );
   });
   return `${header}\n${rows.join("\n")}`;
@@ -157,6 +162,13 @@ const ASPECTS: ReadonlyArray<Aspect> = [
     format: (a) => percentWithCi(a, 0),
     better: "higher",
   },
+  {
+    key: "informationAccuracy",
+    title: "Information accuracy",
+    digits: 3,
+    format: (a) => percentWithCi(a, 0),
+    better: "higher",
+  },
 ];
 
 type HistoryMetricKey =
@@ -165,7 +177,8 @@ type HistoryMetricKey =
   | "totalLatencyMs"
   | "maxSchemaDepth"
   | "maxSchemaBreadth"
-  | "lengthAccuracy";
+  | "lengthAccuracy"
+  | "informationAccuracy";
 
 type HistoryMetric = Readonly<{
   key: HistoryMetricKey;
@@ -222,6 +235,12 @@ const HISTORY_METRICS: ReadonlyArray<HistoryMetric> = [
     key: "lengthAccuracy",
     title: "Length accuracy history",
     yLabel: "Accuracy",
+    valueDigits: 2,
+  },
+  {
+    key: "informationAccuracy",
+    title: "Information accuracy history",
+    yLabel: "F1",
     valueDigits: 2,
   },
 ];
@@ -434,13 +453,14 @@ const perTrialTable = (run: ConfigRun): string => {
     return "";
   }
   const header =
-    "| Trial | Throughput (tok/s) | TTFT (ms) | Total (ms) | Max depth | Max breadth | Length acc |\n" +
-    "| ----- | ------------------ | --------- | ---------- | --------- | ----------- | ---------- |";
+    "| Trial | Throughput (tok/s) | TTFT (ms) | Total (ms) | Max depth | Max breadth | Length acc | Information acc |\n" +
+    "| ----- | ------------------ | --------- | ---------- | --------- | ----------- | ---------- | --------------- |";
   const rows = okTrials.map(
     (t) =>
       `| ${t.trial} | ${t.metrics.throughputTokensPerSec.toFixed(0)} | ` +
       `${t.metrics.ttftMs.toFixed(0)} | ${t.metrics.totalLatencyMs.toFixed(0)} | ` +
-      `${t.metrics.maxSchemaDepth} | ${t.metrics.maxSchemaBreadth} | ${pct(t.metrics.lengthAccuracy)} |`,
+      `${t.metrics.maxSchemaDepth} | ${t.metrics.maxSchemaBreadth} | ${pct(t.metrics.lengthAccuracy)} | ` +
+      `${pct(t.metrics.informationAccuracy)} |`,
   );
   return `#### ${label(run)}\n\n${header}\n${rows.join("\n")}`;
 };
@@ -468,6 +488,9 @@ const transparencySection = (result: ComparisonResult): string => {
   const lengthPrompt = buildLengthPrompt(
     result.probe.lengthTargetWords,
     result.probe.lengthTopic,
+  );
+  const informationPrompt = buildInformationAccuracyPrompt(
+    INFORMATION_ACCURACY_MANIFEST.questions[0],
   );
   const sp = result.probe.schemaProbe;
   const schemaPrompt = buildSchemaPrompt({ depth: sp.depth.start, breadth: 1 });
@@ -507,6 +530,15 @@ ${schemaPrompt}
 ${lengthPrompt}
 \`\`\`
 
+**Information-accuracy probe** (TruthfulQA manifest
+${escapeCell(result.probe.informationAccuracy.manifestVersion)};
+${result.probe.informationAccuracy.questionCount} short factual questions;
+headline score = deterministic alias/exact-match token F1):
+
+\`\`\`text
+${informationPrompt}
+\`\`\`
+
 **Complete raw record.** Every configuration, trial, and call is committed
 alongside this page as a JSON run artifact:
 [\`${escapeCell(result.artifactPath)}\`](./${escapeCell(result.artifactPath)}).
@@ -520,7 +552,7 @@ const costSection = (result: ComparisonResult): string => {
   return `## Cost and time
 
 A full real sweep of this matrix is **${e.configCount} configurations** (model ×
-effort) × the four probes × **${plural(result.trials, "trial")}**, plus one judge call per
+effort) × the five probes × **${plural(result.trials, "trial")}**, plus one judge call per
 configuration. The runner estimated **${e.callCount} API calls**, approximately
 ${usd(e.usdCost)}, and approximately ${e.etaMinutes.toFixed(0)} minutes before it
 called any provider. \`--estimate\` prints that estimate without provider calls.
@@ -561,22 +593,23 @@ export const renderComparisonReport = (
 
   return `---
 title: LLM model comparison
-description: A reproducible comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations. The report separates curated catalog data from measured throughput, latency, JSON-schema limits, length-instruction accuracy, and LLM-judge review summaries over ${trialCount}.
+description: A reproducible comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations. The report separates curated catalog data from measured throughput, latency, JSON-schema limits, length-instruction accuracy, information accuracy, and LLM-judge review summaries over ${trialCount}.
 ---
 
 # LLM model comparison
 
 This report records one reproducible sweep of **${configs.length} model×effort
 configurations** across ${models} models and ${providers} providers. For each
-configuration, the runner measures four narrow behaviors over **${trialCount}**:
+configuration, the runner measures five narrow behaviors over **${trialCount}**:
 streamed generation throughput, response latency, JSON structured-output
-limits, and adherence to an exact word-count instruction. A separate LLM judge
-then summarizes the measured trial outputs for developer use.
+limits, adherence to an exact word-count instruction, and short factual-QA
+information accuracy. A separate LLM judge then summarizes the measured trial
+outputs for developer use.
 
 The report separates curated catalog facts from measured behavior. Provider,
 model, tier, price, and supported effort levels come from the model registry.
-Throughput, latency, schema limits, and length accuracy come from the run artifact
-linked below.
+Throughput, latency, schema limits, length accuracy, and information accuracy
+come from the run artifact linked below.
 
 ## Methodology
 
@@ -594,7 +627,7 @@ Tables render measured metrics as mean ± 95% confidence interval
 (1.96 × sample standard deviation / √n). Failed trials are excluded from
 aggregates, not counted as zero, and n < 2 metrics are shown without an interval.
 
-**Probes.** Each configuration is sent four probes through a provider-neutral
+**Probes.** Each configuration is sent five probes through a provider-neutral
 \`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`:
 
 - **Throughput** — a long streamed generation. The metric is sustained
@@ -611,6 +644,14 @@ aggregates, not counted as zero, and n < 2 metrics are shown without an interval
 - **Length accuracy** — a paragraph of exactly ${result.probe.lengthTargetWords}
   words on "${escapeCell(result.probe.lengthTopic)}"; accuracy is
   \`1 - min(1, |actual - target| / target)\`.
+- **Information accuracy** — ${result.probe.informationAccuracy.questionCount}
+  TruthfulQA short factual questions from manifest
+  \`${escapeCell(result.probe.informationAccuracy.manifestVersion)}\`
+  (${escapeCell(result.probe.informationAccuracy.license)}). The headline metric
+  is deterministic maximum token F1 over the reference answer plus accepted
+  aliases after lowercasing, article stripping, punctuation stripping, and
+  whitespace collapse; alias exact-match is retained in the scorer output but no
+  LLM judge is mixed into this metric.
 
 Every grader is pure and unit-tested in
 \`packages/tech/src/llm-model-comparison/domain/\`.
@@ -638,9 +679,10 @@ ${costSection(result)}
 ${comparisonTable(configs)}
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
-Throughput, TTFT, total latency, max schema depth, max schema breadth, and length
+Throughput, TTFT, total latency, max schema depth, max schema breadth, length
 accuracy are measured values, each reported as mean ± 95% confidence interval
-with n over ${trialCount}. Effort
+with n over ${trialCount}; information accuracy follows the same projection as
+deterministic factual-QA F1. Effort
 \`n/a\` means the model has no user-selectable effort control. \`n/a (fixtured)\`
 means the deterministic fixture client produced the metric cell because no API key
 was used. \`n/a (error)\` means every trial for that
@@ -660,8 +702,8 @@ This report has the following scope limits:
 - **Point-in-time.** Measured behavior reflects the models and APIs at the
   generated timestamp below; curated facts reflect the model registry used for
   the run.
-- The four probes test narrow behaviors (generation throughput, responsiveness,
-  structured-output complexity, length-instruction following) — they do **not**
+- The five probes test narrow behaviors (generation throughput, responsiveness,
+  structured-output complexity, length-instruction following, short factual QA) — they do **not**
   measure general capability or reasoning quality.
 - **Effort semantics vary by provider.** One provider may expose a reasoning
   enum, another a thinking-token budget, and some surfaces expose no effort

@@ -50,5 +50,8 @@ export const summarizeTrials = (
     maxSchemaDepth: aggregate(ok.map((t) => t.metrics.maxSchemaDepth)),
     maxSchemaBreadth: aggregate(ok.map((t) => t.metrics.maxSchemaBreadth)),
     lengthAccuracy: aggregate(ok.map((t) => t.metrics.lengthAccuracy)),
+    informationAccuracy: aggregate(
+      ok.map((t) => t.metrics.informationAccuracy),
+    ),
   };
 };

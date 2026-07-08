@@ -46,6 +46,7 @@ const cfg = (
     maxSchemaDepth: agg(12),
     maxSchemaBreadth: agg(48),
     lengthAccuracy: agg(0.9),
+    informationAccuracy: agg(0.8),
   },
   review: {
     provenance: "skipped",
@@ -79,6 +80,12 @@ describe("toHistoryPoint", () => {
       maxSchemaDepth: { mean: 12, stdDev: 0, n: 1, method: "single-trial" },
       maxSchemaBreadth: { mean: 48, stdDev: 0, n: 1, method: "single-trial" },
       lengthAccuracy: { mean: 0.9, stdDev: 0, n: 1, method: "single-trial" },
+      informationAccuracy: {
+        mean: 0.8,
+        stdDev: 0,
+        n: 1,
+        method: "single-trial",
+      },
       measuredAt: "2026-02-02T00:00:00.000Z",
     });
   });

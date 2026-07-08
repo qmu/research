@@ -35,6 +35,11 @@ import {
   wordCount,
 } from "./domain/length-accuracy";
 import {
+  INFORMATION_ACCURACY_MANIFEST,
+  buildInformationAccuracyPrompt,
+  scoreInformationAccuracy,
+} from "./domain/information-accuracy";
+import {
   buildReviewPrompt,
   parseReview,
   reviewSchema,
@@ -102,6 +107,7 @@ export const runTrial = async (
       schemaAxis: null,
       schemaValue: null,
       schemaConforms: null,
+      informationQuestionId: null,
       error: null,
     });
     const throughputTokensPerSec = sustainedTokensPerSecond(
@@ -127,6 +133,7 @@ export const runTrial = async (
       schemaAxis: null,
       schemaValue: null,
       schemaConforms: null,
+      informationQuestionId: null,
       error: null,
     });
     const latency = normalizeLatency(lat.ttftMs, lat.elapsedMs);
@@ -182,6 +189,7 @@ export const runTrial = async (
           schemaAxis: axis,
           schemaValue: value,
           schemaConforms: conforms,
+          informationQuestionId: null,
           error: callError,
         });
         state = advanceAxis(state, conforms);
@@ -215,11 +223,44 @@ export const runTrial = async (
       schemaAxis: null,
       schemaValue: null,
       schemaConforms: null,
+      informationQuestionId: null,
       error: null,
     });
     const accuracy = lengthAccuracy(
       probe.lengthTargetWords,
       wordCount(lengthCompletion.text),
+    );
+
+    // --- information accuracy: short factual QA with deterministic scoring ----
+    const informationAnswers: { id: string; answer: string }[] = [];
+    for (const item of INFORMATION_ACCURACY_MANIFEST.questions) {
+      const informationPrompt = buildInformationAccuracyPrompt(item);
+      const informationCompletion = await withTimeout(
+        client.complete(informationPrompt, { effort, maxTokens: 64 }),
+        `information:${item.id}`,
+      );
+      calls.push({
+        probe: "information",
+        effort,
+        prompt: informationPrompt,
+        rawOutput: informationCompletion.text,
+        outputTokens: informationCompletion.outputTokens,
+        elapsedMs: informationCompletion.elapsedMs,
+        ttftMs: null,
+        schemaAxis: null,
+        schemaValue: null,
+        schemaConforms: null,
+        informationQuestionId: item.id,
+        error: null,
+      });
+      informationAnswers.push({
+        id: item.id,
+        answer: informationCompletion.text,
+      });
+    }
+    const informationScore = scoreInformationAccuracy(
+      INFORMATION_ACCURACY_MANIFEST,
+      informationAnswers,
     );
 
     return {
@@ -233,6 +274,7 @@ export const runTrial = async (
         maxSchemaDepth,
         maxSchemaBreadth,
         lengthAccuracy: accuracy,
+        informationAccuracy: informationScore.f1,
       },
       calls,
     };
@@ -248,6 +290,7 @@ export const runTrial = async (
         maxSchemaDepth: 0,
         maxSchemaBreadth: 0,
         lengthAccuracy: 0,
+        informationAccuracy: 0,
       },
       calls,
     };
@@ -276,7 +319,12 @@ const sampleOutputs = (trials: ReadonlyArray<TrialResult>): string[] => {
   const samples: string[] = [];
   for (const t of trials) {
     if (!t.ok) continue;
-    for (const probe of ["throughput", "schema", "length"] as const) {
+    for (const probe of [
+      "throughput",
+      "schema",
+      "length",
+      "information",
+    ] as const) {
       const call = t.calls.find((c) => c.probe === probe && c.rawOutput !== "");
       if (call) samples.push(call.rawOutput);
       if (samples.length >= 3) return samples;
@@ -313,6 +361,7 @@ const runJudge = async (
           maxSchemaDepth: stats.maxSchemaDepth.mean,
           maxSchemaBreadth: stats.maxSchemaBreadth.mean,
           lengthAccuracy: stats.lengthAccuracy.mean,
+          informationAccuracy: stats.informationAccuracy.mean,
           sampleOutputs: sampleOutputs(trials),
         }),
         reviewSchema(),
@@ -395,6 +444,7 @@ export const errorRun = (
         maxSchemaDepth: 0,
         maxSchemaBreadth: 0,
         lengthAccuracy: 0,
+        informationAccuracy: 0,
       },
       calls: [],
     },
@@ -406,6 +456,7 @@ export const errorRun = (
     maxSchemaDepth: zeroStat,
     maxSchemaBreadth: zeroStat,
     lengthAccuracy: zeroStat,
+    informationAccuracy: zeroStat,
   },
   review: skippedReview(judgeModel),
 });

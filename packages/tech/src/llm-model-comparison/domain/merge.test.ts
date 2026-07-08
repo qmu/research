@@ -36,6 +36,7 @@ const cfg = (
     maxSchemaDepth: zero,
     maxSchemaBreadth: zero,
     lengthAccuracy: zero,
+    informationAccuracy: zero,
   },
   review: {
     provenance: "skipped",
@@ -61,6 +62,7 @@ const trial = (
     maxSchemaDepth: 10 * trialNumber,
     maxSchemaBreadth: 20 * trialNumber,
     lengthAccuracy: 0.8 + trialNumber / 100,
+    informationAccuracy: 0.7 + trialNumber / 100,
   },
   calls: [],
 });

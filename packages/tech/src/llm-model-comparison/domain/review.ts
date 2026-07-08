@@ -20,6 +20,7 @@ export type ReviewSubject = Readonly<{
   maxSchemaDepth: number;
   maxSchemaBreadth: number;
   lengthAccuracy: number;
+  informationAccuracy: number;
   sampleOutputs: ReadonlyArray<string>;
 }>;
 
@@ -58,7 +59,8 @@ export const buildReviewPrompt = (subject: ReviewSubject): string => {
     `- Total response time: ${subject.totalLatencyMs.toFixed(0)} ms\n` +
     `- Tested max JSON-schema nesting depth: ${subject.maxSchemaDepth.toFixed(0)}\n` +
     `- Tested max JSON-schema field breadth: ${subject.maxSchemaBreadth.toFixed(0)}\n` +
-    `- Length-instruction accuracy: ${(subject.lengthAccuracy * 100).toFixed(0)}%\n\n` +
+    `- Length-instruction accuracy: ${(subject.lengthAccuracy * 100).toFixed(0)}%\n` +
+    `- Information-accuracy QA F1: ${(subject.informationAccuracy * 100).toFixed(0)}%\n\n` +
     `Sample outputs:\n${samples || "(none)"}\n\n` +
     `Respond with a JSON object having "strengths", "weaknesses", and "bestFor" ` +
     `(what workloads this model+effort suits). Keep each to one or two sentences.`

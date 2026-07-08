@@ -53,6 +53,7 @@ const config = (
     maxSchemaDepth: agg(12, 3),
     maxSchemaBreadth: agg(48, 3),
     lengthAccuracy: agg(0.92, 3),
+    informationAccuracy: agg(0.83, 3),
   },
   review: review(overrides.provenance === "error" ? "skipped" : "judged"),
   ...overrides,
@@ -70,6 +71,13 @@ const PROBE: ProbeParams = {
   },
   lengthTargetWords: 100,
   lengthTopic: "the water cycle",
+  informationAccuracy: {
+    dataset: "TruthfulQA",
+    manifestVersion: "2026-07-09.truthfulqa.small-v1",
+    license: "Apache-2.0",
+    questionCount: 6,
+    scoring: "Alias exact-match plus maximum token F1",
+  },
 };
 
 const result = (configs: ReadonlyArray<ConfigRun>): ComparisonResult => ({
@@ -97,6 +105,7 @@ describe("renderComparisonReport", () => {
     expect(md).toContain("Total latency (ms)");
     expect(md).toContain("Max schema depth");
     expect(md).toContain("Max schema breadth");
+    expect(md).toContain("Information accuracy");
   });
 
   it("never presents a fixtured or errored configuration as a live measurement", () => {
@@ -132,6 +141,7 @@ describe("renderComparisonReport", () => {
             maxSchemaDepth: agg(12, 3),
             maxSchemaBreadth: agg(48, 3),
             lengthAccuracy: agg(0.92, 3),
+            informationAccuracy: agg(0.83, 3),
           },
         }),
       ]),
@@ -152,6 +162,7 @@ describe("renderComparisonReport", () => {
             maxSchemaDepth: agg(12, 1),
             maxSchemaBreadth: agg(48, 1),
             lengthAccuracy: agg(0.92, 1),
+            informationAccuracy: agg(0.83, 1),
           },
         }),
       ]),

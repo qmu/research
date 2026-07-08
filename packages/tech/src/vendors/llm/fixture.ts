@@ -12,6 +12,10 @@ import type {
   VisionInput,
   VisionOptions,
 } from "./types";
+import {
+  INFORMATION_ACCURACY_MANIFEST,
+  informationAccuracyFixtureAnswer,
+} from "../../llm-model-comparison/domain/information-accuracy";
 
 // A deterministic client that returns canned answers keyed by prompt. It calls
 // no API, so it runs in CI without credentials or cost. Used for the pipeline
@@ -129,6 +133,19 @@ const buildComplete = (
   model: string,
   seed: number,
 ): Completion => {
+  const informationQuestionId = prompt.match(/Question ID: ([^\n]+)/)?.[1];
+  const informationItem = INFORMATION_ACCURACY_MANIFEST.questions.find(
+    (item) => item.id === informationQuestionId,
+  );
+  if (informationItem !== undefined) {
+    const text = informationAccuracyFixtureAnswer(informationItem, seed);
+    return {
+      text,
+      outputTokens: tokensOf(text),
+      elapsedMs: 10 + (seed % 5) * 2,
+      model,
+    };
+  }
   const target = wordCountFor(/exactly (\d+) words/, prompt, 100);
   const jitter = (seed % 3) - 1; // -1, 0, +1 — small reproducible spread
   const count = Math.max(1, target + jitter);

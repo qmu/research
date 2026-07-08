@@ -23,6 +23,7 @@ import {
 import { renderComparisonReport } from "../llm-model-comparison/domain/report";
 import type { DetailLevel } from "../llm-model-comparison/domain/report";
 import { buildLatencyPrompt } from "../llm-model-comparison/domain/latency";
+import { INFORMATION_ACCURACY_MANIFEST } from "../llm-model-comparison/domain/information-accuracy";
 import { estimateRun } from "../llm-model-comparison/domain/estimate";
 import { isDeclaredEffortLevel } from "../llm-model-comparison/domain/effort";
 import {
@@ -77,6 +78,13 @@ const PROBE: ProbeParams = {
   },
   lengthTargetWords: 100,
   lengthTopic: "the water cycle",
+  informationAccuracy: {
+    dataset: INFORMATION_ACCURACY_MANIFEST.dataset,
+    manifestVersion: INFORMATION_ACCURACY_MANIFEST.manifestVersion,
+    license: INFORMATION_ACCURACY_MANIFEST.license,
+    questionCount: INFORMATION_ACCURACY_MANIFEST.questions.length,
+    scoring: INFORMATION_ACCURACY_MANIFEST.normalization.scoring,
+  },
 };
 
 const DEFAULT_TRIALS = 3;
@@ -320,8 +328,9 @@ const probeCallsPerConfig = (probe: ProbeParams, trials: number): number => {
   const schemaCalls =
     schemaAxisCalls(sp.depth, sp.refineSteps) +
     schemaAxisCalls(sp.breadth, sp.refineSteps);
-  // throughput + latency + (depth axis + breadth axis) + length, per trial
-  return (3 + schemaCalls) * trials;
+  // throughput + latency + (depth axis + breadth axis) + length +
+  // information-accuracy questions, per trial
+  return (3 + schemaCalls + probe.informationAccuracy.questionCount) * trials;
 };
 
 const buildEstimate = (
@@ -562,7 +571,7 @@ const main = async (): Promise<void> => {
     const s = run.stats;
     const line =
       run.provenance === "measured"
-        ? `${s.throughputTokensPerSec.mean.toFixed(0)} tok/s, ttft ${s.ttftMs.mean.toFixed(0)}ms, schema depth ${s.maxSchemaDepth.mean.toFixed(0)}/breadth ${s.maxSchemaBreadth.mean.toFixed(0)}, length ${(s.lengthAccuracy.mean * 100).toFixed(0)}%`
+        ? `${s.throughputTokensPerSec.mean.toFixed(0)} tok/s, ttft ${s.ttftMs.mean.toFixed(0)}ms, schema depth ${s.maxSchemaDepth.mean.toFixed(0)}/breadth ${s.maxSchemaBreadth.mean.toFixed(0)}, length ${(s.lengthAccuracy.mean * 100).toFixed(0)}%, info ${(s.informationAccuracy.mean * 100).toFixed(0)}%`
         : run.provenance;
     process.stderr.write(
       `[${done}/${matrix.length}] ${run.provider}/${run.modelName} [${run.effort}]: ${line}\n`,
