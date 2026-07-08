@@ -11,6 +11,7 @@ const main = (): void => {
       "  npm run benchmark:fixture  (the llm-benchmark topic)\n" +
       "  npm run compare:fixture    (the llm-model-comparison topic)\n" +
       "  npm run rag:fixture        (the rag-benchmark topic)\n" +
+      "  npm run ocr:fixture        (the ocr-comparison topic)\n" +
       "See TEMPLATE.md to add a topic, or run an entrypoint under src/entrypoints/.\n",
   );
 };

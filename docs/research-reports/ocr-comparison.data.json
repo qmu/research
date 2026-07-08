@@ -1,0 +1,1297 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "fixture": true,
+  "trials": 1,
+  "dataset": {
+    "dataset": {
+      "id": "qmu-synthetic-document-ocr-v1",
+      "name": "QMU synthetic document OCR fixture v1",
+      "manifestVersion": "2026-07-08",
+      "source": "Repository-authored deterministic synthetic document manifest",
+      "license": "MIT; generated document text, field ground truth, and rendered images are authored for this repository and may be redistributed under the repository license.",
+      "imageDistribution": "Images are rendered deterministically at run time from this manifest; no third-party document images are committed.",
+      "realDatasetStatus": "No third-party real-image OCR corpus is adopted in this revision. Future real-image datasets must use a manifest plus gitignored fetch/cache path before measurements are published."
+    },
+    "normalization": {
+      "unicode": "NFKC",
+      "case": "preserve for CER/WER; field values use field-specific uppercase/currency/date normalization",
+      "whitespace": "collapse runs of whitespace to one ASCII space, trim ends, and normalize line endings before scoring",
+      "punctuation": "preserve punctuation for CER/WER; field values strip grouping commas from numeric totals and uppercase currency codes",
+      "scoring": "CER and WER divide edit distance by the reference length. Field accuracy is exact normalized-field matches divided by required ground-truth field count."
+    },
+    "preprocessing": {
+      "mimeType": "image/png",
+      "resolution": {
+        "widthPx": 960,
+        "heightPx": 640,
+        "dpi": 150
+      },
+      "pageSplitting": "One manifest item is rendered as one image/page; multi-page documents are out of scope for this v1 fixture.",
+      "rendering": "White background, black fixed 5x7 bitmap text, no rotation, no blur, no compression loss.",
+      "languageScript": "Latin uppercase letters, Arabic numerals, ASCII punctuation, ISO dates, and currency codes. Japanese script is not included in this fixture.",
+      "layoutDifficulty": "Single-page receipt/form hybrid with headings, aligned labels, tabular item lines, and total fields. Handwriting, stamps, photos, skew, and overlapping columns are out of scope."
+    },
+    "schema": {
+      "description": "Required structured extraction fields for each document.",
+      "fields": [
+        {
+          "name": "document_type",
+          "type": "string",
+          "normalization": "uppercase-trim"
+        },
+        {
+          "name": "vendor",
+          "type": "string",
+          "normalization": "uppercase-collapse-space"
+        },
+        {
+          "name": "document_id",
+          "type": "string",
+          "normalization": "uppercase-trim"
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "normalization": "iso-date"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "normalization": "uppercase-trim"
+        },
+        {
+          "name": "total",
+          "type": "string",
+          "normalization": "decimal-string"
+        }
+      ]
+    },
+    "documents": [
+      {
+        "id": "synthetic-receipt-001",
+        "license": "MIT repository-authored synthetic item",
+        "referenceText": "QMU OFFICE SUPPLY\nRECEIPT R-2026-0708\nDATE 2026-07-08\nVENDOR KANDA STATIONERY\nITEM NOTEBOOK A5 3 4.50\nITEM GEL PEN 12 1.20\nSUBTOTAL 27.90\nTAX 2.23\nTOTAL USD 30.13\nTHANK YOU",
+        "fields": {
+          "document_type": "RECEIPT",
+          "vendor": "KANDA STATIONERY",
+          "document_id": "R-2026-0708",
+          "date": "2026-07-08",
+          "currency": "USD",
+          "total": "30.13"
+        },
+        "render": {
+          "title": "QMU OFFICE SUPPLY",
+          "lines": [
+            "QMU OFFICE SUPPLY",
+            "RECEIPT R-2026-0708",
+            "DATE 2026-07-08",
+            "VENDOR KANDA STATIONERY",
+            "ITEM NOTEBOOK A5 3 4.50",
+            "ITEM GEL PEN 12 1.20",
+            "SUBTOTAL 27.90",
+            "TAX 2.23",
+            "TOTAL USD 30.13",
+            "THANK YOU"
+          ]
+        }
+      },
+      {
+        "id": "synthetic-invoice-001",
+        "license": "MIT repository-authored synthetic item",
+        "referenceText": "QMU CLOUD LAB\nINVOICE INV-2026-0142\nDATE 2026-07-09\nVENDOR QMU CLOUD LAB\nBILL TO RESEARCH TEAM\nSERVICE VISION TEST 2 45.00\nSERVICE REPORTING 1 60.00\nSUBTOTAL 150.00\nTAX 15.00\nTOTAL JPY 165.00",
+        "fields": {
+          "document_type": "INVOICE",
+          "vendor": "QMU CLOUD LAB",
+          "document_id": "INV-2026-0142",
+          "date": "2026-07-09",
+          "currency": "JPY",
+          "total": "165.00"
+        },
+        "render": {
+          "title": "QMU CLOUD LAB",
+          "lines": [
+            "QMU CLOUD LAB",
+            "INVOICE INV-2026-0142",
+            "DATE 2026-07-09",
+            "VENDOR QMU CLOUD LAB",
+            "BILL TO RESEARCH TEAM",
+            "SERVICE VISION TEST 2 45.00",
+            "SERVICE REPORTING 1 60.00",
+            "SUBTOTAL 150.00",
+            "TAX 15.00",
+            "TOTAL JPY 165.00"
+          ]
+        }
+      }
+    ],
+    "structuredSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "document_type": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "document_id": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "total": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_type",
+        "vendor",
+        "document_id",
+        "date",
+        "currency",
+        "total"
+      ]
+    }
+  },
+  "runs": [
+    {
+      "id": "anthropic-claude-fable-5",
+      "modelName": "Claude Fable 5",
+      "provider": "anthropic",
+      "apiModelId": "claude-fable-5",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "fieldAccuracy": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "documentScores": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "RECEIPT",
+                "actual": "RECEIPT",
+                "normalizedExpected": "RECEIPT",
+                "normalizedActual": "RECEIPT",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "KANDA STATIONERY",
+                "actual": "KANDA STATIONERY",
+                "normalizedExpected": "KANDA STATIONERY",
+                "normalizedActual": "KANDA STATIONERY",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "R-2026-0708",
+                "actual": "R-2026-0708",
+                "normalizedExpected": "R-2026-0708",
+                "normalizedActual": "R-2026-0708",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-08",
+                "actual": "2026-07-08",
+                "normalizedExpected": "2026-07-08",
+                "normalizedActual": "2026-07-08",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "USD",
+                "actual": "USD",
+                "normalizedExpected": "USD",
+                "normalizedActual": "USD",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "30.13",
+                "actual": "30.13",
+                "normalizedExpected": "30.13",
+                "normalizedActual": "30.13",
+                "correct": true
+              }
+            ]
+          }
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "INVOICE",
+                "actual": "INVOICE",
+                "normalizedExpected": "INVOICE",
+                "normalizedActual": "INVOICE",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "QMU CLOUD LAB",
+                "actual": "QMU CLOUD LAB",
+                "normalizedExpected": "QMU CLOUD LAB",
+                "normalizedActual": "QMU CLOUD LAB",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "INV-2026-0142",
+                "actual": "INV-2026-0142",
+                "normalizedExpected": "INV-2026-0142",
+                "normalizedActual": "INV-2026-0142",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-09",
+                "actual": "2026-07-09",
+                "normalizedExpected": "2026-07-09",
+                "normalizedActual": "2026-07-09",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "JPY",
+                "actual": "JPY",
+                "normalizedExpected": "JPY",
+                "normalizedActual": "JPY",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "165.00",
+                "actual": "165.00",
+                "normalizedExpected": "165.00",
+                "normalizedActual": "165.00",
+                "correct": true
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU OFFICE SUPPLY\nRECEIPT R-2026-0708\nDATE 2026-07-08\nVENDOR KANDA STATIONERY\nITEM NOTEBOOK A5 3 4.50\nITEM GEL PEN 12 1.20\nSUBTOTAL 27.90\nTAX 2.23\nTOTAL USD 30.13\nTHANK YOU",
+          "rawStructured": "{\"document_type\":\"RECEIPT\",\"vendor\":\"KANDA STATIONERY\",\"document_id\":\"R-2026-0708\",\"date\":\"2026-07-08\",\"currency\":\"USD\",\"total\":\"30.13\"}",
+          "outputTokens": 77,
+          "elapsedMs": 12
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU CLOUD LAB\nINVOICE INV-2026-0142\nDATE 2026-07-09\nVENDOR QMU CLOUD LAB\nBILL TO RESEARCH TEAM\nSERVICE VISION TEST 2 45.00\nSERVICE REPORTING 1 60.00\nSUBTOTAL 150.00\nTAX 15.00\nTOTAL JPY 165.00",
+          "rawStructured": "{\"document_type\":\"INVOICE\",\"vendor\":\"QMU CLOUD LAB\",\"document_id\":\"INV-2026-0142\",\"date\":\"2026-07-09\",\"currency\":\"JPY\",\"total\":\"165.00\"}",
+          "outputTokens": 82,
+          "elapsedMs": 12
+        }
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "id": "anthropic-claude-opus-4-8",
+      "modelName": "Claude Opus 4.8",
+      "provider": "anthropic",
+      "apiModelId": "claude-opus-4-8",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "fieldAccuracy": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "documentScores": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "RECEIPT",
+                "actual": "RECEIPT",
+                "normalizedExpected": "RECEIPT",
+                "normalizedActual": "RECEIPT",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "KANDA STATIONERY",
+                "actual": "KANDA STATIONERY",
+                "normalizedExpected": "KANDA STATIONERY",
+                "normalizedActual": "KANDA STATIONERY",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "R-2026-0708",
+                "actual": "R-2026-0708",
+                "normalizedExpected": "R-2026-0708",
+                "normalizedActual": "R-2026-0708",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-08",
+                "actual": "2026-07-08",
+                "normalizedExpected": "2026-07-08",
+                "normalizedActual": "2026-07-08",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "USD",
+                "actual": "USD",
+                "normalizedExpected": "USD",
+                "normalizedActual": "USD",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "30.13",
+                "actual": "30.13",
+                "normalizedExpected": "30.13",
+                "normalizedActual": "30.13",
+                "correct": true
+              }
+            ]
+          }
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "INVOICE",
+                "actual": "INVOICE",
+                "normalizedExpected": "INVOICE",
+                "normalizedActual": "INVOICE",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "QMU CLOUD LAB",
+                "actual": "QMU CLOUD LAB",
+                "normalizedExpected": "QMU CLOUD LAB",
+                "normalizedActual": "QMU CLOUD LAB",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "INV-2026-0142",
+                "actual": "INV-2026-0142",
+                "normalizedExpected": "INV-2026-0142",
+                "normalizedActual": "INV-2026-0142",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-09",
+                "actual": "2026-07-09",
+                "normalizedExpected": "2026-07-09",
+                "normalizedActual": "2026-07-09",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "JPY",
+                "actual": "JPY",
+                "normalizedExpected": "JPY",
+                "normalizedActual": "JPY",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "165.00",
+                "actual": "165.00",
+                "normalizedExpected": "165.00",
+                "normalizedActual": "165.00",
+                "correct": true
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU OFFICE SUPPLY\nRECEIPT R-2026-0708\nDATE 2026-07-08\nVENDOR KANDA STATIONERY\nITEM NOTEBOOK A5 3 4.50\nITEM GEL PEN 12 1.20\nSUBTOTAL 27.90\nTAX 2.23\nTOTAL USD 30.13\nTHANK YOU",
+          "rawStructured": "{\"document_type\":\"RECEIPT\",\"vendor\":\"KANDA STATIONERY\",\"document_id\":\"R-2026-0708\",\"date\":\"2026-07-08\",\"currency\":\"USD\",\"total\":\"30.13\"}",
+          "outputTokens": 77,
+          "elapsedMs": 12
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU CLOUD LAB\nINVOICE INV-2026-0142\nDATE 2026-07-09\nVENDOR QMU CLOUD LAB\nBILL TO RESEARCH TEAM\nSERVICE VISION TEST 2 45.00\nSERVICE REPORTING 1 60.00\nSUBTOTAL 150.00\nTAX 15.00\nTOTAL JPY 165.00",
+          "rawStructured": "{\"document_type\":\"INVOICE\",\"vendor\":\"QMU CLOUD LAB\",\"document_id\":\"INV-2026-0142\",\"date\":\"2026-07-09\",\"currency\":\"JPY\",\"total\":\"165.00\"}",
+          "outputTokens": 82,
+          "elapsedMs": 12
+        }
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "id": "anthropic-claude-sonnet-5",
+      "modelName": "Claude Sonnet 5",
+      "provider": "anthropic",
+      "apiModelId": "claude-sonnet-5",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "fieldAccuracy": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "documentScores": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "RECEIPT",
+                "actual": "RECEIPT",
+                "normalizedExpected": "RECEIPT",
+                "normalizedActual": "RECEIPT",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "KANDA STATIONERY",
+                "actual": "KANDA STATIONERY",
+                "normalizedExpected": "KANDA STATIONERY",
+                "normalizedActual": "KANDA STATIONERY",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "R-2026-0708",
+                "actual": "R-2026-0708",
+                "normalizedExpected": "R-2026-0708",
+                "normalizedActual": "R-2026-0708",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-08",
+                "actual": "2026-07-08",
+                "normalizedExpected": "2026-07-08",
+                "normalizedActual": "2026-07-08",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "USD",
+                "actual": "USD",
+                "normalizedExpected": "USD",
+                "normalizedActual": "USD",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "30.13",
+                "actual": "30.13",
+                "normalizedExpected": "30.13",
+                "normalizedActual": "30.13",
+                "correct": true
+              }
+            ]
+          }
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "INVOICE",
+                "actual": "INVOICE",
+                "normalizedExpected": "INVOICE",
+                "normalizedActual": "INVOICE",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "QMU CLOUD LAB",
+                "actual": "QMU CLOUD LAB",
+                "normalizedExpected": "QMU CLOUD LAB",
+                "normalizedActual": "QMU CLOUD LAB",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "INV-2026-0142",
+                "actual": "INV-2026-0142",
+                "normalizedExpected": "INV-2026-0142",
+                "normalizedActual": "INV-2026-0142",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-09",
+                "actual": "2026-07-09",
+                "normalizedExpected": "2026-07-09",
+                "normalizedActual": "2026-07-09",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "JPY",
+                "actual": "JPY",
+                "normalizedExpected": "JPY",
+                "normalizedActual": "JPY",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "165.00",
+                "actual": "165.00",
+                "normalizedExpected": "165.00",
+                "normalizedActual": "165.00",
+                "correct": true
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU OFFICE SUPPLY\nRECEIPT R-2026-0708\nDATE 2026-07-08\nVENDOR KANDA STATIONERY\nITEM NOTEBOOK A5 3 4.50\nITEM GEL PEN 12 1.20\nSUBTOTAL 27.90\nTAX 2.23\nTOTAL USD 30.13\nTHANK YOU",
+          "rawStructured": "{\"document_type\":\"RECEIPT\",\"vendor\":\"KANDA STATIONERY\",\"document_id\":\"R-2026-0708\",\"date\":\"2026-07-08\",\"currency\":\"USD\",\"total\":\"30.13\"}",
+          "outputTokens": 77,
+          "elapsedMs": 12
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU CLOUD LAB\nINVOICE INV-2026-0142\nDATE 2026-07-09\nVENDOR QMU CLOUD LAB\nBILL TO RESEARCH TEAM\nSERVICE VISION TEST 2 45.00\nSERVICE REPORTING 1 60.00\nSUBTOTAL 150.00\nTAX 15.00\nTOTAL JPY 165.00",
+          "rawStructured": "{\"document_type\":\"INVOICE\",\"vendor\":\"QMU CLOUD LAB\",\"document_id\":\"INV-2026-0142\",\"date\":\"2026-07-09\",\"currency\":\"JPY\",\"total\":\"165.00\"}",
+          "outputTokens": 82,
+          "elapsedMs": 12
+        }
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "id": "anthropic-claude-haiku-4-5",
+      "modelName": "Claude Haiku 4.5",
+      "provider": "anthropic",
+      "apiModelId": "claude-haiku-4-5-20251001",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 2
+        },
+        "fieldAccuracy": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "documentScores": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "RECEIPT",
+                "actual": "RECEIPT",
+                "normalizedExpected": "RECEIPT",
+                "normalizedActual": "RECEIPT",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "KANDA STATIONERY",
+                "actual": "KANDA STATIONERY",
+                "normalizedExpected": "KANDA STATIONERY",
+                "normalizedActual": "KANDA STATIONERY",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "R-2026-0708",
+                "actual": "R-2026-0708",
+                "normalizedExpected": "R-2026-0708",
+                "normalizedActual": "R-2026-0708",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-08",
+                "actual": "2026-07-08",
+                "normalizedExpected": "2026-07-08",
+                "normalizedActual": "2026-07-08",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "USD",
+                "actual": "USD",
+                "normalizedExpected": "USD",
+                "normalizedActual": "USD",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "30.13",
+                "actual": "30.13",
+                "normalizedExpected": "30.13",
+                "normalizedActual": "30.13",
+                "correct": true
+              }
+            ]
+          }
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "characterErrorRate": 0,
+          "wordErrorRate": 0,
+          "fieldAccuracy": 1,
+          "fieldScore": {
+            "accuracy": 1,
+            "correct": 6,
+            "total": 6,
+            "fields": [
+              {
+                "field": "document_type",
+                "expected": "INVOICE",
+                "actual": "INVOICE",
+                "normalizedExpected": "INVOICE",
+                "normalizedActual": "INVOICE",
+                "correct": true
+              },
+              {
+                "field": "vendor",
+                "expected": "QMU CLOUD LAB",
+                "actual": "QMU CLOUD LAB",
+                "normalizedExpected": "QMU CLOUD LAB",
+                "normalizedActual": "QMU CLOUD LAB",
+                "correct": true
+              },
+              {
+                "field": "document_id",
+                "expected": "INV-2026-0142",
+                "actual": "INV-2026-0142",
+                "normalizedExpected": "INV-2026-0142",
+                "normalizedActual": "INV-2026-0142",
+                "correct": true
+              },
+              {
+                "field": "date",
+                "expected": "2026-07-09",
+                "actual": "2026-07-09",
+                "normalizedExpected": "2026-07-09",
+                "normalizedActual": "2026-07-09",
+                "correct": true
+              },
+              {
+                "field": "currency",
+                "expected": "JPY",
+                "actual": "JPY",
+                "normalizedExpected": "JPY",
+                "normalizedActual": "JPY",
+                "correct": true
+              },
+              {
+                "field": "total",
+                "expected": "165.00",
+                "actual": "165.00",
+                "normalizedExpected": "165.00",
+                "normalizedActual": "165.00",
+                "correct": true
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "documentId": "synthetic-receipt-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-receipt-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU OFFICE SUPPLY\nRECEIPT R-2026-0708\nDATE 2026-07-08\nVENDOR KANDA STATIONERY\nITEM NOTEBOOK A5 3 4.50\nITEM GEL PEN 12 1.20\nSUBTOTAL 27.90\nTAX 2.23\nTOTAL USD 30.13\nTHANK YOU",
+          "rawStructured": "{\"document_type\":\"RECEIPT\",\"vendor\":\"KANDA STATIONERY\",\"document_id\":\"R-2026-0708\",\"date\":\"2026-07-08\",\"currency\":\"USD\",\"total\":\"30.13\"}",
+          "outputTokens": 77,
+          "elapsedMs": 12
+        },
+        {
+          "documentId": "synthetic-invoice-001",
+          "transcriptionPrompt": "Transcribe the document image exactly. Preserve line order. Return only the transcription text.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.",
+          "structuredPrompt": "Extract the required fields from the document image. Return only JSON matching the schema.\nDataset: qmu-synthetic-document-ocr-v1.\nDocument id: synthetic-invoice-001.\nFields: document_type, vendor, document_id, date, currency, total.",
+          "rawTranscription": "QMU CLOUD LAB\nINVOICE INV-2026-0142\nDATE 2026-07-09\nVENDOR QMU CLOUD LAB\nBILL TO RESEARCH TEAM\nSERVICE VISION TEST 2 45.00\nSERVICE REPORTING 1 60.00\nSUBTOTAL 150.00\nTAX 15.00\nTOTAL JPY 165.00",
+          "rawStructured": "{\"document_type\":\"INVOICE\",\"vendor\":\"QMU CLOUD LAB\",\"document_id\":\"INV-2026-0142\",\"date\":\"2026-07-09\",\"currency\":\"JPY\",\"total\":\"165.00\"}",
+          "outputTokens": 82,
+          "elapsedMs": 12
+        }
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "id": "openai-gpt-5-5",
+      "modelName": "GPT-5.5",
+      "provider": "openai",
+      "apiModelId": "gpt-5.5",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "openai-gpt-5-4",
+      "modelName": "GPT-5.4",
+      "provider": "openai",
+      "apiModelId": "gpt-5.4",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "openai-gpt-5-4-mini",
+      "modelName": "GPT-5.4 mini",
+      "provider": "openai",
+      "apiModelId": "gpt-5.4-mini",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "openai-gpt-5-4-nano",
+      "modelName": "GPT-5.4 nano",
+      "provider": "openai",
+      "apiModelId": "gpt-5.4-nano",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "openai-o4-mini",
+      "modelName": "o4-mini",
+      "provider": "openai",
+      "apiModelId": "o4-mini",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "openai-gpt-realtime",
+      "modelName": "GPT Realtime",
+      "provider": "openai",
+      "apiModelId": "gpt-realtime",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "openai-gpt-5-3-codex",
+      "modelName": "GPT-5.3 Codex",
+      "provider": "openai",
+      "apiModelId": "gpt-5.3-codex",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.3-codex",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "openai-gpt-5-1-codex-mini",
+      "modelName": "GPT-5.1 Codex mini",
+      "provider": "openai",
+      "apiModelId": "gpt-5.1-codex-mini",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.1-codex-mini",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "google-gemini-3-1-pro",
+      "modelName": "Gemini 3.1 Pro",
+      "provider": "google",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "google-gemini-3-5-flash",
+      "modelName": "Gemini 3.5 Flash",
+      "provider": "google",
+      "apiModelId": "gemini-3.5-flash",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "google-gemini-3-1-flash-lite",
+      "modelName": "Gemini 3.1 Flash-Lite",
+      "provider": "google",
+      "apiModelId": "gemini-3.1-flash-lite",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "xai-grok-4-3",
+      "modelName": "Grok 4.3",
+      "provider": "xai",
+      "apiModelId": "grok-4.3",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://docs.x.ai/developers/models/grok-4.3",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "xai-grok-4-20-0309-reasoning",
+      "modelName": "Grok 4.20 Reasoning",
+      "provider": "xai",
+      "apiModelId": "grok-4.20-0309-reasoning",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://docs.x.ai/developers/models",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "xai-grok-4-20-0309-non-reasoning",
+      "modelName": "Grok 4.20 Non-Reasoning",
+      "provider": "xai",
+      "apiModelId": "grok-4.20-0309-non-reasoning",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://docs.x.ai/developers/models",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "xai-grok-build-0-1",
+      "modelName": "Grok Build 0.1",
+      "provider": "xai",
+      "apiModelId": "grok-build-0.1",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://docs.x.ai/developers/models",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    }
+  ],
+  "artifactPath": "ocr-comparison.data.json"
+}

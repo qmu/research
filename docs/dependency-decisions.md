@@ -176,6 +176,26 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   different permissive factual-QA dataset is a manifest + prompt/scorer fixture
   change, no provider adapter change.
 
+### QMU synthetic document OCR fixture — generated, not a package
+
+- **Reason**: The `ocr-comparison` topic needs document images with pinned
+  transcription text and structured-field ground truth before any article can
+  report OCR metrics. A clean third-party real-image dataset was not adopted in
+  this implementation, so the keyless path uses repository-authored synthetic
+  receipt/invoice documents rendered deterministically from a committed manifest.
+- **License**: MIT. The committed manifest at
+  `packages/tech/src/ocr-comparison/domain/data/synthetic-document-ocr.manifest.json`
+  contains only repository-authored ids, reference transcription text,
+  structured-field ground truth, normalization rules, and rendering instructions.
+  Images are generated at run time and no third-party document images or large
+  OCR corpus files are committed. Future real-image OCR datasets must follow the
+  SciFact pattern: commit only selected ids, reference text, field truth,
+  normalization, and license metadata; fetch image bytes into a gitignored cache.
+- **Exit strategy**: The manifest, renderer, and scorer are self-contained.
+  Replacing the synthetic fixture with a permissive/public-domain real document
+  OCR set is a manifest + fetch-loader change; the vision provider ACL and
+  CER/WER/field scorers do not change.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
