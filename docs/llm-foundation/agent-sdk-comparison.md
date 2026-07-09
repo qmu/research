@@ -1,6 +1,6 @@
 ---
 title: Agent SDKの比較
-description: LLM基礎検証におけるAgent SDKの比較。OpenAI Agents SDK、Claude Agent SDK、Cloudflare Agents SDK、LangGraphを、公開ドキュメントに基づく設計比較として整理する。
+description: LLMs Research (Japanese) におけるAgent SDKの比較。OpenAI Agents SDK、Claude Agent SDK、Cloudflare Agents SDK、LangGraphを、公開ドキュメントに基づく設計比較として整理する。
 ---
 
 # Agent SDKの比較

@@ -75,3 +75,4 @@ owner-gated, regenerable artifact (the existing `.real` pattern).
 ## Changelog
 
 - 2026-07-09 — mission created — mission.md
+- 2026-07-09 — ticket archived — 20260709185801-derive-japanese-sidebar-from-research-topics.md
