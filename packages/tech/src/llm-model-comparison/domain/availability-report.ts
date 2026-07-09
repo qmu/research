@@ -1,14 +1,23 @@
+import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import type {
-  AvailabilityObservationSummary,
-  StatusIncident,
-  StatusObservation,
+  AvailabilityIncident,
+  AvailabilityWindow,
+  ProviderAvailabilityTrend,
 } from "./availability";
+import type { Provider } from "./types";
+
+export type AvailabilityReportRecent = Readonly<{
+  provider: Provider;
+  providerName: string;
+  incidents: ReadonlyArray<AvailabilityIncident>;
+}>;
 
 export type AvailabilityRunReport = Readonly<{
   generatedAt: string;
   fixture: boolean;
-  observations: ReadonlyArray<StatusObservation>;
-  summaries: ReadonlyArray<AvailabilityObservationSummary>;
+  asOf: string;
+  trends: ReadonlyArray<ProviderAvailabilityTrend>;
+  recent: ReadonlyArray<AvailabilityReportRecent>;
   artifactPath: string;
 }>;
 
@@ -18,89 +27,110 @@ const escapeCell = (text: string): string =>
 const orDash = (text: string | null): string =>
   text === null || text.length === 0 ? "—" : escapeCell(text);
 
-const overallReported = (summary: AvailabilityObservationSummary): string => {
-  if (!summary.fetchOk) return "fetch failed";
-  if (summary.overallDescription !== null) return summary.overallDescription;
-  return summary.activeIncidentCount === 0
-    ? "no active incidents reported"
-    : "active incident(s) reported";
+const pct = (value: number): string => `${(value * 100).toFixed(3)}%`;
+const hours = (minutes: number): string => `${(minutes / 60).toFixed(1)} h`;
+
+const trendRow = (
+  trend: ProviderAvailabilityTrend,
+  window: AvailabilityWindow,
+): string => {
+  if (!trend.available) {
+    return `| ${escapeCell(trend.providerName)} | not retrievable | — | — | — | — |`;
+  }
+  return (
+    `| ${escapeCell(trend.providerName)} | ${pct(window.uptimePct)} | ` +
+    `${window.incidentCount} | ${window.majorIncidentCount} | ` +
+    `${hours(window.downtimeMinutes)} | ${hours(window.maintenanceMinutes)} |`
+  );
 };
 
-const componentsCell = (summary: AvailabilityObservationSummary): string => {
-  if (!summary.fetchOk) return "—";
-  if (summary.componentCount === 0) return "not exposed by source";
-  return `${summary.operationalCount}/${summary.componentCount} operational`;
-};
-
-const overallTable = (
-  summaries: ReadonlyArray<AvailabilityObservationSummary>,
+const trendTable = (
+  trends: ReadonlyArray<ProviderAvailabilityTrend>,
+  pick: (t: ProviderAvailabilityTrend) => AvailabilityWindow,
 ): string => {
   const header =
-    "| Provider | Reported status | Components | Active incidents | Recent incidents | Page updated |\n" +
-    "| -------- | --------------- | ---------- | ---------------- | ---------------- | ------------ |";
-  const rows = summaries.map(
-    (s) =>
-      `| ${escapeCell(s.providerName)} | ${escapeCell(overallReported(s))} | ` +
-      `${componentsCell(s)} | ${s.activeIncidentCount} | ${s.recentIncidentCount} | ` +
-      `${orDash(s.pageUpdatedAt)} |`,
-  );
+    "| Provider | Derived uptime | Incidents | Major/critical | Downtime | Maintenance |\n" +
+    "| -------- | -------------- | --------- | -------------- | -------- | ----------- |";
+  const rows = trends.map((trend) => trendRow(trend, pick(trend)));
   return `${header}\n${rows.join("\n")}`;
 };
 
-const componentDetail = (
-  summaries: ReadonlyArray<AvailabilityObservationSummary>,
-): string =>
-  summaries
-    .map((s) => {
-      if (!s.fetchOk) {
-        return `- **${escapeCell(s.providerName)}**: status page could not be fetched (${orDash(s.fetchError)}); no component snapshot recorded.`;
-      }
-      if (s.componentCount === 0) {
-        return `- **${escapeCell(s.providerName)}**: this source does not expose a per-component list (incidents only).`;
-      }
-      if (s.nonOperationalComponents.length === 0) {
-        return `- **${escapeCell(s.providerName)}**: all ${s.componentCount} reported components operational.`;
-      }
-      const items = s.nonOperationalComponents
-        .map((c) => `${escapeCell(c.name)} → ${c.status}`)
-        .join("; ");
-      return `- **${escapeCell(s.providerName)}**: ${s.operationalCount}/${s.componentCount} operational; not operational: ${items}.`;
-    })
-    .join("\n");
+const uptimeChart = (
+  trends: ReadonlyArray<ProviderAvailabilityTrend>,
+): string => {
+  const series = trends
+    .filter((trend) => trend.available)
+    .map((trend) => ({
+      id: trend.provider,
+      label: trend.providerName,
+      points: trend.window90.perDay.map((p) => ({
+        measuredAt: p.date,
+        value: p.uptimePct,
+        n: 1,
+      })),
+    }))
+    .filter((s) => s.points.length > 0);
+  if (series.length === 0) {
+    return "No retrievable provider history to chart.";
+  }
+  return renderTimeSeriesChart({
+    id: "llm-availability-90d-uptime",
+    title: "LLM provider derived daily uptime (last 90 days)",
+    description:
+      "Daily uptime derived from each provider's own reported incidents, weighted by impact. Not an SLA or a ranking.",
+    xLabel: "Date",
+    yLabel: "Uptime",
+    valueDigits: 4,
+    series,
+  });
+};
 
 const incidentLine = (
   providerName: string,
-  incident: StatusIncident,
+  incident: AvailabilityIncident,
 ): string => {
-  const window =
-    incident.startedAt === null && incident.resolvedAt === null
+  const products =
+    incident.affectedProducts.length === 0
       ? ""
-      : ` (${orDash(incident.startedAt)} → ${incident.resolvedAt === null ? "ongoing" : escapeCell(incident.resolvedAt)})`;
-  const link = incident.url === null ? "" : ` [details](${incident.url})`;
-  return `- **${escapeCell(providerName)}** — ${escapeCell(incident.name)} [impact: ${incident.impact}, status: ${escapeCell(incident.status)}]${window}${link}`;
+      : ` — ${escapeCell(incident.affectedProducts.join(", "))}`;
+  // Only linkify absolute URLs; some sources give relative incident refs
+  // (e.g. Google's "incidents/…"), which are not resolvable links here.
+  const link =
+    incident.sourceUrl !== null && /^https?:\/\//.test(incident.sourceUrl)
+      ? ` [details](${incident.sourceUrl})`
+      : "";
+  return (
+    `- **${escapeCell(providerName)}** — ${escapeCell(incident.title)} ` +
+    `[impact: ${incident.impact}] (${orDash(incident.startedAt)} → ` +
+    `${incident.endedAt === null ? "ongoing" : escapeCell(incident.endedAt)})${products}${link}`
+  );
 };
 
-const incidentSection = (
-  observations: ReadonlyArray<StatusObservation>,
-  select: (o: StatusObservation) => ReadonlyArray<StatusIncident>,
-  emptyText: string,
+const recentSection = (
+  recent: ReadonlyArray<AvailabilityReportRecent>,
 ): string => {
-  const lines = observations.flatMap((o) =>
-    select(o).map((incident) => incidentLine(o.providerName, incident)),
-  );
-  return lines.length === 0 ? emptyText : lines.join("\n");
+  const blocks = recent.map((entry) => {
+    if (entry.incidents.length === 0) {
+      return `- **${escapeCell(entry.providerName)}**: no incidents recorded in the accumulated history.`;
+    }
+    return entry.incidents
+      .map((incident) => incidentLine(entry.providerName, incident))
+      .join("\n");
+  });
+  return blocks.join("\n");
 };
 
 const provenanceTable = (
-  observations: ReadonlyArray<StatusObservation>,
+  trends: ReadonlyArray<ProviderAvailabilityTrend>,
 ): string => {
   const header =
-    "| Provider | Source | Fetched at | Page updated | Fetch |\n" +
-    "| -------- | ------ | ---------- | ------------ | ----- |";
-  const rows = observations.map(
-    (o) =>
-      `| ${escapeCell(o.providerName)} | [\`${escapeCell(o.sourceUrl)}\`](${o.sourceUrl}) | ` +
-      `${o.fetchedAt} | ${orDash(o.pageUpdatedAt)} | ${o.fetchOk ? "ok" : `failed: ${orDash(o.fetchError)}`} |`,
+    "| Provider | Source | Format | As of | Incidents recorded | Extraction model | Retrieval |\n" +
+    "| -------- | ------ | ------ | ----- | ------------------ | ---------------- | --------- |";
+  const rows = trends.map(
+    (t) =>
+      `| ${escapeCell(t.providerName)} | [\`${escapeCell(t.sourceUrl)}\`](${t.sourceUrl}) | ` +
+      `${t.sourceKind} | ${t.asOf} | ${t.incidentTotal} | ` +
+      `${orDash(t.extraction?.model ?? null)} | ${t.available ? "ok" : `failed: ${orDash(t.note)}`} |`,
   );
   return `${header}\n${rows.join("\n")}`;
 };
@@ -108,56 +138,61 @@ const provenanceTable = (
 export const renderAvailabilityReport = (
   report: AvailabilityRunReport,
 ): string => `---
-title: LLM provider status-page observation
-description: A passive snapshot of each LLM provider's own public status page — reported component states and incidents, with provenance. Not an availability ranking or SLA.
+title: LLM provider availability — status-page history and 30/90-day trends
+description: A longitudinal record built from each LLM provider's own public status-page incident history, with 30-day and 90-day derived uptime trends. Not an SLA or ranking.
 ---
 
-# LLM provider status-page observation
+# LLM provider availability — status-page history and 30/90-day trends
 
-This report **records what each provider reports on its own public status page** —
-component states, active incidents, and recent incident history — at a single
-fetch time. It makes **no API calls** to the providers' model endpoints and needs
-no API keys. These are the providers' own reports, not our measurements.
+This report is a **longitudinal record** of each provider's availability, built from
+**their own public status-page incident history**. An LLM reads each provider's
+status page (whose formats diverge) and normalizes the incidents into one schema
+that **accumulates** in this repository; the uptime figures below are **derived
+from those reported incidents**, weighted by each incident's impact. We make no API
+calls to the providers' models and record no measurements of our own.
 
-> **This is not an availability ranking or SLA.** A status-page snapshot at one
-> moment does not support assertive "which provider is more reliable" claims. It
-> is presented as an observation, with the source and fetch time recorded.
+> **Not an SLA or a ranking.** Derived uptime is a weighted **index** over what
+> each provider reported about itself, over a rolling window — not a service
+> guarantee or a "most reliable provider" claim. Providers are listed
+> alphabetically. Weighting: critical outage ×1.0, major ×0.5, minor ×0.1;
+> planned maintenance is excluded and reported separately. Because status pages
+> log incidents at very different scopes, a single incident counts toward the
+> index for at most **24 hours** — its full duration is preserved in the incident
+> record below, but one long, product-scoped event cannot dominate the index.
 
-Fixture: ${report.fixture ? "yes (keyless deterministic self-test over committed status responses)" : "no (live fetch of the providers' public status pages)"}
+Source: ${report.fixture ? "committed accumulated history (keyless, deterministic render)" : "live status-page fetch + LLM extraction (this run updated the history)"}
 
-Fetched at: \`${report.generatedAt}\`
+As of: \`${report.asOf}\`
 
-## 1. Reported status by provider
+## 1. Last 30 days
 
-Providers are listed alphabetically; the order implies no ranking.
+${trendTable(report.trends, (t) => t.window30)}
 
-${overallTable(report.summaries)}
+## 2. Last 90 days
 
-## 2. Component states
+${trendTable(report.trends, (t) => t.window90)}
 
-${componentDetail(report.summaries)}
+## 3. Daily uptime trend (90 days)
 
-## 3. Active incidents and maintenance
-
-${incidentSection(report.observations, (o) => o.activeIncidents, "No active incidents or maintenance reported on any source at fetch time.")}
+${uptimeChart(report.trends)}
 
 ## 4. Recent incident history
 
-Recent incidents as exposed by each source at fetch time (Statuspage \`summary.json\`
-carries only currently-listed incidents; a full history would need each page's
-incident feed).
+Most recent incidents from the accumulated per-provider record.
 
-${incidentSection(report.observations, (o) => o.recentIncidents, "No recent resolved incidents exposed by the fetched sources.")}
+${recentSection(report.recent)}
 
 ## 5. Provenance
 
-Each observation records its source URL, our fetch time, and the page's own last
-update time, so a reader can trace it to the provider's report.
+Each provider's record traces to its public status source, the fetch cutoff
+(\`as of\`), and the model that extracted it.
 
-${provenanceTable(report.observations)}
+${provenanceTable(report.trends)}
 
 ## Artifact
 
-The complete normalized observations are stored in
-[\`${escapeCell(report.artifactPath)}\`](./${escapeCell(report.artifactPath)}).
+The computed trends are in
+[\`${escapeCell(report.artifactPath)}\`](./${escapeCell(report.artifactPath)}); the
+accumulated per-provider incident history is committed under
+\`docs/research-reports/availability-history/\`.
 `;

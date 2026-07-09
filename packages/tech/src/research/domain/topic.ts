@@ -111,11 +111,12 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
   {
     id: "availability",
     title:
-      "LLM provider status-page observation: reported component states and incidents (keyless, no API calls)",
+      "LLM provider availability: status-page incident history with 30/90-day derived-uptime trends",
     artifactBase: "llm-availability",
     modes: ["fixture", "estimate", "real"],
-    // The real path is keyless: it fetches each provider's PUBLIC status page,
-    // it does not call any model API. fixture reads committed status responses.
+    // The real path fetches each provider's PUBLIC status page (no model API
+    // call) and uses an LLM to extract incidents into an accumulating history;
+    // fixture renders 30/90-day trends from the committed history (keyless).
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
     stages: ["benchmark", "insights", "translation"],
   },

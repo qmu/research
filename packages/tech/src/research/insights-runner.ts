@@ -82,20 +82,23 @@ const trialsOf = (artifact: unknown): number | undefined => {
 };
 
 /**
- * Topic-specific guardrails for the insights prompt. Availability is a passive
- * observation of each provider's own public status page at a single fetch time,
- * so its insights must read as a summary of the providers' own reports — never
- * as our own uptime measurement, an assertive ranking, or an SLA claim.
+ * Topic-specific guardrails for the insights prompt. Availability is a
+ * longitudinal record built from each provider's OWN public status-page incident
+ * history (LLM-extracted, accumulated); the uptime is DERIVED from those reported
+ * incidents, weighted by impact. Insights must read as a summary of the
+ * providers' own reports over the window — never our own uptime measurement, an
+ * assertive ranking, or an SLA claim.
  */
 const TOPIC_GUIDANCE: Readonly<Record<string, string>> = {
   availability:
-    "These figures are a passive snapshot of each provider's OWN public status " +
-    "page (component states and incidents) at a single fetch time — NOT our own " +
-    "uptime measurement, a scheduled probe, or an SLA. Treat them as a summary " +
-    "of what each provider reports about itself. Do not produce an assertive " +
-    "availability ranking or claim one provider is 'more reliable'. Note the " +
-    "fetch time, that a snapshot is not a trend, and keep every statement " +
-    "observational and sourced to the providers' reports.",
+    "These 30/90-day figures are DERIVED from each provider's OWN reported " +
+    "status-page incident history (weighted by impact), accumulated over time — " +
+    "NOT our own uptime measurement, a scheduled probe, or an SLA. Treat them as " +
+    "a summary of what each provider reports about itself. Do not produce an " +
+    "assertive availability ranking or claim one provider is 'more reliable'. " +
+    "Note the as-of date and window, that derived uptime differs from a " +
+    "provider's published SLA, that an unretrievable source is recorded honestly, " +
+    "and keep every statement observational and sourced to the providers' reports.",
 };
 
 const buildInput = (

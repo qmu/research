@@ -1,0 +1,266 @@
+{
+  "provider": "openai",
+  "providerName": "OpenAI",
+  "sourceUrl": "https://status.openai.com/api/v2/incidents.json",
+  "sourceKind": "statuspage-json",
+  "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+  "asOf": "2026-07-09T03:55:03.571Z",
+  "available": true,
+  "note": null,
+  "extraction": {
+    "model": "claude-sonnet-5",
+    "extractedAt": "2026-07-09T03:55:03.571Z"
+  },
+  "incidents": [
+    {
+      "id": "01KWY5DQZ0KC8PTT3Y3T26H30D",
+      "title": "Elevated errors with image generation in ChatGPT",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-07-07T11:29:14.000Z",
+      "endedAt": "2026-07-07T16:12:58.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KWDW344V7XWEQERJSEW62W57",
+      "title": "Codex, workspace analytics, conversation search, searching for custom GPTs, ChatGPT user invites, and Compliance Log Platform download endpoint not working in FedRAMP workspaces",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-07-01T03:38:18.000Z",
+      "endedAt": null,
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KW5HJAH5X1A2V62HP4ZST1V7",
+      "title": "Issues with ChatGPT Windows desktop app",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-27T22:00:26.000Z",
+      "endedAt": "2026-06-28T03:29:18.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KW2E6W0503W4NXJNCVAG8V6T",
+      "title": "Codex Usage Limits Depleting Faster Than Expected",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-26T17:04:02.000Z",
+      "endedAt": "2026-06-29T17:06:33.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVZRA3Z551H993JHJ9P2TW9E",
+      "title": "Small Number of Users Have Incorrectly Cancelled Subscription",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-25T16:02:50.000Z",
+      "endedAt": "2026-06-26T02:18:06.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVYNAMMJ7AMF94YBECG6JG6Q",
+      "title": "Users may encounter issues using access token with Codex",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-25T05:51:27.000Z",
+      "endedAt": "2026-06-25T11:03:38.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVW3CQQ51SWCV4A1SWA6ATVM",
+      "title": "gpt-4o-mini high error rate",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-24T05:59:33.000Z",
+      "endedAt": "2026-06-24T06:07:32.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVTDW6E1PXBTY2A9XEBT4MY4",
+      "title": "Users may experience elevated errors in ChatGPT uploading and downloading files",
+      "impact": "major",
+      "affectedProducts": [],
+      "startedAt": "2026-06-23T14:24:16.000Z",
+      "endedAt": "2026-06-23T16:38:19.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVEZD06ZFM2CMDZQMQYDV9RK",
+      "title": "chatgpt.com access issues",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-19T03:39:40.000Z",
+      "endedAt": "2026-06-19T05:23:27.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVCZ38K0RJZTSX7Y70RQMV2D",
+      "title": "SSO login errors for some ChatGPT Enterprise workspaces",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-18T08:55:52.000Z",
+      "endedAt": "2026-06-18T11:55:12.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVCC8P5XTCA7H7W7E6A2MYJS",
+      "title": "ChatGPT failing to load or save",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-18T03:26:46.000Z",
+      "endedAt": "2026-06-18T03:55:02.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KVB9JAB1PP9GS4A6AZ52TT5Y",
+      "title": "Errors with conversations on Android and iOS devices",
+      "impact": "major",
+      "affectedProducts": [],
+      "startedAt": "2026-06-17T17:20:22.000Z",
+      "endedAt": "2026-06-17T18:23:18.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KV7ZT644J4V94GSXMFPY2ANR",
+      "title": "Codex \"Selected Model is at Capacity\" Error",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-16T10:32:11.000Z",
+      "endedAt": "2026-06-16T13:48:12.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KV6W1JX2T4T1455777Q1R2W5",
+      "title": "Users may experience issue with Codex Cloud tasks",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-16T00:07:04.000Z",
+      "endedAt": "2026-06-16T00:55:57.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KV6NGBYE50GK3TRXHD2EMTXA",
+      "title": "FedRAMP workspaces and API orgs have degraded performance",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-15T22:12:49.000Z",
+      "endedAt": "2026-06-26T23:07:55.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KV67B3HB2B6JKHAMHCCYS0KZ",
+      "title": "OAuth Account Creation / Login Error",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-15T18:05:16.000Z",
+      "endedAt": "2026-06-15T20:12:26.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTWCER83NNKE698QXNXJG11M",
+      "title": "Elevated 431 Errors",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-11T22:22:14.000Z",
+      "endedAt": "2026-06-12T00:47:57.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTW7QY5W9DDYT0ETXX6MPVSY",
+      "title": "Elevated error rates for GPT 5.5 in Codex",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-11T20:59:52.000Z",
+      "endedAt": "2026-06-11T22:28:09.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTVCFSN91M935M3MD3Z9W7C9",
+      "title": "Disruption in service availabilty for Free and Go users",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-11T13:03:34.000Z",
+      "endedAt": "2026-06-11T14:04:45.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTHRCXQCANBBY5JTGEQ1XTPK",
+      "title": "Disruption in service availabilty for Go users",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-07T19:19:19.000Z",
+      "endedAt": "2026-06-07T19:25:47.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTHA1XMAS77H4GMQBKSNPK71",
+      "title": "Disruption in service availabilty for Free and Go users",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-07T15:08:38.000Z",
+      "endedAt": "2026-06-07T18:06:11.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTCF0M9HQ04JB48EXMMJVX5J",
+      "title": "Voice mode availability impacted",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-05T17:59:06.000Z",
+      "endedAt": "2026-06-05T19:04:32.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTC44AD7928NC4HHQWW9XE5F",
+      "title": "Users unable to sign in using Microsoft personal accounts",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-05T14:48:53.000Z",
+      "endedAt": "2026-06-05T15:58:28.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTC1ZHEQGEYJR6W372KNW3WF",
+      "title": "Elevated error rates for Free users in conversations",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-05T14:11:19.000Z",
+      "endedAt": "2026-06-05T15:37:16.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "01KTBZDS20E3PZ53DH2SCKXN49",
+      "title": "Some users may experience issues accessing OpenAI accounts",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-06-05T13:26:40.000Z",
+      "endedAt": "2026-06-05T16:09:19.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": null
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "provider": "xai",
+  "providerName": "xAI",
+  "sourceUrl": "https://status.x.ai/",
+  "sourceKind": "html",
+  "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+  "asOf": "2026-07-09T03:55:03.571Z",
+  "available": false,
+  "note": "HTTP 403 Forbidden",
+  "extraction": null,
+  "incidents": []
+}

@@ -939,80 +939,39 @@ npm run ocr:real
 
 // --- Availability ------------------------------------------------------------
 
-const availOverall = (summary) => {
-  if (!summary.fetchOk) return "取得失敗";
-  if (summary.overallDescription) return summary.overallDescription;
-  return summary.activeIncidentCount === 0
-    ? "稼働中インシデントの報告なし"
-    : "稼働中インシデントあり";
-};
-
-const availComponents = (summary) => {
-  if (!summary.fetchOk) return "—";
-  if (summary.componentCount === 0) return "非公開（インシデントのみ）";
-  return `${summary.operationalCount}/${summary.componentCount} operational`;
-};
-
+const availPct = (value) =>
+  typeof value === "number" ? `${(value * 100).toFixed(3)}%` : "—";
+const availHours = (minutes) =>
+  typeof minutes === "number" ? `${(minutes / 60).toFixed(1)} 時間` : "—";
 const availDash = (value) => (value ? value : "—");
+
+const availTrendRows = (trends, key) =>
+  trends
+    .map((t) => {
+      if (!t.available) {
+        return `| ${providerName(t.provider)} | 取得不可 | — | — | — | — |`;
+      }
+      const w = t[key];
+      return `| ${providerName(t.provider)} | ${availPct(w.uptimePct)} | ${w.incidentCount} | ${w.majorIncidentCount} | ${availHours(w.downtimeMinutes)} | ${availHours(w.maintenanceMinutes)} |`;
+    })
+    .join("\n");
 
 const exportAvailability = () => {
   const { sourceArtifact, result } = readArtifact(
     "docs/research-reports/llm-availability.real.data.json",
     "docs/research-reports/llm-availability.data.json",
   );
-  const summaries = (result.summaries ?? [])
-    .slice()
-    .toSorted((a, b) => a.provider.localeCompare(b.provider));
-  const observations = (result.observations ?? [])
+  const trends = (result.trends ?? [])
     .slice()
     .toSorted((a, b) => a.provider.localeCompare(b.provider));
   const measuredNote = result.fixture
-    ? "現在の公開データはキー不要の fixture（コミット済みステータス応答）であり、ライブ取得ではありません。"
-    : "各社の公開ステータスページをライブ取得した観測です。";
+    ? "現在の公開データはコミット済みの累積履歴からのキー不要レンダーです。"
+    : "各社ステータスページをライブ取得し、LLM で抽出して履歴を更新した結果です。";
 
-  const statusRows = summaries
+  const provenanceRows = trends
     .map(
-      (s) =>
-        `| ${providerName(s.provider)} | ${availOverall(s)} | ${availComponents(s)} | ${s.activeIncidentCount} | ${s.recentIncidentCount} | ${availDash(s.pageUpdatedAt)} |`,
-    )
-    .join("\n");
-
-  const componentDetail = summaries
-    .map((s) => {
-      if (!s.fetchOk) {
-        return `- **${providerName(s.provider)}**: ステータスページを取得できませんでした（${availDash(s.fetchError)}）。コンポーネントのスナップショットは記録していません。`;
-      }
-      if (s.componentCount === 0) {
-        return `- **${providerName(s.provider)}**: このソースはコンポーネント一覧を公開していません（インシデントのみ）。`;
-      }
-      if ((s.nonOperationalComponents ?? []).length === 0) {
-        return `- **${providerName(s.provider)}**: 報告された ${s.componentCount} コンポーネントはすべて operational。`;
-      }
-      const items = s.nonOperationalComponents
-        .map((c) => `${c.name} → ${c.status}`)
-        .join("; ");
-      return `- **${providerName(s.provider)}**: ${s.operationalCount}/${s.componentCount} operational。非 operational: ${items}。`;
-    })
-    .join("\n");
-
-  const incidentLines = (select, emptyText) => {
-    const lines = observations.flatMap((o) =>
-      (select(o) ?? []).map((i) => {
-        const window =
-          !i.startedAt && !i.resolvedAt
-            ? ""
-            : `（${availDash(i.startedAt)} → ${i.resolvedAt ? i.resolvedAt : "継続中"}）`;
-        const link = i.url ? ` [詳細](${i.url})` : "";
-        return `- **${providerName(o.provider)}** — ${i.name} [impact: ${i.impact}, status: ${i.status}]${window}${link}`;
-      }),
-    );
-    return lines.length === 0 ? emptyText : lines.join("\n");
-  };
-
-  const provenanceRows = observations
-    .map(
-      (o) =>
-        `| ${providerName(o.provider)} | [\`${o.sourceUrl}\`](${o.sourceUrl}) | ${o.fetchedAt} | ${availDash(o.pageUpdatedAt)} | ${o.fetchOk ? "ok" : `失敗: ${availDash(o.fetchError)}`} |`,
+      (t) =>
+        `| ${providerName(t.provider)} | [\`${t.sourceUrl}\`](${t.sourceUrl}) | ${t.sourceKind} | ${t.asOf} | ${t.incidentTotal} | ${availDash(t.extraction?.model)} | ${t.available ? "ok" : `失敗: ${availDash(t.note)}`} |`,
     )
     .join("\n");
 
@@ -1021,71 +980,63 @@ const exportAvailability = () => {
     `${frontmatter({
       sourceArtifact,
       generatedAt: result.generatedAt,
-      trials: observations.length,
+      trials: trends.length,
       provenance: result.fixture ? "fixtured" : "measured",
     })}
 
-# 可用性の観測（ステータスページ観測）
+# 可用性の観測（ステータスページ履歴・30/90 日トレンド）
 
-この観測は \`${result.generatedAt}\` に生成しました。${summaries.length} 社の**公開ステータスページ**を取得し、各社が報告するコンポーネント状態・稼働中インシデント・直近インシデント履歴を、取得時点のスナップショットとして記録します。**API キーは不要**で、各社のモデル API は一切呼び出しません。${measuredNote}
+この記録は各社の**公開ステータスページのインシデント履歴**から構築した**時系列の可用性記録**です（as of \`${result.asOf}\`）。フォーマットが各社で割れるステータスページを **LLM が読み取り**、共通スキーマのインシデントへ正規化してリポジトリに**累積**します。以下のアップタイムは各社が報告したインシデントから impact 重み付きで**導出**した値であり、当方によるモデル API の測定ではありません。${measuredNote}
 
-> **これはランキングではありません。** ある時点のステータスページのスナップショットであり、「どのプロバイダーがより信頼できる」といった断定はできません。各社自身の報告の記録として、取得元・取得時刻とともに観測値としてのみ提示します。
+> **これは SLA でもランキングでもありません。** 導出アップタイムは各社の自己報告インシデントをローリング窓で重み付き集計した**指標**であり、サービス保証や「最も信頼できる」といった断定ではありません。プロバイダーは五十音順に並べます。重み: critical ×1.0、major ×0.5、minor ×0.1、計画メンテナンスは除外し別掲。各社でインシデントの粒度が大きく異なるため、単一インシデントが指標に寄与するのは最大 **24 時間**までとし（実際の継続時間はインシデント記録に保持）、長時間・特定プロダクト限定の事象が指標を支配しないようにしています。
 
-## 1. 観測の目的
+## 1. 直近 30 日
 
-各プロバイダーが自社ステータスページで報告している状態（コンポーネント別 status・稼働中インシデント・直近履歴）を、取得時点で記録・要約することを目的とします。これは各社の**報告の記録**であり、当方によるアップタイム測定や SLA ではありません。
+| Provider | 導出アップタイム | インシデント | major/critical | ダウンタイム | メンテナンス |
+| --- | ---: | ---: | ---: | ---: | ---: |
+${availTrendRows(trends, "window30")}
 
-## 2. プロバイダー別の報告状態
+## 2. 直近 90 日
 
-プロバイダー名の昇順で並べます（順位づけはしません）。
+| Provider | 導出アップタイム | インシデント | major/critical | ダウンタイム | メンテナンス |
+| --- | ---: | ---: | ---: | ---: | ---: |
+${availTrendRows(trends, "window90")}
 
-| Provider | 報告状態 | コンポーネント | 稼働中インシデント | 直近インシデント | ページ更新 |
-| --- | --- | --- | ---: | ---: | --- |
-${statusRows}
+## 3. 読み方と制約
 
-## 3. コンポーネントの状態
+- アップタイムは各社報告インシデントからの**導出値**（impact 重み付き）であり、各社公表の SLA・稼働率とは定義が異なります。
+- 取得不可のプロバイダー（例: Cloudflare でブロックされる提供元）は「取得不可」と正直に記録し、値を捏造しません。
+- 窓は as of 時点からのローリング 30／90 日です。日次アップタイムの推移チャートは公開リポジトリの \`docs/research-reports/llm-availability.md\` に描画されます。
 
-${componentDetail}
+## 4. 取得元（provenance）
 
-## 4. 稼働中のインシデント／メンテナンス
+各社の記録は、公開ステータスソース・取得基準時（as of）・抽出に用いた LLM モデルまで辿れます。
 
-${incidentLines((o) => o.activeIncidents, "取得時点で、いずれのソースにも稼働中インシデント・メンテナンスの報告はありませんでした。")}
-
-## 5. 直近のインシデント履歴
-
-取得時点で各ソースが公開している直近インシデントです（Statuspage の \`summary.json\` は現在掲載中のインシデントのみを含むため、網羅的な履歴には各社のインシデントフィードが必要です）。
-
-${incidentLines((o) => o.recentIncidents, "取得したソースからは、直近の解決済みインシデントは公開されていませんでした。")}
-
-## 6. 取得元（provenance）
-
-各観測には、取得元 URL・当方の取得時刻・ページ側の最終更新時刻を残し、各社の報告まで辿れるようにしています。
-
-| Provider | Source | 取得時刻 | ページ更新 | 取得 |
-| --- | --- | --- | --- | --- |
+| Provider | Source | 形式 | as of | 記録インシデント数 | 抽出モデル | 取得 |
+| --- | --- | --- | --- | ---: | --- | --- |
 ${provenanceRows}
 
 ${kousatsuSection(
-  7,
+  5,
   "llm-availability",
-  "この観測は各社ステータスページの、ある時点のスナップショットです。各社の報告の記録であり、可用性の断定的な比較や SLA には使えません。継続的な評価には、定期的な取得と各社インシデントフィードの参照が必要です。",
+  "各社ステータスページの累積履歴からの導出トレンドであり、断定的な可用性比較や SLA には使えません。継続的な評価には定期取得と長期の窓が必要です。",
 )}
 
-## 8. 再現方法
+## 6. 再現方法
 
-調査は公開リポジトリ \`qmu/research\` で再生成できます。API キー不要の fixture 観測（コミット済みステータス応答）と、公開ステータスページのライブ取得が分かれています。
+調査は公開リポジトリ \`qmu/research\` で再生成できます。キー不要の \`--fixture\` は累積履歴から 30/90 日トレンドを描画し、real 経路は公開ステータスページを取得して LLM 抽出で履歴を更新します。
 
 \`\`\`sh
 git clone https://github.com/qmu/research
 cd research/packages/tech
 npm install
 
-npm run availability:fixture
-npm run availability:estimate
-npm run availability
+npm run availability:fixture   # keyless: 累積履歴から描画
+npm run availability:estimate  # 見積のみ
+npm run availability           # real: 取得 + LLM 抽出で履歴更新
 \`\`\`
 
-公開判断に使う場合は、取得元・取得時刻・ページ側更新時刻・provenance を記録し、各社の報告の記録であることを明記します。`,
+公開判断に使う場合は、取得元・as of・抽出モデル・provenance を記録し、各社の報告からの導出値であることを明記します。`,
   );
 };
 

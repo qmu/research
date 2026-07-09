@@ -1,0 +1,103 @@
+{
+  "provider": "google",
+  "providerName": "Google Cloud",
+  "sourceUrl": "https://status.cloud.google.com/incidents.json",
+  "sourceKind": "google-json",
+  "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+  "asOf": "2026-07-09T03:55:03.571Z",
+  "available": true,
+  "note": null,
+  "extraction": {
+    "model": "claude-sonnet-5",
+    "extractedAt": "2026-07-09T03:55:03.571Z"
+  },
+  "incidents": [
+    {
+      "id": "5fGQt4VbkDnr3Yp8PXPr",
+      "title": "Network traffic to Google Cloud originating from Delhi, Chennai, Mumbai and surrounding areas experiencing intermittent elevated latency and possible packet loss",
+      "impact": "minor",
+      "affectedProducts": [
+        "Hybrid Connectivity",
+        "Media CDN",
+        "Virtual Private Cloud (VPC)"
+      ],
+      "startedAt": "2026-06-05T07:00:00.000Z",
+      "endedAt": "2026-06-26T19:00:00.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "incidents/5fGQt4VbkDnr3Yp8PXPr"
+    },
+    {
+      "id": "41E5S3mkTGDfkZuJZH5k",
+      "title": "Vertex AI Gemini API customers experienced increased error rates when accessing the global endpoint",
+      "impact": "minor",
+      "affectedProducts": [
+        "Agent Assist",
+        "Dialogflow CX",
+        "Google Cloud Support",
+        "Vertex Gemini API"
+      ],
+      "startedAt": "2026-02-27T12:37:00.000Z",
+      "endedAt": "2026-02-27T14:35:00.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "incidents/41E5S3mkTGDfkZuJZH5k"
+    },
+    {
+      "id": "8cY8jdUpEGGbsSMSQk7J",
+      "title": "Elevated error rates with multiple products in us-east1",
+      "impact": "minor",
+      "affectedProducts": [
+        "AlloyDB for PostgreSQL",
+        "Apigee",
+        "Artifact Registry",
+        "Certificate Authority Service",
+        "Cloud Armor",
+        "Cloud Billing",
+        "Cloud Build",
+        "Cloud External Key Manager",
+        "Cloud Firestore",
+        "Cloud HSM",
+        "Cloud Key Management Service",
+        "Cloud Load Balancing",
+        "Cloud Memorystore",
+        "Cloud Monitoring",
+        "Cloud Run",
+        "Cloud Spanner",
+        "Cloud Storage for Firebase",
+        "Cloud Workflows",
+        "Database Migration Service",
+        "Dataproc Metastore",
+        "Dialogflow CX",
+        "Eventarc",
+        "Google App Engine",
+        "Google BigQuery",
+        "Google Cloud Bigtable",
+        "Google Cloud Console",
+        "Google Cloud Dataflow",
+        "Google Cloud Dataproc",
+        "Google Cloud Pub/Sub",
+        "Google Cloud SQL",
+        "Google Cloud Storage",
+        "Google Cloud Support",
+        "Google Cloud Tasks",
+        "Google Compute Engine",
+        "Google Kubernetes Engine",
+        "Hybrid Connectivity",
+        "Identity and Access Management",
+        "Media CDN",
+        "Memorystore for Memcached",
+        "Memorystore for Redis",
+        "Memorystore for Redis Cluster",
+        "Persistent Disk",
+        "Private Service Connect",
+        "Secret Manager",
+        "Service Directory",
+        "Vertex AI Online Prediction",
+        "Virtual Private Cloud (VPC)"
+      ],
+      "startedAt": "2025-07-18T14:42:00.000Z",
+      "endedAt": "2025-07-18T16:47:00.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "incidents/8cY8jdUpEGGbsSMSQk7J"
+    }
+  ]
+}
