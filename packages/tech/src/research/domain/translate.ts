@@ -12,16 +12,21 @@ import type { LlmClient } from "../../vendors/llm/types";
  * Like insights, translation is LLM-generated — non-deterministic, key-gated —
  * so it is a real-run, owner-gated, regenerable artifact and never part of the
  * keyless byte-stable fixture. Everything here is pure except
- * `translateInsights`, which makes the single model call.
+ * `translateInsights`, which makes the model calls.
  */
 
 export const TRANSLATION_MODEL_ID = "anthropic-claude-sonnet-5";
 export const TRANSLATION_API_MODEL_ID = "claude-sonnet-5";
 
-/** Rough output budget for one translated overview; used by the cost estimate. */
-export const TRANSLATION_OUTPUT_TOKENS = 900;
+/** Output budget for one translated report; used for live calls and estimates. */
+export const TRANSLATION_OUTPUT_TOKENS = 16_384;
 
 const ROUGH_CHARS_PER_TOKEN = 4;
+const TRANSLATION_CHUNK_MAX_CHARS = 8_000;
+
+const RAW_BLOCK_PLACEHOLDER_PREFIX = "@@RAW_BLOCK_";
+const RAW_BLOCK_PLACEHOLDER_SUFFIX = "@@";
+const RAW_BLOCK_PATTERN = /^<svg\b.*<\/svg>$/gm;
 
 export type TranslateInput = Readonly<{
   topicId: string;
@@ -53,6 +58,128 @@ export type TranslationReport = Readonly<{
   /** Numbers present in the English source but missing from the translation. */
   missingNumbers: ReadonlyArray<string>;
 }>;
+
+type ProtectedBody = Readonly<{
+  markdown: string;
+  blocks: ReadonlyArray<Readonly<{ placeholder: string; raw: string }>>;
+}>;
+
+const placeholderFor = (index: number): string => {
+  let n = index;
+  let label = "";
+  do {
+    label = String.fromCharCode(65 + (n % 26)) + label;
+    n = Math.floor(n / 26) - 1;
+  } while (n >= 0);
+  return `${RAW_BLOCK_PLACEHOLDER_PREFIX}${label}${RAW_BLOCK_PLACEHOLDER_SUFFIX}`;
+};
+
+const protectRawBlocks = (markdown: string): ProtectedBody => {
+  const blocks: Array<{ placeholder: string; raw: string }> = [];
+  const protectedMarkdown = markdown.replace(RAW_BLOCK_PATTERN, (raw) => {
+    const placeholder = placeholderFor(blocks.length);
+    blocks.push({ placeholder, raw });
+    return placeholder;
+  });
+  return { markdown: protectedMarkdown, blocks };
+};
+
+const restoreRawBlocks = (
+  markdown: string,
+  blocks: ProtectedBody["blocks"],
+): string =>
+  blocks.reduce(
+    (restored, block) => restored.replaceAll(block.placeholder, block.raw),
+    markdown,
+  );
+
+const withEnglishBody = (
+  input: TranslateInput,
+  englishBody: string,
+): TranslateInput => ({ ...input, englishBody });
+
+const splitIntoSections = (markdown: string): ReadonlyArray<string> => {
+  const sections: string[] = [];
+  let current: string[] = [];
+  for (const line of markdown.split("\n")) {
+    if (line.startsWith("## ") && current.length > 0) {
+      sections.push(current.join("\n").trim());
+      current = [];
+    }
+    current.push(line);
+  }
+  if (current.length > 0) sections.push(current.join("\n").trim());
+  return sections.filter((section) => section.length > 0);
+};
+
+const splitLargeSection = (section: string): ReadonlyArray<string> => {
+  if (section.length <= TRANSLATION_CHUNK_MAX_CHARS) return [section];
+  const units: string[] = [];
+  const lines = section.split("\n");
+  for (let index = 0; index < lines.length; ) {
+    const line = lines[index] ?? "";
+    if (line.startsWith("```")) {
+      const block: string[] = [line];
+      index += 1;
+      while (index < lines.length) {
+        const next = lines[index] ?? "";
+        block.push(next);
+        index += 1;
+        if (next.startsWith("```")) break;
+      }
+      units.push(block.join("\n"));
+      continue;
+    }
+    if (line.startsWith("|")) {
+      const table: string[] = [];
+      while (index < lines.length && (lines[index] ?? "").startsWith("|")) {
+        table.push(lines[index] ?? "");
+        index += 1;
+      }
+      units.push(table.join("\n"));
+      continue;
+    }
+    const paragraph: string[] = [];
+    while (index < lines.length && (lines[index] ?? "").trim() !== "") {
+      paragraph.push(lines[index] ?? "");
+      index += 1;
+    }
+    while (index < lines.length && (lines[index] ?? "").trim() === "") {
+      index += 1;
+    }
+    if (paragraph.length > 0) units.push(paragraph.join("\n"));
+  }
+
+  const chunks: string[] = [];
+  let current = "";
+  for (const unit of units) {
+    if (
+      current.length > 0 &&
+      current.length + unit.length + 2 > TRANSLATION_CHUNK_MAX_CHARS
+    ) {
+      chunks.push(current.trim());
+      current = "";
+    }
+    current = current.length === 0 ? unit : `${current}\n\n${unit}`;
+  }
+  if (current.trim().length > 0) chunks.push(current.trim());
+  return chunks;
+};
+
+const splitTranslationChunks = (markdown: string): ReadonlyArray<string> =>
+  splitIntoSections(markdown).flatMap(splitLargeSection);
+
+const translateChunk = async (
+  client: LlmClient,
+  input: TranslateInput,
+): Promise<string> => {
+  const prompt = buildTranslationPrompt(input);
+  let body = await client.generateAnswer(prompt);
+  if (verifyNumbersPreserved(input.englishBody, body).length > 0) {
+    body = await client.generateAnswer(prompt);
+  }
+  return body;
+};
 
 /**
  * Extract numeric tokens from text for the preservation check. Matches integers
@@ -133,8 +260,13 @@ export const buildTranslationPrompt = (input: TranslateInput): string => {
     `  "sqlite-vec", "AutoRAG") in their original form.`,
     `- Translate only the prose; do not add, drop, or reinterpret any claim.`,
     `- Preserve Markdown structure: headings, tables, lists, links, inline code,`,
-    `  code fences, Mermaid diagrams, and shell commands. Translate labels and`,
-    `  prose; do not translate code, commands, paths, or frontmatter keys.`,
+    `  code fences, Mermaid diagrams, and shell commands.`,
+    `- Preserve raw-block placeholders such as ${placeholderFor(0)} exactly;`,
+    `  they will be restored after translation.`,
+    `- Translate all human-facing English text into Japanese, including headings,`,
+    `  table headers, legends, captions, and list labels. Keep only code,`,
+    `  commands, paths, URLs, provider names, model names, model IDs, and units`,
+    `  unchanged.`,
     `- Output the translated Markdown body only — no frontmatter and no outer`,
     `  wrapper code fence.`,
     ``,
@@ -186,8 +318,17 @@ export const translateInsights = async (
   params: TranslateParams,
 ): Promise<TranslationReport> => {
   const { client, input, generatedAt } = params;
-  const prompt = buildTranslationPrompt(input);
-  const body = await client.generateAnswer(prompt);
+  const protectedBody = protectRawBlocks(input.englishBody);
+  const translatedChunks: string[] = [];
+  for (const chunk of splitTranslationChunks(protectedBody.markdown)) {
+    translatedChunks.push(
+      await translateChunk(client, withEnglishBody(input, chunk)),
+    );
+  }
+  const body = restoreRawBlocks(
+    translatedChunks.map((chunk) => chunk.trim()).join("\n\n"),
+    protectedBody.blocks,
+  );
   const missingNumbers = verifyNumbersPreserved(input.englishBody, body);
   const provenance: TranslationProvenance = {
     source_artifact: input.sourceArtifact,
@@ -215,10 +356,16 @@ export type TranslationEstimate = Readonly<{
 export const estimateTranslation = (
   input: TranslateInput,
 ): TranslationEstimate => {
-  const prompt = buildTranslationPrompt(input);
+  const protectedBody = protectRawBlocks(input.englishBody);
+  const prompts = splitTranslationChunks(protectedBody.markdown).map((chunk) =>
+    buildTranslationPrompt(withEnglishBody(input, chunk)),
+  );
   return {
-    calls: 1,
-    promptTokens: Math.ceil(prompt.length / ROUGH_CHARS_PER_TOKEN),
-    outputTokens: TRANSLATION_OUTPUT_TOKENS,
+    calls: prompts.length,
+    promptTokens: Math.ceil(
+      prompts.reduce((total, prompt) => total + prompt.length, 0) /
+        ROUGH_CHARS_PER_TOKEN,
+    ),
+    outputTokens: prompts.length * TRANSLATION_OUTPUT_TOKENS,
   };
 };

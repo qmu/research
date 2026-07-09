@@ -5,6 +5,7 @@ import {
   estimateTranslation,
   translateInsights,
   TRANSLATION_API_MODEL_ID,
+  TRANSLATION_OUTPUT_TOKENS,
   type TranslateInput,
 } from "./domain/translate";
 import type { LlmClient } from "../vendors/llm/types";
@@ -92,7 +93,9 @@ const translationClient = (): LlmClient => {
   return {
     model: completion.model,
     generateAnswer: (prompt) =>
-      completion.complete(prompt).then((result) => result.text),
+      completion
+        .complete(prompt, { maxTokens: TRANSLATION_OUTPUT_TOKENS })
+        .then((result) => result.text),
   };
 };
 

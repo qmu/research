@@ -1,0 +1,2569 @@
+{
+  "generatedAt": "2026-07-09T03:55:03.571Z",
+  "method": "status-page-llm-extraction",
+  "fixture": true,
+  "asOf": "2026-07-09T03:55:03.571Z",
+  "trends": [
+    {
+      "provider": "anthropic",
+      "providerName": "Anthropic (Claude)",
+      "sourceUrl": "https://status.claude.com/api/v2/incidents.json",
+      "sourceKind": "statuspage-json",
+      "available": true,
+      "note": null,
+      "asOf": "2026-07-09T03:55:03.571Z",
+      "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+      "extraction": {
+        "model": "claude-sonnet-5",
+        "extractedAt": "2026-07-09T03:55:03.571Z"
+      },
+      "incidentTotal": 50,
+      "window30": {
+        "days": 30,
+        "startedAt": "2026-06-10T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 43200,
+        "downtimeMinutes": 2276.8,
+        "maintenanceMinutes": 0,
+        "uptimePct": 0.9473,
+        "incidentCount": 40,
+        "majorIncidentCount": 9,
+        "perDay": [
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 25.5,
+            "uptimePct": 0.98231
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 33.1,
+            "uptimePct": 0.97701
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 1390.2,
+            "uptimePct": 0.03461
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 50.7,
+            "uptimePct": 0.96477
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 15.6,
+            "uptimePct": 0.98919
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 48.5,
+            "uptimePct": 0.9663
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 36.5,
+            "uptimePct": 0.97463
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 18.9,
+            "uptimePct": 0.98685
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 9.8,
+            "uptimePct": 0.99322
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 5.5,
+            "uptimePct": 0.99617
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 87.2,
+            "uptimePct": 0.93945
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 159.9,
+            "uptimePct": 0.88893
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 10,
+            "uptimePct": 0.99305
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 5.2,
+            "uptimePct": 0.9964
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 5.7,
+            "uptimePct": 0.99602
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 4.1,
+            "uptimePct": 0.99715
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 3,
+            "uptimePct": 0.99792
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 2,
+            "uptimePct": 0.99859
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 69.7,
+            "uptimePct": 0.95159
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 210.9,
+            "uptimePct": 0.85354
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 73.5,
+            "uptimePct": 0.94893
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 11.1,
+            "uptimePct": 0.99227
+          }
+        ]
+      },
+      "window90": {
+        "days": 90,
+        "startedAt": "2026-04-11T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 129600,
+        "downtimeMinutes": 2404.8,
+        "maintenanceMinutes": 0,
+        "uptimePct": 0.98144,
+        "incidentCount": 49,
+        "majorIncidentCount": 10,
+        "perDay": [
+          {
+            "date": "2026-04-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-31",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-07",
+            "downtimeMinutes": 12.3,
+            "uptimePct": 0.99147
+          },
+          {
+            "date": "2026-06-08",
+            "downtimeMinutes": 23.5,
+            "uptimePct": 0.98366
+          },
+          {
+            "date": "2026-06-09",
+            "downtimeMinutes": 92.2,
+            "uptimePct": 0.936
+          },
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 25.5,
+            "uptimePct": 0.98231
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 33.1,
+            "uptimePct": 0.97701
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 1390.2,
+            "uptimePct": 0.03461
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 50.7,
+            "uptimePct": 0.96477
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 15.6,
+            "uptimePct": 0.98919
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 48.5,
+            "uptimePct": 0.9663
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 36.5,
+            "uptimePct": 0.97463
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 18.9,
+            "uptimePct": 0.98685
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 9.8,
+            "uptimePct": 0.99322
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 5.5,
+            "uptimePct": 0.99617
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 87.2,
+            "uptimePct": 0.93945
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 159.9,
+            "uptimePct": 0.88893
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 10,
+            "uptimePct": 0.99305
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 5.2,
+            "uptimePct": 0.9964
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 5.7,
+            "uptimePct": 0.99602
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 4.1,
+            "uptimePct": 0.99715
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 3,
+            "uptimePct": 0.99792
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 2,
+            "uptimePct": 0.99859
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 69.7,
+            "uptimePct": 0.95159
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 210.9,
+            "uptimePct": 0.85354
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 73.5,
+            "uptimePct": 0.94893
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 11.1,
+            "uptimePct": 0.99227
+          }
+        ]
+      }
+    },
+    {
+      "provider": "google",
+      "providerName": "Google Cloud",
+      "sourceUrl": "https://status.cloud.google.com/incidents.json",
+      "sourceKind": "google-json",
+      "available": true,
+      "note": null,
+      "asOf": "2026-07-09T03:55:03.571Z",
+      "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+      "extraction": {
+        "model": "claude-sonnet-5",
+        "extractedAt": "2026-07-09T03:55:03.571Z"
+      },
+      "incidentTotal": 3,
+      "window30": {
+        "days": 30,
+        "startedAt": "2026-06-10T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 43200,
+        "downtimeMinutes": 0,
+        "maintenanceMinutes": 0,
+        "uptimePct": 1,
+        "incidentCount": 1,
+        "majorIncidentCount": 0,
+        "perDay": [
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          }
+        ]
+      },
+      "window90": {
+        "days": 90,
+        "startedAt": "2026-04-11T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 129600,
+        "downtimeMinutes": 144,
+        "maintenanceMinutes": 0,
+        "uptimePct": 0.99889,
+        "incidentCount": 1,
+        "majorIncidentCount": 0,
+        "perDay": [
+          {
+            "date": "2026-04-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-31",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downtimeMinutes": 102,
+            "uptimePct": 0.92917
+          },
+          {
+            "date": "2026-06-06",
+            "downtimeMinutes": 42,
+            "uptimePct": 0.97083
+          },
+          {
+            "date": "2026-06-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          }
+        ]
+      }
+    },
+    {
+      "provider": "openai",
+      "providerName": "OpenAI",
+      "sourceUrl": "https://status.openai.com/api/v2/incidents.json",
+      "sourceKind": "statuspage-json",
+      "available": true,
+      "note": null,
+      "asOf": "2026-07-09T03:55:03.571Z",
+      "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+      "extraction": {
+        "model": "claude-sonnet-5",
+        "extractedAt": "2026-07-09T03:55:03.571Z"
+      },
+      "incidentTotal": 25,
+      "window30": {
+        "days": 30,
+        "startedAt": "2026-06-10T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 43200,
+        "downtimeMinutes": 783.2,
+        "maintenanceMinutes": 0,
+        "uptimePct": 0.98187,
+        "incidentCount": 19,
+        "majorIncidentCount": 2,
+        "perDay": [
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 24.7,
+            "uptimePct": 0.98283
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 4.8,
+            "uptimePct": 0.99667
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 23.4,
+            "uptimePct": 0.98373
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 157.8,
+            "uptimePct": 0.89044
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 31.5,
+            "uptimePct": 0.97815
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 20.8,
+            "uptimePct": 0.98558
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 10.4,
+            "uptimePct": 0.99279
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 67,
+            "uptimePct": 0.95345
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 0.8,
+            "uptimePct": 0.99945
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 78.9,
+            "uptimePct": 0.94518
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 55.4,
+            "uptimePct": 0.96152
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 114.4,
+            "uptimePct": 0.92058
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 20.9,
+            "uptimePct": 0.98547
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 122.2,
+            "uptimePct": 0.91516
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 21.8,
+            "uptimePct": 0.98484
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 28.4,
+            "uptimePct": 0.9803
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          }
+        ]
+      },
+      "window90": {
+        "days": 90,
+        "startedAt": "2026-04-11T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 129600,
+        "downtimeMinutes": 839.9,
+        "maintenanceMinutes": 0,
+        "uptimePct": 0.99352,
+        "incidentCount": 25,
+        "majorIncidentCount": 2,
+        "perDay": [
+          {
+            "date": "2026-04-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-31",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downtimeMinutes": 38.4,
+            "uptimePct": 0.97336
+          },
+          {
+            "date": "2026-06-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-07",
+            "downtimeMinutes": 18.4,
+            "uptimePct": 0.98722
+          },
+          {
+            "date": "2026-06-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 24.7,
+            "uptimePct": 0.98283
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 4.8,
+            "uptimePct": 0.99667
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 23.4,
+            "uptimePct": 0.98373
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 157.8,
+            "uptimePct": 0.89044
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 31.5,
+            "uptimePct": 0.97815
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 20.8,
+            "uptimePct": 0.98558
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 10.4,
+            "uptimePct": 0.99279
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 67,
+            "uptimePct": 0.95345
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 0.8,
+            "uptimePct": 0.99945
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 78.9,
+            "uptimePct": 0.94518
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 55.4,
+            "uptimePct": 0.96152
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 114.4,
+            "uptimePct": 0.92058
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 20.9,
+            "uptimePct": 0.98547
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 122.2,
+            "uptimePct": 0.91516
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 21.8,
+            "uptimePct": 0.98484
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 28.4,
+            "uptimePct": 0.9803
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          }
+        ]
+      }
+    },
+    {
+      "provider": "xai",
+      "providerName": "xAI",
+      "sourceUrl": "https://status.x.ai/",
+      "sourceKind": "html",
+      "available": false,
+      "note": "HTTP 403 Forbidden",
+      "asOf": "2026-07-09T03:55:03.571Z",
+      "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+      "extraction": null,
+      "incidentTotal": 0,
+      "window30": {
+        "days": 30,
+        "startedAt": "2026-06-10T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 43200,
+        "downtimeMinutes": 0,
+        "maintenanceMinutes": 0,
+        "uptimePct": 1,
+        "incidentCount": 0,
+        "majorIncidentCount": 0,
+        "perDay": [
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          }
+        ]
+      },
+      "window90": {
+        "days": 90,
+        "startedAt": "2026-04-11T00:00:00.000Z",
+        "endedAt": "2026-07-09T03:55:03.571Z",
+        "windowMinutes": 129600,
+        "downtimeMinutes": 0,
+        "maintenanceMinutes": 0,
+        "uptimePct": 1,
+        "incidentCount": 0,
+        "majorIncidentCount": 0,
+        "perDay": [
+          {
+            "date": "2026-04-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-04-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-05-31",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-10",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-11",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-12",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-13",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-14",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-15",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-16",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-17",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-18",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-19",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-20",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-21",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-22",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-24",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-25",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-26",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-27",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-28",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-01",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-02",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-03",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-04",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-05",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-06",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-07",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-08",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          },
+          {
+            "date": "2026-07-09",
+            "downtimeMinutes": 0,
+            "uptimePct": 1
+          }
+        ]
+      }
+    }
+  ]
+}

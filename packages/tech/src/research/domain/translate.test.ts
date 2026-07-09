@@ -142,6 +142,63 @@ describe("translateInsights", () => {
     }
   });
 
+  it("keeps raw SVG blocks out of the model prompt and restores them", async () => {
+    const svgInput: TranslateInput = {
+      ...input,
+      englishBody:
+        "The chart has 1 source value.\n<svg><text>0.9734</text></svg>\nThe table has 2 rows.",
+    };
+    const client = {
+      model: "fixture-translate",
+      generateAnswer: (prompt: string) => {
+        expect(prompt).not.toContain("<svg>");
+        expect(prompt).toContain("@@RAW_BLOCK_A@@");
+        return Promise.resolve(
+          "チャートには1個のソース値があります。\n@@RAW_BLOCK_A@@\n表には2行あります。",
+        );
+      },
+    };
+    const report = await translateInsights({
+      client,
+      input: svgInput,
+      generatedAt: "2026-07-09T00:00:00.000Z",
+    });
+    expect(report.markdown).toContain("<svg><text>0.9734</text></svg>");
+    expect(report.markdown).not.toContain("@@RAW_BLOCK_A@@");
+    expect(report.missingNumbers).toEqual([]);
+  });
+
+  it("translates long reports in multiple chunks", async () => {
+    let calls = 0;
+    const longInput: TranslateInput = {
+      ...input,
+      englishBody: [
+        "# Long report 1",
+        "A short opening with 2.",
+        "## Large section",
+        `${"Long prose. ".repeat(900)}3`,
+        "## Final section",
+        "The closing value is 4.",
+      ].join("\n\n"),
+    };
+    const client = {
+      model: "fixture-translate",
+      generateAnswer: (prompt: string) => {
+        calls += 1;
+        const numbers = [...new Set(prompt.match(/\d+(?:\.\d+)?%?/g) ?? [])];
+        return Promise.resolve(`翻訳チャンク ${calls}: ${numbers.join(" ")}`);
+      },
+    };
+    const report = await translateInsights({
+      client,
+      input: longInput,
+      generatedAt: "2026-07-09T00:00:00.000Z",
+    });
+    expect(calls).toBeGreaterThan(1);
+    expect(report.missingNumbers).toEqual([]);
+    expect(estimateTranslation(longInput).calls).toBeGreaterThan(1);
+  });
+
   it("reports missing numbers (without throwing) when the model drops one", async () => {
     const dropping = {
       model: "bad-translate",
