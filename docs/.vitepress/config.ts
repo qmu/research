@@ -17,7 +17,11 @@ export default defineConfig({
   description: "Public, reproducible foundational research for qmu.co.jp.",
   cleanUrls: true,
   // Role and template READMEs are documentation for editors, not site pages.
-  srcExclude: ["**/README.md"],
+  srcExclude: [
+    "**/README.md",
+    "research-reports/*.real.md",
+    "research-reports/*.fixture.md",
+  ],
   sitemap: { hostname: "https://research.qmu.dev" },
   markdown: {
     // High-contrast code themes so syntax-highlighted tokens (comments,
@@ -30,6 +34,7 @@ export default defineConfig({
     },
   },
   themeConfig: {
+    outline: false,
     nav: [
       { text: "Home", link: "/" },
       {

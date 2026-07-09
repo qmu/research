@@ -20,6 +20,8 @@ docs/.vitepress/dist/
 # committed (unlike the byte-stable fixture `llm-model-comparison.md`/`.data.json`).
 docs/research-reports/*.real.md
 docs/research-reports/*.real.data.json
+docs/research-reports/*.fixture.md
+docs/research-reports/*.fixture.data.json
 
 # Regenerable artifact-to-draft skeletons for the canonical LLM foundation IA.
 docs/llm-foundation/_generated/

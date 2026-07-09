@@ -1,4 +1,5 @@
 import type { OcrComparisonResult, OcrModelRun } from "./types";
+import { providerDisplayName } from "../../llm-model-comparison/domain/provider";
 
 const pct = (value: number): string => `${(value * 100).toFixed(1)}%`;
 
@@ -16,7 +17,7 @@ const resultRows = (result: OcrComparisonResult): string =>
   result.runs
     .map(
       (run) =>
-        `| ${run.modelName} | ${run.provider} | ${run.provenance} | ` +
+        `| ${run.modelName} | ${providerDisplayName(run.provider)} | ${run.provenance} | ` +
         `${run.measuredAt} | ` +
         `${metric(run, "characterErrorRate")} | ${metric(run, "wordErrorRate")} | ` +
         `${metric(run, "fieldAccuracy")} | ${run.error ?? ""} |`,

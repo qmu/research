@@ -106,6 +106,7 @@ describe("renderComparisonReport", () => {
     expect(md).toContain("Max schema depth");
     expect(md).toContain("Max schema breadth");
     expect(md).toContain("Information accuracy");
+    expect(md).toContain("| Anthropic | Test Model |");
   });
 
   it("never presents a fixtured or errored configuration as a live measurement", () => {

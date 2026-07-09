@@ -38,6 +38,8 @@ const sample: ReadonlyArray<ModelCard> = [
 describe("buildCatalogRows", () => {
   it("mirrors the registry cards, defaulting the API surface to chat", () => {
     const rows = buildCatalogRows(sample);
+    expect(rows[0]?.provider).toBe("Anthropic");
+    expect(rows[1]?.provider).toBe("OpenAI");
     expect(rows[0]?.apiSurface).toBe("chat");
     expect(rows[1]?.apiSurface).toBe("realtime");
     expect(rows[0]?.inputCostPerMTok).toBe(6);

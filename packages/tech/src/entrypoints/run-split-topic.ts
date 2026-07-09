@@ -17,8 +17,8 @@ import { renderSplitReport } from "../llm-model-comparison/domain/split-report";
  * `--real` simply re-projects the latest real compare artifact.
  *
  * The keyless `--fixture` path projects the committed compare fixture artifact
- * (`llm-model-comparison.data.json`), which is byte-stable, so each split
- * fixture is byte-stable too.
+ * (`llm-model-comparison.data.json`) into a `.fixture.*` report so the public
+ * per-topic page is not overwritten by placeholder `n/a (fixtured)` cells.
  */
 const hasArg = (name: string): boolean => process.argv.includes(name);
 
@@ -75,8 +75,8 @@ export const runSplitTopic = async (group: ProbeGroup): Promise<void> => {
   const artifact = projectComparison(comparison, group, basename(sourcePath));
   const canonicalMd = resolve(docsReportDir(), `${spec.artifactBase}.md`);
   const reportPath = fixture
-    ? canonicalMd
-    : `${canonicalMd.replace(/\.md$/, "")}.real.md`;
+    ? `${canonicalMd.replace(/\.md$/, "")}.fixture.md`
+    : canonicalMd;
   const artifactPath = reportPath.replace(/\.md$/, ".data.json");
   const rendered = { ...artifact, artifactPath: basename(artifactPath) };
 

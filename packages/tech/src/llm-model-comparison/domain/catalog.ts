@@ -1,4 +1,5 @@
 import type { ModelCard } from "./types";
+import { providerDisplayName } from "./provider";
 
 /**
  * The foundation-model catalog: a REFERENCE topic, not a benchmark. It renders
@@ -36,7 +37,7 @@ export const buildCatalogRows = (
   models: ReadonlyArray<ModelCard>,
 ): ReadonlyArray<CatalogRow> =>
   models.map((card) => ({
-    provider: card.provider,
+    provider: providerDisplayName(card.provider),
     modelName: card.modelName,
     apiModelId: card.apiModelId,
     tier: card.tier,

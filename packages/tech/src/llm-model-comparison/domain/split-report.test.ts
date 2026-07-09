@@ -94,6 +94,8 @@ describe("renderSplitReport", () => {
     expect(md).toContain("# LLM response speed comparison");
     expect(md).toContain("Throughput (tok/s)");
     expect(md).toContain("TTFT (ms)");
+    expect(md).toContain("| Anthropic | Claude Fable 5 |");
+    expect(md).not.toContain("| anthropic | Claude Fable 5 |");
     // Accuracy columns must NOT leak into the speed report headline.
     expect(md).not.toContain("Max schema depth");
     expect(md).not.toContain("Information accuracy");

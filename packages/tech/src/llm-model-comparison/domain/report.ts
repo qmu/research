@@ -17,6 +17,7 @@ import {
   buildInformationAccuracyPrompt,
 } from "./information-accuracy";
 import { isNoEffortLevel } from "./effort";
+import { providerDisplayName } from "./provider";
 
 // Render the comparison result page as Markdown — a comprehensive, objective
 // research report, not just a table. Provenance (curated / measured / fixtured /
@@ -95,7 +96,7 @@ const comparisonTable = (configs: ReadonlyArray<ConfigRun>): string => {
   const rows = configs.map((run) => {
     const s = run.stats;
     return (
-      `| ${escapeCell(run.provider)} | ${escapeCell(run.modelName)} | ${run.tier} | ` +
+      `| ${escapeCell(providerDisplayName(run.provider))} | ${escapeCell(run.modelName)} | ${run.tier} | ` +
       `${escapeCell(run.effort)} | ${usd(run.inputCostPerMTok)} / ${usd(run.outputCostPerMTok)} | ` +
       `${measured(run, numberWithCi(s.throughputTokensPerSec, 0))} | ` +
       `${measured(run, numberWithCi(s.ttftMs, 0))} | ` +
@@ -421,7 +422,7 @@ const reviewProvenanceNote = (r: Review): string => {
 
 const reviewBlock = (run: ConfigRun, detail: DetailLevel): string => {
   const r = run.review;
-  const head = `### ${label(run)} — ${escapeCell(run.provider)} · ${run.tier} {#${configKey(run)}}`;
+  const head = `### ${label(run)} — ${escapeCell(providerDisplayName(run.provider))} · ${run.tier} {#${configKey(run)}}`;
   if (r.provenance === "skipped") {
     return `${head}\n\n_No developer review: every trial failed for this configuration._`;
   }

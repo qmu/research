@@ -97,8 +97,8 @@ self-test, not a real provider sweep.
 
 | Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) | Max schema depth | Max schema breadth | Length accuracy | Information accuracy |
 | -------- | ----- | ---- | ------ | ------------------------ | ------------------ | --------- | ------------------ | ---------------- | ------------------ | --------------- | -------------------- |
-| anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) | 83% ± 0pp (95% CI, n=3) |
-| anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) | 83% ± 0pp (95% CI, n=3) |
+| Anthropic | Test Model | flagship | low | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) | 83% ± 0pp (95% CI, n=3) |
+| Anthropic | Test Model | flagship | high | $5.00 / $25.00 | 150 ± 0 (95% CI, n=3) | 320 ± 0 (95% CI, n=3) | 900 ± 0 (95% CI, n=3) | 12 ± 0 (95% CI, n=3) | 48 ± 0 (95% CI, n=3) | 92% ± 0pp (95% CI, n=3) | 83% ± 0pp (95% CI, n=3) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
 Throughput, TTFT, total latency, max schema depth, max schema breadth, length
@@ -182,13 +182,13 @@ Highest measured of the 2 measured configuration(s): **Test Model [low]** at 83%
 
 The LLM judge (\`claude-opus-4-8\`) wrote each review from that configuration's trial outputs and measured metrics. Treat these bullets as measured-run summaries, not independent capability claims.
 
-### Test Model [low] — anthropic · flagship {#test-model-low}
+### Test Model [low] — Anthropic · flagship {#test-model-low}
 
 - **Observed advantages:** fast and structured
 - **Observed constraints:** pricey at high effort
 - **Observed fit:** latency-sensitive structured extraction
 
-### Test Model [high] — anthropic · flagship {#test-model-high}
+### Test Model [high] — Anthropic · flagship {#test-model-high}
 
 - **Observed advantages:** fast and structured
 - **Observed constraints:** pricey at high effort

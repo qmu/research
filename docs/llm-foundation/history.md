@@ -16,10 +16,12 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### 対象基盤モデル（カタログ）
 
+- 2026-07-09T11:54:54.587Z: [English](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
 - 2026-07-09T11:02:05.370Z: [English](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)
 
 ### LLM応答速度
 
+- 2026-07-09T11:52:54.627Z: [English](../research-reports/history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison) · [Japanese](../research-reports/history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.ja) · [data.json](../research-reports/history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.data.json)
 - 2026-07-09T11:12:01.332Z: [English](../research-reports/history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison) · [Japanese](../research-reports/history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.ja) · [data.json](../research-reports/history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.data.json)
 
 ### LLM出力精度

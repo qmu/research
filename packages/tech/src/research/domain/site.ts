@@ -313,10 +313,10 @@ English reports, data artifacts, and history are kept here as reproducible
 source material. The public reading line for the Japanese canonical articles is
 [${JA_RESEARCH_TITLE}](../llm-foundation/).
 
-These are organized by research topic. The keyless-fixture data reports here are
-the byte-stable CI self-tests and the reproducible source for each topic; the
-per-topic reading experience and its Japanese version are generated from these
-by an owner-triggered real run.
+These are organized by research topic. Current reports and data artifacts are
+the reproducible source for each topic; keyless fixture outputs remain available
+as self-tests but do not replace owner-triggered real measurements on the public
+reading path.
 
 Past generated frames are listed in [History](./history).
 

@@ -12,6 +12,7 @@ import {
   INFORMATION_ACCURACY_MANIFEST,
   buildInformationAccuracyPrompt,
 } from "./information-accuracy";
+import { providerDisplayName } from "./provider";
 
 /**
  * Render a focused per-topic (speed or accuracy) report from a `SplitArtifact`.
@@ -76,7 +77,7 @@ const headlineTable = (artifact: SplitArtifact): string => {
       )
       .join(" | ");
     return (
-      `| ${escapeCell(run.provider)} | ${escapeCell(run.modelName)} | ${run.tier} | ` +
+      `| ${escapeCell(providerDisplayName(run.provider))} | ${escapeCell(run.modelName)} | ${run.tier} | ` +
       `${escapeCell(run.effort)} | ${usd(run.inputCostPerMTok)} / ${usd(run.outputCostPerMTok)} | ${cells} |`
     );
   });

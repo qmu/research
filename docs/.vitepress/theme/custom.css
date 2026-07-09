@@ -1,0 +1,14 @@
+.VPDoc .aside,
+.VPLocalNavOutlineDropdown {
+  display: none !important;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: none !important;
+}
+
+@media (min-width: 960px) {
+  .VPDoc.has-aside .content {
+    padding-right: 0 !important;
+  }
+}
