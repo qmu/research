@@ -26,6 +26,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "Home", link: "/" },
+      { text: "Research data (source)", link: "/research-reports/" },
       {
         // The main reading line: the generated structured Japanese reports
         // (data tables + LLM 考察), produced by the exporter from real data.
@@ -58,40 +59,8 @@ export default defineConfig({
           },
         ],
       },
-      { text: "Research data (source)", link: "/research-reports/" },
     ],
     sidebar: [
-      {
-        text: "LLM基礎検証（日本語）",
-        link: "/llm-foundation/",
-        items: [
-          { text: "はじめに", link: "/llm-foundation/" },
-          {
-            text: "基盤モデルの比較",
-            link: "/llm-foundation/foundation-model-comparison",
-          },
-          {
-            text: "ベクトルDB／RAGの比較",
-            link: "/llm-foundation/vector-db-comparison",
-          },
-          {
-            text: "可用性の観測",
-            link: "/llm-foundation/availability-comparison",
-          },
-          {
-            text: "OCR能力の比較",
-            link: "/llm-foundation/ocr-comparison",
-          },
-          {
-            text: "対象基盤モデル（カタログ）",
-            link: "/research-reports/foundation-models.insights.ja",
-          },
-          {
-            text: "Agent SDKの比較",
-            link: "/llm-foundation/agent-sdk-comparison",
-          },
-        ],
-      },
       {
         text: "Research data (source)",
         link: "/research-reports/",
@@ -131,6 +100,37 @@ export default defineConfig({
           {
             text: "LLM exact-match benchmark",
             link: "/research-reports/llm-benchmark",
+          },
+        ],
+      },
+      {
+        text: "LLM基礎検証（日本語）",
+        link: "/llm-foundation/",
+        items: [
+          { text: "はじめに", link: "/llm-foundation/" },
+          {
+            text: "基盤モデルの比較",
+            link: "/llm-foundation/foundation-model-comparison",
+          },
+          {
+            text: "ベクトルDB／RAGの比較",
+            link: "/llm-foundation/vector-db-comparison",
+          },
+          {
+            text: "可用性の観測",
+            link: "/llm-foundation/availability-comparison",
+          },
+          {
+            text: "OCR能力の比較",
+            link: "/llm-foundation/ocr-comparison",
+          },
+          {
+            text: "対象基盤モデル（カタログ）",
+            link: "/research-reports/foundation-models.insights.ja",
+          },
+          {
+            text: "Agent SDKの比較",
+            link: "/llm-foundation/agent-sdk-comparison",
           },
         ],
       },
