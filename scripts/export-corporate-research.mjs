@@ -939,108 +939,141 @@ npm run ocr:real
 
 // --- Availability ------------------------------------------------------------
 
-const availPercent = (value) => `${(value * 100).toFixed(1)}%`;
+const availOverall = (summary) => {
+  if (!summary.fetchOk) return "取得失敗";
+  if (summary.overallDescription) return summary.overallDescription;
+  return summary.activeIncidentCount === 0
+    ? "稼働中インシデントの報告なし"
+    : "稼働中インシデントあり";
+};
+
+const availComponents = (summary) => {
+  if (!summary.fetchOk) return "—";
+  if (summary.componentCount === 0) return "非公開（インシデントのみ）";
+  return `${summary.operationalCount}/${summary.componentCount} operational`;
+};
+
+const availDash = (value) => (value ? value : "—");
 
 const exportAvailability = () => {
   const { sourceArtifact, result } = readArtifact(
     "docs/research-reports/llm-availability.real.data.json",
     "docs/research-reports/llm-availability.data.json",
   );
-  const summaries = result.summaries ?? [];
-  const spec = result.samplingSpec ?? {};
+  const summaries = (result.summaries ?? [])
+    .slice()
+    .toSorted((a, b) => a.provider.localeCompare(b.provider));
+  const observations = (result.observations ?? [])
+    .slice()
+    .toSorted((a, b) => a.provider.localeCompare(b.provider));
   const measuredNote = result.fixture
-    ? "現在の公開データはキー不要の fixture であり、実サービスの可用性ではありません。"
-    : "手動ヘルスプローブによる観測です。";
-  const totalSamples = summaries.reduce((sum, s) => sum + (s.n ?? 0), 0);
+    ? "現在の公開データはキー不要の fixture（コミット済みステータス応答）であり、ライブ取得ではありません。"
+    : "各社の公開ステータスページをライブ取得した観測です。";
 
-  const observationRows = summaries
-    .toSorted(
-      (a, b) =>
-        a.provider.localeCompare(b.provider) ||
-        a.targetModelName.localeCompare(b.targetModelName),
-    )
+  const statusRows = summaries
     .map(
       (s) =>
-        `| ${providerName(s.provider)} | ${s.targetModelName} | ${s.n} | ${availPercent(s.successRate)} | ${s.successCount}/${s.n} | ${Number(s.meanResponseTimeMs).toFixed(0)} |`,
+        `| ${providerName(s.provider)} | ${availOverall(s)} | ${availComponents(s)} | ${s.activeIncidentCount} | ${s.recentIncidentCount} | ${availDash(s.pageUpdatedAt)} |`,
     )
     .join("\n");
 
-  const failureRows = summaries
-    .toSorted((a, b) => a.provider.localeCompare(b.provider))
+  const componentDetail = summaries
     .map((s) => {
-      const f = s.failureTypeBreakdown ?? {};
-      return `| ${providerName(s.provider)} | ${s.targetModelName} | ${f.timeout ?? 0} | ${f.server_error ?? 0} | ${f.rate_limit ?? 0} | ${f.network_error ?? 0} | ${(f.client_error ?? 0) + (f.unknown_error ?? 0)} |`;
+      if (!s.fetchOk) {
+        return `- **${providerName(s.provider)}**: ステータスページを取得できませんでした（${availDash(s.fetchError)}）。コンポーネントのスナップショットは記録していません。`;
+      }
+      if (s.componentCount === 0) {
+        return `- **${providerName(s.provider)}**: このソースはコンポーネント一覧を公開していません（インシデントのみ）。`;
+      }
+      if ((s.nonOperationalComponents ?? []).length === 0) {
+        return `- **${providerName(s.provider)}**: 報告された ${s.componentCount} コンポーネントはすべて operational。`;
+      }
+      const items = s.nonOperationalComponents
+        .map((c) => `${c.name} → ${c.status}`)
+        .join("; ");
+      return `- **${providerName(s.provider)}**: ${s.operationalCount}/${s.componentCount} operational。非 operational: ${items}。`;
     })
     .join("\n");
 
-  const window = summaries[0]?.observationWindow;
-  const windowNote = window
-    ? `観測窓は \`${window.startedAt}\` から \`${window.endedAt}\`（約 ${(window.durationMs / 1000).toFixed(0)} 秒）です。`
-    : "";
+  const incidentLines = (select, emptyText) => {
+    const lines = observations.flatMap((o) =>
+      (select(o) ?? []).map((i) => {
+        const window =
+          !i.startedAt && !i.resolvedAt
+            ? ""
+            : `（${availDash(i.startedAt)} → ${i.resolvedAt ? i.resolvedAt : "継続中"}）`;
+        const link = i.url ? ` [詳細](${i.url})` : "";
+        return `- **${providerName(o.provider)}** — ${i.name} [impact: ${i.impact}, status: ${i.status}]${window}${link}`;
+      }),
+    );
+    return lines.length === 0 ? emptyText : lines.join("\n");
+  };
+
+  const provenanceRows = observations
+    .map(
+      (o) =>
+        `| ${providerName(o.provider)} | [\`${o.sourceUrl}\`](${o.sourceUrl}) | ${o.fetchedAt} | ${availDash(o.pageUpdatedAt)} | ${o.fetchOk ? "ok" : `失敗: ${availDash(o.fetchError)}`} |`,
+    )
+    .join("\n");
 
   writeDraft(
     "availability-comparison",
     `${frontmatter({
       sourceArtifact,
       generatedAt: result.generatedAt,
-      trials: spec.samplesPerTarget ?? spec.samples ?? summaries[0]?.n ?? 0,
+      trials: observations.length,
       provenance: result.fixture ? "fixtured" : "measured",
     })}
 
-# 可用性の観測（手動ヘルスプローブ）
+# 可用性の観測（ステータスページ観測）
 
-この観測は \`${result.generatedAt}\` に生成しました。${summaries.length} 個のプロバイダー／モデルのヘルスエンドポイントに対し、限定した観測窓で ${totalSamples} サンプルのプローブを行い、成功率・応答時間・失敗種別を記録します。${measuredNote}${windowNote}
+この観測は \`${result.generatedAt}\` に生成しました。${summaries.length} 社の**公開ステータスページ**を取得し、各社が報告するコンポーネント状態・稼働中インシデント・直近インシデント履歴を、取得時点のスナップショットとして記録します。**API キーは不要**で、各社のモデル API は一切呼び出しません。${measuredNote}
 
-> **これはランキングではありません。** 観測窓・サンプル数が小さい手動観測であり、定常的なアップタイム測定や SLA ではありません。「どのプロバイダーがより信頼できる」といった断定は行わず、観測値としてのみ提示します。
+> **これはランキングではありません。** ある時点のステータスページのスナップショットであり、「どのプロバイダーがより信頼できる」といった断定はできません。各社自身の報告の記録として、取得元・取得時刻とともに観測値としてのみ提示します。
 
 ## 1. 観測の目的
 
-各プロバイダーの API が、限定した観測窓でどのように応答したかを、成功率・応答時間・失敗種別として記録することを目的とします。ダウン頻度やダウンタイム長の断定的な比較は、定常サンプリングが確立するまで行いません。
+各プロバイダーが自社ステータスページで報告している状態（コンポーネント別 status・稼働中インシデント・直近履歴）を、取得時点で記録・要約することを目的とします。これは各社の**報告の記録**であり、当方によるアップタイム測定や SLA ではありません。
 
-## 2. 測定対象
-
-| 測定対象 | 測っているもの | 読み方 |
-| --- | --- | --- |
-| 成功率 | 観測窓内のプローブ成功割合 | 観測値。サンプル数と観測窓に依存する |
-| 平均応答時間 | 成功プローブの平均レイテンシ (ms) | 観測時点のネットワーク・負荷に依存する |
-| 失敗種別 | timeout / server_error / rate_limit / network_error / client 他の内訳 | 失敗の性質を分けて見る |
-
-## 3. 観測条件
-
-- サンプル数: 各ターゲット ${summaries[0]?.n ?? "—"} プローブ。
-- 観測窓: ${windowNote || "生成物の frontmatter を参照。"}
-- サンプリングは手動オンデマンドであり、定常スケジュールではありません。
-
-## 4. 範囲と制約
-
-- 小さな観測窓・サンプル数のため、統計的な可用性の主張はできません。
-- 応答時間は実行環境・ネットワーク・時間帯で変動します。
-- 断定的な可用性ランキングや SLA は提示しません（観測として扱います）。
-- 結果は \`${result.generatedAt}\` 時点の観測です。
-
-## 5. プロバイダー別の観測
+## 2. プロバイダー別の報告状態
 
 プロバイダー名の昇順で並べます（順位づけはしません）。
 
-| Provider | Model | サンプル数 | 成功率 | 成功/試行 | 平均応答 (ms) |
-| --- | --- | ---: | ---: | ---: | ---: |
-${observationRows}
+| Provider | 報告状態 | コンポーネント | 稼働中インシデント | 直近インシデント | ページ更新 |
+| --- | --- | --- | ---: | ---: | --- |
+${statusRows}
 
-## 6. 失敗種別の内訳
+## 3. コンポーネントの状態
 
-| Provider | Model | timeout | server_error | rate_limit | network_error | その他 |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-${failureRows}
+${componentDetail}
+
+## 4. 稼働中のインシデント／メンテナンス
+
+${incidentLines((o) => o.activeIncidents, "取得時点で、いずれのソースにも稼働中インシデント・メンテナンスの報告はありませんでした。")}
+
+## 5. 直近のインシデント履歴
+
+取得時点で各ソースが公開している直近インシデントです（Statuspage の \`summary.json\` は現在掲載中のインシデントのみを含むため、網羅的な履歴には各社のインシデントフィードが必要です）。
+
+${incidentLines((o) => o.recentIncidents, "取得したソースからは、直近の解決済みインシデントは公開されていませんでした。")}
+
+## 6. 取得元（provenance）
+
+各観測には、取得元 URL・当方の取得時刻・ページ側の最終更新時刻を残し、各社の報告まで辿れるようにしています。
+
+| Provider | Source | 取得時刻 | ページ更新 | 取得 |
+| --- | --- | --- | --- | --- |
+${provenanceRows}
 
 ${kousatsuSection(
   7,
   "llm-availability",
-  "この観測は限定した窓での手動プローブであり、可用性の断定的な比較には使えません。継続的なアップタイム評価には、定常サンプリングと長期の観測窓が必要です。",
+  "この観測は各社ステータスページの、ある時点のスナップショットです。各社の報告の記録であり、可用性の断定的な比較や SLA には使えません。継続的な評価には、定期的な取得と各社インシデントフィードの参照が必要です。",
 )}
 
 ## 8. 再現方法
 
-調査は公開リポジトリ \`qmu/research\` で再生成できます。API キー不要の fixture 観測と、実エンドポイントへのプローブが分かれています。
+調査は公開リポジトリ \`qmu/research\` で再生成できます。API キー不要の fixture 観測（コミット済みステータス応答）と、公開ステータスページのライブ取得が分かれています。
 
 \`\`\`sh
 git clone https://github.com/qmu/research
@@ -1052,7 +1085,7 @@ npm run availability:estimate
 npm run availability
 \`\`\`
 
-公開判断に使う場合は、観測窓・サンプル数・生成日時・provenance を記録し、手動観測であることを明記します。`,
+公開判断に使う場合は、取得元・取得時刻・ページ側更新時刻・provenance を記録し、各社の報告の記録であることを明記します。`,
   );
 };
 

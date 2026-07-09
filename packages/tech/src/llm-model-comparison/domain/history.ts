@@ -14,7 +14,6 @@ import type {
   MetricStat,
   Provenance,
 } from "./types";
-import type { AvailabilityHistoryPoint } from "./availability";
 
 const metricMethod = (
   provenance: Provenance,
@@ -72,16 +71,6 @@ export const buildHistoryEntry = (
   generatedAt,
   trials,
   points: configs.map(toHistoryPoint),
-});
-
-export const buildAvailabilityHistoryEntry = (
-  availability: ReadonlyArray<AvailabilityHistoryPoint>,
-  generatedAt: string,
-): HistoryEntry => ({
-  generatedAt,
-  trials: 0,
-  points: [],
-  availability,
 });
 
 // Append a run's entry to the (possibly empty/absent) history file, newest last.

@@ -82,18 +82,20 @@ const trialsOf = (artifact: unknown): number | undefined => {
 };
 
 /**
- * Topic-specific guardrails for the insights prompt. Availability is a manual
- * health-probe observation over a limited window, so its insights must not read
- * as an assertive uptime ranking or SLA claim — the observation-policy caveat,
- * carried into the interpretation layer.
+ * Topic-specific guardrails for the insights prompt. Availability is a passive
+ * observation of each provider's own public status page at a single fetch time,
+ * so its insights must read as a summary of the providers' own reports — never
+ * as our own uptime measurement, an assertive ranking, or an SLA claim.
  */
 const TOPIC_GUIDANCE: Readonly<Record<string, string>> = {
   availability:
-    "These figures are a manual health-probe observation over a limited, " +
-    "explicitly-bounded window and sample count — NOT a scheduled uptime " +
-    "measurement or SLA. Do not produce an assertive availability ranking or " +
-    "claim one provider is 'more reliable'. Describe the observation window, " +
-    "sample sizes, and their limits, and keep every statement observational.",
+    "These figures are a passive snapshot of each provider's OWN public status " +
+    "page (component states and incidents) at a single fetch time — NOT our own " +
+    "uptime measurement, a scheduled probe, or an SLA. Treat them as a summary " +
+    "of what each provider reports about itself. Do not produce an assertive " +
+    "availability ranking or claim one provider is 'more reliable'. Note the " +
+    "fetch time, that a snapshot is not a trend, and keep every statement " +
+    "observational and sourced to the providers' reports.",
 };
 
 const buildInput = (

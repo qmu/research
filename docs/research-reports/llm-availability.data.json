@@ -1,266 +1,285 @@
 {
   "generatedAt": "2026-01-01T00:00:00.000Z",
-  "samplingSpec": {
-    "version": "manual-health-probe-v1",
-    "cadence": "manual-on-demand",
-    "intervalMs": 60000,
-    "timeoutMs": 10000,
-    "samplesPerProvider": 3,
-    "consecutiveFailureThreshold": 2,
-    "requestOrigin": "Manual operator environment running packages/tech. Record the concrete region/network with --origin or AVAILABILITY_REQUEST_ORIGIN for every real run.",
-    "rateLimitClassification": "HTTP 429 / provider quota errors are recorded as rate_limit and excluded from service-outage down runs.",
-    "censoring": "Unknown gaps before the first sample, after the last sample, and between separate manual runs are censored; no uptime or downtime is inferred across those gaps.",
-    "downDefinition": "A provider is counted as down only after at least two consecutive non-rate-limit outage-eligible failures (timeout, 5xx/server_error, or network_error) within one defined observation window. Client errors and rate limits are not service downtime."
-  },
-  "targets": [
+  "method": "status-page-observation",
+  "fixture": true,
+  "sources": [
     {
       "provider": "anthropic",
-      "modelId": "anthropic-claude-haiku-4-5",
-      "modelName": "Claude Haiku 4.5",
-      "apiModelId": "claude-haiku-4-5-20251001",
-      "effort": "n/a"
+      "providerName": "Anthropic",
+      "sourceUrl": "https://status.anthropic.com/api/v2/summary.json",
+      "kind": "statuspage"
     },
     {
       "provider": "google",
-      "modelId": "google-gemini-3-1-flash-lite",
-      "modelName": "Gemini 3.1 Flash-Lite",
-      "apiModelId": "gemini-3.1-flash-lite",
-      "effort": "low"
+      "providerName": "Google Cloud",
+      "sourceUrl": "https://status.cloud.google.com/incidents.json",
+      "kind": "google"
     },
     {
       "provider": "openai",
-      "modelId": "openai-gpt-5-4-nano",
-      "modelName": "GPT-5.4 nano",
-      "apiModelId": "gpt-5.4-nano",
-      "effort": "none"
+      "providerName": "OpenAI",
+      "sourceUrl": "https://status.openai.com/api/v2/summary.json",
+      "kind": "statuspage"
     },
     {
       "provider": "xai",
-      "modelId": "xai-grok-build-0-1",
-      "modelName": "Grok Build 0.1",
-      "apiModelId": "grok-build-0.1",
-      "effort": "n/a"
+      "providerName": "xAI",
+      "sourceUrl": "https://status.x.ai/api/v2/summary.json",
+      "kind": "statuspage"
     }
   ],
-  "samples": [
+  "observations": [
     {
       "provider": "anthropic",
-      "targetModelId": "anthropic-claude-haiku-4-5",
-      "targetModelName": "Claude Haiku 4.5",
-      "observedAt": "2026-01-01T00:00:00.000Z",
-      "ok": true,
-      "responseTimeMs": 90,
-      "failureType": null
-    },
-    {
-      "provider": "anthropic",
-      "targetModelId": "anthropic-claude-haiku-4-5",
-      "targetModelName": "Claude Haiku 4.5",
-      "observedAt": "2026-01-01T00:01:00.000Z",
-      "ok": true,
-      "responseTimeMs": 95,
-      "failureType": null
-    },
-    {
-      "provider": "anthropic",
-      "targetModelId": "anthropic-claude-haiku-4-5",
-      "targetModelName": "Claude Haiku 4.5",
-      "observedAt": "2026-01-01T00:02:00.000Z",
-      "ok": true,
-      "responseTimeMs": 100,
-      "failureType": null
+      "providerName": "Anthropic",
+      "sourceUrl": "https://status.anthropic.com/api/v2/summary.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": "2025-12-31T23:40:00.000Z",
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": "All Systems Operational",
+      "overallIndicator": "none",
+      "components": [
+        {
+          "name": "api.anthropic.com",
+          "status": "operational"
+        },
+        {
+          "name": "Claude Code",
+          "status": "operational"
+        },
+        {
+          "name": "Claude on the web (claude.ai)",
+          "status": "operational"
+        },
+        {
+          "name": "console.anthropic.com",
+          "status": "operational"
+        }
+      ],
+      "activeIncidents": [],
+      "recentIncidents": []
     },
     {
       "provider": "google",
-      "targetModelId": "google-gemini-3-1-flash-lite",
-      "targetModelName": "Gemini 3.1 Flash-Lite",
-      "observedAt": "2026-01-01T00:00:00.000Z",
-      "ok": true,
-      "responseTimeMs": 107,
-      "failureType": null
-    },
-    {
-      "provider": "google",
-      "targetModelId": "google-gemini-3-1-flash-lite",
-      "targetModelName": "Gemini 3.1 Flash-Lite",
-      "observedAt": "2026-01-01T00:01:00.000Z",
-      "ok": true,
-      "responseTimeMs": 112,
-      "failureType": null
-    },
-    {
-      "provider": "google",
-      "targetModelId": "google-gemini-3-1-flash-lite",
-      "targetModelName": "Gemini 3.1 Flash-Lite",
-      "observedAt": "2026-01-01T00:02:00.000Z",
-      "ok": true,
-      "responseTimeMs": 117,
-      "failureType": null
-    },
-    {
-      "provider": "openai",
-      "targetModelId": "openai-gpt-5-4-nano",
-      "targetModelName": "GPT-5.4 nano",
-      "observedAt": "2026-01-01T00:00:00.000Z",
-      "ok": true,
-      "responseTimeMs": 124,
-      "failureType": null
+      "providerName": "Google Cloud",
+      "sourceUrl": "https://status.cloud.google.com/incidents.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": null,
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": null,
+      "overallIndicator": null,
+      "components": [],
+      "activeIncidents": [
+        {
+          "name": "Vertex AI: elevated error rates for online prediction in us-central1",
+          "impact": "major",
+          "status": "SERVICE_DISRUPTION",
+          "startedAt": "2025-12-31T21:30:00.000Z",
+          "resolvedAt": null,
+          "url": "https://status.cloud.google.com/incidents/gc-active"
+        }
+      ],
+      "recentIncidents": [
+        {
+          "name": "Gemini API: increased 503 responses in multiple regions",
+          "impact": "critical",
+          "status": "AVAILABLE",
+          "startedAt": "2025-12-28T14:00:00.000Z",
+          "resolvedAt": "2025-12-28T16:20:00.000Z",
+          "url": "https://status.cloud.google.com/incidents/gc-resolved"
+        }
+      ]
     },
     {
       "provider": "openai",
-      "targetModelId": "openai-gpt-5-4-nano",
-      "targetModelName": "GPT-5.4 nano",
-      "observedAt": "2026-01-01T00:01:00.000Z",
-      "ok": true,
-      "responseTimeMs": 129,
-      "failureType": null
-    },
-    {
-      "provider": "openai",
-      "targetModelId": "openai-gpt-5-4-nano",
-      "targetModelName": "GPT-5.4 nano",
-      "observedAt": "2026-01-01T00:02:00.000Z",
-      "ok": true,
-      "responseTimeMs": 134,
-      "failureType": null
+      "providerName": "OpenAI",
+      "sourceUrl": "https://status.openai.com/api/v2/summary.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": "2025-12-31T23:52:00.000Z",
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": "Partially Degraded Service",
+      "overallIndicator": "minor",
+      "components": [
+        {
+          "name": "API",
+          "status": "degraded_performance"
+        },
+        {
+          "name": "ChatGPT",
+          "status": "operational"
+        },
+        {
+          "name": "Playground",
+          "status": "operational"
+        }
+      ],
+      "activeIncidents": [
+        {
+          "name": "Elevated latency on the Chat Completions API",
+          "impact": "minor",
+          "status": "monitoring",
+          "startedAt": "2025-12-31T22:05:00.000Z",
+          "resolvedAt": null,
+          "url": "https://status.openai.com/incidents/inc-active"
+        }
+      ],
+      "recentIncidents": [
+        {
+          "name": "Errors creating fine-tuning jobs",
+          "impact": "major",
+          "status": "resolved",
+          "startedAt": "2025-12-30T08:50:00.000Z",
+          "resolvedAt": "2025-12-30T10:30:00.000Z",
+          "url": "https://status.openai.com/incidents/inc-recent"
+        }
+      ]
     },
     {
       "provider": "xai",
-      "targetModelId": "xai-grok-build-0-1",
-      "targetModelName": "Grok Build 0.1",
-      "observedAt": "2026-01-01T00:00:00.000Z",
-      "ok": true,
-      "responseTimeMs": 141,
-      "failureType": null
-    },
-    {
-      "provider": "xai",
-      "targetModelId": "xai-grok-build-0-1",
-      "targetModelName": "Grok Build 0.1",
-      "observedAt": "2026-01-01T00:01:00.000Z",
-      "ok": true,
-      "responseTimeMs": 146,
-      "failureType": null
-    },
-    {
-      "provider": "xai",
-      "targetModelId": "xai-grok-build-0-1",
-      "targetModelName": "Grok Build 0.1",
-      "observedAt": "2026-01-01T00:02:00.000Z",
-      "ok": true,
-      "responseTimeMs": 151,
-      "failureType": null
+      "providerName": "xAI",
+      "sourceUrl": "https://status.x.ai/api/v2/summary.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": "2025-12-31T20:00:00.000Z",
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": "Scheduled Maintenance In Progress",
+      "overallIndicator": "maintenance",
+      "components": [
+        {
+          "name": "API",
+          "status": "operational"
+        },
+        {
+          "name": "Console",
+          "status": "operational"
+        },
+        {
+          "name": "Grok",
+          "status": "under_maintenance"
+        }
+      ],
+      "activeIncidents": [
+        {
+          "name": "Grok inference capacity upgrade",
+          "impact": "maintenance",
+          "status": "in_progress",
+          "startedAt": "2025-12-31T19:00:00.000Z",
+          "resolvedAt": "2025-12-31T21:00:00.000Z",
+          "url": "https://status.x.ai/incidents/maint-active"
+        }
+      ],
+      "recentIncidents": []
     }
   ],
   "summaries": [
     {
       "provider": "anthropic",
-      "targetModelId": "anthropic-claude-haiku-4-5",
-      "targetModelName": "Claude Haiku 4.5",
-      "n": 3,
-      "observationWindow": {
-        "startedAt": "2026-01-01T00:00:00.000Z",
-        "endedAt": "2026-01-01T00:02:00.000Z",
-        "durationMs": 120100
+      "providerName": "Anthropic",
+      "sourceUrl": "https://status.anthropic.com/api/v2/summary.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": "2025-12-31T23:40:00.000Z",
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": "All Systems Operational",
+      "overallIndicator": "none",
+      "componentCount": 4,
+      "statusTally": {
+        "operational": 4,
+        "degraded_performance": 0,
+        "partial_outage": 0,
+        "major_outage": 0,
+        "under_maintenance": 0,
+        "unknown": 0
       },
-      "successCount": 3,
-      "failureCount": 0,
-      "successRate": 1,
-      "meanResponseTimeMs": 95,
-      "failureTypeBreakdown": {
-        "timeout": 0,
-        "server_error": 0,
-        "rate_limit": 0,
-        "network_error": 0,
-        "client_error": 0,
-        "unknown_error": 0
-      },
-      "rateLimitCount": 0,
-      "downFrequency": 0,
-      "downtimeDurationMs": 0,
-      "downRuns": []
+      "operationalCount": 4,
+      "nonOperationalComponents": [],
+      "activeIncidentCount": 0,
+      "recentIncidentCount": 0
     },
     {
       "provider": "google",
-      "targetModelId": "google-gemini-3-1-flash-lite",
-      "targetModelName": "Gemini 3.1 Flash-Lite",
-      "n": 3,
-      "observationWindow": {
-        "startedAt": "2026-01-01T00:00:00.000Z",
-        "endedAt": "2026-01-01T00:02:00.000Z",
-        "durationMs": 120117
+      "providerName": "Google Cloud",
+      "sourceUrl": "https://status.cloud.google.com/incidents.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": null,
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": null,
+      "overallIndicator": null,
+      "componentCount": 0,
+      "statusTally": {
+        "operational": 0,
+        "degraded_performance": 0,
+        "partial_outage": 0,
+        "major_outage": 0,
+        "under_maintenance": 0,
+        "unknown": 0
       },
-      "successCount": 3,
-      "failureCount": 0,
-      "successRate": 1,
-      "meanResponseTimeMs": 112,
-      "failureTypeBreakdown": {
-        "timeout": 0,
-        "server_error": 0,
-        "rate_limit": 0,
-        "network_error": 0,
-        "client_error": 0,
-        "unknown_error": 0
-      },
-      "rateLimitCount": 0,
-      "downFrequency": 0,
-      "downtimeDurationMs": 0,
-      "downRuns": []
+      "operationalCount": 0,
+      "nonOperationalComponents": [],
+      "activeIncidentCount": 1,
+      "recentIncidentCount": 1
     },
     {
       "provider": "openai",
-      "targetModelId": "openai-gpt-5-4-nano",
-      "targetModelName": "GPT-5.4 nano",
-      "n": 3,
-      "observationWindow": {
-        "startedAt": "2026-01-01T00:00:00.000Z",
-        "endedAt": "2026-01-01T00:02:00.000Z",
-        "durationMs": 120134
+      "providerName": "OpenAI",
+      "sourceUrl": "https://status.openai.com/api/v2/summary.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": "2025-12-31T23:52:00.000Z",
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": "Partially Degraded Service",
+      "overallIndicator": "minor",
+      "componentCount": 3,
+      "statusTally": {
+        "operational": 2,
+        "degraded_performance": 1,
+        "partial_outage": 0,
+        "major_outage": 0,
+        "under_maintenance": 0,
+        "unknown": 0
       },
-      "successCount": 3,
-      "failureCount": 0,
-      "successRate": 1,
-      "meanResponseTimeMs": 129,
-      "failureTypeBreakdown": {
-        "timeout": 0,
-        "server_error": 0,
-        "rate_limit": 0,
-        "network_error": 0,
-        "client_error": 0,
-        "unknown_error": 0
-      },
-      "rateLimitCount": 0,
-      "downFrequency": 0,
-      "downtimeDurationMs": 0,
-      "downRuns": []
+      "operationalCount": 2,
+      "nonOperationalComponents": [
+        {
+          "name": "API",
+          "status": "degraded_performance"
+        }
+      ],
+      "activeIncidentCount": 1,
+      "recentIncidentCount": 1
     },
     {
       "provider": "xai",
-      "targetModelId": "xai-grok-build-0-1",
-      "targetModelName": "Grok Build 0.1",
-      "n": 3,
-      "observationWindow": {
-        "startedAt": "2026-01-01T00:00:00.000Z",
-        "endedAt": "2026-01-01T00:02:00.000Z",
-        "durationMs": 120151
+      "providerName": "xAI",
+      "sourceUrl": "https://status.x.ai/api/v2/summary.json",
+      "fetchedAt": "2026-01-01T00:00:00.000Z",
+      "pageUpdatedAt": "2025-12-31T20:00:00.000Z",
+      "fetchOk": true,
+      "fetchError": null,
+      "overallDescription": "Scheduled Maintenance In Progress",
+      "overallIndicator": "maintenance",
+      "componentCount": 3,
+      "statusTally": {
+        "operational": 2,
+        "degraded_performance": 0,
+        "partial_outage": 0,
+        "major_outage": 0,
+        "under_maintenance": 1,
+        "unknown": 0
       },
-      "successCount": 3,
-      "failureCount": 0,
-      "successRate": 1,
-      "meanResponseTimeMs": 146,
-      "failureTypeBreakdown": {
-        "timeout": 0,
-        "server_error": 0,
-        "rate_limit": 0,
-        "network_error": 0,
-        "client_error": 0,
-        "unknown_error": 0
-      },
-      "rateLimitCount": 0,
-      "downFrequency": 0,
-      "downtimeDurationMs": 0,
-      "downRuns": []
+      "operationalCount": 2,
+      "nonOperationalComponents": [
+        {
+          "name": "Grok",
+          "status": "under_maintenance"
+        }
+      ],
+      "activeIncidentCount": 1,
+      "recentIncidentCount": 0
     }
-  ],
-  "fixture": true
+  ]
 }

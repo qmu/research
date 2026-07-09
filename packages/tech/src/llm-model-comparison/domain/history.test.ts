@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   appendHistory,
   archivesToPrune,
-  buildAvailabilityHistoryEntry,
   buildHistoryEntry,
   latestArchive,
   selectErrored,
@@ -10,7 +9,6 @@ import {
 } from "./history";
 import type { Aggregate, ConfigRun, HistoryFile, Provenance } from "./types";
 import type { EffortLevel } from "./effort";
-import type { AvailabilityHistoryPoint } from "./availability";
 
 const agg = (mean: number, stdDev = 0, n = 1): Aggregate => ({
   mean,
@@ -103,48 +101,6 @@ describe("buildHistoryEntry", () => {
     expect(entry.generatedAt).toBe("2026-03-03T00:00:00.000Z");
     expect(entry.trials).toBe(3);
     expect(entry.points.map((p) => p.id)).toEqual(["m1", "m2"]);
-  });
-});
-
-describe("buildAvailabilityHistoryEntry", () => {
-  it("records availability points without model metric points", () => {
-    const point: AvailabilityHistoryPoint = {
-      provider: "openai",
-      targetModelId: "gpt-test",
-      targetModelName: "GPT Test",
-      n: 3,
-      observationWindow: {
-        startedAt: "2026-01-01T00:00:00.000Z",
-        endedAt: "2026-01-01T00:02:00.000Z",
-        durationMs: 120_000,
-      },
-      successCount: 3,
-      failureCount: 0,
-      successRate: 1,
-      meanResponseTimeMs: 120,
-      failureTypeBreakdown: {
-        timeout: 0,
-        server_error: 0,
-        rate_limit: 0,
-        network_error: 0,
-        client_error: 0,
-        unknown_error: 0,
-      },
-      rateLimitCount: 0,
-      downFrequency: 0,
-      downtimeDurationMs: 0,
-      downRuns: [],
-      measuredAt: "2026-01-01T00:02:00.000Z",
-      samplingSpecVersion: "manual-health-probe-v1",
-      cadence: "manual-on-demand",
-    };
-    const entry = buildAvailabilityHistoryEntry(
-      [point],
-      "2026-01-01T00:02:00.000Z",
-    );
-    expect(entry.trials).toBe(0);
-    expect(entry.points).toEqual([]);
-    expect(entry.availability).toEqual([point]);
   });
 });
 

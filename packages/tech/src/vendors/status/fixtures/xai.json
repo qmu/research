@@ -1,0 +1,39 @@
+{
+  "page": {
+    "id": "xai-fixture",
+    "name": "xAI",
+    "url": "https://status.x.ai",
+    "updated_at": "2025-12-31T20:00:00.000Z"
+  },
+  "status": {
+    "indicator": "maintenance",
+    "description": "Scheduled Maintenance In Progress"
+  },
+  "components": [
+    { "id": "c-api", "name": "API", "status": "operational", "group": false },
+    {
+      "id": "c-grok",
+      "name": "Grok",
+      "status": "under_maintenance",
+      "group": false
+    },
+    {
+      "id": "c-console",
+      "name": "Console",
+      "status": "operational",
+      "group": false
+    }
+  ],
+  "incidents": [],
+  "scheduled_maintenances": [
+    {
+      "id": "maint-active",
+      "name": "Grok inference capacity upgrade",
+      "status": "in_progress",
+      "impact": "maintenance",
+      "scheduled_for": "2025-12-31T19:00:00.000Z",
+      "scheduled_until": "2025-12-31T21:00:00.000Z",
+      "shortlink": "https://status.x.ai/incidents/maint-active"
+    }
+  ]
+}

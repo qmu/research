@@ -110,9 +110,12 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
   },
   {
     id: "availability",
-    title: "LLM API availability: manual health-probe observation windows",
+    title:
+      "LLM provider status-page observation: reported component states and incidents (keyless, no API calls)",
     artifactBase: "llm-availability",
     modes: ["fixture", "estimate", "real"],
+    // The real path is keyless: it fetches each provider's PUBLIC status page,
+    // it does not call any model API. fixture reads committed status responses.
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
     stages: ["benchmark", "insights", "translation"],
   },

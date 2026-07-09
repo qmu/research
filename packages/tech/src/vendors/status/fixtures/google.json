@@ -1,0 +1,40 @@
+[
+  {
+    "id": "gc-active",
+    "number": "24001",
+    "begin": "2025-12-31T21:30:00.000Z",
+    "created": "2025-12-31T21:35:00.000Z",
+    "end": null,
+    "modified": "2025-12-31T23:00:00.000Z",
+    "external_desc": "Vertex AI: elevated error rates for online prediction in us-central1",
+    "status_impact": "SERVICE_DISRUPTION",
+    "severity": "medium",
+    "service_key": "vertex-ai",
+    "service_name": "Vertex AI Online Prediction",
+    "affected_products": [{ "title": "Vertex AI", "id": "vertex-ai" }],
+    "uri": "incidents/gc-active",
+    "most_recent_update": {
+      "status": "SERVICE_DISRUPTION",
+      "when": "2025-12-31T23:00:00.000Z"
+    }
+  },
+  {
+    "id": "gc-resolved",
+    "number": "23099",
+    "begin": "2025-12-28T14:00:00.000Z",
+    "created": "2025-12-28T14:10:00.000Z",
+    "end": "2025-12-28T16:20:00.000Z",
+    "modified": "2025-12-28T16:20:00.000Z",
+    "external_desc": "Gemini API: increased 503 responses in multiple regions",
+    "status_impact": "SERVICE_OUTAGE",
+    "severity": "high",
+    "service_key": "gemini-api",
+    "service_name": "Gemini API",
+    "affected_products": [{ "title": "Gemini API", "id": "gemini-api" }],
+    "uri": "incidents/gc-resolved",
+    "most_recent_update": {
+      "status": "AVAILABLE",
+      "when": "2025-12-28T16:20:00.000Z"
+    }
+  }
+]
