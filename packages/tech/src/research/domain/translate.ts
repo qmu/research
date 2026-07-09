@@ -121,7 +121,7 @@ export const verifyNumbersPreserved = (
 export const buildTranslationPrompt = (input: TranslateInput): string => {
   const numbers = extractNumbers(input.englishBody);
   return [
-    `Translate the following English research-insights prose into natural,`,
+    `Translate the following English research report or insights prose into natural,`,
     `readable Japanese (日本語). This is for the ${input.topicId} topic of a`,
     `public LLM/infrastructure comparison.`,
     ``,

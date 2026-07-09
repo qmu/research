@@ -33,24 +33,26 @@ Run `make help`. Common: `make install`, `make build`, `make test`, `make lint`,
 
 This repository has two delivery surfaces:
 
-1. **Preview site** — `make docs` builds the VitePress site under `docs/`, which
-   is the canonical public home of the `LLM基礎検証` Japanese articles
-   (`docs/llm-foundation/`). It is a static site; deploy the build output to the
-   configured static host.
-2. **Foundational research** — the reader-facing pages are generated structured
-   Japanese reports under `docs/llm-foundation/` (`foundation-model-comparison`,
-   `vector-db-comparison`, `availability-comparison`, `ocr-comparison`).
-   `scripts/publish-research.sh generate` runs the exporter
-   (`scripts/export-corporate-research.mjs`), which builds each report from the
-   real measurement artifact — numbered sections, per-metric ranked tables, a
-   full measurement table — and splices in the topic's LLM `考察` section (from
-   `docs/research-reports/<topic>.insights.ja.md`). Publishing to the corporate
-   site is a one-directional copy: `scripts/publish-research.sh copy --all` copies
-   the four reports, the hand-written `agent-sdk-comparison`, and the JP catalog
-   into `../qmu-co-jp/docs/llm-foundation-research/<name>.md` as plain Markdown;
-   it never copies the keyless fixture data reports (the reproducible source). The
-   corporate site (Astro) renders the copies; commit and deploy `qmu-co-jp`
-   separately. See `docs/adr/0003-*` for the boundary.
+1. **Preview site** — `make docs` serves the VitePress site under `docs/`. The
+   site exposes `LLMs Research` (English source reports) and `LLMs Research
+   (Japanese)` in the same topic order. The order and labels come from
+   `packages/tech/src/research/domain/site.ts`, not parallel hand-written lists.
+2. **Foundational research** — each topic is runnable through `npm run research
+   -- <topic> --real` or its topic-specific npm script. After a run, use
+   `npm run research:archive -- <topic> --generated-at <iso>` to keep the
+   current English Markdown, data artifact when present, and Japanese Markdown as
+   a dated frame under `docs/research-reports/history/<topic>/<timestamp>/`.
+   `npm run research:translate-report -- <topic> --estimate` prices the
+   full-report Japanese translation; running it without `--estimate` writes the
+   Japanese page configured in the shared metadata. `npm run research:site --
+   write-indexes` regenerates the English and Japanese indexes from the same
+   metadata.
+3. **Corporate copy** — `scripts/publish-research.sh copy --all` gets its ordered
+   source/destination plan from `npm run research:site -- copy-plan` and copies
+   Japanese Markdown into
+   `../qmu-co-jp/docs/llm-foundation-research/<name>.md`. The corporate site
+   (Astro) renders the copies; commit and deploy `qmu-co-jp` separately. See
+   `docs/adr/0003-*` for the boundary.
 
 ### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
 
@@ -59,21 +61,21 @@ conventions (である体), docker Astro build, and `/ship` deploy. Instead, thi
 repo's `/ship` generates a **publish ticket** into the sibling `qmu-co-jp` repo,
 and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
 
-1. Refresh the published Markdown: `scripts/publish-research.sh generate`, then
+1. Refresh the published Markdown and indexes from the shared metadata:
+   `npm run research:site -- write-indexes` in `packages/tech`, then
    `scripts/publish-research.sh copy --all` (or a single slug), so
-   `../qmu-co-jp/docs/llm-foundation-research/*.md` matches this repo's reports.
+   `../qmu-co-jp/docs/llm-foundation-research/*.md` matches this repo's Japanese
+   reports and order.
 2. Locate the `qmu-co-jp` checkout as a **sibling of this repo** (`../qmu-co-jp`).
    **If there is no `qmu-co-jp` repo at the same directory level, ask the user**
    for its path.
 3. **Ask the user which `qmu-co-jp` worktree** to generate the ticket in
    (`git -C <qmu-co-jp> worktree list`); if there is only one, use it.
-4. Write a ticket into that worktree's `.workaholic/tickets/todo/` that describes
-   what to reflect: which reports changed, wiring any new pages into
-   `packages/astro/src/data/navigation.ts` and the JP/EN
-   `docs/llm-foundation-research.md` index pages (in that repo's である体 stance,
-   with `<small class="updated">` status lines), reconciling the
-   `vector-store`/`vector-db` naming, verifying with the docker Astro build, then
-   committing and deploying via that repo's own `/ship` (`scripts/deploy.sh`).
+4. Write a ticket into that worktree's `.workaholic/tickets/todo/` using
+   `npm run research:site -- qmu-ticket` as the ordered payload. The ticket tells
+   qmu-co-jp to copy/delete Markdown, update navigation and JP/EN indexes in the
+   same order, verify with the docker Astro build, then commit and deploy via
+   that repo's own `/ship` (`scripts/deploy.sh`).
 5. **Tell the user to run `/drive` in `qmu-co-jp`** to apply the ticket.
 
 CI must be green before merge to `main` (type-check, tests, lint, dependency

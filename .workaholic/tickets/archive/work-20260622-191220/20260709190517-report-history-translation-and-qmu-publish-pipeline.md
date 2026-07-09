@@ -3,9 +3,9 @@ created_at: 2026-07-09T19:05:17+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [Domain, UX, Config, Infrastructure]
-effort:
-commit_hash:
-category:
+effort: 2h
+commit_hash: 82162bb
+category: Added
 depends_on:
 mission: per-topic-research-pipeline-benchmark-llm-insights-jp-translation
 ---
@@ -171,3 +171,21 @@ keeps several publication lists hand-maintained.
 - qmu-co-jp remains the rendering/deploy owner. This repository should produce a
   ticket and ordered artifact list, not directly commit/deploy the sibling repo
   outside the established workflow.
+
+## Final Report
+
+Development completed as planned.
+
+### Discovered Insights
+
+- **Insight**: The publication order had three separate sources of truth:
+  VitePress config, `docs/*/index.md`, and `scripts/publish-research.sh`.
+  **Context**: `packages/tech/src/research/domain/site.ts` is now the single
+  metadata source for sidebar items, generated indexes, qmu copy order, history
+  paths, and qmu handoff payloads.
+- **Insight**: Full-report translation needs a separate operator step from
+  pipeline wiring because large table-heavy reports can be expensive and require
+  review for numeric/table preservation.
+  **Context**: The command exists (`npm run research:translate-report --
+  <topic>`), and estimate mode is verified; the live all-topic replacement was
+  not run in this implementation commit.

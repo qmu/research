@@ -8,13 +8,10 @@
 # Stages:
 #   generate          Read committed/local artifacts and write regenerable drafts
 #                     under docs/llm-foundation/_generated/.
-#   copy              Copy the published reports to qmu-co-jp as plain Markdown.
-#                     The published set is the generated structured Japanese
-#                     reports under docs/llm-foundation/ (foundation-model,
-#                     vector-db, availability, ocr — data tables + LLM 考察),
-#                     the design article agent-sdk-comparison, and the Japanese
-#                     model catalog. The keyless fixture data reports are NOT
-#                     published — they are the reproducible source.
+#   copy              Copy the published Japanese reports to qmu-co-jp as plain
+#                     Markdown. The --all set is generated from the shared
+#                     research site metadata so the publish order matches the
+#                     VitePress sidebar order.
 #
 # Options:
 #   --all             With copy, copy every per-topic published report (the set
@@ -35,13 +32,14 @@ REPORTS_DIR="$REPO_ROOT/docs/research-reports"
 FOUNDATION_DIR="$REPO_ROOT/docs/llm-foundation"
 QMU_DIR="${QMU_DIR:-$REPO_ROOT/../qmu-co-jp}"
 
-# The published set, as repo-docs-relative paths (no .md extension): the four
-# generated structured Japanese reports, the design article, and the JP catalog.
-PUBLISHED_REPORTS="llm-foundation/foundation-model-comparison llm-foundation/vector-db-comparison llm-foundation/availability-comparison llm-foundation/ocr-comparison llm-foundation/agent-sdk-comparison research-reports/foundation-models.insights.ja"
 COMMAND=""
 ALL=0
 DRY=0
 SLUGS=""
+
+published_report_plan() {
+  (cd "$REPO_ROOT/packages/tech" && npm run -s research:site -- copy-plan)
+}
 
 usage() {
   sed -n '2,33p' "$0" | sed 's/^# \{0,1\}//'
@@ -105,11 +103,18 @@ case "$COMMAND" in
     ;;
 esac
 
+PLAN_FILE=$(mktemp)
+trap 'rm -f "$PLAN_FILE"' EXIT
+
 if [ "$ALL" -eq 1 ]; then
-  SLUGS="$SLUGS $PUBLISHED_REPORTS"
+  published_report_plan >>"$PLAN_FILE"
 fi
 
-if [ -z "$(echo "$SLUGS" | tr -d ' ')" ]; then
+for slug in $SLUGS; do
+  printf '%s\t%s\n' "$slug" "$(basename "$slug")" >>"$PLAN_FILE"
+done
+
+if [ ! -s "$PLAN_FILE" ]; then
   echo "No reports to copy. Pass a slug or --all." >&2
   exit 0
 fi
@@ -123,7 +128,7 @@ fi
 
 DEST_DIR="$QMU_DIR/docs/llm-foundation-research"
 copied=0
-for slug in $SLUGS; do
+while read -r slug dest_slug; do
   # A slug is either a docs-relative path (research-reports/... or
   # llm-foundation/...) or a bare name resolved against research-reports first,
   # then llm-foundation. The destination keeps the basename.
@@ -138,7 +143,7 @@ for slug in $SLUGS; do
       ;;
   esac
   REL=${SRC#"$REPO_ROOT"/}
-  DEST="$DEST_DIR/$(basename "$slug").md"
+  DEST="$DEST_DIR/${dest_slug:-$(basename "$slug")}.md"
 
   if [ ! -f "$SRC" ]; then
     echo "Error: report not found: $REL" >&2
@@ -152,9 +157,9 @@ for slug in $SLUGS; do
 
   mkdir -p "$DEST_DIR"
   cp "$SRC" "$DEST"
-  echo "copied: $REL -> docs/llm-foundation-research/$(basename "$slug").md"
+  echo "copied: $REL -> docs/llm-foundation-research/${dest_slug:-$(basename "$slug")}.md"
   copied=$((copied + 1))
-done
+done <"$PLAN_FILE"
 
 if [ "$DRY" -eq 0 ]; then
   echo "Done. $copied per-topic report(s) copied to $QMU_DIR/docs/llm-foundation-research/."
