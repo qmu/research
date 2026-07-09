@@ -93,25 +93,6 @@ export const researchSiteTopics = [
     qmuSlug: "llm-accuracy-comparison",
   },
   {
-    id: "llm-model-comparison",
-    artifactBase: "llm-model-comparison",
-    npmScript: "npm run research -- llm-model-comparison --real",
-    source: {
-      text: "LLM model comparison",
-      docsPath: "docs/research-reports/llm-model-comparison.md",
-      summary:
-        "The combined model-by-effort sweep that speed and accuracy topics project from.",
-    },
-    japanese: {
-      text: "LLMモデル比較",
-      docsPath: "docs/research-reports/llm-model-comparison.insights.ja.md",
-      summary:
-        "モデル×effort の統合比較。速度・精度トピックの投影元になる測定。",
-    },
-    dataPath: "docs/research-reports/llm-model-comparison.data.json",
-    qmuSlug: "llm-model-comparison",
-  },
-  {
     id: "availability",
     artifactBase: "llm-availability",
     npmScript: "npm run research -- availability --real",

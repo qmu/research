@@ -19,6 +19,7 @@ export default defineConfig({
   // Role and template READMEs are documentation for editors, not site pages.
   srcExclude: [
     "**/README.md",
+    "llm-foundation/_generated/**",
     "research-reports/*.real.md",
     "research-reports/*.fixture.md",
   ],

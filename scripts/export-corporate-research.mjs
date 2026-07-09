@@ -1040,7 +1040,7 @@ npm run availability           # real: 取得 + LLM 抽出で履歴更新
   );
 };
 
-exportLlm();
+if (process.env.EXPORT_LEGACY_LLM_COMPARISON === "1") exportLlm();
 exportRag();
 exportOcr();
 exportAvailability();

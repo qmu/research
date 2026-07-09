@@ -29,10 +29,6 @@ The topic order matches [LLMs Research](./) and
 - 2026-07-09T12:21:25.966Z: [English](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.data.json)
 - 2026-07-09T11:14:36.434Z: [English](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.data.json)
 
-### LLM model comparison
-
-- 2026-07-09T11:17:24.154Z: [English](./history/llm-model-comparison/2026-07-09T11-17-24-154Z/llm-model-comparison) · [Japanese](./history/llm-model-comparison/2026-07-09T11-17-24-154Z/llm-model-comparison.ja) · [data.json](./history/llm-model-comparison/2026-07-09T11-17-24-154Z/llm-model-comparison.data.json)
-
 ### LLM API availability
 
 - 2026-07-09T11:08:12.753Z: [English](./history/availability/2026-07-09T11-08-12-753Z/llm-availability) · [Japanese](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja) · [data.json](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.data.json)

@@ -399,12 +399,12 @@ const writeHistory = async (
 export const main = async (): Promise<void> => {
   const args = parseArgs(process.argv.slice(2));
 
-  // Path split: the FIXTURE report is the byte-stable committed CI self-test; a REAL
-  // run writes to a separate `.real.md` (gitignored, regenerable) so it never clobbers
-  // the fixture. The compact history.json + gzip archives — the committed real-data
-  // source of truth — always sit beside the canonical `.md`, regardless of which
-  // report this run writes. A real incremental run (--models/--only-errored) merges
-  // into the latest REAL artifact; a fixture run merges into the fixture artifact.
+  // Path split: the combined compare sweep is an internal measurement source for
+  // the public speed and accuracy pages. Fixture and real Markdown renderings are
+  // regenerable `.fixture.md` / `.real.md` side files so the redundant combined
+  // article is not published as a canonical docs page. The compact history.json
+  // + gzip archives still sit beside this stem because they are source data for
+  // future projections.
   const canonicalMdPath = (
     process.env.OUTPUT_PATH ??
     resolve(
@@ -413,7 +413,9 @@ export const main = async (): Promise<void> => {
     )
   ).replace(/\.real\.md$/, ".md");
   const stem = canonicalMdPath.replace(/\.md$/, "");
-  const reportPath = args.forceFixture ? canonicalMdPath : `${stem}.real.md`;
+  const reportPath = args.forceFixture
+    ? `${stem}.fixture.md`
+    : `${stem}.real.md`;
   const artifactPath = args.forceFixture
     ? `${stem}.data.json`
     : `${stem}.real.data.json`;

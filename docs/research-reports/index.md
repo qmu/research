@@ -21,7 +21,6 @@ Past generated frames are listed in [History](./history).
 - [Foundation model catalog](./foundation-models) — A reference catalog of the compared models: provider, tier, price, effort, and API surface.
 - [LLM response speed](./llm-speed-comparison) — Sustained throughput, time-to-first-token, and total latency.
 - [LLM output accuracy](./llm-accuracy-comparison) — JSON-schema limits, length-instruction following, and information accuracy.
-- [LLM model comparison](./llm-model-comparison) — The combined model-by-effort sweep that speed and accuracy topics project from.
 - [LLM API availability](./llm-availability) — Status-page incident history and derived 30/90-day availability trends.
 - [OCR capability comparison](./ocr-comparison) — CER/WER and structured field extraction over synthetic documents.
 - [RAG vector store benchmark](./rag-benchmark) — Retrieval quality, ingestion time, query latency, cost, and operational constraints.

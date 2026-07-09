@@ -29,10 +29,6 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 - 2026-07-09T12:21:25.966Z: [English](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison) · [Japanese](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja) · [data.json](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.data.json)
 - 2026-07-09T11:14:36.434Z: [English](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison) · [Japanese](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja) · [data.json](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.data.json)
 
-### LLMモデル比較
-
-- 2026-07-09T11:17:24.154Z: [English](../research-reports/history/llm-model-comparison/2026-07-09T11-17-24-154Z/llm-model-comparison) · [Japanese](../research-reports/history/llm-model-comparison/2026-07-09T11-17-24-154Z/llm-model-comparison.ja) · [data.json](../research-reports/history/llm-model-comparison/2026-07-09T11-17-24-154Z/llm-model-comparison.data.json)
-
 ### LLM API可用性
 
 - 2026-07-09T11:08:12.753Z: [English](../research-reports/history/availability/2026-07-09T11-08-12-753Z/llm-availability) · [Japanese](../research-reports/history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja) · [data.json](../research-reports/history/availability/2026-07-09T11-08-12-753Z/llm-availability.data.json)

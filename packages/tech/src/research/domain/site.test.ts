@@ -46,6 +46,14 @@ describe("research site metadata", () => {
     );
   });
 
+  it("does not publish the internal combined LLM comparison page", () => {
+    expect(researchSiteTopics.map((topic) => topic.id)).not.toContain(
+      "llm-model-comparison",
+    );
+    expect(renderSourceIndex()).not.toContain("LLM model comparison");
+    expect(renderJapaneseIndex()).not.toContain("LLMモデル比較");
+  });
+
   it("derives stable dated history paths for report frames", () => {
     const [topic] = researchSiteTopics;
     if (topic === undefined) throw new Error("missing topic fixture");
