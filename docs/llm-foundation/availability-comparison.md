@@ -1,6 +1,6 @@
 ---
 source_artifact: docs/research-reports/llm-availability.data.json
-source_commit: 631d8cde5e4ccd01e97080ac66013de43c4494a7
+source_commit: a55e89f6e2b5f9ce0375c055283a91c6e3a1d079
 generated_at: "2026-07-09T03:55:03.571Z"
 trials: 4
 provenance: fixtured

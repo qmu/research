@@ -1,6 +1,6 @@
 ---
 source_artifact: docs/research-reports/ocr-comparison.real.data.json
-source_commit: 834ade815730cfceb6a1d908e56d78d97d3cb17f
+source_commit: a55e89f6e2b5f9ce0375c055283a91c6e3a1d079
 generated_at: "2026-07-08T19:33:48.414Z"
 trials: 1
 provenance: measured

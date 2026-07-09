@@ -52,5 +52,29 @@ This repository has two delivery surfaces:
    corporate site (Astro) renders the copies; commit and deploy `qmu-co-jp`
    separately. See `docs/adr/0003-*` for the boundary.
 
+### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
+
+Publishing does not edit `qmu-co-jp` directly — that repo has its own writing
+conventions (である体), docker Astro build, and `/ship` deploy. Instead, this
+repo's `/ship` generates a **publish ticket** into the sibling `qmu-co-jp` repo,
+and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
+
+1. Refresh the published Markdown: `scripts/publish-research.sh generate`, then
+   `scripts/publish-research.sh copy --all` (or a single slug), so
+   `../qmu-co-jp/docs/llm-foundation-research/*.md` matches this repo's reports.
+2. Locate the `qmu-co-jp` checkout as a **sibling of this repo** (`../qmu-co-jp`).
+   **If there is no `qmu-co-jp` repo at the same directory level, ask the user**
+   for its path.
+3. **Ask the user which `qmu-co-jp` worktree** to generate the ticket in
+   (`git -C <qmu-co-jp> worktree list`); if there is only one, use it.
+4. Write a ticket into that worktree's `.workaholic/tickets/todo/` that describes
+   what to reflect: which reports changed, wiring any new pages into
+   `packages/astro/src/data/navigation.ts` and the JP/EN
+   `docs/llm-foundation-research.md` index pages (in that repo's である体 stance,
+   with `<small class="updated">` status lines), reconciling the
+   `vector-store`/`vector-db` naming, verifying with the docker Astro build, then
+   committing and deploying via that repo's own `/ship` (`scripts/deploy.sh`).
+5. **Tell the user to run `/drive` in `qmu-co-jp`** to apply the ticket.
+
 CI must be green before merge to `main` (type-check, tests, lint, dependency
 audit, and — once the site lands — an accessibility check).
