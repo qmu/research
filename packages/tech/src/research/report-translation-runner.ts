@@ -1,5 +1,7 @@
+import { execFile } from "node:child_process";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { promisify } from "node:util";
 import {
   estimateTranslation,
   translateInsights,
@@ -17,6 +19,21 @@ const TRANSLATION_KEY_ENV = "ANTHROPIC_API_KEY";
 const repoRoot = (): string => resolve(process.cwd(), "../..");
 
 const repoPath = (path: string): string => resolve(repoRoot(), path);
+
+const execFileAsync = promisify(execFile);
+
+const currentCommit = async (): Promise<string> => {
+  try {
+    const { stdout } = await execFileAsync(
+      "git",
+      ["rev-parse", "--short", "HEAD"],
+      { cwd: repoRoot() },
+    );
+    return stdout.trim() || "uncommitted";
+  } catch {
+    return "uncommitted";
+  }
+};
 
 const translationClient = (): LlmClient => {
   const key = process.env[TRANSLATION_KEY_ENV];
@@ -44,6 +61,7 @@ const trialsFrom = (frontmatter: ReadonlyMap<string, string>): number => {
 const buildInput = (
   topic: ResearchSiteTopic,
   englishMarkdown: string,
+  sourceCommit: string,
 ): TranslateInput => {
   const { frontmatter, body } = splitFrontmatter(englishMarkdown);
   return {
@@ -54,7 +72,7 @@ const buildInput = (
       "",
     ),
     sourceArtifact: topic.dataPath ?? topic.source.docsPath,
-    sourceCommit: frontmatter.get("source_commit") ?? "uncommitted",
+    sourceCommit: frontmatter.get("source_commit") ?? sourceCommit,
     insightsModel: frontmatter.get("insights_model") ?? "source-report",
     trials: trialsFrom(frontmatter),
   };
@@ -76,6 +94,7 @@ export const runReportTranslation = async (
   const input = buildInput(
     topic,
     await readFile(repoPath(topic.source.docsPath), "utf8"),
+    await currentCommit(),
   );
   if (options.mode === "estimate") {
     const estimate = estimateTranslation(input);
