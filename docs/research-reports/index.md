@@ -14,6 +14,8 @@ the byte-stable CI self-tests and the reproducible source for each topic; the
 per-topic reading experience and its Japanese version are generated from these
 by an owner-triggered real run.
 
+Past generated frames are listed in [History](./history).
+
 **Topics**
 
 - [Foundation model catalog](./foundation-models) — A reference catalog of the compared models: provider, tier, price, effort, and API surface.

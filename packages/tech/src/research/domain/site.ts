@@ -32,6 +32,11 @@ export const overview = {
   japanese: { text: "はじめに", link: "/llm-foundation/" },
 } satisfies Readonly<{ source: ResearchPage; japanese: ResearchPage }>;
 
+export const historyOverview = {
+  source: { text: "History", link: "/research-reports/history" },
+  japanese: { text: "History", link: "/llm-foundation/history" },
+} satisfies Readonly<{ source: ResearchPage; japanese: ResearchPage }>;
+
 export const researchSiteTopics = [
   {
     id: "foundation-models",
@@ -187,6 +192,7 @@ export const sourceResearchItems = (): ReadonlyArray<ResearchPage> => [
     text: topic.source.text,
     link: docsLink(topic.source.docsPath),
   })),
+  historyOverview.source,
 ];
 
 export const japaneseResearchItems = (): ReadonlyArray<ResearchPage> => [
@@ -195,6 +201,7 @@ export const japaneseResearchItems = (): ReadonlyArray<ResearchPage> => [
     text: topic.japanese.text,
     link: docsLink(topic.japanese.docsPath),
   })),
+  historyOverview.japanese,
 ];
 
 export const publishSlugs = (): ReadonlyArray<string> =>
@@ -230,6 +237,71 @@ export const historyPathFor = (
   return `${directory}/${topic.artifactBase}.data.json`;
 };
 
+export type ResearchHistoryFrame = Readonly<{
+  topicId: string;
+  generatedAt: string;
+  sourcePath?: string;
+  japanesePath?: string;
+  dataPath?: string;
+}>;
+
+const sourceHistoryLink = (path: string): string => {
+  const relative = path.replace(/^docs\/research-reports\//, "");
+  return `./${path.endsWith(".md") ? stripMarkdown(relative) : relative}`;
+};
+
+const japaneseHistoryLink = (path: string): string => {
+  const relative = path.replace(/^docs\//, "");
+  return `../${path.endsWith(".md") ? stripMarkdown(relative) : relative}`;
+};
+
+const sortHistoryFrames = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): ReadonlyArray<ResearchHistoryFrame> =>
+  [...frames].sort((left, right) =>
+    right.generatedAt.localeCompare(left.generatedAt),
+  );
+
+const renderHistoryFrame = (
+  frame: ResearchHistoryFrame,
+  linkFor: (path: string) => string,
+): string => {
+  const links = [
+    frame.sourcePath === undefined
+      ? undefined
+      : `[English](${linkFor(frame.sourcePath)})`,
+    frame.japanesePath === undefined
+      ? undefined
+      : `[Japanese](${linkFor(frame.japanesePath)})`,
+    frame.dataPath === undefined
+      ? undefined
+      : `[data.json](${linkFor(frame.dataPath)})`,
+  ].filter((link): link is string => link !== undefined);
+
+  return `- ${frame.generatedAt}: ${links.join(" · ")}`;
+};
+
+const renderHistorySections = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+  linkFor: (path: string) => string,
+  titleFor: (topic: ResearchSiteTopic) => string,
+  emptyText: string,
+): string =>
+  researchSiteTopics
+    .map((topic) => {
+      const topicFrames = sortHistoryFrames(
+        frames.filter((frame) => frame.topicId === topic.id),
+      );
+      const body =
+        topicFrames.length === 0
+          ? emptyText
+          : topicFrames.map((frame) => renderHistoryFrame(frame, linkFor)).join("\n");
+      return `### ${titleFor(topic)}
+
+${body}`;
+    })
+    .join("\n\n");
+
 export const renderSourceIndex = (): string => `---
 title: ${EN_RESEARCH_TITLE}
 description: English reports, data artifacts, and history kept as reproducible source material.
@@ -246,6 +318,8 @@ the byte-stable CI self-tests and the reproducible source for each topic; the
 per-topic reading experience and its Japanese version are generated from these
 by an owner-triggered real run.
 
+Past generated frames are listed in [History](./history).
+
 **Topics**
 
 ${researchSiteTopics
@@ -258,6 +332,32 @@ ${researchSiteTopics
 To add a study, see the \`TEMPLATE.md\` in the relevant package under \`packages/\`.
 `;
 
+export const renderSourceHistoryIndex = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): string => `---
+title: ${EN_RESEARCH_TITLE} History
+description: Dated English, Japanese, and data frames for shipped research reports.
+---
+
+# History
+
+This page lists dated report frames committed under
+\`docs/research-reports/history/\`. Each frame keeps the English source report,
+Japanese translation, and \`data.json\` artifact when available.
+
+The topic order matches [${EN_RESEARCH_TITLE}](./) and
+[${JA_RESEARCH_TITLE}](../llm-foundation/).
+
+## Frames
+
+${renderHistorySections(
+  frames,
+  sourceHistoryLink,
+  (topic) => topic.source.text,
+  "No dated frames have been archived yet.",
+)}
+`;
+
 export const renderJapaneseIndex = (): string => `---
 title: ${JA_RESEARCH_TITLE}
 description: LLMs Research と同じ構成で、日本語の生成・翻訳済み記事を並べる。
@@ -268,6 +368,8 @@ description: LLMs Research と同じ構成で、日本語の生成・翻訳済�
 このページは [${EN_RESEARCH_TITLE}](../research-reports/) と同じトピック順で、
 日本語の生成・翻訳済み記事を並べる。英語レポート、\`data.json\`、history は
 再現可能なソースとして英語側に残し、日本語側は同じトピックを日本語で読む入口にする。
+
+過去の生成フレームは [History](./history) に残す。
 
 ## トピック
 
@@ -289,6 +391,32 @@ ${topic.japanese.summary}
 artifact、source commit、translation model、generated timestamp を保持する。
 全文レポートの直接翻訳と日付別履歴は、report-history pipeline が同じ topic metadata
 から生成する。
+`;
+
+export const renderJapaneseHistoryIndex = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): string => `---
+title: ${JA_RESEARCH_TITLE} History
+description: 生成日ごとの英語ソース、日本語翻訳、data.json の履歴。
+---
+
+# History
+
+このページは、\`docs/research-reports/history/\` にコミットされた日付別の
+調査フレームを一覧する。各フレームには、利用できる場合に英語ソース、
+日本語翻訳、\`data.json\` を残す。
+
+トピック順は [${EN_RESEARCH_TITLE}](../research-reports/) と
+[${JA_RESEARCH_TITLE}](./) に合わせる。
+
+## フレーム
+
+${renderHistorySections(
+  frames,
+  japaneseHistoryLink,
+  (topic) => topic.japanese.text,
+  "まだ日付別フレームは保存されていない。",
+)}
 `;
 
 export const renderQmuTicketPayload = (): string =>

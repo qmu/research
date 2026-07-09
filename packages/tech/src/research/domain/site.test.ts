@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
+  historyOverview,
   historyPathFor,
   japaneseResearchItems,
   publishSlugs,
   publishPlan,
+  renderJapaneseHistoryIndex,
   renderJapaneseIndex,
   renderQmuTicketPayload,
+  renderSourceHistoryIndex,
   renderSourceIndex,
   researchSiteTopics,
   sourceResearchItems,
@@ -18,12 +21,14 @@ describe("research site metadata", () => {
       ...researchSiteTopics.map((topic) =>
         topic.source.docsPath.replace(/^docs\/(.+)\.md$/, "/$1"),
       ),
+      historyOverview.source.link,
     ]);
     expect(japaneseResearchItems().map((item) => item.link)).toEqual([
       "/llm-foundation/",
       ...researchSiteTopics.map((topic) =>
         topic.japanese.docsPath.replace(/^docs\/(.+)\.md$/, "/$1"),
       ),
+      historyOverview.japanese.link,
     ]);
   });
 
@@ -63,6 +68,55 @@ describe("research site metadata", () => {
       expect(japanese).toContain(topic.japanese.text);
       expect(japanese).toContain(topic.source.text);
     }
+    expect(source).toContain("[History](./history)");
+    expect(japanese).toContain("[History](./history)");
+  });
+
+  it("renders history indexes from dated report frames", () => {
+    const [topic] = researchSiteTopics;
+    if (topic === undefined) throw new Error("missing topic fixture");
+    const generatedAt = "2026-07-09T10:05:17.123Z";
+    const source = renderSourceHistoryIndex([
+      {
+        topicId: topic.id,
+        generatedAt,
+        sourcePath: historyPathFor(topic, generatedAt, "source"),
+        japanesePath: historyPathFor(topic, generatedAt, "japanese"),
+        dataPath: historyPathFor(topic, generatedAt, "data"),
+      },
+    ]);
+    const japanese = renderJapaneseHistoryIndex([
+      {
+        topicId: topic.id,
+        generatedAt,
+        sourcePath: historyPathFor(topic, generatedAt, "source"),
+        japanesePath: historyPathFor(topic, generatedAt, "japanese"),
+        dataPath: historyPathFor(topic, generatedAt, "data"),
+      },
+    ]);
+
+    expect(source).toContain(`# History`);
+    expect(source).toContain(topic.source.text);
+    expect(source).toContain(
+      "[English](./history/foundation-models/2026-07-09T10-05-17-123Z/foundation-models)",
+    );
+    expect(source).toContain(
+      "[Japanese](./history/foundation-models/2026-07-09T10-05-17-123Z/foundation-models.ja)",
+    );
+    expect(source).toContain(
+      "[data.json](./history/foundation-models/2026-07-09T10-05-17-123Z/foundation-models.data.json)",
+    );
+    expect(japanese).toContain(`# History`);
+    expect(japanese).toContain(topic.japanese.text);
+    expect(japanese).toContain(
+      "[English](../research-reports/history/foundation-models/2026-07-09T10-05-17-123Z/foundation-models)",
+    );
+    expect(japanese).toContain(
+      "[Japanese](../research-reports/history/foundation-models/2026-07-09T10-05-17-123Z/foundation-models.ja)",
+    );
+    expect(japanese).toContain(
+      "[data.json](../research-reports/history/foundation-models/2026-07-09T10-05-17-123Z/foundation-models.data.json)",
+    );
   });
 
   it("renders a qmu handoff payload with ordered destination slugs", () => {
