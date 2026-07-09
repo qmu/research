@@ -26,6 +26,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### LLM出力精度
 
+- 2026-07-09T12:21:25.966Z: [English](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison) · [Japanese](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja) · [data.json](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.data.json)
 - 2026-07-09T11:14:36.434Z: [English](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison) · [Japanese](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja) · [data.json](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.data.json)
 
 ### LLMモデル比較

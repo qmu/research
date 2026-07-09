@@ -117,6 +117,30 @@ describe("renderSplitReport", () => {
     expect(md).not.toContain("TTFT (ms)");
   });
 
+  it("does not advertise omitted accuracy metrics as measured coverage", () => {
+    const older: ComparisonResult = {
+      ...result,
+      configs: result.configs.map((config) => {
+        const stats = Object.fromEntries(
+          Object.entries(config.stats).filter(
+            ([key]) => key !== "informationAccuracy",
+          ),
+        ) as ConfigRun["stats"];
+        return { ...config, stats };
+      }),
+    };
+    const md = renderSplitReport(
+      projectComparison(older, "accuracy", "old.data.json"),
+    );
+    expect(md).toContain(
+      "covering JSON-schema structural limits and length-instruction following",
+    );
+    expect(md).not.toContain(
+      "covering JSON-schema structural limits, length-instruction following, and factual information accuracy",
+    );
+    expect(md).toContain("**Not measured in this run.** Information accuracy");
+  });
+
   it("marks fixtured configurations as not measured", () => {
     const fixtured: ComparisonResult = {
       ...result,

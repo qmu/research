@@ -55,6 +55,33 @@ const percentWithCi = (a: Aggregate, digits: number): string => {
 const range = (a: Aggregate, digits: number): string =>
   `${a.min.toFixed(digits)}–${a.max.toFixed(digits)}`;
 
+const joinList = (items: ReadonlyArray<string>): string => {
+  if (items.length === 0) return "the configured probes";
+  if (items.length === 1) return items[0] ?? "";
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`;
+};
+
+const coverageSummary = (artifact: SplitArtifact): string => {
+  if (artifact.group === "speed") return artifact.summary;
+
+  const metricSet = new Set(artifact.metrics);
+  const parts: string[] = [];
+  if (
+    metricSet.has("maxSchemaDepth") ||
+    metricSet.has("maxSchemaBreadth")
+  ) {
+    parts.push("JSON-schema structural limits");
+  }
+  if (metricSet.has("lengthAccuracy")) {
+    parts.push("length-instruction following");
+  }
+  if (metricSet.has("informationAccuracy")) {
+    parts.push("factual information accuracy");
+  }
+  return joinList(parts);
+};
+
 const formatAspect = (aspect: SplitAspect, a: Aggregate): string =>
   aspect.kind === "percent"
     ? percentWithCi(a, 0)
@@ -216,6 +243,7 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
   const models = [...new Set(configs.map((r) => r.id))].length;
   const aspects = aspectsForMetrics(artifact.metrics);
   const trialCount = plural(artifact.trials, "trial");
+  const coveredSummary = coverageSummary(artifact);
 
   const aspectSections = aspects
     .map((aspect) => aspectSection(aspect, configs, measuredRuns))
@@ -232,13 +260,13 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
 
   return `---
 title: ${artifact.title}
-description: A reproducible ${artifact.group} comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations, covering ${artifact.summary}, over ${trialCount}. Projected from the shared LLM comparison sweep.
+description: A reproducible ${artifact.group} comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations, covering ${coveredSummary}, over ${trialCount}. Projected from the shared LLM comparison sweep.
 ---
 
 # ${artifact.title}
 
 This report compares **${configs.length} model×effort configurations** across
-${models} models and ${providers} providers on ${artifact.summary}, over
+${models} models and ${providers} providers on ${coveredSummary}, over
 **${trialCount}**.
 
 The numbers here are a **projection of the combined LLM comparison sweep** — the
@@ -276,7 +304,7 @@ ${transparencySection(artifact)}
   comparison, not a statistical claim about stable provider behavior.
 - **Point-in-time.** Measured behavior reflects the models and APIs at the
   generated timestamp below.
-- This topic tests narrow behaviors only (${artifact.summary}); it does not
+- This topic tests narrow behaviors only (${coveredSummary}); it does not
   measure general capability or reasoning quality.
 - **Effort semantics vary by provider**, so effort levels are more comparable
   within a provider than across providers.
