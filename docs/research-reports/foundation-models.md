@@ -5,19 +5,27 @@ description: A curated reference catalog of 19 foundation models across 4 provid
 
 # Foundation model catalog
 
-This is a **reference catalog**, not a benchmark. It lists 19
-foundation models across 4 providers with their curated tier, price,
-supported effort levels, and API surface. Every value is **curated catalog data**
-with a cited source — **未測定 (not measured)**: no throughput, latency,
-accuracy, or availability figure appears here. For measured behavior see the
-speed, accuracy, and availability topics.
+This is a **reference catalog**, not a benchmark. It lists the compared foundation models and records the catalog facts used by measured topics.
 
-The single source of truth is the model registry
-(`packages/tech/src/llm-model-comparison/models.ts`); this page is generated from it, so the prices and
-tiers below are verifiable against that file and against each provider's cited
-page. Treat each cell as correct only as of its source's date.
+## 1. Research Purpose
 
-## Catalog
+The catalog gives readers one place to verify which providers, model names, API model ids, tiers, prices, effort controls, and API surfaces are in scope before reading measured speed, accuracy, and availability reports.
+
+## 2. Measurement Targets
+
+### Target Models
+
+19 foundation models across 4 providers are listed. The single source of truth is the model registry (`packages/tech/src/llm-model-comparison/models.ts`).
+
+### Target Metrics
+
+This topic has no measured metrics. It records curated catalog fields only: provider, model, API model id, tier, API surface, release label, input/output catalog price, and supported effort levels.
+
+## 3. Scope and Constraints
+
+Every value is curated catalog data with a cited source, not a live measurement. No throughput, latency, accuracy, OCR, RAG, or availability figure appears here. Treat each cell as correct only as of its source's date; provider catalog pages can change after this page is generated. Vision/multimodal support is **to verify** and is deliberately omitted rather than guessed.
+
+## 4. Verification Results
 
 | Provider | Model | API model id | Tier | API surface | Released | Input $/MTok | Output $/MTok | Effort levels |
 | -------- | ----- | ------------ | ---- | ----------- | -------- | ------------ | ------------- | ------------- |
@@ -41,19 +49,34 @@ page. Treat each cell as correct only as of its source's date.
 | xAI | Grok 4.20 Non-Reasoning | `grok-4.20-0309-non-reasoning` | mid | chat | 2026 | $1.25 | $2.50 | n/a |
 | xAI | Grok Build 0.1 | `grok-build-0.1` | small | chat | 2026 | $1.00 | $2.00 | n/a |
 
-**Legend.** Every column is curated catalog data (provenance: `catalog`), not a
-measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are
-the reasoning-effort settings the registry sweeps for that model; `n/a` means
-the model exposes no user-selectable effort control. Vision/multimodal support is
-**要確認 (to verify)** — it is not tracked in the registry and is deliberately
-omitted rather than guessed.
+**Legend.** Every column is curated catalog data (provenance: `catalog`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; `n/a` means the model exposes no user-selectable effort control.
 
-## Sources
+## 5. Analysis
+
+Use this page to understand the comparison matrix before reading measurement pages. Model selection should not be based on this catalog alone: prices and effort controls constrain cost and runtime behavior, but measured speed, output accuracy, OCR capability, RAG behavior, and availability are covered by the other research topics.
+
+## 6. Reproduction
+
+### Reproduction Steps
+
+```sh
+cd packages/tech
+npm run research -- foundation-models --fixture
+```
+
+### Reproduction Cost (Estimate)
+
+The catalog path is keyless and costless. It reads the committed model registry and does not call provider APIs.
+
+### Cleanup
+
+No external resources are created. Re-rendering only rewrites the catalog Markdown and JSON artifact in `docs/research-reports/`.
+
+## 7. Verification Data
 
 - **Anthropic:** https://platform.claude.com/docs/en/about-claude/models/overview
 - **OpenAI:** https://developers.openai.com/api/docs/pricing
 - **Google:** https://ai.google.dev/gemini-api/docs/pricing
 - **xAI:** https://docs.x.ai/developers/models/grok-4.3
 
-The catalog regenerates from `packages/tech/src/llm-model-comparison/models.ts`; a correction to a price
-or tier is a one-line edit there, after which this page is re-rendered.
+The catalog regenerates from `packages/tech/src/llm-model-comparison/models.ts`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered.

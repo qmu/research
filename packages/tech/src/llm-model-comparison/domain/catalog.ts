@@ -1,5 +1,6 @@
 import type { ModelCard } from "./types";
 import { providerDisplayName } from "./provider";
+import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
 
 /**
  * The foundation-model catalog: a REFERENCE topic, not a benchmark. It renders
@@ -89,41 +90,33 @@ export const renderFoundationModelsReport = (
   catalog: FoundationModelsCatalog,
 ): string => {
   const providers = [...new Set(catalog.rows.map((r) => r.provider))].length;
-  return `---
-title: Foundation model catalog
-description: A curated reference catalog of ${catalog.rows.length} foundation models across ${providers} providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.
----
+  return renderEnglishResearchArticle({
+    title: "Foundation model catalog",
+    description: `A curated reference catalog of ${catalog.rows.length} foundation models across ${providers} providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.`,
+    introduction:
+      "This is a **reference catalog**, not a benchmark. It lists the compared foundation models and records the catalog facts used by measured topics.",
+    purpose:
+      "The catalog gives readers one place to verify which providers, model names, API model ids, tiers, prices, effort controls, and API surfaces are in scope before reading measured speed, accuracy, and availability reports.",
+    targetModels: `${catalog.rows.length} foundation models across ${providers} providers are listed. The single source of truth is the model registry (\`${catalog.generatedFrom}\`).`,
+    targetMetrics:
+      "This topic has no measured metrics. It records curated catalog fields only: provider, model, API model id, tier, API surface, release label, input/output catalog price, and supported effort levels.",
+    scopeAndConstraints:
+      "Every value is curated catalog data with a cited source, not a live measurement. No throughput, latency, accuracy, OCR, RAG, or availability figure appears here. Treat each cell as correct only as of its source's date; provider catalog pages can change after this page is generated. Vision/multimodal support is **to verify** and is deliberately omitted rather than guessed.",
+    verificationResults: `${catalogTable(catalog.rows)}
 
-# Foundation model catalog
+**Legend.** Every column is curated catalog data (provenance: \`catalog\`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; \`n/a\` means the model exposes no user-selectable effort control.`,
+    analysis:
+      "Use this page to understand the comparison matrix before reading measurement pages. Model selection should not be based on this catalog alone: prices and effort controls constrain cost and runtime behavior, but measured speed, output accuracy, OCR capability, RAG behavior, and availability are covered by the other research topics.",
+    reproductionSteps: `\`\`\`sh
+cd packages/tech
+npm run research -- foundation-models --fixture
+\`\`\``,
+    reproductionCost:
+      "The catalog path is keyless and costless. It reads the committed model registry and does not call provider APIs.",
+    cleanup:
+      "No external resources are created. Re-rendering only rewrites the catalog Markdown and JSON artifact in `docs/research-reports/`.",
+    verificationData: `${sourceList(catalog.rows)}
 
-This is a **reference catalog**, not a benchmark. It lists ${catalog.rows.length}
-foundation models across ${providers} providers with their curated tier, price,
-supported effort levels, and API surface. Every value is **curated catalog data**
-with a cited source — **未測定 (not measured)**: no throughput, latency,
-accuracy, or availability figure appears here. For measured behavior see the
-speed, accuracy, and availability topics.
-
-The single source of truth is the model registry
-(\`${catalog.generatedFrom}\`); this page is generated from it, so the prices and
-tiers below are verifiable against that file and against each provider's cited
-page. Treat each cell as correct only as of its source's date.
-
-## Catalog
-
-${catalogTable(catalog.rows)}
-
-**Legend.** Every column is curated catalog data (provenance: \`catalog\`), not a
-measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are
-the reasoning-effort settings the registry sweeps for that model; \`n/a\` means
-the model exposes no user-selectable effort control. Vision/multimodal support is
-**要確認 (to verify)** — it is not tracked in the registry and is deliberately
-omitted rather than guessed.
-
-## Sources
-
-${sourceList(catalog.rows)}
-
-The catalog regenerates from \`${catalog.generatedFrom}\`; a correction to a price
-or tier is a one-line edit there, after which this page is re-rendered.
-`;
+The catalog regenerates from \`${catalog.generatedFrom}\`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered.`,
+  });
 };

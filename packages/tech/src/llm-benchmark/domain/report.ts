@@ -1,4 +1,5 @@
 import type { BenchmarkResult } from "./types";
+import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
 
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
@@ -18,25 +19,43 @@ export const renderReport = (
     )
     .join("\n");
 
-  return `---
-title: LLM exact-match benchmark
-description: A small, reproducible exact-match accuracy benchmark for large language models, runnable by cloning this repository.
----
+  return renderEnglishResearchArticle({
+    title: "LLM exact-match benchmark",
+    description:
+      "A small, reproducible exact-match accuracy benchmark for large language models, runnable by cloning this repository.",
+    introduction:
+      "This page reports a small exact-match accuracy benchmark for large language models.",
+    purpose:
+      "The benchmark demonstrates the research-to-publication pipeline end to end with a tiny task set that can be reproduced in seconds.",
+    targetModels: `The current run targets \`${result.model}\`. The real path defaults to \`claude-opus-4-8\` unless \`ANTHROPIC_MODEL\` overrides it.`,
+    targetMetrics:
+      "The metric is exact-match accuracy after normalizing the model reply: lowercased, trimmed, and internal whitespace collapsed. A task is correct when the normalized reply contains the expected string.",
+    scopeAndConstraints:
+      "The task set is intentionally tiny and exists as a pipeline self-test. It should not be read as a general model-quality benchmark or as a statistically meaningful evaluation.",
+    verificationResults: `- **Model:** \`${result.model}\`
+- **Accuracy:** ${pct}% (${result.correct}/${result.total})
+- **Generated:** ${generatedAt}
 
-# LLM exact-match benchmark
+| Task | Outcome | Expected | Model output |
+| ---- | ------- | -------- | ------------ |
+${rows}`,
+    analysis:
+      "Use this page to verify that grading, report rendering, and publication wiring work. For model selection, use the larger speed, accuracy, OCR, RAG, and availability topics.",
+    reproductionSteps: `\`\`\`sh
+git clone https://github.com/qmu/research
+cd research/packages/tech
+npm install
 
-This page reports a small exact-match accuracy benchmark for large language
-models. It exists to demonstrate the research-to-publication pipeline end to
-end; the task set is intentionally tiny so a reader can reproduce it in seconds.
+npm run benchmark:fixture
 
-## Method
-
-Each task is a prompt with a single expected answer. The model's reply is
-normalized (lowercased, trimmed, internal whitespace collapsed) and counted
-correct when it contains the expected string. Accuracy is the fraction of tasks
-answered correctly.
-
-\`\`\`mermaid
+export ANTHROPIC_API_KEY=sk-ant-...
+npm run benchmark
+\`\`\``,
+    reproductionCost:
+      "The fixture run is keyless and costless. A real run sends the small task set to the configured model; each request costs a few hundred tokens, so exact cost follows the selected model's pricing.",
+    cleanup:
+      "No external resources are created. The run regenerates the Markdown report and data artifact under `docs/research-reports/`.",
+    verificationData: `\`\`\`mermaid
 flowchart LR
   D[Task set] --> R[Run model]
   R --> G[Grade: normalized contains]
@@ -44,39 +63,6 @@ flowchart LR
   S --> P[Result page]
 \`\`\`
 
-The grading and scoring logic is pure and unit-tested in
-\`packages/tech/src/llm-benchmark/domain/\`. The model is reached through an
-anti-corruption layer in \`packages/tech/src/vendors/llm/\`, so the provider is
-swappable.
-
-## Result
-
-- **Model:** \`${result.model}\`
-- **Accuracy:** ${pct}% (${result.correct}/${result.total})
-- **Generated:** ${generatedAt}
-
-| Task | Outcome | Expected | Model output |
-| ---- | ------- | -------- | ------------ |
-${rows}
-
-## Reproduce
-
-\`\`\`sh
-git clone https://github.com/qmu/research
-cd research/packages/tech
-npm install
-
-# Pipeline self-test, no API key or cost (deterministic fixture model):
-npm run benchmark:fixture
-
-# Against a real model (defaults to claude-opus-4-8; override with ANTHROPIC_MODEL):
-export ANTHROPIC_API_KEY=sk-ant-...
-npm run benchmark
-\`\`\`
-
-The run regenerates this page at \`docs/research-reports/llm-benchmark.md\`.
-Each request costs a few hundred tokens; see the model's pricing for the exact
-figure. Pin the model id in any published comparison so the result stays
-interpretable over time.
-`;
+The grading and scoring logic is pure and unit-tested in \`packages/tech/src/llm-benchmark/domain/\`. The model is reached through an anti-corruption layer in \`packages/tech/src/vendors/llm/\`, so the provider is swappable. Pin the model id in any published comparison so the result stays interpretable over time.`,
+  });
 };

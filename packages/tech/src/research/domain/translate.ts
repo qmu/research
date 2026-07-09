@@ -1,4 +1,5 @@
 import type { LlmClient } from "../../vendors/llm/types";
+import { ARTICLE_OUTLINE } from "./article-outline";
 
 /**
  * The translation pipeline stage: render a topic's English insights into
@@ -247,6 +248,18 @@ export const verifyNumbersPreserved = (
  */
 export const buildTranslationPrompt = (input: TranslateInput): string => {
   const numbers = extractNumbers(input.englishBody);
+  const headingPairs = ARTICLE_OUTLINE.english.h2
+    .map(
+      (heading, index) =>
+        `  - "## ${heading}" -> "## ${ARTICLE_OUTLINE.japanese.h2[index] ?? heading}"`,
+    )
+    .concat(
+      ARTICLE_OUTLINE.english.h3.map(
+        (heading, index) =>
+          `  - "### ${heading}" -> "### ${ARTICLE_OUTLINE.japanese.h3[index] ?? heading}"`,
+      ),
+    )
+    .join("\n");
   return [
     `Translate the following English research report or insights prose into natural,`,
     `readable Japanese (日本語). This is for the ${input.topicId} topic of a`,
@@ -267,6 +280,9 @@ export const buildTranslationPrompt = (input: TranslateInput): string => {
     `  table headers, legends, captions, and list labels. Keep only code,`,
     `  commands, paths, URLs, provider names, model names, model IDs, and units`,
     `  unchanged.`,
+    `- When these standard article headings appear, translate them EXACTLY as`,
+    `  follows and keep their order:`,
+    headingPairs,
     `- Output the translated Markdown body only — no frontmatter and no outer`,
     `  wrapper code fence.`,
     ``,

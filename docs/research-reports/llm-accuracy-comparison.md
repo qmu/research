@@ -5,18 +5,32 @@ description: A reproducible accuracy comparison of 19 large language models acro
 
 # LLM output accuracy comparison
 
-This report compares **59 model×effort configurations** across
-19 models and 4 providers on JSON-schema structural limits and length-instruction following, over
-**1 trial**.
+The numbers here are a **projection of the combined LLM comparison sweep**: the same trials, model×effort matrix, statistics, and provenance, restricted to this topic's probes.
 
-The numbers here are a **projection of the combined LLM comparison sweep** — the
-same trials, model×effort matrix, statistics, and provenance, restricted to this
-topic's probes. They are not a separate measurement, so they match the combined
-report cell-for-cell. Curated catalog facts (provider, model, tier, price,
-effort) come from the model registry; measured values come from the projected
-run artifact linked below.
+## 1. Research Purpose
 
-## Comparison
+This report helps narrow model choices by the measured constraints that matter for this topic. It is not a general model ranking and it does not re-run a separate benchmark.
+
+## 2. Measurement Targets
+
+### Target Models
+
+The report covers **59 model×effort configurations** across 19 models and 4 providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.
+
+### Target Metrics
+
+This topic covers JSON-schema structural limits and length-instruction following. Metric cells are reported as mean ± 95% confidence interval when n ≥ 2; metrics with n < 2 show the mean and sample count.
+
+## 3. Scope and Constraints
+
+- **1 trial** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
+- **Point-in-time.** Measured behavior reflects the models and APIs at `2026-07-06T13:08:50.282Z`.
+- This topic tests narrow behaviors only (JSON-schema structural limits and length-instruction following); it does not measure general capability or reasoning quality.
+- **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
+
+**Not measured in this run.** Information accuracy — the source sweep (`llm-model-comparison.real.data.json`) predates this probe, so it is omitted here rather than shown as a value. Re-run `compare` to include it.
+
+## 4. Verification Results
 
 | Provider | Model | Tier | Effort | Cost (in / out per MTok) | Max schema depth | Max schema breadth | Length accuracy |
 | -------- | ----- | ---- | ------ | ------------------------ | --- | --- | --- |
@@ -80,23 +94,11 @@ run artifact linked below.
 | xAI | Grok 4.20 Non-Reasoning | mid | n/a | $1.25 / $2.50 | 48 (n=1) | 192 (n=1) | 97% (n=1) |
 | xAI | Grok Build 0.1 | small | n/a | $1.00 / $2.00 | 11 (n=1) | 192 (n=1) | 100% (n=1) |
 
-**Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
-The metric columns are measured values, each reported as mean ± 95% confidence
-interval (1.96 × sample standard deviation / √n) with n over 1 trial.
-`n/a (fixtured)` means the deterministic fixture client produced the cell (no
-API key was used); `n/a (error)` means every trial for that configuration
-failed. Provenance is written in the cell text, never encoded only by color.
+**Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. `n/a (fixtured)` means the deterministic fixture client produced the cell; `n/a (error)` means every trial for that configuration failed.
 
-**Not measured in this run.** Information accuracy — the source sweep (`llm-model-comparison.real.data.json`) predates this probe, so it is omitted here rather than shown as a value. Re-run `compare` to include it.
+Each detail table reports observed min-max and contributing trial count for one measured aspect.
 
-
-## Per-aspect measurements
-
-Each table reports the mean ± 95% confidence interval, observed min–max, and
-contributing trial count for one measured aspect. A metric with n < 2 is shown
-as a mean only and labelled with its n.
-
-### Maximum schema nesting depth accepted
+**Maximum schema nesting depth accepted**
 
 | Configuration | Mean ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |
@@ -162,7 +164,7 @@ as a mean only and labelled with its n.
 
 Highest measured of the 59 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
 
-### Maximum schema field breadth accepted
+**Maximum schema field breadth accepted**
 
 | Configuration | Mean ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |
@@ -228,7 +230,7 @@ Highest measured of the 59 measured configuration(s): **Grok 4.3 [none]** at 48 
 
 Highest measured of the 59 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
 
-### Length instruction accuracy
+**Length instruction accuracy**
 
 | Configuration | Mean ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |
@@ -294,7 +296,40 @@ Highest measured of the 59 measured configuration(s): **GPT-5.5 [none]** at 192 
 
 Highest measured of the 59 measured configuration(s): **Claude Fable 5 [low]** at 100% (n=1). Opposite end of this measurement: GPT-5.1 Codex mini [high] at 0% (n=1).
 
-## Data transparency
+## 5. Analysis
+
+Highest measured of the 59 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+
+Highest measured of the 59 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+
+Highest measured of the 59 measured configuration(s): **Claude Fable 5 [low]** at 100% (n=1). Opposite end of this measurement: GPT-5.1 Codex mini [high] at 0% (n=1).
+
+## 6. Reproduction
+
+### Reproduction Steps
+
+```sh
+git clone https://github.com/qmu/research
+cd research/packages/tech
+npm install
+
+# Keyless self-test (projects the committed compare fixture):
+npm run research -- accuracy --fixture
+
+# Against real providers, run the shared sweep, then project:
+npm run compare
+npm run research -- accuracy --real
+```
+
+### Reproduction Cost (Estimate)
+
+The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.
+
+### Cleanup
+
+The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.
+
+## 7. Verification Data
 
 The projected artifact preserves this topic's prompts, raw trial outputs, token
 counts, timing values, and (for accuracy) schema-conformance results and
@@ -322,32 +357,4 @@ committed alongside this page as a JSON artifact:
 It is projected from the combined comparison record
 `llm-model-comparison.real.data.json` — the same measurements, never re-run.
 
-## Scope & limitations
-
-- **1 trial** per configuration×probe. This sample supports a run-level
-  comparison, not a statistical claim about stable provider behavior.
-- **Point-in-time.** Measured behavior reflects the models and APIs at the
-  generated timestamp below.
-- This topic tests narrow behaviors only (JSON-schema structural limits and length-instruction following); it does not
-  measure general capability or reasoning quality.
-- **Effort semantics vary by provider**, so effort levels are more comparable
-  within a provider than across providers.
-- **Generated:** 2026-07-06T13:08:50.282Z
-
-## Reproduce
-
-```sh
-git clone https://github.com/qmu/research
-cd research/packages/tech
-npm install
-
-# Keyless self-test (projects the committed compare fixture):
-npm run research -- accuracy --fixture
-
-# Against real providers, run the shared sweep, then project:
-npm run compare        # measures every probe once
-npm run research -- accuracy --real
-```
-
-This page is a projection of the combined comparison; run `compare` to measure
-and `research accuracy` to regenerate this focused view.
+The projection writes `llm-accuracy-comparison.data.json` and this Markdown page. The source sweep remains `llm-model-comparison.real.data.json`, so speed and accuracy stay auditable back to the same underlying run.

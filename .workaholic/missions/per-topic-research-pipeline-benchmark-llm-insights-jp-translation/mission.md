@@ -77,3 +77,4 @@ owner-gated, regenerable artifact (the existing `.real` pattern).
 - 2026-07-09 — mission created — mission.md
 - 2026-07-09 — ticket archived — 20260709185801-derive-japanese-sidebar-from-research-topics.md
 - 2026-07-09 — ticket archived — 20260709190517-report-history-translation-and-qmu-publish-pipeline.md
+- 2026-07-10 — ticket archived — 20260710002018-standardize-public-research-article-outline.md

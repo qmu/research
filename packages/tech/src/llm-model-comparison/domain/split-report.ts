@@ -13,6 +13,7 @@ import {
   buildInformationAccuracyPrompt,
 } from "./information-accuracy";
 import { providerDisplayName } from "./provider";
+import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
 
 /**
  * Render a focused per-topic (speed or accuracy) report from a `SplitArtifact`.
@@ -146,7 +147,7 @@ const aspectSection = (
     );
   });
   return (
-    `### ${aspect.title}\n\n${header}\n${rows.join("\n")}\n\n` +
+    `**${aspect.title}**\n\n${header}\n${rows.join("\n")}\n\n` +
     `${aspectSentence(aspect, measuredRuns)}`
   );
 };
@@ -217,9 +218,7 @@ ${informationPrompt}
 };
 
 const transparencySection = (artifact: SplitArtifact): string =>
-  `## Data transparency
-
-The projected artifact preserves this topic's prompts, raw trial outputs, token
+  `The projected artifact preserves this topic's prompts, raw trial outputs, token
 counts, timing values, and (for accuracy) schema-conformance results and
 provider rejection messages. This page can be regenerated from that artifact
 without rerunning the providers.
@@ -255,65 +254,41 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
             ", ",
           )} — the source sweep (\`${escapeCell(artifact.sourceArtifact)}\`) predates this probe, so it is omitted here rather than shown as a value. Re-run \`compare\` to include it.\n`;
 
-  return `---
-title: ${artifact.title}
-description: A reproducible ${artifact.group} comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations, covering ${coveredSummary}, over ${trialCount}. Projected from the shared LLM comparison sweep.
----
+  const analysis = aspects
+    .map((aspect) => aspectSentence(aspect, measuredRuns))
+    .filter((sentence) => sentence !== "")
+    .join("\n\n");
 
-# ${artifact.title}
-
-This report compares **${configs.length} model×effort configurations** across
-${models} models and ${providers} providers on ${coveredSummary}, over
-**${trialCount}**.
-
-The numbers here are a **projection of the combined LLM comparison sweep** — the
-same trials, model×effort matrix, statistics, and provenance, restricted to this
-topic's probes. They are not a separate measurement, so they match the combined
-report cell-for-cell. Curated catalog facts (provider, model, tier, price,
-effort) come from the model registry; measured values come from the projected
-run artifact linked below.
-
-## Comparison
-
-${headlineTable(artifact)}
-
-**Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data.
-The metric columns are measured values, each reported as mean ± 95% confidence
-interval (1.96 × sample standard deviation / √n) with n over ${trialCount}.
-\`n/a (fixtured)\` means the deterministic fixture client produced the cell (no
-API key was used); \`n/a (error)\` means every trial for that configuration
-failed. Provenance is written in the cell text, never encoded only by color.
-${omittedNote}
-
-## Per-aspect measurements
-
-Each table reports the mean ± 95% confidence interval, observed min–max, and
-contributing trial count for one measured aspect. A metric with n < 2 is shown
-as a mean only and labelled with its n.
-
-${aspectSections}
-
-${transparencySection(artifact)}
-
-## Scope & limitations
-
-- **${trialCount}** per configuration×probe. This sample supports a run-level
-  comparison, not a statistical claim about stable provider behavior.
-- **Point-in-time.** Measured behavior reflects the models and APIs at the
-  generated timestamp below.
-- This topic tests narrow behaviors only (${coveredSummary}); it does not
-  measure general capability or reasoning quality.
-- **Effort semantics vary by provider**, so effort levels are more comparable
-  within a provider than across providers.
+  return renderEnglishResearchArticle({
+    title: artifact.title,
+    description: `A reproducible ${artifact.group} comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations, covering ${coveredSummary}, over ${trialCount}. Projected from the shared LLM comparison sweep.`,
+    introduction:
+      "The numbers here are a **projection of the combined LLM comparison sweep**: the same trials, model×effort matrix, statistics, and provenance, restricted to this topic's probes.",
+    purpose:
+      "This report helps narrow model choices by the measured constraints that matter for this topic. It is not a general model ranking and it does not re-run a separate benchmark.",
+    targetModels: `The report covers **${configs.length} model×effort configurations** across ${models} models and ${providers} providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.`,
+    targetMetrics: `This topic covers ${coveredSummary}. Metric cells are reported as mean ± 95% confidence interval when n ≥ 2; metrics with n < 2 show the mean and sample count.`,
+    scopeAndConstraints: `- **${trialCount}** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
+- **Point-in-time.** Measured behavior reflects the models and APIs at \`${escapeCell(artifact.generatedAt)}\`.
+- This topic tests narrow behaviors only (${coveredSummary}); it does not measure general capability or reasoning quality.
+- **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
 ${
   anyNonMeasured
     ? "- **This run includes non-measured configurations.** `n/a (fixtured)` and `n/a (error)` cells are not live measurements.\n"
     : ""
-}- **Generated:** ${escapeCell(artifact.generatedAt)}
+}${omittedNote}`,
+    verificationResults: `${headlineTable(artifact)}
 
-## Reproduce
+**Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. \`n/a (fixtured)\` means the deterministic fixture client produced the cell; \`n/a (error)\` means every trial for that configuration failed.
 
-\`\`\`sh
+Each detail table reports observed min-max and contributing trial count for one measured aspect.
+
+${aspectSections}`,
+    analysis:
+      analysis === ""
+        ? "This run has no measured values for this topic; every configuration was fixtured or errored."
+        : analysis,
+    reproductionSteps: `\`\`\`sh
 git clone https://github.com/qmu/research
 cd research/packages/tech
 npm install
@@ -322,11 +297,15 @@ npm install
 npm run research -- ${artifact.group} --fixture
 
 # Against real providers, run the shared sweep, then project:
-npm run compare        # measures every probe once
+npm run compare
 npm run research -- ${artifact.group} --real
-\`\`\`
+\`\`\``,
+    reproductionCost:
+      "The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.",
+    cleanup:
+      "The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.",
+    verificationData: `${transparencySection(artifact)}
 
-This page is a projection of the combined comparison; run \`compare\` to measure
-and \`research ${artifact.group}\` to regenerate this focused view.
-`;
+The projection writes \`${artifact.artifactPath}\` and this Markdown page. The source sweep remains \`${artifact.sourceArtifact}\`, so speed and accuracy stay auditable back to the same underlying run.`,
+  });
 };

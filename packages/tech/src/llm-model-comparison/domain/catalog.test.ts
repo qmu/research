@@ -66,7 +66,7 @@ describe("renderFoundationModelsReport", () => {
       buildFoundationModelsCatalog(sample),
     );
     expect(md).toContain("reference catalog");
-    expect(md).toContain("未測定");
+    expect(md).toContain("no measured metrics");
     expect(md).toContain("provenance: `catalog`");
     // Curated values appear; no measured metric column leaks in.
     expect(md).toContain("Claude Fable 5");
@@ -74,7 +74,7 @@ describe("renderFoundationModelsReport", () => {
     expect(md).not.toContain("Throughput");
     expect(md).not.toContain("tok/s");
     // Vision support is explicitly deferred, not fabricated.
-    expect(md).toContain("要確認");
+    expect(md).toContain("to verify");
   });
 
   it("renders an effort-less model's levels as n/a", () => {
