@@ -22,6 +22,15 @@ export type ResearchSiteTopic = Readonly<{
   qmuSlug: string;
 }>;
 
+export type InternalResearchSource = Readonly<{
+  id: string;
+  artifactBase: string;
+  npmScript: string;
+  sourceForTopicIds: ReadonlyArray<string>;
+  dataPaths: ReadonlyArray<string>;
+  sideMarkdownPaths: ReadonlyArray<string>;
+}>;
+
 const stripMarkdown = (path: string): string => path.replace(/\.md$/, "");
 
 const docsLink = (path: string): string =>
@@ -37,7 +46,7 @@ export const historyOverview = {
   japanese: { text: "History", link: "/llm-foundation/history" },
 } satisfies Readonly<{ source: ResearchPage; japanese: ResearchPage }>;
 
-export const researchSiteTopics = [
+export const publishedResearchTopics = [
   {
     id: "foundation-models",
     artifactBase: "foundation-models",
@@ -167,9 +176,41 @@ export const researchSiteTopics = [
   },
 ] satisfies ReadonlyArray<ResearchSiteTopic>;
 
+export const internalResearchSources = [
+  {
+    id: "llm-model-comparison",
+    artifactBase: "llm-model-comparison",
+    npmScript: "npm run compare",
+    sourceForTopicIds: ["speed", "accuracy"],
+    dataPaths: [
+      "docs/research-reports/llm-model-comparison.data.json",
+      "docs/research-reports/llm-model-comparison.real.data.json",
+      "docs/research-reports/llm-model-comparison.history.json",
+    ],
+    sideMarkdownPaths: [
+      "docs/research-reports/llm-model-comparison.fixture.md",
+      "docs/research-reports/llm-model-comparison.real.md",
+    ],
+  },
+] satisfies ReadonlyArray<InternalResearchSource>;
+
+// Backward-compatible name used by older entrypoints. It intentionally exposes
+// only published topics, never internal measurement sources.
+export const researchSiteTopics = publishedResearchTopics;
+
+export const findPublishedResearchTopic = (
+  id: string,
+): ResearchSiteTopic | undefined =>
+  publishedResearchTopics.find((topic) => topic.id === id);
+
+export const findInternalResearchSource = (
+  id: string,
+): InternalResearchSource | undefined =>
+  internalResearchSources.find((source) => source.id === id);
+
 export const sourceResearchItems = (): ReadonlyArray<ResearchPage> => [
   overview.source,
-  ...researchSiteTopics.map((topic) => ({
+  ...publishedResearchTopics.map((topic) => ({
     text: topic.source.text,
     link: docsLink(topic.source.docsPath),
   })),
@@ -178,7 +219,7 @@ export const sourceResearchItems = (): ReadonlyArray<ResearchPage> => [
 
 export const japaneseResearchItems = (): ReadonlyArray<ResearchPage> => [
   overview.japanese,
-  ...researchSiteTopics.map((topic) => ({
+  ...publishedResearchTopics.map((topic) => ({
     text: topic.japanese.text,
     link: docsLink(topic.japanese.docsPath),
   })),
@@ -186,7 +227,7 @@ export const japaneseResearchItems = (): ReadonlyArray<ResearchPage> => [
 ];
 
 export const publishSlugs = (): ReadonlyArray<string> =>
-  researchSiteTopics.map((topic) =>
+  publishedResearchTopics.map((topic) =>
     stripMarkdown(topic.japanese.docsPath).replace(/^docs\//, ""),
   );
 
@@ -196,7 +237,7 @@ export type PublishPlanEntry = Readonly<{
 }>;
 
 export const publishPlan = (): ReadonlyArray<PublishPlanEntry> =>
-  researchSiteTopics.map((topic) => ({
+  publishedResearchTopics.map((topic) => ({
     sourceSlug: stripMarkdown(topic.japanese.docsPath).replace(/^docs\//, ""),
     destinationSlug: topic.qmuSlug,
   }));
@@ -268,7 +309,7 @@ const renderHistorySections = (
   titleFor: (topic: ResearchSiteTopic) => string,
   emptyText: string,
 ): string =>
-  researchSiteTopics
+  publishedResearchTopics
     .map((topic) => {
       const topicFrames = sortHistoryFrames(
         frames.filter((frame) => frame.topicId === topic.id),
@@ -276,7 +317,9 @@ const renderHistorySections = (
       const body =
         topicFrames.length === 0
           ? emptyText
-          : topicFrames.map((frame) => renderHistoryFrame(frame, linkFor)).join("\n");
+          : topicFrames
+              .map((frame) => renderHistoryFrame(frame, linkFor))
+              .join("\n");
       return `### ${titleFor(topic)}
 
 ${body}`;
@@ -303,7 +346,7 @@ Past generated frames are listed in [History](./history).
 
 **Topics**
 
-${researchSiteTopics
+${publishedResearchTopics
   .map(
     (topic) =>
       `- [${topic.source.text}](./${stripMarkdown(topic.source.docsPath).replace("docs/research-reports/", "")}) — ${topic.source.summary}`,
@@ -354,7 +397,7 @@ description: LLMs Research と同じ構成で、日本語の生成・翻訳済�
 
 ## トピック
 
-${researchSiteTopics
+${publishedResearchTopics
   .map(
     (
       topic,
@@ -406,7 +449,7 @@ export const renderQmuTicketPayload = (): string =>
     "",
     "Copy the following Japanese report files in order, preserving this order in the qmu-co-jp navigation and indexes:",
     "",
-    ...researchSiteTopics.map(
+    ...publishedResearchTopics.map(
       (topic, index) =>
         `${index + 1}. ${topic.japanese.docsPath} -> docs/llm-foundation-research/${topic.qmuSlug}.md`,
     ),

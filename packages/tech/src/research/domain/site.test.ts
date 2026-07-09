@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  findInternalResearchSource,
+  findPublishedResearchTopic,
   historyOverview,
   historyPathFor,
+  internalResearchSources,
   japaneseResearchItems,
+  publishedResearchTopics,
   publishSlugs,
   publishPlan,
   renderJapaneseHistoryIndex,
@@ -13,19 +17,21 @@ import {
   researchSiteTopics,
   sourceResearchItems,
 } from "./site";
+import { findTopic, topicIds } from "./topic";
 
 describe("research site metadata", () => {
   it("derives English and Japanese navigation from the same topic order", () => {
+    expect(researchSiteTopics).toBe(publishedResearchTopics);
     expect(sourceResearchItems().map((item) => item.link)).toEqual([
       "/research-reports/",
-      ...researchSiteTopics.map((topic) =>
+      ...publishedResearchTopics.map((topic) =>
         topic.source.docsPath.replace(/^docs\/(.+)\.md$/, "/$1"),
       ),
       historyOverview.source.link,
     ]);
     expect(japaneseResearchItems().map((item) => item.link)).toEqual([
       "/llm-foundation/",
-      ...researchSiteTopics.map((topic) =>
+      ...publishedResearchTopics.map((topic) =>
         topic.japanese.docsPath.replace(/^docs\/(.+)\.md$/, "/$1"),
       ),
       historyOverview.japanese.link,
@@ -34,24 +40,62 @@ describe("research site metadata", () => {
 
   it("publishes Japanese report slugs in sidebar order", () => {
     expect(publishSlugs()).toEqual(
-      researchSiteTopics.map((topic) =>
+      publishedResearchTopics.map((topic) =>
         topic.japanese.docsPath.replace(/^docs\/(.+)\.md$/, "$1"),
       ),
     );
     expect(publishPlan()).toEqual(
-      researchSiteTopics.map((topic) => ({
+      publishedResearchTopics.map((topic) => ({
         sourceSlug: topic.japanese.docsPath.replace(/^docs\/(.+)\.md$/, "$1"),
         destinationSlug: topic.qmuSlug,
       })),
     );
   });
 
-  it("does not publish the internal combined LLM comparison page", () => {
-    expect(researchSiteTopics.map((topic) => topic.id)).not.toContain(
-      "llm-model-comparison",
+  it("keeps the combined LLM comparison runnable but internal to publishing", () => {
+    const internal = findInternalResearchSource("llm-model-comparison");
+
+    expect(topicIds()).toContain("llm-model-comparison");
+    expect(findTopic("llm-model-comparison")?.modes).toEqual([
+      "fixture",
+      "estimate",
+      "real",
+    ]);
+    expect(internal).toEqual({
+      id: "llm-model-comparison",
+      artifactBase: "llm-model-comparison",
+      npmScript: "npm run compare",
+      sourceForTopicIds: ["speed", "accuracy"],
+      dataPaths: [
+        "docs/research-reports/llm-model-comparison.data.json",
+        "docs/research-reports/llm-model-comparison.real.data.json",
+        "docs/research-reports/llm-model-comparison.history.json",
+      ],
+      sideMarkdownPaths: [
+        "docs/research-reports/llm-model-comparison.fixture.md",
+        "docs/research-reports/llm-model-comparison.real.md",
+      ],
+    });
+    expect(internalResearchSources.map((source) => source.id)).toEqual(
+      expect.arrayContaining(["llm-model-comparison"]),
+    );
+    expect(findPublishedResearchTopic("llm-model-comparison")).toBeUndefined();
+    expect(publishedResearchTopics.map((topic) => topic.id)).not.toContain(
+      internal?.id,
     );
     expect(renderSourceIndex()).not.toContain("LLM model comparison");
     expect(renderJapaneseIndex()).not.toContain("LLMモデル比較");
+    expect(renderQmuTicketPayload()).not.toContain("llm-model-comparison");
+    expect(
+      renderSourceHistoryIndex([
+        {
+          topicId: "llm-model-comparison",
+          generatedAt: "2026-07-09T10:05:17.123Z",
+          sourcePath:
+            "docs/research-reports/history/llm-model-comparison/2026-07-09T10-05-17-123Z/llm-model-comparison.md",
+        },
+      ]),
+    ).not.toContain("llm-model-comparison");
   });
 
   it("derives stable dated history paths for report frames", () => {

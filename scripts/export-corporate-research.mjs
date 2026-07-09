@@ -823,9 +823,7 @@ const exportOcr = () => {
 
   const rankRows = (rows, columns) =>
     rows
-      .map(
-        (r, i) => `| ${i + 1} | ${columns.map((c) => c(r)).join(" | ")} |`,
-      )
+      .map((r, i) => `| ${i + 1} | ${columns.map((c) => c(r)).join(" | ")} |`)
       .join("\n");
 
   const completeOcrRows = runs
@@ -1040,6 +1038,8 @@ npm run availability           # real: 取得 + LLM 抽出で履歴更新
   );
 };
 
+// Legacy combined corporate report is opt-in; public site/QMU handoff uses the
+// split speed and accuracy topics instead of regenerating this combined page.
 if (process.env.EXPORT_LEGACY_LLM_COMPARISON === "1") exportLlm();
 exportRag();
 exportOcr();

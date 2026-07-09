@@ -1,11 +1,12 @@
 /**
- * The per-topic research pipeline's shared vocabulary: every research topic
- * (speed, accuracy, RAG, OCR, availability, …) is registered as a `TopicSpec`
- * and runs through the same pipeline — benchmark → data artifact →
- * [EN insights] → [JP translation]. This module is pure: it defines the specs,
- * the registry, and the pipeline plan; the effectful runner bindings (which
- * legacy entrypoint implements a topic's benchmark) live in
- * `entrypoints/run-research.ts`.
+ * The per-topic research pipeline's shared vocabulary: every runnable research
+ * job (public topics such as speed/accuracy/RAG/OCR/availability, plus internal
+ * measurement sources such as the combined LLM sweep) is registered as a
+ * `TopicSpec`. Public site publishing is intentionally separate in
+ * `site.ts`, so a runnable source job does not automatically become a public
+ * article. This module is pure: it defines the specs, the registry, and the
+ * pipeline plan; the effectful runner bindings (which legacy entrypoint
+ * implements a topic's benchmark) live in `entrypoints/run-research.ts`.
  *
  * This is the skeleton stage of the migration: each existing topic is
  * registered with its current benchmark behavior unchanged, and the insights /
@@ -58,9 +59,9 @@ export type TopicSpec = Readonly<{
 }>;
 
 /**
- * Registry of research topics. Adding a topic means adding a spec here and a
- * runner binding in `entrypoints/run-research.ts`; ids are the public CLI
- * surface and must stay unique.
+ * Registry of runnable research jobs. Adding a job means adding a spec here and
+ * a runner binding in `entrypoints/run-research.ts`; ids are the CLI surface and
+ * must stay unique. Add public site placement separately in `site.ts`.
  */
 export const TOPICS: ReadonlyArray<TopicSpec> = [
   {

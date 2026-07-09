@@ -16,7 +16,8 @@ export default defineConfig({
   title: "qmu research",
   description: "Public, reproducible foundational research for qmu.co.jp.",
   cleanUrls: true,
-  // Role and template READMEs are documentation for editors, not site pages.
+  // Role/template READMEs and combined compare side files are source material,
+  // not public site pages. Speed and accuracy carry the public split articles.
   srcExclude: [
     "**/README.md",
     "llm-foundation/_generated/**",

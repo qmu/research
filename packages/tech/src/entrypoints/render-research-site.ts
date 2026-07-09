@@ -9,7 +9,7 @@ import {
   renderQmuTicketPayload,
   renderSourceHistoryIndex,
   renderSourceIndex,
-  researchSiteTopics,
+  publishedResearchTopics,
   type ResearchHistoryFrame,
 } from "../research/domain/site";
 import { isDirectRun } from "./direct-run";
@@ -49,11 +49,13 @@ const generatedAtFromStamp = (stamp: string): string => {
   return `${dateAndHour}:${minute}:${second}.${milliseconds}Z`;
 };
 
-const readHistoryFrames = async (): Promise<ReadonlyArray<ResearchHistoryFrame>> => {
+const readHistoryFrames = async (): Promise<
+  ReadonlyArray<ResearchHistoryFrame>
+> => {
   const root = repoRoot();
   const frames: ResearchHistoryFrame[] = [];
 
-  for (const topic of researchSiteTopics) {
+  for (const topic of publishedResearchTopics) {
     const topicDir = resolve(root, "docs/research-reports/history", topic.id);
     let entries: Dirent[];
     try {
@@ -79,8 +81,10 @@ const readHistoryFrames = async (): Promise<ReadonlyArray<ResearchHistoryFrame>>
         topicId: topic.id,
         generatedAt: generatedAtFromStamp(entry.name),
       };
-      if (await exists(resolve(root, sourcePath))) frame.sourcePath = sourcePath;
-      if (await exists(resolve(root, japanesePath))) frame.japanesePath = japanesePath;
+      if (await exists(resolve(root, sourcePath)))
+        frame.sourcePath = sourcePath;
+      if (await exists(resolve(root, japanesePath)))
+        frame.japanesePath = japanesePath;
       if (await exists(resolve(root, dataPath))) frame.dataPath = dataPath;
 
       if (

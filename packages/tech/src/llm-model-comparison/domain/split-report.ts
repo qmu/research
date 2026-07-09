@@ -67,10 +67,7 @@ const coverageSummary = (artifact: SplitArtifact): string => {
 
   const metricSet = new Set(artifact.metrics);
   const parts: string[] = [];
-  if (
-    metricSet.has("maxSchemaDepth") ||
-    metricSet.has("maxSchemaBreadth")
-  ) {
+  if (metricSet.has("maxSchemaDepth") || metricSet.has("maxSchemaBreadth")) {
     parts.push("JSON-schema structural limits");
   }
   if (metricSet.has("lengthAccuracy")) {

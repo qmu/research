@@ -9,7 +9,10 @@ import {
   TRANSLATION_OUTPUT_TOKENS,
   type TranslateInput,
 } from "./domain/translate";
-import { researchSiteTopics, type ResearchSiteTopic } from "./domain/site";
+import {
+  findPublishedResearchTopic,
+  type ResearchSiteTopic,
+} from "./domain/site";
 import type { LlmClient } from "../vendors/llm/types";
 import { createFixtureTranslationClient } from "../vendors/llm/fixture";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
@@ -52,9 +55,6 @@ const translationClient = (): LlmClient => {
   };
 };
 
-const findSiteTopic = (id: string): ResearchSiteTopic | undefined =>
-  researchSiteTopics.find((topic) => topic.id === id);
-
 const trialsFrom = (frontmatter: ReadonlyMap<string, string>): number => {
   const raw = frontmatter.get("trials");
   const parsed = raw === undefined ? Number.NaN : Number(raw);
@@ -90,9 +90,9 @@ export type ReportTranslationOptions = Readonly<{
 export const runReportTranslation = async (
   options: ReportTranslationOptions,
 ): Promise<void> => {
-  const topic = findSiteTopic(options.topicId);
+  const topic = findPublishedResearchTopic(options.topicId);
   if (topic === undefined) {
-    throw new Error(`unknown site topic: ${options.topicId}`);
+    throw new Error(`unknown published research topic: ${options.topicId}`);
   }
   const input = buildInput(
     topic,

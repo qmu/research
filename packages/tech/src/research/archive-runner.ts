@@ -1,17 +1,10 @@
 import { copyFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import {
-  historyPathFor,
-  researchSiteTopics,
-  type ResearchSiteTopic,
-} from "./domain/site";
+import { findPublishedResearchTopic, historyPathFor } from "./domain/site";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
 
 const repoPath = (path: string): string => resolve(repoRoot(), path);
-
-const findSiteTopic = (id: string): ResearchSiteTopic | undefined =>
-  researchSiteTopics.find((topic) => topic.id === id);
 
 const copyIfPresent = async (
   source: string | undefined,
@@ -40,9 +33,9 @@ export type ArchiveReportOptions = Readonly<{
 export const archiveReportFrame = async (
   options: ArchiveReportOptions,
 ): Promise<ReadonlyArray<string>> => {
-  const topic = findSiteTopic(options.topicId);
+  const topic = findPublishedResearchTopic(options.topicId);
   if (topic === undefined) {
-    throw new Error(`unknown site topic: ${options.topicId}`);
+    throw new Error(`unknown published research topic: ${options.topicId}`);
   }
   const copies = [
     {
