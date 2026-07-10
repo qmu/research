@@ -173,8 +173,11 @@ describe("research site metadata", () => {
 
   it("renders a qmu handoff payload with ordered destination slugs", () => {
     const payload = renderQmuTicketPayload();
-    expect(payload).toContain("Reflect LLMs Research Japanese reports");
+    expect(payload).toContain("Reflect LLMs Research reports");
     for (const [index, topic] of researchSiteTopics.entries()) {
+      expect(payload).toContain(
+        `${index + 1}. ${topic.source.docsPath} -> docs/en/llm-foundation-research/${topic.qmuSlug}.md`,
+      );
       expect(payload).toContain(
         `${index + 1}. ${topic.japanese.docsPath} -> docs/llm-foundation-research/${topic.qmuSlug}.md`,
       );

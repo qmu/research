@@ -445,14 +445,23 @@ ${renderHistorySections(
 
 export const renderQmuTicketPayload = (): string =>
   [
-    "# Reflect LLMs Research Japanese reports",
+    "# Reflect LLMs Research reports",
     "",
-    "Copy the following Japanese report files in order, preserving this order in the qmu-co-jp navigation and indexes:",
+    "Copy the following English and Japanese report files in order, preserving this order in the qmu-co-jp navigation and indexes:",
+    "",
+    "English reports:",
+    "",
+    ...publishedResearchTopics.map(
+      (topic, index) =>
+        `${index + 1}. ${topic.source.docsPath} -> docs/en/llm-foundation-research/${topic.qmuSlug}.md`,
+    ),
+    "",
+    "Japanese reports:",
     "",
     ...publishedResearchTopics.map(
       (topic, index) =>
         `${index + 1}. ${topic.japanese.docsPath} -> docs/llm-foundation-research/${topic.qmuSlug}.md`,
     ),
     "",
-    "Update the qmu-co-jp index/table-of-contents entries from the same order.",
+    "Update both qmu-co-jp index/table-of-contents entries from the same order.",
   ].join("\n");
