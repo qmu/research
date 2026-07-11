@@ -1,6 +1,10 @@
 import { copyFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { findPublishedResearchTopic, historyPathFor } from "./domain/site";
+import {
+  findPublishedResearchTopic,
+  historyPathFor,
+  reportFrameSources,
+} from "./domain/site";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
 
@@ -37,9 +41,10 @@ export const archiveReportFrame = async (
   if (topic === undefined) {
     throw new Error(`unknown published research topic: ${options.topicId}`);
   }
+  const reportSources = reportFrameSources(topic);
   const copies = [
     {
-      source: topic.source.docsPath,
+      source: reportSources.source,
       destination: historyPathFor(topic, options.generatedAt, "source"),
     },
     {
@@ -47,7 +52,7 @@ export const archiveReportFrame = async (
       destination: historyPathFor(topic, options.generatedAt, "data"),
     },
     {
-      source: topic.japanese.docsPath,
+      source: reportSources.japanese,
       destination: historyPathFor(topic, options.generatedAt, "japanese"),
     },
   ];

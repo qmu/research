@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain, UX, Config]
 effort: 4h
-commit_hash:
+commit_hash: 9ac1cde
 category: Added
 depends_on: [20260712030400-research-development-guideline.md]
 mission: living-research-development-guideline

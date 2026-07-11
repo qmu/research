@@ -23,6 +23,9 @@ export default defineConfig({
     "llm-foundation/_generated/**",
     "research-reports/*.real.md",
     "research-reports/*.fixture.md",
+    // Committed LLM-written tendency narratives are embedded into snapshot
+    // pages by `research:site -- write-snapshots`, not served standalone.
+    "research-reports/*.tendency.md",
   ],
   sitemap: { hostname: "https://research.qmu.dev" },
   markdown: {

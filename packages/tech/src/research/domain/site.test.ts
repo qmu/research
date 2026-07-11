@@ -14,8 +14,10 @@ import {
   renderQmuTicketPayload,
   renderSourceHistoryIndex,
   renderSourceIndex,
+  reportFrameSources,
   researchSiteTopics,
   sourceResearchItems,
+  type ResearchSiteTopic,
 } from "./site";
 import { findTopic, topicIds } from "./topic";
 
@@ -188,5 +190,43 @@ describe("research site metadata", () => {
     expect(
       researchSiteTopics.every((topic) => topic.npmScript.length > 0),
     ).toBe(true);
+  });
+
+  it("carries an agreed research design for every published topic", () => {
+    for (const topic of publishedResearchTopics) {
+      const { design } = topic;
+      expect(design.cadence.length, topic.id).toBeGreaterThan(0);
+      expect(design.subjects.length, topic.id).toBeGreaterThan(0);
+      expect(design.metrics.length, topic.id).toBeGreaterThan(0);
+      expect(design.trialsPerRun.minimum, topic.id).toBeLessThanOrEqual(
+        design.trialsPerRun.maximum,
+      );
+      expect(design.trialsPerRun.premises.length, topic.id).toBeGreaterThan(0);
+      expect(design.costPerRun.ceilingUsd, topic.id).toBeGreaterThanOrEqual(0);
+      expect(design.costPerRun.premises.length, topic.id).toBeGreaterThan(0);
+      expect(design.accumulates.length, topic.id).toBeGreaterThan(0);
+    }
+  });
+
+  it("archives frames from the report pages, not the snapshot", () => {
+    const plain = publishedResearchTopics[0];
+    if (plain === undefined) throw new Error("missing topic fixture");
+    expect(reportFrameSources(plain)).toEqual({
+      source: plain.source.docsPath,
+      japanese: plain.japanese.docsPath,
+    });
+
+    const snapshotTopic: ResearchSiteTopic = {
+      ...plain,
+      articleMode: "snapshot",
+      report: {
+        sourcePath: "docs/research-reports/example.report.md",
+        japanesePath: "docs/research-reports/example.report.ja.md",
+      },
+    };
+    expect(reportFrameSources(snapshotTopic)).toEqual({
+      source: "docs/research-reports/example.report.md",
+      japanese: "docs/research-reports/example.report.ja.md",
+    });
   });
 });

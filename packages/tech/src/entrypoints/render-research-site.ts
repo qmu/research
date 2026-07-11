@@ -1,5 +1,5 @@
 import { constants, type Dirent } from "node:fs";
-import { access, mkdir, readdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
   publishPlan,
@@ -12,6 +12,13 @@ import {
   publishedResearchTopics,
   type ResearchHistoryFrame,
 } from "../research/domain/site";
+import {
+  framesInTendencyWindow,
+  renderSnapshot,
+  snapshotBudgetProblems,
+  snapshotPointsFor,
+  type SnapshotPoint,
+} from "../research/domain/snapshot";
 import { isDirectRun } from "./direct-run";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
@@ -25,6 +32,7 @@ const usage = (): string =>
     "  copy-plan     Print source and destination slugs for qmu copy",
     "  qmu-ticket    Print the qmu-co-jp handoff ticket body",
     "  write-indexes Regenerate docs/research-reports and docs/llm-foundation indexes",
+    "  write-snapshots Regenerate the snapshot page of every snapshot-mode topic",
     "",
   ].join("\n");
 
@@ -116,6 +124,48 @@ export const main = async (): Promise<void> => {
   }
   if (command === "qmu-ticket") {
     process.stdout.write(`${renderQmuTicketPayload()}\n`);
+    return;
+  }
+  if (command === "write-snapshots") {
+    const root = repoRoot();
+    const historyFrames = await readHistoryFrames();
+    let written = 0;
+    for (const topic of publishedResearchTopics) {
+      if (topic.articleMode !== "snapshot") continue;
+      const frames = framesInTendencyWindow(
+        historyFrames.filter((frame) => frame.topicId === topic.id),
+      );
+      const points: SnapshotPoint[] = [];
+      for (const frame of frames) {
+        if (frame.dataPath === undefined) continue;
+        const artifact: unknown = JSON.parse(
+          await readFile(resolve(root, frame.dataPath), "utf8"),
+        );
+        points.push(...snapshotPointsFor(topic.id, artifact));
+      }
+      // The LLM-written tendency narrative is committed beside the reports and
+      // regenerated on real runs; the renderer falls back to the deterministic
+      // skeleton when the file is absent.
+      const narrativePath = resolve(
+        root,
+        `docs/research-reports/${topic.artifactBase}.tendency.md`,
+      );
+      const narrative = (await exists(narrativePath))
+        ? await readFile(narrativePath, "utf8")
+        : undefined;
+      const markdown = renderSnapshot(
+        narrative === undefined
+          ? { topic, frames, points }
+          : { topic, frames, points, narrative },
+      );
+      const problems = snapshotBudgetProblems(markdown);
+      if (problems.length > 0) {
+        throw new Error(`snapshot for ${topic.id}: ${problems.join("; ")}`);
+      }
+      await writeText(resolve(root, topic.source.docsPath), markdown);
+      written += 1;
+    }
+    process.stdout.write(`wrote ${written} snapshot page(s)\n`);
     return;
   }
   if (command === "write-indexes") {

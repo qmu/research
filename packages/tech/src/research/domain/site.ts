@@ -12,6 +12,44 @@ export type ResearchTopicPage = Readonly<{
   summary: string;
 }>;
 
+export type MetricDirection =
+  | "lower-is-better"
+  | "higher-is-better"
+  | "reference";
+
+export type ResearchMetric = Readonly<{
+  name: string;
+  unit: string;
+  direction: MetricDirection;
+}>;
+
+export type TrialsPerRun = Readonly<{
+  minimum: number;
+  maximum: number;
+  premises: string;
+}>;
+
+export type CostBudget = Readonly<{
+  ceilingUsd: number;
+  premises: string;
+}>;
+
+/**
+ * The per-topic research design the proposal-first protocol
+ * (docs/research-development-guideline.md) agrees with the developer. Recorded
+ * as shared metadata so the snapshot page, the cost gate before a real run,
+ * and the accumulated history all read the same agreed values.
+ */
+export type ResearchDesign = Readonly<{
+  cadence: string;
+  offCadenceTrigger: string;
+  subjects: string;
+  metrics: ReadonlyArray<ResearchMetric>;
+  trialsPerRun: TrialsPerRun;
+  costPerRun: CostBudget;
+  accumulates: string;
+}>;
+
 export type ResearchSiteTopic = Readonly<{
   id: string;
   artifactBase: string;
@@ -20,6 +58,18 @@ export type ResearchSiteTopic = Readonly<{
   japanese: ResearchTopicPage;
   dataPath?: string;
   qmuSlug: string;
+  design: ResearchDesign;
+  /**
+   * "snapshot": the sidebar page (source/japanese docsPath) is the compact
+   * renderer-produced snapshot over the dated trial frames, and the full
+   * trial report lives at `report.*` for archiving. Absent (default): the
+   * sidebar page is the full report itself (pre-ADR-0005 layout).
+   */
+  articleMode?: "snapshot";
+  report?: Readonly<{
+    sourcePath: string;
+    japanesePath: string;
+  }>;
 }>;
 
 export type InternalResearchSource = Readonly<{
@@ -46,7 +96,7 @@ export const historyOverview = {
   japanese: { text: "History", link: "/llm-foundation/history" },
 } satisfies Readonly<{ source: ResearchPage; japanese: ResearchPage }>;
 
-export const publishedResearchTopics = [
+export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
   {
     id: "foundation-models",
     artifactBase: "foundation-models",
@@ -65,6 +115,25 @@ export const publishedResearchTopics = [
     },
     dataPath: "docs/research-reports/foundation-models.data.json",
     qmuSlug: "foundation-models",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a provider model release",
+      subjects: "models in the shared model registry",
+      metrics: [
+        { name: "inputCostPerMTok", unit: "USD/MTok", direction: "reference" },
+        { name: "outputCostPerMTok", unit: "USD/MTok", direction: "reference" },
+      ],
+      trialsPerRun: {
+        minimum: 0,
+        maximum: 0,
+        premises: "curated catalog rows; no measurement calls",
+      },
+      costPerRun: {
+        ceilingUsd: 0,
+        premises: "keyless and costless; reads the committed model registry",
+      },
+      accumulates: "catalog revisions, one dated frame per archive",
+    },
   },
   {
     id: "speed",
@@ -82,6 +151,33 @@ export const publishedResearchTopics = [
     },
     dataPath: "docs/research-reports/llm-speed-comparison.data.json",
     qmuSlug: "llm-speed-comparison",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a major model release",
+      subjects: "models in the foundation-models catalog",
+      metrics: [
+        { name: "ttftMs", unit: "ms", direction: "lower-is-better" },
+        {
+          name: "throughputTokensPerSec",
+          unit: "tokens/s",
+          direction: "higher-is-better",
+        },
+        { name: "totalLatencyMs", unit: "ms", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 60,
+        premises:
+          "shared `npm run compare` sweep; a 3-repetition full-catalog run measured about $46 (2026-07); run --estimate before each real run",
+      },
+      accumulates:
+        "per-model HistoryPoint series for each speed metric, one point per dated frame",
+    },
   },
   {
     id: "accuracy",
@@ -100,6 +196,41 @@ export const publishedResearchTopics = [
     },
     dataPath: "docs/research-reports/llm-accuracy-comparison.data.json",
     qmuSlug: "llm-accuracy-comparison",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a major model release",
+      subjects: "models in the foundation-models catalog",
+      metrics: [
+        {
+          name: "maxSchemaDepth",
+          unit: "levels",
+          direction: "higher-is-better",
+        },
+        {
+          name: "maxSchemaBreadth",
+          unit: "properties",
+          direction: "higher-is-better",
+        },
+        {
+          name: "lengthAccuracy",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 60,
+        premises:
+          "shared `npm run compare` sweep; a 3-repetition full-catalog run measured about $46 (2026-07); run --estimate before each real run",
+      },
+      accumulates:
+        "per-model HistoryPoint series for each accuracy metric, one point per dated frame",
+    },
   },
   {
     id: "availability",
@@ -118,6 +249,26 @@ export const publishedResearchTopics = [
     },
     dataPath: "docs/research-reports/llm-availability.data.json",
     qmuSlug: "llm-availability",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a provider incident",
+      subjects: "public provider status pages (Anthropic, OpenAI, Google, xAI)",
+      metrics: [
+        { name: "incidentTotal", unit: "count", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 1,
+        premises: "one observation reads each provider's public status history",
+      },
+      costPerRun: {
+        ceilingUsd: 5,
+        premises:
+          "status-page fetches are free; cost is one LLM extraction call per provider; run availability:estimate first",
+      },
+      accumulates:
+        "per-provider incident history in docs/research-reports/availability-history/*.json with 30/90-day windows",
+    },
   },
   {
     id: "ocr",
@@ -136,6 +287,33 @@ export const publishedResearchTopics = [
     },
     dataPath: "docs/research-reports/ocr-comparison.data.json",
     qmuSlug: "ocr-comparison",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a vision-capable model release",
+      subjects: "vision-capable models in the foundation-models catalog",
+      metrics: [
+        {
+          name: "characterErrorRate",
+          unit: "ratio",
+          direction: "lower-is-better",
+        },
+        { name: "wordErrorRate", unit: "ratio", direction: "lower-is-better" },
+        { name: "fieldAccuracy", unit: "ratio", direction: "higher-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 20,
+        premises:
+          "provider token/image charges over the synthetic document set; no measured baseline yet; run ocr:estimate first",
+      },
+      accumulates:
+        "per-model HistoryPoint series for each OCR metric, one point per dated frame",
+    },
   },
   {
     id: "rag",
@@ -155,6 +333,34 @@ export const publishedResearchTopics = [
     },
     dataPath: "docs/research-reports/rag-benchmark.data.json",
     qmuSlug: "rag-benchmark",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a new vector-store backend or embedding model",
+      subjects: "vector-store backends behind the shared RAG harness",
+      metrics: [
+        { name: "recallAtK", unit: "ratio", direction: "higher-is-better" },
+        { name: "ndcgAtK", unit: "ratio", direction: "higher-is-better" },
+        {
+          name: "queryLatencyP50Ms",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        { name: "costUsd", unit: "USD", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 5,
+        premises:
+          "retrieval quality is deterministic per dataset; five trials bound operational latency variance",
+      },
+      costPerRun: {
+        ceilingUsd: 10,
+        premises:
+          "local compute plus managed-backend usage when credentials are configured; run rag:estimate first",
+      },
+      accumulates:
+        "per-backend HistoryPoint series for retrieval and latency metrics, one point per dated frame",
+    },
   },
   {
     id: "llm-benchmark",
@@ -173,8 +379,38 @@ export const publishedResearchTopics = [
         "研究から公開までのパイプラインを再現できる小さな完全一致精度ベンチマーク。",
     },
     qmuSlug: "llm-benchmark",
+    design: {
+      cadence: "on demand",
+      offCadenceTrigger: "a pipeline change that needs end-to-end exercise",
+      subjects: "the configured model over the small exact-match task set",
+      metrics: [
+        { name: "exactMatch", unit: "ratio", direction: "higher-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 1,
+        premises: "small task set; each request costs a few hundred tokens",
+      },
+      costPerRun: {
+        ceilingUsd: 1,
+        premises: "cost follows the selected model's pricing per request",
+      },
+      accumulates: "one dated frame per archived pipeline exercise",
+    },
   },
-] satisfies ReadonlyArray<ResearchSiteTopic>;
+];
+
+/**
+ * The pages a dated trial frame is copied from. For a snapshot topic the full
+ * trial report lives at `report.*` (the sidebar page is the compact snapshot);
+ * otherwise the sidebar page itself is the report.
+ */
+export const reportFrameSources = (
+  topic: ResearchSiteTopic,
+): Readonly<{ source: string; japanese: string }> => ({
+  source: topic.report?.sourcePath ?? topic.source.docsPath,
+  japanese: topic.report?.japanesePath ?? topic.japanese.docsPath,
+});
 
 export const internalResearchSources = [
   {
