@@ -84,12 +84,13 @@ Out of scope:
 - [ ] Snapshot-article structure defined in shared metadata/site tooling:
       sidebar page = compact latest snapshot with 3–5-month tendencies,
       linking to dated historical trial reports in a uniform format
-      (ticket TBD)
+      (#20260712031500-snapshot-structure-site-tooling.md)
 - [ ] One existing research topic migrated to the snapshot + historical-trials
-      structure as the reference implementation (ticket TBD)
+      structure as the reference implementation
+      (#20260712031600-migrate-llm-speed-snapshot-reference.md)
 - [ ] Recurring-run flow verified end-to-end for the reference topic:
       `--real` run → archive dated trial → snapshot regenerated with updated
-      tendencies (ticket TBD)
+      tendencies (#20260712031600-migrate-llm-speed-snapshot-reference.md)
 - [ ] Snapshot compactness expectation documented (size budget for LLM
       context use) and reflected in the guideline
       (#20260712030400-research-development-guideline.md)
@@ -103,3 +104,7 @@ Out of scope:
   Guideline brief; Goal/Scope/Acceptance drafted — mission.md
 - 2026-07-12 — Ticket written for acceptance items 1 & 5 (guideline doc +
   compactness budget) — 20260712030400-research-development-guideline.md
+- 2026-07-12 — Tickets written for items 2 (site tooling) and 3+4 (llm-speed
+  reference migration + end-to-end loop) —
+  20260712031500-snapshot-structure-site-tooling.md,
+  20260712031600-migrate-llm-speed-snapshot-reference.md
