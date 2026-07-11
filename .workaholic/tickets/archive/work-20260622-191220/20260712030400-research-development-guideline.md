@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [UX, Config]
 effort: 4h
-commit_hash:
+commit_hash: 03ba48d
 category: Added
 depends_on:
 mission: living-research-development-guideline

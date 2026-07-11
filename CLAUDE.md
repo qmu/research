@@ -23,6 +23,11 @@ site (`../qmu-co-jp`) as a one-directional Markdown copy.
 - **One runner.** All common operations run through `make`; CI invokes the same
   targets. Do not put build logic inline in workflow YAML.
 - **Objective docs.** Write reports and docs in factual, verifiable language.
+- **Proposal-first research.** A new or changed research topic starts from
+  `docs/research-development-guideline.md`: the agent proposes cadence,
+  subjects, metrics, cost/trial-count range, and accumulated history for
+  developer approval before building; articles ship as a compact snapshot
+  over dated uniform trial reports.
 
 ## Commands
 

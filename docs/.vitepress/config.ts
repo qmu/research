@@ -62,6 +62,10 @@ export default defineConfig({
       {
         text: "Project",
         items: [
+          {
+            text: "Research development guideline",
+            link: "/research-development-guideline",
+          },
           { text: "Glossary", link: "/glossary" },
           { text: "Dependency decisions", link: "/dependency-decisions" },
         ],
