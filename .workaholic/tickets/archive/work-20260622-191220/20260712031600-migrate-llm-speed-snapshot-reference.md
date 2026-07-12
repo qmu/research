@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [UX, Domain]
 effort: 4h
-commit_hash:
+commit_hash: 3c454b7
 category: Changed
 depends_on: [20260712030400-research-development-guideline.md, 20260712031500-snapshot-structure-site-tooling.md]
 mission: living-research-development-guideline
