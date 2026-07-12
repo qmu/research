@@ -77,21 +77,21 @@ Out of scope:
      by filename, e.g. "criterion text (#20260101120000-some-ticket.md)". Progress toward
      achievement is checked over total, computed from this list, never a hand-set number. -->
 
-- [ ] Research Development Guideline document committed, defining the
+- [x] Research Development Guideline document committed, defining the
       proposal-first protocol AI agents follow (cadence, subjects, metrics,
       cost/trials, historical data)
       (#20260712030400-research-development-guideline.md)
-- [ ] Snapshot-article structure defined in shared metadata/site tooling:
+- [x] Snapshot-article structure defined in shared metadata/site tooling:
       sidebar page = compact latest snapshot with 3–5-month tendencies,
       linking to dated historical trial reports in a uniform format
       (#20260712031500-snapshot-structure-site-tooling.md)
-- [ ] One existing research topic migrated to the snapshot + historical-trials
+- [x] One existing research topic migrated to the snapshot + historical-trials
       structure as the reference implementation
       (#20260712031600-migrate-llm-speed-snapshot-reference.md)
-- [ ] Recurring-run flow verified end-to-end for the reference topic:
+- [x] Recurring-run flow verified end-to-end for the reference topic:
       `--real` run → archive dated trial → snapshot regenerated with updated
       tendencies (#20260712031600-migrate-llm-speed-snapshot-reference.md)
-- [ ] Snapshot compactness expectation documented (size budget for LLM
+- [x] Snapshot compactness expectation documented (size budget for LLM
       context use) and reflected in the guideline
       (#20260712030400-research-development-guideline.md)
 
@@ -112,3 +112,6 @@ Out of scope:
 - 2026-07-12 — ticket archived — 20260712031500-snapshot-structure-site-tooling.md
 - 2026-07-12 — ticket archived — 20260712043000-comparison-instrument-v2.md
 - 2026-07-12 — ticket archived — 20260712031600-migrate-llm-speed-snapshot-reference.md
+- 2026-07-12 — All five acceptance criteria met: guideline + ADR 0005 (d7329e2),
+  snapshot tooling + budget validator (e522aa0), instrument v2 (c79751f),
+  llm-speed migration + real end-to-end loop, ~$3 actual (ec38a52) — mission.md
