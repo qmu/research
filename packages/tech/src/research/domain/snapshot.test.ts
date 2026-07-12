@@ -4,6 +4,7 @@ import { findPublishedResearchTopic, historyPathFor } from "./site";
 import {
   comparisonSnapshotPoints,
   framesInTendencyWindow,
+  instrumentVersionOf,
   renderSnapshot,
   SNAPSHOT_CHAR_BUDGET,
   snapshotBudgetProblems,
@@ -36,6 +37,8 @@ const speedArtifact = (
     id: string;
     modelName: string;
     ttft: ReadonlyArray<number | undefined>;
+    effort?: string;
+    provenance?: string;
   }>,
 ): unknown => ({
   generatedAt,
@@ -44,6 +47,8 @@ const speedArtifact = (
     id: config.id,
     modelName: config.modelName,
     measuredAt: generatedAt,
+    provenance: config.provenance ?? "measured",
+    ...(config.effort === undefined ? {} : { effort: config.effort }),
     trials: config.ttft.map((value) =>
       value === undefined
         ? { ok: false, metrics: {} }
@@ -135,6 +140,36 @@ describe("comparisonSnapshotPoints", () => {
     ).toEqual([]);
     expect(comparisonSnapshotPoints(undefined)).toEqual([]);
     expect(comparisonSnapshotPoints({ configs: "wrong" })).toEqual([]);
+  });
+
+  it("never charts fixtured or curated configs as measurements", () => {
+    expect(
+      comparisonSnapshotPoints(
+        speedArtifact("2026-07-01T00:00:00.000Z", [
+          {
+            id: "a",
+            modelName: "Model A",
+            ttft: [100],
+            provenance: "fixtured",
+          },
+          { id: "b", modelName: "Model B", ttft: [100], provenance: "curated" },
+        ]),
+      ),
+    ).toEqual([]);
+  });
+
+  it("splits effort variants sharing a model id into distinct series", () => {
+    const points = comparisonSnapshotPoints(
+      speedArtifact("2026-07-01T00:00:00.000Z", [
+        { id: "a", modelName: "Model A", ttft: [100], effort: "low" },
+        { id: "a", modelName: "Model A", ttft: [300], effort: "high" },
+      ]),
+    );
+    expect(points.map((point) => point.seriesId)).toEqual(["a@low", "a@high"]);
+    expect(points.map((point) => point.seriesLabel)).toEqual([
+      "Model A (low)",
+      "Model A (high)",
+    ]);
   });
 
   it("is registered for the speed and accuracy topics only", () => {
@@ -257,5 +292,14 @@ describe("renderSnapshot", () => {
     expect(markdown).toContain(
       "[English](./history/speed/2026-07-01T00-00-00-000Z/llm-speed-comparison)",
     );
+  });
+});
+
+describe("instrumentVersionOf", () => {
+  it("reads the artifact's instrument version, defaulting to 1", () => {
+    expect(instrumentVersionOf({ instrumentVersion: 2 })).toBe(2);
+    expect(instrumentVersionOf({})).toBe(1);
+    expect(instrumentVersionOf(undefined)).toBe(1);
+    expect(instrumentVersionOf({ instrumentVersion: "2" })).toBe(1);
   });
 });

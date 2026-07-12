@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   INFORMATION_ACCURACY_MANIFEST,
+  batchedInformationAccuracyFixtureAnswer,
+  buildBatchedInformationAccuracyPrompt,
   buildInformationAccuracyPrompt,
+  parseBatchedInformationAnswers,
   informationAccuracyFixtureAnswer,
   normalizeAnswer,
   scoreInformationAccuracy,
@@ -98,5 +101,48 @@ describe("information-accuracy prompt and fixture", () => {
     expect(informationAccuracyFixtureAnswer(watermelon, 1)).toBe(
       watermelon.acceptedAliases[0],
     );
+  });
+});
+
+describe("batched information accuracy (instrument v2)", () => {
+  const questions = INFORMATION_ACCURACY_MANIFEST.questions;
+
+  it("numbers every manifest question in the batched prompt", () => {
+    const prompt = buildBatchedInformationAccuracyPrompt(questions);
+    for (const [index, item] of questions.entries()) {
+      expect(prompt).toContain(`${index + 1}. ${item.question}`);
+    }
+  });
+
+  it("parses numbered answers back to question ids in any order", () => {
+    const raw = questions
+      .map(
+        (_, index) =>
+          `${questions.length - index}) answer ${questions.length - index}`,
+      )
+      .join("\n");
+    const parsed = parseBatchedInformationAnswers(raw, questions);
+    expect(parsed.map((a) => a.id)).toEqual(questions.map((q) => q.id));
+    expect(parsed[0]?.answer).toBe("answer 1");
+  });
+
+  it("scores unanswered questions as empty rather than failing the parse", () => {
+    const parsed = parseBatchedInformationAnswers(
+      "1. only one line",
+      questions,
+    );
+    expect(parsed[0]?.answer).toBe("only one line");
+    expect(parsed.slice(1).every((a) => a.answer === "")).toBe(true);
+  });
+
+  it("round-trips the batched fixture answer to a perfect score", () => {
+    const raw = batchedInformationAccuracyFixtureAnswer(questions, 0);
+    const parsed = parseBatchedInformationAnswers(raw, questions);
+    const score = scoreInformationAccuracy(
+      INFORMATION_ACCURACY_MANIFEST,
+      parsed,
+    );
+    expect(score.exactMatchRate).toBe(1);
+    expect(score.f1).toBe(1);
   });
 });

@@ -45,8 +45,12 @@ export type ModelCard = Readonly<{
 }>;
 
 // Which probe a captured call belongs to. Each probe exercises a distinct,
-// separately-reported behavior.
+// separately-reported behavior. "speed" is the instrument-v2 unified probe (one
+// streamed fixed-length generation yielding throughput, TTFT, total latency,
+// and length accuracy together); "throughput"/"latency"/"length" are the v1
+// probes it replaced, kept so v1 artifacts still type.
 export type Probe =
+  | "speed"
   | "throughput"
   | "latency"
   | "schema"
@@ -86,14 +90,18 @@ export type CallRecord = Readonly<{
 // response time), and the JSON metrics are the tested maxima along the two
 // independent schema axes: the deepest nesting and the widest field count for
 // which the model still returned schema-conforming structured output.
+// `null` means "not measured in this trial": under instrument v2 the schema and
+// information probes run once per configuration (their values sit on trial 1)
+// while the speed probe repeats, so later trials carry null for the structural
+// metrics and the aggregates count only real samples.
 export type TrialMetrics = Readonly<{
-  throughputTokensPerSec: number; // sustained tokens/sec during generation
-  ttftMs: number; // time-to-first-token on the latency probe
-  totalLatencyMs: number; // total response time on the latency probe
-  maxSchemaDepth: number; // deepest conforming nesting (breadth 1)
-  maxSchemaBreadth: number; // widest conforming field count (depth 1)
-  lengthAccuracy: number; // 0..1
-  informationAccuracy: number; // deterministic alias/exact-match token F1, 0..1
+  throughputTokensPerSec: number | null; // sustained tokens/sec during generation
+  ttftMs: number | null; // time-to-first-token on the speed probe
+  totalLatencyMs: number | null; // total response time on the speed probe
+  maxSchemaDepth: number | null; // deepest conforming nesting (breadth 1)
+  maxSchemaBreadth: number | null; // widest conforming field count (depth 1)
+  lengthAccuracy: number | null; // 0..1
+  informationAccuracy: number | null; // deterministic alias/exact-match token F1, 0..1
 }>;
 
 // One trial: a full probe pass (throughput, latency, schema escalation, length)
@@ -255,15 +263,16 @@ export type InformationAccuracyProbeParams = Readonly<{
 
 // Probe parameters the runner owns and echoes here for the Method section. The
 // domain does not decide these — they are orchestration policy, kept out of the
-// pure graders.
+// pure graders. Instrument v2: one unified speed probe (streamed fixed-length
+// generation measuring throughput, TTFT, total latency, and length accuracy at
+// once, repeated `speedTrials` times), a warm-startable per-axis schema search,
+// and one batched information-accuracy call.
 export type ProbeParams = Readonly<{
-  throughputTargetWords: number; // long-generation target for the throughput probe
-  throughputTopic: string;
-  latencyPrompt: string; // short prompt whose TTFT + total is the latency probe
-  schemaProbe: SchemaProbeParams; // adaptive per-axis escalation
-  lengthTargetWords: number;
-  lengthTopic: string;
-  informationAccuracy: InformationAccuracyProbeParams;
+  speedTargetWords: number; // exact word target of the unified speed probe
+  speedTopic: string;
+  speedTrials: number; // repetitions of the speed probe per configuration
+  schemaProbe: SchemaProbeParams; // per-axis boundary search (run once)
+  informationAccuracy: InformationAccuracyProbeParams; // batched (run once)
 }>;
 
 // A pre-run estimate of the cost of a real sweep: how many configurations, how
@@ -290,4 +299,12 @@ export type ComparisonResult = Readonly<{
   judgeModel: string;
   estimate: RunEstimate;
   artifactPath: string;
+  /**
+   * Which measurement instrument produced this artifact. Version 2 (2026-07)
+   * unified the speed probes, batched information accuracy, and warm-started
+   * the schema search; its numbers are not comparable with version 1's, so
+   * trend surfaces only connect points measured by the same version.
+   * Artifacts without the field are version 1.
+   */
+  instrumentVersion: number;
 }>;

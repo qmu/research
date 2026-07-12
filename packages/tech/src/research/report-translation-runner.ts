@@ -11,6 +11,7 @@ import {
 } from "./domain/translate";
 import {
   findPublishedResearchTopic,
+  reportFrameSources,
   type ResearchSiteTopic,
 } from "./domain/site";
 import type { LlmClient } from "../vendors/llm/types";
@@ -70,7 +71,7 @@ const buildInput = (
   return {
     topicId: topic.id,
     englishBody: body,
-    sourceInsights: topic.source.docsPath.replace(
+    sourceInsights: reportFrameSources(topic).source.replace(
       /^docs\/research-reports\//,
       "",
     ),
@@ -94,9 +95,11 @@ export const runReportTranslation = async (
   if (topic === undefined) {
     throw new Error(`unknown published research topic: ${options.topicId}`);
   }
+  // Translate the full trial report; for a snapshot topic that is the report
+  // path, not the sidebar snapshot.
   const input = buildInput(
     topic,
-    await readFile(repoPath(topic.source.docsPath), "utf8"),
+    await readFile(repoPath(reportFrameSources(topic).source), "utf8"),
     await currentCommit(),
   );
   if (options.mode === "estimate") {

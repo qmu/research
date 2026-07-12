@@ -14,6 +14,7 @@ import {
 } from "../research/domain/site";
 import {
   framesInTendencyWindow,
+  instrumentVersionOf,
   renderSnapshot,
   snapshotBudgetProblems,
   snapshotPointsFor,
@@ -135,13 +136,22 @@ export const main = async (): Promise<void> => {
       const frames = framesInTendencyWindow(
         historyFrames.filter((frame) => frame.topicId === topic.id),
       );
-      const points: SnapshotPoint[] = [];
+      // Chart only the frames measured by the same instrument version as the
+      // newest frame; older-instrument frames stay listed as trials but their
+      // numbers are not connected into the same tendency series.
+      const artifacts: { artifact: unknown; version: number }[] = [];
       for (const frame of frames) {
         if (frame.dataPath === undefined) continue;
         const artifact: unknown = JSON.parse(
           await readFile(resolve(root, frame.dataPath), "utf8"),
         );
-        points.push(...snapshotPointsFor(topic.id, artifact));
+        artifacts.push({ artifact, version: instrumentVersionOf(artifact) });
+      }
+      const latestVersion = artifacts[0]?.version;
+      const points: SnapshotPoint[] = [];
+      for (const entry of artifacts) {
+        if (entry.version !== latestVersion) continue;
+        points.push(...snapshotPointsFor(topic.id, entry.artifact));
       }
       // The LLM-written tendency narrative is committed beside the reports and
       // regenerated on real runs; the renderer falls back to the deterministic

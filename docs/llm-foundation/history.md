@@ -21,11 +21,13 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### LLM応答速度
 
+- 2026-07-12T05:47:26.268Z: [English](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison) · [Japanese](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja) · [data.json](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.data.json)
 - 2026-07-09T11:52:54.627Z: [English](../research-reports/history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison) · [Japanese](../research-reports/history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.ja) · [data.json](../research-reports/history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.data.json)
 - 2026-07-09T11:12:01.332Z: [English](../research-reports/history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison) · [Japanese](../research-reports/history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.ja) · [data.json](../research-reports/history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.data.json)
 
 ### LLM出力精度
 
+- 2026-07-12T05:47:26.268Z: [English](../research-reports/history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison) · [Japanese](../research-reports/history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.ja) · [data.json](../research-reports/history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.data.json)
 - 2026-07-09T12:21:25.966Z: [English](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison) · [Japanese](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja) · [data.json](../research-reports/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.data.json)
 - 2026-07-09T11:14:36.434Z: [English](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison) · [Japanese](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja) · [data.json](../research-reports/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.data.json)
 

@@ -5,12 +5,11 @@ import {
   type SplitArtifact,
   type SplitAspect,
 } from "./split";
-import { buildThroughputPrompt } from "./throughput";
 import { buildSchemaPrompt } from "./json-schema";
-import { buildLengthPrompt } from "./length-accuracy";
+import { buildSpeedPrompt } from "./speed-probe";
 import {
   INFORMATION_ACCURACY_MANIFEST,
-  buildInformationAccuracyPrompt,
+  buildBatchedInformationAccuracyPrompt,
 } from "./information-accuracy";
 import { providerDisplayName } from "./provider";
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
@@ -153,46 +152,42 @@ const aspectSection = (
 };
 
 const speedTransparency = (artifact: SplitArtifact): string => {
-  const throughputPrompt = buildThroughputPrompt(
-    artifact.probe.throughputTargetWords,
-    artifact.probe.throughputTopic,
+  const speedPrompt = buildSpeedPrompt(
+    artifact.probe.speedTargetWords,
+    artifact.probe.speedTopic,
   );
-  return `**Throughput probe** (streamed long generation; sustained tok/s is
-measured over the generation window, excluding time-to-first-token):
+  return `**Unified speed probe** (streamed exact-length generation, repeated
+${artifact.probe.speedTrials}× per configuration; one call yields sustained
+tok/s over the generation window — excluding time-to-first-token — plus TTFT
+and total response time):
 
 \`\`\`text
-${throughputPrompt}
-\`\`\`
-
-**Latency probe** (streamed short prompt; TTFT + total response time):
-
-\`\`\`text
-${escapeCell(artifact.probe.latencyPrompt)}
+${speedPrompt}
 \`\`\``;
 };
 
 const accuracyTransparency = (artifact: SplitArtifact): string => {
   const sp = artifact.probe.schemaProbe;
-  const schemaPrompt = buildSchemaPrompt({ depth: sp.depth.start, breadth: 1 });
-  const lengthPrompt = buildLengthPrompt(
-    artifact.probe.lengthTargetWords,
-    artifact.probe.lengthTopic,
+  const schemaPrompt = buildSchemaPrompt({ depth: sp.depth.cap, breadth: 1 });
+  const lengthPrompt = buildSpeedPrompt(
+    artifact.probe.speedTargetWords,
+    artifact.probe.speedTopic,
   );
-  const informationItem = INFORMATION_ACCURACY_MANIFEST.questions[0];
-  const informationPrompt =
-    informationItem === undefined
-      ? ""
-      : buildInformationAccuracyPrompt(informationItem);
-  const base = `**Schema-complexity probe** (structured-output mode; each axis is
-escalated independently — depth up to ${sp.depth.cap} nesting levels, breadth up
-to ${sp.breadth.cap} fields — climbing geometrically then bisecting to the tested
-maximum. The first rung on the depth axis asks for):
+  const informationPrompt = buildBatchedInformationAccuracyPrompt(
+    INFORMATION_ACCURACY_MANIFEST.questions,
+  );
+  const base = `**Schema-complexity probe** (structured-output mode, run once per
+configuration; each axis is searched independently — depth up to
+${sp.depth.cap} nesting levels, breadth up to ${sp.breadth.cap} fields — by
+exact binary search, warm-started from the previous run's measured boundary
+when one exists. The cap rung on the depth axis asks for):
 
 \`\`\`text
 ${schemaPrompt}
 \`\`\`
 
-**Length probe:**
+**Length accuracy source** (the unified speed probe's exact-length generation;
+accuracy is scored against its ${artifact.probe.speedTargetWords}-word target):
 
 \`\`\`text
 ${lengthPrompt}
@@ -209,8 +204,8 @@ ${lengthPrompt}
 
 **Information-accuracy probe** (TruthfulQA manifest
 ${escapeCell(info.manifestVersion)};
-${info.questionCount} short factual questions;
-headline score = deterministic alias/exact-match token F1):
+${info.questionCount} short factual questions in one batched call;
+headline score = deterministic alias/exact-match token F1 per question):
 
 \`\`\`text
 ${informationPrompt}

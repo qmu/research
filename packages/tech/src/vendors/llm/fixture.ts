@@ -13,7 +13,9 @@ import type {
   VisionOptions,
 } from "./types";
 import {
+  BATCHED_INFORMATION_MARKER,
   INFORMATION_ACCURACY_MANIFEST,
+  batchedInformationAccuracyFixtureAnswer,
   informationAccuracyFixtureAnswer,
 } from "../../llm-model-comparison/domain/information-accuracy";
 
@@ -166,6 +168,19 @@ const buildComplete = (
   model: string,
   seed: number,
 ): Completion => {
+  // Instrument-v2 batched information probe: numbered correct answers.
+  if (prompt.startsWith(BATCHED_INFORMATION_MARKER)) {
+    const text = batchedInformationAccuracyFixtureAnswer(
+      INFORMATION_ACCURACY_MANIFEST.questions,
+      seed,
+    );
+    return {
+      text,
+      outputTokens: tokensOf(text),
+      elapsedMs: 14 + (seed % 5) * 2,
+      model,
+    };
+  }
   const informationQuestionId = prompt.match(/Question ID: ([^\n]+)/)?.[1];
   const informationItem = INFORMATION_ACCURACY_MANIFEST.questions.find(
     (item) => item.id === informationQuestionId,
@@ -198,6 +213,26 @@ const buildStreamed = (
   model: string,
   seed: number,
 ): StreamedCompletion => {
+  // Instrument-v2 unified speed probe: an exact-length streamed generation.
+  // Small seed-varying word jitter gives the length-accuracy aggregate a real
+  // (reproducible) spread; ttft/per-token pacing varies with the seed too.
+  const exactTarget = prompt.match(/exactly (\d+) words/)?.[1];
+  if (exactTarget !== undefined) {
+    const target = Number(exactTarget);
+    const jitter = (seed % 3) - 1; // -1, 0, +1
+    const count = Math.max(1, target + jitter);
+    const text = Array.from({ length: count }, () => "word").join(" ");
+    const outputTokens = tokensOf(text);
+    const ttftMs = 40 + seed * 3;
+    const perToken = 6 + (seed % 3);
+    return {
+      text,
+      outputTokens,
+      elapsedMs: ttftMs + outputTokens * perToken,
+      ttftMs,
+      model,
+    };
+  }
   const isThroughput = /at least (\d+) words/.test(prompt);
   if (isThroughput) {
     const target = wordCountFor(/at least (\d+) words/, prompt, 400);

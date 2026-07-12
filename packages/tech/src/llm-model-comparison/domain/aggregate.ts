@@ -37,21 +37,32 @@ export const aggregate = (xs: ReadonlyArray<number>): Aggregate => ({
 // Summarize a configuration's trials into the aggregated metrics. Only successful
 // (`ok`) trials contribute — a failed trial is excluded from every aggregate, so
 // the mean is over real measurements, never contaminated by a zeroed failure.
+// A `null` metric value means "not measured in that trial" (instrument v2 runs
+// the structural probes once), so each metric aggregates only its real samples
+// and `n` reflects the true per-metric sample count.
 export const summarizeTrials = (
   trials: ReadonlyArray<TrialResult>,
 ): ProbeStats => {
   const ok = trials.filter((t) => t.ok);
+  const samples = (
+    pick: (t: TrialResult) => number | null,
+  ): ReadonlyArray<number> =>
+    ok
+      .map(pick)
+      .filter(
+        (value): value is number => value !== null && Number.isFinite(value),
+      );
   return {
     throughputTokensPerSec: aggregate(
-      ok.map((t) => t.metrics.throughputTokensPerSec),
+      samples((t) => t.metrics.throughputTokensPerSec),
     ),
-    ttftMs: aggregate(ok.map((t) => t.metrics.ttftMs)),
-    totalLatencyMs: aggregate(ok.map((t) => t.metrics.totalLatencyMs)),
-    maxSchemaDepth: aggregate(ok.map((t) => t.metrics.maxSchemaDepth)),
-    maxSchemaBreadth: aggregate(ok.map((t) => t.metrics.maxSchemaBreadth)),
-    lengthAccuracy: aggregate(ok.map((t) => t.metrics.lengthAccuracy)),
+    ttftMs: aggregate(samples((t) => t.metrics.ttftMs)),
+    totalLatencyMs: aggregate(samples((t) => t.metrics.totalLatencyMs)),
+    maxSchemaDepth: aggregate(samples((t) => t.metrics.maxSchemaDepth)),
+    maxSchemaBreadth: aggregate(samples((t) => t.metrics.maxSchemaBreadth)),
+    lengthAccuracy: aggregate(samples((t) => t.metrics.lengthAccuracy)),
     informationAccuracy: aggregate(
-      ok.map((t) => t.metrics.informationAccuracy),
+      samples((t) => t.metrics.informationAccuracy),
     ),
   };
 };

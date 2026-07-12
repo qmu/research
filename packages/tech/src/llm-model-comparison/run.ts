@@ -17,26 +17,21 @@ import type {
   SchemaAxisParams,
   TrialResult,
 } from "./domain/types";
-import {
-  buildThroughputPrompt,
-  sustainedTokensPerSecond,
-} from "./domain/throughput";
+import { sustainedTokensPerSecond } from "./domain/throughput";
 import { normalizeLatency } from "./domain/latency";
 import {
-  advanceAxis,
+  advanceWarmAxis,
   buildSchema,
   buildSchemaPrompt,
   gradeConformance,
-  startAxisProbe,
+  startWarmAxisProbe,
 } from "./domain/json-schema";
-import {
-  buildLengthPrompt,
-  lengthAccuracy,
-  wordCount,
-} from "./domain/length-accuracy";
+import { buildSpeedPrompt } from "./domain/speed-probe";
+import { lengthAccuracy, wordCount } from "./domain/length-accuracy";
 import {
   INFORMATION_ACCURACY_MANIFEST,
-  buildInformationAccuracyPrompt,
+  buildBatchedInformationAccuracyPrompt,
+  parseBatchedInformationAnswers,
   scoreInformationAccuracy,
 } from "./domain/information-accuracy";
 import {
@@ -74,80 +69,103 @@ const withTimeout = <T>(work: Promise<T>, label: string): Promise<T> => {
   return Promise.race([work, guard]).finally(() => clearTimeout(timer));
 };
 
-// Run one trial: throughput (streamed long generation), latency (streamed short
-// prompt), the schema-complexity escalation, and the length probe — capturing
-// every call verbatim and deriving the metrics. NEVER throws — a failed call is
-// caught and the trial returns `ok: false` with whatever calls completed, so one
-// bad call (or one bad provider) never aborts the run.
+// Prior schema boundaries from the last real artifact, used to warm-start the
+// per-axis search. Absent boundaries fall back to the cold cap-first bisection.
+export type WarmBoundaries = Readonly<{
+  depth?: number;
+  breadth?: number;
+}>;
+
+export type TrialOptions = Readonly<{
+  /** Run the once-per-configuration structural probes (schema + information)
+   * in this trial. True on trial 1; later trials measure speed only and carry
+   * null for the structural metrics. */
+  structural: boolean;
+  warm?: WarmBoundaries;
+}>;
+
+// Run one trial. Every trial makes the unified speed probe (one streamed
+// exact-length generation → throughput, TTFT, total latency, length accuracy);
+// the structural probes (warm-started schema axis searches + one batched
+// information call) run only when `options.structural`. NEVER throws — a failed
+// call is caught and the trial returns `ok: false` with whatever calls
+// completed, so one bad call (or one bad provider) never aborts the run.
 export const runTrial = async (
   client: CompletionClient,
   trialNumber: number,
   probe: ProbeParams,
   effort: EffortLevel,
+  options: TrialOptions,
 ): Promise<TrialResult> => {
   const calls: CallRecord[] = [];
+  const nullMetrics = {
+    throughputTokensPerSec: null,
+    ttftMs: null,
+    totalLatencyMs: null,
+    maxSchemaDepth: null,
+    maxSchemaBreadth: null,
+    lengthAccuracy: null,
+    informationAccuracy: null,
+  };
   try {
-    // --- throughput: sustained tokens/sec over a long streamed generation -----
-    const throughputPrompt = buildThroughputPrompt(
-      probe.throughputTargetWords,
-      probe.throughputTopic,
+    // --- unified speed probe: four metrics from one streamed call -------------
+    const speedPrompt = buildSpeedPrompt(
+      probe.speedTargetWords,
+      probe.speedTopic,
     );
-    const tp = await withTimeout(
-      client.completeStreaming(throughputPrompt, { effort }),
-      "throughput",
+    const sp = await withTimeout(
+      client.completeStreaming(speedPrompt, { effort }),
+      "speed",
     );
     calls.push({
-      probe: "throughput",
+      probe: "speed",
       effort,
-      prompt: throughputPrompt,
-      rawOutput: tp.text,
-      outputTokens: tp.outputTokens,
-      elapsedMs: tp.elapsedMs,
-      ttftMs: tp.ttftMs,
+      prompt: speedPrompt,
+      rawOutput: sp.text,
+      outputTokens: sp.outputTokens,
+      elapsedMs: sp.elapsedMs,
+      ttftMs: sp.ttftMs,
       schemaAxis: null,
       schemaValue: null,
       schemaConforms: null,
       informationQuestionId: null,
       error: null,
     });
+    const latency = normalizeLatency(sp.ttftMs, sp.elapsedMs);
     const throughputTokensPerSec = sustainedTokensPerSecond(
-      tp.outputTokens,
-      tp.elapsedMs,
-      tp.ttftMs,
+      sp.outputTokens,
+      sp.elapsedMs,
+      sp.ttftMs,
     );
+    const accuracy = lengthAccuracy(probe.speedTargetWords, wordCount(sp.text));
 
-    // --- latency: TTFT + total on a short streamed prompt ---------------------
-    const latencyPrompt = probe.latencyPrompt;
-    const lat = await withTimeout(
-      client.completeStreaming(latencyPrompt, { effort }),
-      "latency",
-    );
-    calls.push({
-      probe: "latency",
-      effort,
-      prompt: latencyPrompt,
-      rawOutput: lat.text,
-      outputTokens: lat.outputTokens,
-      elapsedMs: lat.elapsedMs,
-      ttftMs: lat.ttftMs,
-      schemaAxis: null,
-      schemaValue: null,
-      schemaConforms: null,
-      informationQuestionId: null,
-      error: null,
-    });
-    const latency = normalizeLatency(lat.ttftMs, lat.elapsedMs);
+    if (!options.structural) {
+      return {
+        trial: trialNumber,
+        ok: true,
+        error: null,
+        metrics: {
+          ...nullMetrics,
+          throughputTokensPerSec,
+          ttftMs: latency.ttftMs,
+          totalLatencyMs: latency.totalMs,
+          lengthAccuracy: accuracy,
+        },
+        calls,
+      };
+    }
 
-    // --- schema complexity: adaptively escalate each axis to its tested max ---
+    // --- schema complexity: warm-started exact boundary search per axis -------
     // Depth and breadth are probed INDEPENDENTLY (depth at breadth 1; breadth at
-    // depth 1), each doubling until the model stops conforming (or the provider
-    // rejects the schema), then bisecting to pin the maximum. A rejection is a
-    // finding, recorded verbatim, and never aborts the trial.
+    // depth 1). With a prior boundary the stable case costs 2 probes per axis;
+    // without one, cap-first bisection stays within 1 + log2(cap). A provider
+    // rejection is a ceiling finding, recorded verbatim, never a trial failure.
     const probeAxis = async (
       axis: "depth" | "breadth",
       params: SchemaAxisParams,
+      prior: number | undefined,
     ): Promise<number> => {
-      let state = startAxisProbe(params, probe.schemaProbe.refineSteps);
+      let state = startWarmAxisProbe(prior, params.cap);
       while (state.next !== null) {
         const value = state.next;
         const shape =
@@ -192,75 +210,50 @@ export const runTrial = async (
           informationQuestionId: null,
           error: callError,
         });
-        state = advanceAxis(state, conforms);
+        state = advanceWarmAxis(state, conforms);
       }
-      return state.maxConforming;
+      return state.lo;
     };
 
-    const maxSchemaDepth = await probeAxis("depth", probe.schemaProbe.depth);
+    const maxSchemaDepth = await probeAxis(
+      "depth",
+      probe.schemaProbe.depth,
+      options.warm?.depth,
+    );
     const maxSchemaBreadth = await probeAxis(
       "breadth",
       probe.schemaProbe.breadth,
+      options.warm?.breadth,
     );
 
-    // --- length: word-count accuracy on a fixed target ------------------------
-    const lengthPrompt = buildLengthPrompt(
-      probe.lengthTargetWords,
-      probe.lengthTopic,
+    // --- information accuracy: one batched call, deterministic scoring --------
+    const informationPrompt = buildBatchedInformationAccuracyPrompt(
+      INFORMATION_ACCURACY_MANIFEST.questions,
     );
-    const lengthCompletion = await withTimeout(
-      client.complete(lengthPrompt, { effort, topic: probe.lengthTopic }),
-      "length",
+    const informationCompletion = await withTimeout(
+      client.complete(informationPrompt, { effort, maxTokens: 512 }),
+      "information",
     );
     calls.push({
-      probe: "length",
+      probe: "information",
       effort,
-      prompt: lengthPrompt,
-      rawOutput: lengthCompletion.text,
-      outputTokens: lengthCompletion.outputTokens,
-      elapsedMs: lengthCompletion.elapsedMs,
+      prompt: informationPrompt,
+      rawOutput: informationCompletion.text,
+      outputTokens: informationCompletion.outputTokens,
+      elapsedMs: informationCompletion.elapsedMs,
       ttftMs: null,
       schemaAxis: null,
       schemaValue: null,
       schemaConforms: null,
-      informationQuestionId: null,
+      informationQuestionId: "batched",
       error: null,
     });
-    const accuracy = lengthAccuracy(
-      probe.lengthTargetWords,
-      wordCount(lengthCompletion.text),
-    );
-
-    // --- information accuracy: short factual QA with deterministic scoring ----
-    const informationAnswers: { id: string; answer: string }[] = [];
-    for (const item of INFORMATION_ACCURACY_MANIFEST.questions) {
-      const informationPrompt = buildInformationAccuracyPrompt(item);
-      const informationCompletion = await withTimeout(
-        client.complete(informationPrompt, { effort, maxTokens: 64 }),
-        `information:${item.id}`,
-      );
-      calls.push({
-        probe: "information",
-        effort,
-        prompt: informationPrompt,
-        rawOutput: informationCompletion.text,
-        outputTokens: informationCompletion.outputTokens,
-        elapsedMs: informationCompletion.elapsedMs,
-        ttftMs: null,
-        schemaAxis: null,
-        schemaValue: null,
-        schemaConforms: null,
-        informationQuestionId: item.id,
-        error: null,
-      });
-      informationAnswers.push({
-        id: item.id,
-        answer: informationCompletion.text,
-      });
-    }
     const informationScore = scoreInformationAccuracy(
       INFORMATION_ACCURACY_MANIFEST,
-      informationAnswers,
+      parseBatchedInformationAnswers(
+        informationCompletion.text,
+        INFORMATION_ACCURACY_MANIFEST.questions,
+      ),
     );
 
     return {
@@ -283,15 +276,7 @@ export const runTrial = async (
       trial: trialNumber,
       ok: false,
       error: String(error),
-      metrics: {
-        throughputTokensPerSec: 0,
-        ttftMs: 0,
-        totalLatencyMs: 0,
-        maxSchemaDepth: 0,
-        maxSchemaBreadth: 0,
-        lengthAccuracy: 0,
-        informationAccuracy: 0,
-      },
+      metrics: nullMetrics,
       calls,
     };
   }
@@ -300,6 +285,10 @@ export const runTrial = async (
 export type RunOptions = Readonly<{
   trials: number;
   probe: ProbeParams;
+  // Prior schema boundaries for this configuration (from the last real
+  // artifact), used to warm-start the axis search. Optional: cold search
+  // otherwise.
+  warm?: WarmBoundaries;
   // The live client for this configuration, or undefined to use the fixture path.
   liveClient: CompletionClient | undefined;
   // Build the deterministic fixture client for a given 0-based trial index.
@@ -383,11 +372,17 @@ export const buildConfigRun = async (
   effort: EffortLevel,
   opts: RunOptions,
 ): Promise<ConfigRun> => {
-  const { trials, probe, liveClient, fixtureFor, judge, measuredAt } = opts;
+  const { trials, probe, liveClient, fixtureFor, judge, measuredAt, warm } =
+    opts;
   const results: TrialResult[] = [];
   for (let i = 0; i < trials; i += 1) {
     const client = liveClient ?? fixtureFor(i);
-    results.push(await runTrial(client, i + 1, probe, effort));
+    results.push(
+      await runTrial(client, i + 1, probe, effort, {
+        structural: i === 0,
+        ...(warm === undefined ? {} : { warm }),
+      }),
+    );
   }
   const anyOk = results.some((r) => r.ok);
   const provenance: Provenance = liveClient
@@ -438,13 +433,13 @@ export const errorRun = (
       ok: false,
       error: reason,
       metrics: {
-        throughputTokensPerSec: 0,
-        ttftMs: 0,
-        totalLatencyMs: 0,
-        maxSchemaDepth: 0,
-        maxSchemaBreadth: 0,
-        lengthAccuracy: 0,
-        informationAccuracy: 0,
+        throughputTokensPerSec: null,
+        ttftMs: null,
+        totalLatencyMs: null,
+        maxSchemaDepth: null,
+        maxSchemaBreadth: null,
+        lengthAccuracy: null,
+        informationAccuracy: null,
       },
       calls: [],
     },

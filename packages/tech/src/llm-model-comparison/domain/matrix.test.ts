@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { MODELS } from "../models";
 import { hasOnlyNoEffortLevel } from "./effort";
-import { buildComparisonMatrix } from "./matrix";
+import {
+  buildComparisonMatrix,
+  buildDefaultMatrix,
+  capEffortSpread,
+} from "./matrix";
 
 const KNOWN_NO_EFFORT_MODEL_IDS = [
   "anthropic-claude-haiku-4-5",
@@ -42,5 +46,48 @@ describe("model effort matrix", () => {
       [...KNOWN_NO_EFFORT_MODEL_IDS].sort(),
     );
     expect(matrix.every((config) => config.effort === "n/a")).toBe(true);
+  });
+});
+
+describe("capEffortSpread (instrument v2 subject rule)", () => {
+  it("keeps ladders at or under the cap unchanged", () => {
+    expect(capEffortSpread(["low", "medium", "high"], 3)).toEqual([
+      "low",
+      "medium",
+      "high",
+    ]);
+    expect(capEffortSpread(["n/a"], 3)).toEqual(["n/a"]);
+  });
+
+  it("picks lowest, intermediate, and highest from longer ladders", () => {
+    expect(
+      capEffortSpread(["low", "medium", "high", "xhigh", "max"], 3),
+    ).toEqual(["low", "high", "max"]);
+    expect(capEffortSpread(["none", "low", "medium", "high"], 3)).toEqual([
+      "none",
+      "medium",
+      "high",
+    ]);
+  });
+
+  it("builds the default matrix with at most three efforts per model", () => {
+    const matrix = buildDefaultMatrix(
+      [
+        {
+          id: "m",
+          provider: "anthropic",
+          tier: "frontier",
+          modelName: "M",
+          apiModelId: "m",
+          released: "2026-01",
+          inputCostPerMTok: 1,
+          outputCostPerMTok: 1,
+          effortLevels: ["low", "medium", "high", "xhigh", "max"],
+          source: "https://example.com",
+        },
+      ],
+      3,
+    );
+    expect(matrix.map((c) => c.effort)).toEqual(["low", "high", "max"]);
   });
 });

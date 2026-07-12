@@ -23,12 +23,12 @@ import {
 } from "../llm-model-comparison/domain/history";
 import { renderComparisonReport } from "../llm-model-comparison/domain/report";
 import type { DetailLevel } from "../llm-model-comparison/domain/report";
-import { buildLatencyPrompt } from "../llm-model-comparison/domain/latency";
 import { INFORMATION_ACCURACY_MANIFEST } from "../llm-model-comparison/domain/information-accuracy";
 import { estimateRun } from "../llm-model-comparison/domain/estimate";
 import { isDeclaredEffortLevel } from "../llm-model-comparison/domain/effort";
 import {
   buildComparisonMatrix,
+  buildDefaultMatrix,
   type Configuration,
 } from "../llm-model-comparison/domain/matrix";
 import type { CompletionClient } from "../vendors/llm/types";
@@ -59,26 +59,28 @@ import { createFixtureCompletionClient } from "../vendors/llm/fixture";
 // The merge/history shaping is pure and unit-tested; this file only wires the IO.
 
 // Probe constants are orchestration policy, not domain truth — they live here and
-// are echoed into the result for the Method section.
+// are echoed into the result for the Method section. Instrument v2 (2026-07):
+// one unified speed probe measures throughput/TTFT/total-latency/length-accuracy
+// on a single streamed exact-length generation and repeats (`--trials`) for
+// spread; the schema axis search runs once, warm-started from the previous real
+// artifact's boundaries; information accuracy is one batched call. v2 numbers
+// are not comparable with v1's — `instrumentVersion` records the break.
+export const INSTRUMENT_VERSION = 2;
+
 const PROBE: ProbeParams = {
-  throughputTargetWords: 400,
-  throughputTopic: "how large language models generate text",
-  latencyPrompt: buildLatencyPrompt("the water cycle"),
-  // Adaptive schema probe: climb each axis geometrically to a hard ceiling, then
-  // bisect. A short fixed ladder only measured its own ceiling (near everything
-  // hit 6/6). Caps sit well above where current models actually fail (a first
+  speedTargetWords: 200,
+  speedTopic: "how large language models generate text",
+  speedTrials: 3, // overridden by --trials at run time; echoed for Method
+  // Schema caps sit well above where current models actually fail (a first
   // sweep measured ~depth 21 / breadth 72) so the tested maximum is the model's
-  // limit, not the probe's — while staying low enough that the climb doesn't
-  // waste large, slow calls probing far past every model's ceiling. A model that
-  // clears a cap is reported as ">= cap".
+  // limit, not the probe's. `start`/`refineSteps` are v1 climb parameters kept
+  // for artifact-shape compatibility; the v2 warm search does not read them.
   schemaProbe: {
     depth: { start: 2, cap: 48 },
     breadth: { start: 2, cap: 192 },
     refineSteps: 6,
     maxTokens: 8192,
   },
-  lengthTargetWords: 100,
-  lengthTopic: "the water cycle",
   informationAccuracy: {
     dataset: INFORMATION_ACCURACY_MANIFEST.dataset,
     manifestVersion: INFORMATION_ACCURACY_MANIFEST.manifestVersion,
@@ -88,7 +90,12 @@ const PROBE: ProbeParams = {
   },
 };
 
+// Speed-probe repetitions per configuration (the structural probes run once).
 const DEFAULT_TRIALS = 3;
+
+// Instrument-v2 default subject rule: at most 3 efforts per model (lowest,
+// intermediate, highest of the declared ladder).
+const MAX_EFFORTS_PER_MODEL = 3;
 
 // Retention: how many gzip full-record archives to keep under history/. The compact
 // history.json keeps every run's means regardless; only older raw full-records are
@@ -238,6 +245,8 @@ type ComparisonCore = Readonly<{
   probe: ProbeParams;
   judgeModel: string;
   estimate: RunEstimate;
+  /** Absent on artifacts written before the field existed (= version 1). */
+  instrumentVersion?: number;
 }>;
 
 // Read the latest artifact for an incremental run, or null when none exists yet
@@ -314,36 +323,44 @@ const configurationsFromKeys = (
   return out;
 };
 
-// Upper bound on the calls one schema axis makes: the geometric climb from
-// `start` to `cap` (log2 doublings, +1 for the cap probe) plus the bisection
-// budget. Used only for the pre-run estimate; the real count is a little lower
-// when a model caps out early.
-const schemaAxisCalls = (
-  axis: ProbeParams["schemaProbe"]["depth"],
-  refineSteps: number,
-): number =>
-  Math.floor(Math.log2(Math.max(1, axis.cap / axis.start))) + 2 + refineSteps;
+// Instrument-v2 per-axis schema call estimates. Cold: cap probe + binary search
+// over [0, cap) — 1 + log2(cap). Warm (a prior boundary exists): confirm +
+// bracket, with occasional extra bisection when the boundary moved — call it 3.
+const schemaAxisCallsCold = (cap: number): number =>
+  1 + Math.ceil(Math.log2(Math.max(2, cap)));
+const SCHEMA_AXIS_CALLS_WARM = 3;
 
-const probeCallsPerConfig = (probe: ProbeParams, trials: number): number => {
+// Probe calls per configuration under instrument v2: the unified speed probe
+// per trial, the two schema axes (once), and one batched information call.
+const probeCallsPerConfig = (
+  probe: ProbeParams,
+  trials: number,
+  warm: boolean,
+): number => {
   const sp = probe.schemaProbe;
-  const schemaCalls =
-    schemaAxisCalls(sp.depth, sp.refineSteps) +
-    schemaAxisCalls(sp.breadth, sp.refineSteps);
-  // throughput + latency + (depth axis + breadth axis) + length +
-  // information-accuracy questions, per trial
-  return (3 + schemaCalls + probe.informationAccuracy.questionCount) * trials;
+  const schemaCalls = warm
+    ? 2 * SCHEMA_AXIS_CALLS_WARM
+    : schemaAxisCallsCold(sp.depth.cap) + schemaAxisCallsCold(sp.breadth.cap);
+  return trials + schemaCalls + 1;
 };
 
 const buildEstimate = (
   matrix: ReadonlyArray<Configuration>,
   trials: number,
-): RunEstimate =>
-  estimateRun({
+  warmCount: number,
+): RunEstimate => {
+  const total = Math.max(1, matrix.length);
+  const bounded = Math.min(Math.max(0, warmCount), total);
+  const avgCalls =
+    (bounded * probeCallsPerConfig(PROBE, trials, true) +
+      (total - bounded) * probeCallsPerConfig(PROBE, trials, false)) /
+    total;
+  return estimateRun({
     configs: matrix.map((c) => ({
       inputCostPerMTok: c.card.inputCostPerMTok,
       outputCostPerMTok: c.card.outputCostPerMTok,
     })),
-    probeCallsPerConfig: probeCallsPerConfig(PROBE, trials),
+    probeCallsPerConfig: Math.ceil(avgCalls),
     avgInputTokensPerCall: ESTIMATE_AVG_INPUT_TOKENS,
     avgOutputTokensPerCall: ESTIMATE_AVG_OUTPUT_TOKENS,
     judgeInputTokens: ESTIMATE_JUDGE_INPUT_TOKENS,
@@ -352,6 +369,7 @@ const buildEstimate = (
     judgeOutputCostPerMTok: JUDGE.outputCostPerMTok,
     secondsPerCall: ESTIMATE_SECONDS_PER_CALL,
   });
+};
 
 const printEstimate = (estimate: RunEstimate, trials: number): void => {
   process.stdout.write(
@@ -443,6 +461,7 @@ export const main = async (): Promise<void> => {
     const rendered: ComparisonResult = {
       ...core,
       artifactPath: basename(artifactPath),
+      instrumentVersion: core.instrumentVersion ?? 1,
     };
     await mkdir(dirname(reportPath), { recursive: true });
     const history = await readHistoryFile(canonicalMdPath);
@@ -493,8 +512,14 @@ export const main = async (): Promise<void> => {
     );
   } else if (args.configs !== null) {
     matrix = configurationsFromKeys(parseConfigKeys(args.configs), "--configs");
-  } else {
+  } else if (args.efforts !== null) {
     matrix = buildComparisonMatrix(selectModels(args.modelIds), args.efforts);
+  } else {
+    // Default sweep: the v2 subject rule — at most 3 efforts per model.
+    matrix = buildDefaultMatrix(
+      selectModels(args.modelIds),
+      MAX_EFFORTS_PER_MODEL,
+    );
   }
   if (matrix.length === 0) {
     process.stderr.write("no configurations selected; nothing to do\n");
@@ -502,10 +527,41 @@ export const main = async (): Promise<void> => {
     return;
   }
 
-  const estimate = buildEstimate(matrix, args.trials);
+  // Warm-start source: the last real artifact's measured schema boundaries.
+  // Never read under --fixture — the keyless self-test must not depend on a
+  // session-local real artifact.
+  const warmSource = args.forceFixture
+    ? null
+    : await loadPreviousCore(artifactPath);
+  const warmFor = (
+    id: string,
+    effort: string,
+  ): { depth?: number; breadth?: number } | undefined => {
+    // v1 boundaries (climb instrument) are still valid warm-start hints — a
+    // boundary is a boundary — so any previous artifact version is usable.
+    const config = warmSource?.configs.find(
+      (c) => c.id === id && c.effort === effort && c.provenance === "measured",
+    );
+    if (config === undefined) return undefined;
+    const depth = config.stats.maxSchemaDepth;
+    const breadth = config.stats.maxSchemaBreadth;
+    const warm = {
+      ...(depth.n > 0 ? { depth: Math.round(depth.mean) } : {}),
+      ...(breadth.n > 0 ? { breadth: Math.round(breadth.mean) } : {}),
+    };
+    return Object.keys(warm).length === 0 ? undefined : warm;
+  };
+  const warmCount = matrix.filter(
+    ({ card, effort }) => warmFor(card.id, effort) !== undefined,
+  ).length;
+
+  const estimate = buildEstimate(matrix, args.trials, warmCount);
   printEstimate(estimate, args.trials);
   if (args.estimateOnly) {
-    process.stdout.write("--estimate: dry run, no API calls made.\n");
+    process.stdout.write(
+      `--estimate: dry run, no API calls made. (${warmCount}/${matrix.length} ` +
+        `configs warm-start their schema search from the previous artifact.)\n`,
+    );
     return;
   }
 
@@ -547,13 +603,15 @@ export const main = async (): Promise<void> => {
   for (const { card, effort } of matrix) {
     let run: ConfigRun;
     try {
+      const warm = warmFor(card.id, effort);
       run = await buildConfigRun(card, effort, {
         trials: args.trials,
-        probe: PROBE,
+        probe: { ...PROBE, speedTrials: args.trials },
         liveClient: liveClient(card),
         fixtureFor: (i) => createFixtureCompletionClient(card.apiModelId, i),
         judge,
         measuredAt: runTimestamp,
+        ...(warm === undefined ? {} : { warm }),
       });
     } catch (error: unknown) {
       // A configuration that fails catastrophically is recorded and skipped.
@@ -594,13 +652,15 @@ export const main = async (): Promise<void> => {
     configs,
     trials: args.trials,
     generatedAt: runTimestamp,
-    probe: PROBE,
+    probe: { ...PROBE, speedTrials: args.trials },
     judgeModel: JUDGE.apiModelId,
     estimate,
+    instrumentVersion: INSTRUMENT_VERSION,
   };
   const result: ComparisonResult = {
     ...core,
     artifactPath: basename(artifactPath),
+    instrumentVersion: INSTRUMENT_VERSION,
   };
   const history = args.forceFixture
     ? undefined

@@ -154,7 +154,8 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     design: {
       cadence: "monthly",
       offCadenceTrigger: "a major model release",
-      subjects: "models in the foundation-models catalog",
+      subjects:
+        "models in the foundation-models catalog, at most 3 efforts per model (lowest, intermediate, highest)",
       metrics: [
         { name: "ttftMs", unit: "ms", direction: "lower-is-better" },
         {
@@ -165,18 +166,23 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         { name: "totalLatencyMs", unit: "ms", direction: "lower-is-better" },
       ],
       trialsPerRun: {
-        minimum: 1,
+        minimum: 3,
         maximum: 3,
         premises:
-          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+          "instrument v2: the unified speed probe repeats 3 times per configuration for stdDev; structural probes run once",
       },
       costPerRun: {
         ceilingUsd: 60,
         premises:
-          "shared `npm run compare` sweep; a 3-repetition full-catalog run measured about $46 (2026-07); run --estimate before each real run",
+          "shared `npm run compare` sweep (instrument v2, 47 configs); estimated ~$10 cold / ~$6 warm-started; run --estimate before each real run",
       },
       accumulates:
-        "per-model HistoryPoint series for each speed metric, one point per dated frame",
+        "per-config HistoryPoint series for each speed metric, one point per dated frame; charts connect same-instrument-version points only",
+    },
+    articleMode: "snapshot",
+    report: {
+      sourcePath: "docs/research-reports/llm-speed-comparison.report.md",
+      japanesePath: "docs/research-reports/llm-speed-comparison.insights.ja.md",
     },
   },
   {
@@ -199,7 +205,8 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     design: {
       cadence: "monthly",
       offCadenceTrigger: "a major model release",
-      subjects: "models in the foundation-models catalog",
+      subjects:
+        "models in the foundation-models catalog, at most 3 efforts per model (lowest, intermediate, highest)",
       metrics: [
         {
           name: "maxSchemaDepth",
@@ -219,17 +226,17 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       ],
       trialsPerRun: {
         minimum: 1,
-        maximum: 3,
+        maximum: 1,
         premises:
-          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+          "instrument v2: schema boundary search and batched information probe run once per configuration (near-deterministic structural measurements); length accuracy repeats with the speed probe",
       },
       costPerRun: {
         ceilingUsd: 60,
         premises:
-          "shared `npm run compare` sweep; a 3-repetition full-catalog run measured about $46 (2026-07); run --estimate before each real run",
+          "shared `npm run compare` sweep (instrument v2, 47 configs); estimated ~$10 cold / ~$6 warm-started; run --estimate before each real run",
       },
       accumulates:
-        "per-model HistoryPoint series for each accuracy metric, one point per dated frame",
+        "per-config HistoryPoint series for each accuracy metric, one point per dated frame; charts connect same-instrument-version points only",
     },
   },
   {

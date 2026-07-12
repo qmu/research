@@ -110,8 +110,10 @@ export const GROUP_SPECS: Readonly<Record<ProbeGroup, GroupSpec>> = {
     title: "LLM response speed comparison",
     summary:
       "sustained generation throughput, time-to-first-token, and total response latency",
+    // "speed" is the v2 unified probe; the v1 probe names stay so projecting a
+    // v1 artifact still carries its raw captures.
     metrics: ["throughputTokensPerSec", "ttftMs", "totalLatencyMs"],
-    probes: ["throughput", "latency"],
+    probes: ["speed", "throughput", "latency"],
     artifactBase: "llm-speed-comparison",
   },
   accuracy: {
@@ -125,7 +127,9 @@ export const GROUP_SPECS: Readonly<Record<ProbeGroup, GroupSpec>> = {
       "lengthAccuracy",
       "informationAccuracy",
     ],
-    probes: ["schema", "length", "information"],
+    // Includes "speed": under v2 the length-accuracy source call is the
+    // unified speed probe, so its raw capture belongs to this group too.
+    probes: ["speed", "schema", "length", "information"],
     artifactBase: "llm-accuracy-comparison",
   },
 };
@@ -153,6 +157,8 @@ export type SplitArtifact = Readonly<{
   /** ConfigRun rows with each trial's calls filtered to this group's probes. */
   configs: ReadonlyArray<ConfigRun>;
   artifactPath: string;
+  /** Carried from the source comparison; 1 for artifacts predating the field. */
+  instrumentVersion: number;
 }>;
 
 const filterConfigToGroup = (
@@ -208,6 +214,7 @@ export const projectComparison = (
       filterConfigToGroup(config, spec.probes),
     ),
     artifactPath: `${spec.artifactBase}.data.json`,
+    instrumentVersion: result.instrumentVersion ?? 1,
   };
 };
 

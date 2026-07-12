@@ -1,41 +1,36 @@
 ---
-source_artifact: docs/research-reports/llm-speed-comparison.data.json
-source_commit: e522aa0
-insights_model: source-report
-translated_from: llm-speed-comparison.report.md
-translation_model: claude-sonnet-5
-generated_at: 2026-07-12T07:39:27.674Z
-trials: 0
-provenance: llm-translation
+title: LLM response speed comparison
+description: A reproducible speed comparison of 19 large language models across 4 providers and 47 model×effort configurations, covering sustained generation throughput, time-to-first-token, and total response latency, over 3 trials. Projected from the shared LLM comparison sweep.
 ---
-# LLM応答速度比較
 
-ここに示す数値は、**LLM比較の統合スイープ**からの抜粋です。すなわち、同一の試行、モデル×努力度（effort）のマトリクス、統計処理、そして来歴（provenance）情報を、本トピックのプローブに絞り込んだものとなっています。
+# LLM response speed comparison
 
-## 1. 調査の目的
+The numbers here are a **projection of the combined LLM comparison sweep**: the same trials, model×effort matrix, statistics, and provenance, restricted to this topic's probes.
 
-本レポートは、このトピックにおいて重要となる測定済みの制約条件に基づき、モデル選定の絞り込みを支援することを目的とする。これは一般的なモデルランキングではなく、また独立したベンチマークを再実行するものでもない。
+## 1. Research Purpose
 
-## 2. 測定対象
+This report helps narrow model choices by the measured constraints that matter for this topic. It is not a general model ranking and it does not re-run a separate benchmark.
 
-### 対象モデル
+## 2. Measurement Targets
 
-本レポートは、19モデル・4プロバイダーにまたがる**47のモデル×エフォート構成**を対象としています。厳選されたカタログ情報（プロバイダー、モデル、ティア、価格、エフォート）はモデルレジストリに由来します。
+### Target Models
 
-### 対象メトリクス
+The report covers **47 model×effort configurations** across 19 models and 4 providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.
 
-このトピックでは、持続的な生成スループット、最初のトークンまでの時間（time-to-first-token）、および総応答レイテンシを扱います。メトリクスの値は、n ≥ 2の場合は平均値 ± 95%信頼区間として、n < 2の場合は平均値とサンプル数として報告されます。
+### Target Metrics
 
-## 3. 範囲と制約
+This topic covers sustained generation throughput, time-to-first-token, and total response latency. Metric cells are reported as mean ± 95% confidence interval when n ≥ 2; metrics with n < 2 show the mean and sample count.
 
-- 各設定×プローブにつき**3回の試行**。このサンプル数は実行単位の比較を裏付けるものであり、プロバイダの挙動が安定しているという統計的な主張を裏付けるものではありません。
-- **特定時点の測定です。** 測定された挙動は `2026-07-12T05:47:26.268Z` 時点のモデルおよびAPIを反映したものです。
-- このトピックでは限定的な挙動（持続的な生成スループット、Time To First Token、総応答レイテンシ）のみを検証しており、一般的な能力や推論の質を測定するものではありません。
-- **エフォート（effort）のセマンティクスはプロバイダごとに異なる**ため、エフォートレベルはプロバイダ間よりもプロバイダ内での比較の方が妥当です。
+## 3. Scope and Constraints
 
-## 4. 検証結果
+- **3 trials** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
+- **Point-in-time.** Measured behavior reflects the models and APIs at `2026-07-12T05:47:26.268Z`.
+- This topic tests narrow behaviors only (sustained generation throughput, time-to-first-token, and total response latency); it does not measure general capability or reasoning quality.
+- **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
 
-| プロバイダー | モデル | ティア | Effort | コスト（入力 / 出力、per MTok） | スループット（tok/s） | TTFT（ms） | 総レイテンシ（ms） |
+## 4. Verification Results
+
+| Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) |
 | -------- | ----- | ---- | ------ | ------------------------ | --- | --- | --- |
 | Anthropic | Claude Fable 5 | frontier | low | $6.00 / $30.00 | 272 ± 14 tok/s (95% CI, n=3) | 9888 ± 729 ms (95% CI, n=3) | 12820 ± 506 ms (95% CI, n=3) |
 | Anthropic | Claude Fable 5 | frontier | high | $6.00 / $30.00 | 468 ± 372 tok/s (95% CI, n=3) | 12148 ± 11912 ms (95% CI, n=3) | 21810 ± 1100 ms (95% CI, n=3) |
@@ -85,13 +80,13 @@ provenance: llm-translation
 | xAI | Grok 4.20 Non-Reasoning | mid | n/a | $1.25 / $2.50 | 100 ± 2 tok/s (95% CI, n=3) | 435 ± 40 ms (95% CI, n=3) | 2919 ± 123 ms (95% CI, n=3) |
 | xAI | Grok Build 0.1 | small | n/a | $1.00 / $2.00 | 273 ± 4 tok/s (95% CI, n=3) | 35660 ± 6588 ms (95% CI, n=3) | 36444 ± 6613 ms (95% CI, n=3) |
 
-**凡例。** プロバイダー、モデル、ティア、Effort、コストは整備済みのカタログデータです。各メトリクス列は実測値です。`n/a (fixtured)` は、決定論的なフィクスチャクライアントがそのセルの値を生成したことを意味し、`n/a (error)` はその構成でのすべての試行が失敗したことを意味します。
+**Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. `n/a (fixtured)` means the deterministic fixture client produced the cell; `n/a (error)` means every trial for that configuration failed.
 
-各詳細テーブルは、測定対象の1つの側面について、観測されたmin-maxと寄与した試行回数を示しています。
+Each detail table reports observed min-max and contributing trial count for one measured aspect.
 
-**生成中の持続スループット**
+**Sustained throughput during generation**
 
-| 設定 | 平均 ± 95% CI | 最小～最大 | n |
+| Configuration | Mean ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | 272 ± 14 tok/s (95% CI, n=3) | 262.4–285.6 | 3 |
 | Claude Fable 5 [high] | 468 ± 372 tok/s (95% CI, n=3) | 89.5–676.5 | 3 |
@@ -141,11 +136,11 @@ provenance: llm-translation
 | Grok 4.20 Non-Reasoning [n/a] | 100 ± 2 tok/s (95% CI, n=3) | 98.9–102.2 | 3 |
 | Grok Build 0.1 [n/a] | 273 ± 4 tok/s (95% CI, n=3) | 269.8–277.2 | 3 |
 
-測定した47設定のうち最高値: **Gemini 3.1 Flash-Lite [high]**、9278 ± 17042 tok/s (95% CI, n=3)。この測定の対極: GPT-5.5 [none]、48 ± 4 tok/s (95% CI, n=3)。
+Highest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [high]** at 9278 ± 17042 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
 
-**初回トークンまでの時間**
+**Time to first token**
 
-| 設定 | 平均 ± 95% CI | 最小～最大 | n |
+| Configuration | Mean ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | 9888 ± 729 ms (95% CI, n=3) | 9286–10568 | 3 |
 | Claude Fable 5 [high] | 12148 ± 11912 ms (95% CI, n=3) | 0–18569 | 3 |
@@ -195,11 +190,11 @@ provenance: llm-translation
 | Grok 4.20 Non-Reasoning [n/a] | 435 ± 40 ms (95% CI, n=3) | 405–474 | 3 |
 | Grok Build 0.1 [n/a] | 35660 ± 6588 ms (95% CI, n=3) | 28981–39657 | 3 |
 
-測定した47設定のうち最低値: **Claude Fable 5 [max]**、0 ± 0 ms (95% CI, n=3)。この測定の対極: Grok 4.20 Reasoning [n/a]、37966 ± 16419 ms (95% CI, n=3)。
+Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
 
-**総応答時間**
+**Total response time**
 
-| 設定 | 平均 ± 95% CI | 最小～最大 | n |
+| Configuration | Mean ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | 12820 ± 506 ms (95% CI, n=3) | 12449–13317 | 3 |
 | Claude Fable 5 [high] | 21810 ± 1100 ms (95% CI, n=3) | 21013–22893 | 3 |
@@ -249,53 +244,61 @@ provenance: llm-translation
 | Grok 4.20 Non-Reasoning [n/a] | 2919 ± 123 ms (95% CI, n=3) | 2843–3043 | 3 |
 | Grok Build 0.1 [n/a] | 36444 ± 6613 ms (95% CI, n=3) | 29735–40428 | 3 |
 
-測定された47件の設定のうち、最も低かったのは **Gemini 3.1 Flash-Lite [low]** で、1726 ± 108 ms（95% CI, n=3）でした。これと対照的なのは Grok 4.20 Reasoning [n/a] で、38918 ± 16237 ms（95% CI, n=3）でした。
+Lowest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [low]** at 1726 ± 108 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
 
-## 5. 考察
+## 5. Analysis
 
-47件の測定構成のうち最高値：**Gemini 3.1 Flash-Lite [high]** が 9278 ± 17042 tok/s（95% CI, n=3）。この測定の対極にあるのは GPT-5.5 [none] の 48 ± 4 tok/s（95% CI, n=3）。
+Highest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [high]** at 9278 ± 17042 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
 
-47件の測定構成のうち最低値：**Claude Fable 5 [max]** が 0 ± 0 ms（95% CI, n=3）。この測定の対極にあるのは Grok 4.20 Reasoning [n/a] の 37966 ± 16419 ms（95% CI, n=3）。
+Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
 
-47件の測定構成のうち最低値：**Gemini 3.1 Flash-Lite [low]** が 1726 ± 108 ms（95% CI, n=3）。この測定の対極にあるのは Grok 4.20 Reasoning [n/a] の 38918 ± 16237 ms（95% CI, n=3）。
+Lowest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [low]** at 1726 ± 108 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
 
-## 6. 再現方法
+## 6. Reproduction
 
-### 再現手順
+### Reproduction Steps
 
 ```sh
 git clone https://github.com/qmu/research
 cd research/packages/tech
 npm install
 
-# キー不要のセルフテスト（コミット済みの比較用フィクスチャを投影する）:
+# Keyless self-test (projects the committed compare fixture):
 npm run research -- speed --fixture
 
-# 実プロバイダーに対しては、共有のスイープを実行してから投影する:
+# Against real providers, run the shared sweep, then project:
 npm run compare
 npm run research -- speed --real
 ```
 
-### 再現コスト（目安）
+### Reproduction Cost (Estimate)
 
-フィクスチャの投影はキー不要でコストもかからない。実際の経路では共有の `npm run compare` スイープの料金が発生する。プロバイダーの実行前に `npm run compare -- --estimate` を実行し、呼び出し回数、推定コスト、所要時間の見積もりを事前に確認すること。
+The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.
 
-### クリーンアップ
+### Cleanup
 
-投影処理は外部リソースを一切作成しない。実行時（real run）にはローカルの `.real` Markdown／データ成果物が書き出され、共有の比較履歴が更新される。コミット前にそれらのファイルを確認すること。
+The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.
 
-## 7. 検証データ
+## 7. Verification Data
 
-投影されたアーティファクトには、本トピックのプロンプト、生の試行出力、トークン数、タイミング値、そして（精度に関しては）スキーマ適合結果とプロバイダーの拒否メッセージが保存されている。このページは、プロバイダーへの再実行なしに、そのアーティファクトから再生成できる。
+The projected artifact preserves this topic's prompts, raw trial outputs, token
+counts, timing values, and (for accuracy) schema-conformance results and
+provider rejection messages. This page can be regenerated from that artifact
+without rerunning the providers.
 
-**統一速度プローブ**（ストリーミングによる正確な長さの生成を、設定ごとに3回繰り返す。1回の呼び出しから、生成ウィンドウ全体での持続tok/s（Time To First Tokenを除く）に加え、TTFTと総応答時間が得られる）：
+**Unified speed probe** (streamed exact-length generation, repeated
+3× per configuration; one call yields sustained
+tok/s over the generation window — excluding time-to-first-token — plus TTFT
+and total response time):
 
 ```text
 Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.
 ```
 
-**完全な生データ記録。** すべての設定、試行、そして本トピックの呼び出しは、このページとともにJSONアーティファクトとしてコミットされている：
-[`llm-speed-comparison.data.json`](./llm-speed-comparison.data.json)。
-これは、統合比較記録`llm-model-comparison.real.data.json`から投影されたものであり——同一の測定結果であって、再実行されたものではない。
+**Complete raw record.** Every configuration, trial, and this topic's calls are
+committed alongside this page as a JSON artifact:
+[`llm-speed-comparison.data.json`](./llm-speed-comparison.data.json).
+It is projected from the combined comparison record
+`llm-model-comparison.real.data.json` — the same measurements, never re-run.
 
-この投影処理により、`llm-speed-comparison.data.json`と本Markdownページが生成される。元となるスイープは`llm-model-comparison.real.data.json`のままであるため、速度と精度は同一の基礎的な実行結果にまで遡って監査可能である。
+The projection writes `llm-speed-comparison.data.json` and this Markdown page. The source sweep remains `llm-model-comparison.real.data.json`, so speed and accuracy stay auditable back to the same underlying run.

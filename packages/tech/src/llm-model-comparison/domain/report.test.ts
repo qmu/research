@@ -60,17 +60,15 @@ const config = (
 });
 
 const PROBE: ProbeParams = {
-  throughputTargetWords: 400,
-  throughputTopic: "how large language models generate text",
-  latencyPrompt: "One short fact about the water cycle.",
+  speedTargetWords: 200,
+  speedTopic: "how large language models generate text",
+  speedTrials: 3,
   schemaProbe: {
     depth: { start: 2, cap: 128 },
     breadth: { start: 2, cap: 512 },
     refineSteps: 6,
     maxTokens: 8192,
   },
-  lengthTargetWords: 100,
-  lengthTopic: "the water cycle",
   informationAccuracy: {
     dataset: "TruthfulQA",
     manifestVersion: "2026-07-09.truthfulqa.small-v1",
@@ -93,6 +91,7 @@ const result = (configs: ReadonlyArray<ConfigRun>): ComparisonResult => ({
     etaMinutes: 4,
   },
   artifactPath: "llm-model-comparison.data.json",
+  instrumentVersion: 2,
 });
 
 describe("renderComparisonReport", () => {

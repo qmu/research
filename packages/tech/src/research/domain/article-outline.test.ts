@@ -7,7 +7,8 @@ import {
   extractMarkdownHeadings,
   renderEnglishResearchArticle,
 } from "./article-outline";
-import { publishedResearchTopics } from "./site";
+import { publishedResearchTopics, reportFrameSources } from "./site";
+import { snapshotBudgetProblems } from "./snapshot";
 
 const repoPath = (path: string): string =>
   resolve(process.cwd(), "../..", path);
@@ -69,16 +70,31 @@ describe("article outline", () => {
 
   it("keeps every published English and Japanese article on the standard outline", () => {
     for (const topic of publishedResearchTopics) {
-      const english = readFileSync(repoPath(topic.source.docsPath), "utf8");
+      // For a snapshot topic the outline applies to the full trial report;
+      // the sidebar page is the snapshot and is checked separately below.
+      const englishPath = reportFrameSources(topic).source;
+      const english = readFileSync(repoPath(englishPath), "utf8");
       const japanese = readFileSync(repoPath(topic.japanese.docsPath), "utf8");
-      expect(
-        articleOutlineProblems(english, "english"),
-        topic.source.docsPath,
-      ).toEqual([]);
+      expect(articleOutlineProblems(english, "english"), englishPath).toEqual(
+        [],
+      );
       expect(
         articleOutlineProblems(japanese, "japanese"),
         topic.japanese.docsPath,
       ).toEqual([]);
+    }
+  });
+
+  it("keeps every committed snapshot page within the compactness budget", () => {
+    for (const topic of publishedResearchTopics) {
+      if (topic.articleMode !== "snapshot") continue;
+      const snapshot = readFileSync(repoPath(topic.source.docsPath), "utf8");
+      expect(snapshotBudgetProblems(snapshot), topic.source.docsPath).toEqual(
+        [],
+      );
+      for (const heading of ["## Tendency", "## Trials", "## Design"]) {
+        expect(snapshot, topic.source.docsPath).toContain(heading);
+      }
     }
   });
 });

@@ -5,6 +5,8 @@ import {
   buildSchemaPrompt,
   gradeConformance,
   startAxisProbe,
+  advanceWarmAxis,
+  startWarmAxisProbe,
 } from "./json-schema";
 
 // Drive the axis state machine to completion, feeding a conformance verdict from
@@ -120,5 +122,59 @@ describe("gradeConformance", () => {
       value: null,
       conforms: false,
     });
+  });
+});
+
+describe("warm axis search (instrument v2)", () => {
+  // Drive the machine against a model that conforms iff value <= boundary.
+  const search = (
+    prior: number | undefined,
+    cap: number,
+    boundary: number,
+  ): { max: number; probes: number[] } => {
+    const probes: number[] = [];
+    let state = startWarmAxisProbe(prior, cap);
+    while (state.next !== null) {
+      probes.push(state.next);
+      state = advanceWarmAxis(state, state.next <= boundary);
+    }
+    return { max: state.lo, probes };
+  };
+
+  it("re-verifies a stable boundary in two probes", () => {
+    expect(search(21, 48, 21)).toEqual({ max: 21, probes: [21, 22] });
+  });
+
+  it("detects an improved boundary by climbing to the cap then bisecting", () => {
+    const { max, probes } = search(10, 48, 30);
+    expect(max).toBe(30);
+    expect(probes[0]).toBe(10); // confirm prior
+    expect(probes[1]).toBe(11); // bracket probe
+    expect(probes[2]).toBe(48); // cap check
+    expect(probes.length).toBeLessThanOrEqual(3 + Math.ceil(Math.log2(48)));
+  });
+
+  it("detects a regressed boundary by bisecting below the prior", () => {
+    const { max, probes } = search(30, 48, 7);
+    expect(max).toBe(7);
+    expect(probes[0]).toBe(30);
+    expect(probes.length).toBeLessThanOrEqual(1 + Math.ceil(Math.log2(30)));
+  });
+
+  it("cold-starts with a cap probe and finds the exact boundary", () => {
+    const { max, probes } = search(undefined, 48, 21);
+    expect(max).toBe(21);
+    expect(probes[0]).toBe(48);
+    expect(probes.length).toBeLessThanOrEqual(1 + Math.ceil(Math.log2(48)));
+  });
+
+  it("finishes in one probe when the model clears the cap", () => {
+    expect(search(undefined, 48, 100)).toEqual({ max: 48, probes: [48] });
+    expect(search(48, 48, 100)).toEqual({ max: 48, probes: [48] });
+  });
+
+  it("reports zero when the model never conforms", () => {
+    const { max } = search(undefined, 8, 0);
+    expect(max).toBe(0);
   });
 });

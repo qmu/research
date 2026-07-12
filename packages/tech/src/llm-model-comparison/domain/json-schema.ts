@@ -126,6 +126,87 @@ export const advanceAxis = (
   return bisect(state, state.maxConforming, probed);
 };
 
+// --- instrument-v2 axis search: warm-startable, exact, no refine budget -------
+//
+// The v1 machine above climbs geometrically from `start` every run — wasteful
+// when the previous run already measured the boundary. This machine finds the
+// exact boundary with the fewest probes given an optional prior:
+//
+//  - no prior: probe the cap (1 call answers "unbounded up to cap"), then
+//    binary-search [0, cap) — ≤ 1 + log2(cap) probes, exact.
+//  - prior p: probe p (confirm), then p+1 (bracket). A stable model finishes in
+//    2 probes. If p+1 conforms the model improved — check the cap and bisect
+//    (p+1, cap); if p fails the model regressed — bisect (0, p).
+//
+// Exactness holds because bisection only stops when hi - lo <= 1, and the
+// reported max is always a value the model actually conformed at.
+export type WarmAxisState = Readonly<{
+  cap: number;
+  lo: number; // highest conforming value so far (0 = none yet)
+  hi: number | null; // lowest failing value so far (null = none yet)
+  next: number | null; // next value to probe; null = axis done
+  phase: "confirm" | "increment" | "cap" | "bisect" | "done";
+}>;
+
+export const startWarmAxisProbe = (
+  prior: number | undefined,
+  cap: number,
+): WarmAxisState => {
+  const ceiling = Math.max(1, Math.floor(cap));
+  const p =
+    prior === undefined ? undefined : Math.floor(Math.min(prior, ceiling));
+  if (p === undefined || p < 1) {
+    return { cap: ceiling, lo: 0, hi: null, next: ceiling, phase: "cap" };
+  }
+  if (p >= ceiling) {
+    return { cap: ceiling, lo: 0, hi: null, next: ceiling, phase: "cap" };
+  }
+  return { cap: ceiling, lo: 0, hi: null, next: p, phase: "confirm" };
+};
+
+const warmBisect = (
+  state: WarmAxisState,
+  lo: number,
+  hi: number,
+): WarmAxisState =>
+  hi - lo <= 1
+    ? { ...state, lo, hi, next: null, phase: "done" }
+    : {
+        ...state,
+        lo,
+        hi,
+        next: Math.floor((lo + hi) / 2),
+        phase: "bisect",
+      };
+
+export const advanceWarmAxis = (
+  state: WarmAxisState,
+  conformed: boolean,
+): WarmAxisState => {
+  const probed = state.next;
+  if (probed === null) return state;
+  switch (state.phase) {
+    case "confirm":
+      return conformed
+        ? probed + 1 >= state.cap
+          ? { ...state, lo: probed, next: state.cap, phase: "cap" }
+          : { ...state, lo: probed, next: probed + 1, phase: "increment" }
+        : warmBisect(state, 0, probed);
+    case "increment":
+      return conformed
+        ? { ...state, lo: probed, next: state.cap, phase: "cap" }
+        : { ...state, hi: probed, next: null, phase: "done" };
+    case "cap":
+      return conformed
+        ? { ...state, lo: state.cap, next: null, phase: "done" }
+        : warmBisect(state, state.lo, probed);
+    default:
+      return conformed
+        ? warmBisect(state, probed, state.hi ?? state.cap)
+        : warmBisect(state, state.lo, probed);
+  }
+};
+
 // Instruct the model to return a JSON object conforming to a schema of the given
 // shape. Under structured-output mode the schema is enforced by the provider;
 // the prompt only supplies content to fill it — values are kept to one or two

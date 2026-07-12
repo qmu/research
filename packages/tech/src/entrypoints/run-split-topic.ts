@@ -8,6 +8,10 @@ import {
   type ProbeGroup,
 } from "../llm-model-comparison/domain/split";
 import { renderSplitReport } from "../llm-model-comparison/domain/split-report";
+import {
+  findPublishedResearchTopic,
+  reportFrameSources,
+} from "../research/domain/site";
 
 /**
  * Effectful runner for a split topic (speed | accuracy). It reads the combined
@@ -73,11 +77,20 @@ export const runSplitTopic = async (group: ProbeGroup): Promise<void> => {
   }
 
   const artifact = projectComparison(comparison, group, basename(sourcePath));
-  const canonicalMd = resolve(docsReportDir(), `${spec.artifactBase}.md`);
+  // For a snapshot-mode topic the full trial report lives at the metadata's
+  // report path (the sidebar page is the renderer-produced snapshot); the data
+  // artifact keeps its canonical name either way.
+  const topic = findPublishedResearchTopic(group);
+  const canonicalMd =
+    topic === undefined
+      ? resolve(docsReportDir(), `${spec.artifactBase}.md`)
+      : resolve(process.cwd(), "../..", reportFrameSources(topic).source);
   const reportPath = fixture
-    ? `${canonicalMd.replace(/\.md$/, "")}.fixture.md`
+    ? resolve(docsReportDir(), `${spec.artifactBase}.fixture.md`)
     : canonicalMd;
-  const artifactPath = reportPath.replace(/\.md$/, ".data.json");
+  const artifactPath = fixture
+    ? resolve(docsReportDir(), `${spec.artifactBase}.fixture.data.json`)
+    : resolve(docsReportDir(), `${spec.artifactBase}.data.json`);
   const rendered = { ...artifact, artifactPath: basename(artifactPath) };
 
   await mkdir(dirname(reportPath), { recursive: true });

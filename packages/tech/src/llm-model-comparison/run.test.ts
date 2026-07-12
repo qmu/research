@@ -19,18 +19,16 @@ const conformingInstance = (schema: JsonSchema): unknown => {
 };
 
 const PROBE: ProbeParams = {
-  throughputTargetWords: 400,
-  throughputTopic: "the water cycle",
-  latencyPrompt: "One short fact about the water cycle.",
-  // Small caps keep the test escalation short and deterministic.
+  speedTargetWords: 100,
+  speedTopic: "the water cycle",
+  speedTrials: 2,
+  // Small caps keep the test search short and deterministic.
   schemaProbe: {
     depth: { start: 2, cap: 4 },
     breadth: { start: 2, cap: 4 },
     refineSteps: 2,
     maxTokens: 2048,
   },
-  lengthTargetWords: 100,
-  lengthTopic: "the water cycle",
   informationAccuracy: {
     dataset: "TruthfulQA",
     manifestVersion: "test",
@@ -124,24 +122,71 @@ const okClient: CompletionClient = {
 const fixtureFor = () => okClient;
 
 describe("runTrial", () => {
-  it("captures every probe call and derives the metrics on a successful trial", async () => {
-    const t = await runTrial(okClient, 1, PROBE, "low");
+  it("captures every probe call and derives the metrics on a structural trial", async () => {
+    const t = await runTrial(okClient, 1, PROBE, "low", { structural: true });
     expect(t.ok).toBe(true);
     expect(t.error).toBeNull();
-    // throughput + latency + depth axis (2,4) + breadth axis (2,4) + length +
-    // six information-accuracy questions
-    expect(t.calls).toHaveLength(13);
-    expect(t.calls[0].probe).toBe("throughput");
+    // unified speed probe + cold cap-first depth axis (conforms at cap: 1 call)
+    // + breadth axis (1 call) + one batched information call
+    expect(t.calls).toHaveLength(4);
+    expect(t.calls[0].probe).toBe("speed");
     expect(t.calls[0].ttftMs).toBe(20);
     expect(t.metrics.throughputTokensPerSec).toBeCloseTo(300, 6); // 30 / ((120-20)/1000)
     // Always conforms → each axis reaches its cap.
     expect(t.metrics.maxSchemaDepth).toBe(4);
     expect(t.metrics.maxSchemaBreadth).toBe(4);
-    expect(t.calls.filter((c) => c.probe === "information")).toHaveLength(6);
+    expect(t.calls.filter((c) => c.probe === "information")).toHaveLength(1);
     const schemaCalls = t.calls.filter((c) => c.probe === "schema");
     expect(schemaCalls.some((c) => c.schemaAxis === "depth")).toBe(true);
     expect(schemaCalls.some((c) => c.schemaAxis === "breadth")).toBe(true);
     expect(schemaCalls.every((c) => c.schemaConforms === true)).toBe(true);
+  });
+
+  it("measures only the speed metrics on a non-structural trial", async () => {
+    const t = await runTrial(okClient, 2, PROBE, "low", { structural: false });
+    expect(t.ok).toBe(true);
+    expect(t.calls).toHaveLength(1);
+    expect(t.calls[0].probe).toBe("speed");
+    expect(t.metrics.throughputTokensPerSec).toBeCloseTo(300, 6);
+    expect(t.metrics.maxSchemaDepth).toBeNull();
+    expect(t.metrics.maxSchemaBreadth).toBeNull();
+    expect(t.metrics.informationAccuracy).toBeNull();
+  });
+
+  it("re-verifies a stable prior boundary in two calls per axis", async () => {
+    // Conforms at value 2, fails above: prior boundary 2 → confirm(2 ok) +
+    // increment(3 fail) = 2 calls on each axis.
+    const boundedAtTwo: CompletionClient = {
+      ...okClient,
+      completeStructured: (_prompt, schema) => {
+        const s = schema as Record<string, unknown>;
+        const props = (s.properties ?? {}) as Record<
+          string,
+          Record<string, unknown>
+        >;
+        const breadth = Object.keys(props).length;
+        const depth = (function measure(node: Record<string, unknown>): number {
+          const p = (node.properties ?? {}) as Record<
+            string,
+            Record<string, unknown>
+          >;
+          const child = p.child;
+          return child === undefined ? 1 : 1 + measure(child);
+        })(s);
+        if (depth > 2 || breadth > 2) {
+          return Promise.reject(new Error("400 schema too complex"));
+        }
+        return okClient.completeStructured(_prompt, schema);
+      },
+    };
+    const t = await runTrial(boundedAtTwo, 1, PROBE, "low", {
+      structural: true,
+      warm: { depth: 2, breadth: 2 },
+    });
+    expect(t.metrics.maxSchemaDepth).toBe(2);
+    expect(t.metrics.maxSchemaBreadth).toBe(2);
+    const schemaCalls = t.calls.filter((c) => c.probe === "schema");
+    expect(schemaCalls).toHaveLength(4); // 2 per axis
   });
 
   it("records a schema-call rejection as a finding, not a trial failure", async () => {
@@ -159,7 +204,9 @@ describe("runTrial", () => {
         return okClient.completeStructured(_prompt, schema);
       },
     };
-    const t = await runTrial(rejectAtCap, 1, PROBE, "low");
+    const t = await runTrial(rejectAtCap, 1, PROBE, "low", {
+      structural: true,
+    });
     expect(t.ok).toBe(true); // a schema rejection never fails the trial
     expect(t.metrics.maxSchemaDepth).toBe(1); // depth 2 rejected → capped at 1
     const rejected = t.calls.find((c) => c.error?.includes("too complex"));
@@ -167,10 +214,12 @@ describe("runTrial", () => {
   });
 
   it("never throws on a failing probe — returns ok:false with the error", async () => {
-    const t = await runTrial(throwingClient, 2, PROBE, "low");
+    const t = await runTrial(throwingClient, 2, PROBE, "low", {
+      structural: true,
+    });
     expect(t.ok).toBe(false);
     expect(t.error).toContain("429 quota exhausted");
-    expect(t.metrics.throughputTokensPerSec).toBe(0);
+    expect(t.metrics.throughputTokensPerSec).toBeNull();
   });
 });
 

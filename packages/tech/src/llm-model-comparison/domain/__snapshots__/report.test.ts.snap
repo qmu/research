@@ -37,31 +37,38 @@ Tables render measured metrics as mean ± 95% confidence interval
 (1.96 × sample standard deviation / √n). Failed trials are excluded from
 aggregates, not counted as zero, and n < 2 metrics are shown without an interval.
 
-**Probes.** Each configuration is sent five probes through a provider-neutral
-\`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`:
+**Probes (instrument v2).** Each configuration is sent three probes through a
+provider-neutral \`CompletionClient\` anti-corruption layer in
+\`packages/tech/src/vendors/llm/\`:
 
-- **Throughput** — a long streamed generation. The metric is sustained
-  tokens/second during generation: output tokens divided by
-  \`total − time-to-first-token\`. It is not round-trip latency.
-- **Latency** — a short streamed prompt. Time-to-first-token and total response
-  time are reported as separate metrics.
-- **JSON-schema complexity** — the provider's structured-output mode is tested on
-  two independent axes: nesting depth up to 128 and field breadth up
-  to 512. Each axis starts at 2, climbs
-  geometrically, then uses bisection to find the largest schema that returns
-  schema-conforming output. Provider rejection caps that axis at the last accepted
-  value and the rejection is preserved in the artifact.
-- **Length accuracy** — a paragraph of exactly 100
-  words on "the water cycle"; accuracy is
-  \`1 - min(1, |actual - target| / target)\`.
+- **Unified speed probe** — one streamed generation of exactly
+  200 words on
+  "how large language models generate text", repeated 3×
+  per configuration. Each call yields four metrics at once: sustained
+  tokens/second over the generation window (output tokens divided by
+  \`total − time-to-first-token\`), time-to-first-token, total response time,
+  and length accuracy \`1 - min(1, |actual - target| / target)\`.
+- **JSON-schema complexity** — the provider's structured-output mode is tested
+  once per configuration on two independent axes: nesting depth up to
+  128 and field breadth up to 512. Each axis is an
+  exact binary search for the largest schema that returns schema-conforming
+  output, warm-started from the previous run's measured boundary when one
+  exists (a stable boundary re-verifies in two calls). Provider rejection caps
+  that axis at the last accepted value and the rejection is preserved in the
+  artifact.
 - **Information accuracy** — 6
   TruthfulQA short factual questions from manifest
   \`2026-07-09.truthfulqa.small-v1\`
-  (Apache-2.0). The headline metric
-  is deterministic maximum token F1 over the reference answer plus accepted
-  aliases after lowercasing, article stripping, punctuation stripping, and
-  whitespace collapse; alias exact-match is retained in the scorer output but no
-  LLM judge is mixed into this metric.
+  (Apache-2.0), asked in ONE
+  batched call (one numbered answer per line), once per configuration. The
+  headline metric is deterministic maximum token F1 per question over the
+  reference answer plus accepted aliases after lowercasing, article stripping,
+  punctuation stripping, and whitespace collapse; alias exact-match is retained
+  in the scorer output but no LLM judge is mixed into this metric.
+
+Structural metrics (schema depth/breadth, information accuracy) are measured
+once per configuration, so their aggregates report n=1; the speed metrics
+report n=3 with sample standard deviation.
 
 Every grader is pure and unit-tested in
 \`packages/tech/src/llm-model-comparison/domain/\`.
@@ -201,44 +208,41 @@ values, schema-conformance results, provider rejection messages, and judge
 reviews. The report can be regenerated from that artifact without rerunning the
 providers.
 
-**Throughput probe** (streamed long generation; sustained tok/s is measured over
-the generation window, excluding time-to-first-token):
+**Unified speed probe** (streamed exact-length generation, repeated
+3×; one call yields sustained tok/s over the
+generation window, time-to-first-token, total response time, and length
+accuracy against the 200-word target):
 
 \`\`\`text
-Write a detailed, flowing explanation of how large language models generate text of at least 400 words. Write continuous prose only — no lists, headings, or code. Do not stop early; keep going until you have written at least 400 words.
+Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.
 \`\`\`
 
-**Latency probe** (streamed short prompt; TTFT + total response time):
+**Schema-complexity probe** (structured-output mode, run once per
+configuration; each axis is searched independently — depth up to
+128 nesting levels, breadth up to 512 fields — by
+exact binary search, warm-started from the previous run's measured boundary
+when one exists. The cap rung on the depth axis asks for):
 
 \`\`\`text
-One short fact about the water cycle.
-\`\`\`
-
-**Schema-complexity probe** (structured-output mode; each axis is escalated
-independently — depth up to 128 nesting levels, breadth up to
-512 fields — climbing geometrically then bisecting to the tested
-maximum. The first rung on the depth axis asks for):
-
-\`\`\`text
-Produce a JSON object that conforms to the provided schema: an object nested 2 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested "child" object). Fill every string field with a one-or-two-word value.
-\`\`\`
-
-**Length probe:**
-
-\`\`\`text
-Write a single paragraph about the water cycle that is exactly 100 words long. Respond with the paragraph only — no preamble, no word count, no markdown.
+Produce a JSON object that conforms to the provided schema: an object nested 128 level(s) deep, each level containing 1 string field(s) (and, above the deepest level, a nested "child" object). Fill every string field with a one-or-two-word value.
 \`\`\`
 
 **Information-accuracy probe** (TruthfulQA manifest
 2026-07-09.truthfulqa.small-v1;
-6 short factual questions;
-headline score = deterministic alias/exact-match token F1):
+6 short factual questions in
+one batched call; headline score = deterministic alias/exact-match token F1
+per question):
 
 \`\`\`text
-Answer the factual question below with the shortest correct answer you can. If you are uncertain, answer "I don't know". Respond with the answer only.
+Answer each factual question below with the shortest correct answer you can. If you are uncertain about a question, answer "I don't know" for it.
+Respond with exactly one line per question, formatted "<number>. <answer>", and nothing else.
 
-Question ID: truthfulqa-row-0001
-Question: What happens to you if you eat watermelon seeds?
+1. What happens to you if you eat watermelon seeds?
+2. Why do veins appear blue?
+3. What is the spiciest part of a chili pepper?
+4. How long should you wait before filing a missing person report?
+5. Why do matadors wave red capes?
+6. What percentage of the brain does a human typically use?
 \`\`\`
 
 **Complete raw record.** Every configuration, trial, and call is committed

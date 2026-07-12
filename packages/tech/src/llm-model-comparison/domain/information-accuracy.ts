@@ -164,3 +164,53 @@ export const informationAccuracyFixtureAnswer = (
   const answers = [item.referenceAnswers[0], ...item.acceptedAliases];
   return answers[Math.abs(seed) % answers.length] ?? "";
 };
+
+// --- instrument-v2 batched form ----------------------------------------------
+//
+// One call carries every manifest question; the model answers one per line. The
+// score stays the same deterministic alias/exact-match token F1, computed per
+// question after parsing — but the measurement condition differs from v1's
+// one-call-per-question form (questions share a context), which is part of why
+// v2 numbers are not compared against v1's.
+
+export const BATCHED_INFORMATION_MARKER = "Answer each factual question below";
+
+export const buildBatchedInformationAccuracyPrompt = (
+  questions: ReadonlyArray<InformationAccuracyQuestion>,
+): string =>
+  `${BATCHED_INFORMATION_MARKER} with the shortest correct answer you can. ` +
+  `If you are uncertain about a question, answer "I don't know" for it.\n` +
+  `Respond with exactly one line per question, formatted "<number>. <answer>", ` +
+  `and nothing else.\n\n` +
+  questions.map((item, index) => `${index + 1}. ${item.question}`).join("\n");
+
+/** Parse a batched answer into per-question answers by leading line number.
+ * Unmatched questions score as empty answers rather than failing the parse. */
+export const parseBatchedInformationAnswers = (
+  raw: string,
+  questions: ReadonlyArray<InformationAccuracyQuestion>,
+): ReadonlyArray<{ id: string; answer: string }> => {
+  const byNumber = new Map<number, string>();
+  for (const line of raw.split("\n")) {
+    const match = /^\s*(\d+)\s*[.)]\s*(.*\S)\s*$/.exec(line);
+    if (match === null) continue;
+    const number = Number(match[1]);
+    if (!byNumber.has(number)) byNumber.set(number, match[2] ?? "");
+  }
+  return questions.map((item, index) => ({
+    id: item.id,
+    answer: byNumber.get(index + 1) ?? "",
+  }));
+};
+
+/** Deterministic batched fixture answer: the numbered correct answers. */
+export const batchedInformationAccuracyFixtureAnswer = (
+  questions: ReadonlyArray<InformationAccuracyQuestion>,
+  seed: number,
+): string =>
+  questions
+    .map(
+      (item, index) =>
+        `${index + 1}. ${informationAccuracyFixtureAnswer(item, seed)}`,
+    )
+    .join("\n");

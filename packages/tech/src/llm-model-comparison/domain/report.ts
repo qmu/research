@@ -9,12 +9,11 @@ import type {
   TrialResult,
 } from "./types";
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
-import { buildThroughputPrompt } from "./throughput";
 import { buildSchemaPrompt } from "./json-schema";
-import { buildLengthPrompt } from "./length-accuracy";
+import { buildSpeedPrompt } from "./speed-probe";
 import {
   INFORMATION_ACCURACY_MANIFEST,
-  buildInformationAccuracyPrompt,
+  buildBatchedInformationAccuracyPrompt,
 } from "./information-accuracy";
 import { isNoEffortLevel } from "./effort";
 import { providerDisplayName } from "./provider";
@@ -456,12 +455,18 @@ const perTrialTable = (run: ConfigRun): string => {
   const header =
     "| Trial | Throughput (tok/s) | TTFT (ms) | Total (ms) | Max depth | Max breadth | Length acc | Information acc |\n" +
     "| ----- | ------------------ | --------- | ---------- | --------- | ----------- | ---------- | --------------- |";
+  // A null metric was not measured in that trial (instrument v2 runs the
+  // structural probes once); rendered as an em dash, never as a number.
+  const num = (value: number | null, digits = 0): string =>
+    value === null ? "—" : value.toFixed(digits);
+  const pctOrDash = (value: number | null): string =>
+    value === null ? "—" : pct(value);
   const rows = okTrials.map(
     (t) =>
-      `| ${t.trial} | ${t.metrics.throughputTokensPerSec.toFixed(0)} | ` +
-      `${t.metrics.ttftMs.toFixed(0)} | ${t.metrics.totalLatencyMs.toFixed(0)} | ` +
-      `${t.metrics.maxSchemaDepth} | ${t.metrics.maxSchemaBreadth} | ${pct(t.metrics.lengthAccuracy)} | ` +
-      `${pct(t.metrics.informationAccuracy)} |`,
+      `| ${t.trial} | ${num(t.metrics.throughputTokensPerSec)} | ` +
+      `${num(t.metrics.ttftMs)} | ${num(t.metrics.totalLatencyMs)} | ` +
+      `${t.metrics.maxSchemaDepth ?? "—"} | ${t.metrics.maxSchemaBreadth ?? "—"} | ${pctOrDash(t.metrics.lengthAccuracy)} | ` +
+      `${pctOrDash(t.metrics.informationAccuracy)} |`,
   );
   return `#### ${label(run)}\n\n${header}\n${rows.join("\n")}`;
 };
@@ -482,19 +487,15 @@ const perTrialSection = (configs: ReadonlyArray<ConfigRun>): string => {
 // --- data transparency -------------------------------------------------------
 
 const transparencySection = (result: ComparisonResult): string => {
-  const throughputPrompt = buildThroughputPrompt(
-    result.probe.throughputTargetWords,
-    result.probe.throughputTopic,
+  const speedPrompt = buildSpeedPrompt(
+    result.probe.speedTargetWords,
+    result.probe.speedTopic,
   );
-  const lengthPrompt = buildLengthPrompt(
-    result.probe.lengthTargetWords,
-    result.probe.lengthTopic,
-  );
-  const informationPrompt = buildInformationAccuracyPrompt(
-    INFORMATION_ACCURACY_MANIFEST.questions[0],
+  const informationPrompt = buildBatchedInformationAccuracyPrompt(
+    INFORMATION_ACCURACY_MANIFEST.questions,
   );
   const sp = result.probe.schemaProbe;
-  const schemaPrompt = buildSchemaPrompt({ depth: sp.depth.start, breadth: 1 });
+  const schemaPrompt = buildSchemaPrompt({ depth: sp.depth.cap, breadth: 1 });
 
   return `## Data transparency
 
@@ -503,38 +504,30 @@ values, schema-conformance results, provider rejection messages, and judge
 reviews. The report can be regenerated from that artifact without rerunning the
 providers.
 
-**Throughput probe** (streamed long generation; sustained tok/s is measured over
-the generation window, excluding time-to-first-token):
+**Unified speed probe** (streamed exact-length generation, repeated
+${result.probe.speedTrials}×; one call yields sustained tok/s over the
+generation window, time-to-first-token, total response time, and length
+accuracy against the ${result.probe.speedTargetWords}-word target):
 
 \`\`\`text
-${throughputPrompt}
+${speedPrompt}
 \`\`\`
 
-**Latency probe** (streamed short prompt; TTFT + total response time):
-
-\`\`\`text
-${escapeCell(result.probe.latencyPrompt)}
-\`\`\`
-
-**Schema-complexity probe** (structured-output mode; each axis is escalated
-independently — depth up to ${sp.depth.cap} nesting levels, breadth up to
-${sp.breadth.cap} fields — climbing geometrically then bisecting to the tested
-maximum. The first rung on the depth axis asks for):
+**Schema-complexity probe** (structured-output mode, run once per
+configuration; each axis is searched independently — depth up to
+${sp.depth.cap} nesting levels, breadth up to ${sp.breadth.cap} fields — by
+exact binary search, warm-started from the previous run's measured boundary
+when one exists. The cap rung on the depth axis asks for):
 
 \`\`\`text
 ${schemaPrompt}
 \`\`\`
 
-**Length probe:**
-
-\`\`\`text
-${lengthPrompt}
-\`\`\`
-
 **Information-accuracy probe** (TruthfulQA manifest
 ${escapeCell(result.probe.informationAccuracy.manifestVersion)};
-${result.probe.informationAccuracy.questionCount} short factual questions;
-headline score = deterministic alias/exact-match token F1):
+${result.probe.informationAccuracy.questionCount} short factual questions in
+one batched call; headline score = deterministic alias/exact-match token F1
+per question):
 
 \`\`\`text
 ${informationPrompt}
@@ -628,31 +621,38 @@ Tables render measured metrics as mean ± 95% confidence interval
 (1.96 × sample standard deviation / √n). Failed trials are excluded from
 aggregates, not counted as zero, and n < 2 metrics are shown without an interval.
 
-**Probes.** Each configuration is sent five probes through a provider-neutral
-\`CompletionClient\` anti-corruption layer in \`packages/tech/src/vendors/llm/\`:
+**Probes (instrument v2).** Each configuration is sent three probes through a
+provider-neutral \`CompletionClient\` anti-corruption layer in
+\`packages/tech/src/vendors/llm/\`:
 
-- **Throughput** — a long streamed generation. The metric is sustained
-  tokens/second during generation: output tokens divided by
-  \`total − time-to-first-token\`. It is not round-trip latency.
-- **Latency** — a short streamed prompt. Time-to-first-token and total response
-  time are reported as separate metrics.
-- **JSON-schema complexity** — the provider's structured-output mode is tested on
-  two independent axes: nesting depth up to ${sp.depth.cap} and field breadth up
-  to ${sp.breadth.cap}. Each axis starts at ${sp.depth.start}, climbs
-  geometrically, then uses bisection to find the largest schema that returns
-  schema-conforming output. Provider rejection caps that axis at the last accepted
-  value and the rejection is preserved in the artifact.
-- **Length accuracy** — a paragraph of exactly ${result.probe.lengthTargetWords}
-  words on "${escapeCell(result.probe.lengthTopic)}"; accuracy is
-  \`1 - min(1, |actual - target| / target)\`.
+- **Unified speed probe** — one streamed generation of exactly
+  ${result.probe.speedTargetWords} words on
+  "${escapeCell(result.probe.speedTopic)}", repeated ${result.probe.speedTrials}×
+  per configuration. Each call yields four metrics at once: sustained
+  tokens/second over the generation window (output tokens divided by
+  \`total − time-to-first-token\`), time-to-first-token, total response time,
+  and length accuracy \`1 - min(1, |actual - target| / target)\`.
+- **JSON-schema complexity** — the provider's structured-output mode is tested
+  once per configuration on two independent axes: nesting depth up to
+  ${sp.depth.cap} and field breadth up to ${sp.breadth.cap}. Each axis is an
+  exact binary search for the largest schema that returns schema-conforming
+  output, warm-started from the previous run's measured boundary when one
+  exists (a stable boundary re-verifies in two calls). Provider rejection caps
+  that axis at the last accepted value and the rejection is preserved in the
+  artifact.
 - **Information accuracy** — ${result.probe.informationAccuracy.questionCount}
   TruthfulQA short factual questions from manifest
   \`${escapeCell(result.probe.informationAccuracy.manifestVersion)}\`
-  (${escapeCell(result.probe.informationAccuracy.license)}). The headline metric
-  is deterministic maximum token F1 over the reference answer plus accepted
-  aliases after lowercasing, article stripping, punctuation stripping, and
-  whitespace collapse; alias exact-match is retained in the scorer output but no
-  LLM judge is mixed into this metric.
+  (${escapeCell(result.probe.informationAccuracy.license)}), asked in ONE
+  batched call (one numbered answer per line), once per configuration. The
+  headline metric is deterministic maximum token F1 per question over the
+  reference answer plus accepted aliases after lowercasing, article stripping,
+  punctuation stripping, and whitespace collapse; alias exact-match is retained
+  in the scorer output but no LLM judge is mixed into this metric.
+
+Structural metrics (schema depth/breadth, information accuracy) are measured
+once per configuration, so their aggregates report n=1; the speed metrics
+report n=${result.probe.speedTrials} with sample standard deviation.
 
 Every grader is pure and unit-tested in
 \`packages/tech/src/llm-model-comparison/domain/\`.

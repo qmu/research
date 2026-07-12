@@ -77,6 +77,8 @@ type ArtifactConfig = Readonly<{
   modelName?: unknown;
   measuredAt?: unknown;
   trials?: unknown;
+  effort?: unknown;
+  provenance?: unknown;
 }>;
 
 type ArtifactTrial = Readonly<{
@@ -97,8 +99,11 @@ const meanOf = (values: ReadonlyArray<number>): number | undefined =>
 /**
  * Extract snapshot points from a speed/accuracy-shaped comparison artifact:
  * `{ generatedAt, metrics: [names], configs: [{ id, modelName, measuredAt,
- * trials: [{ ok, metrics: { name: value } }] }] }`. Each subject contributes
- * the mean over its successful trials, one point per metric.
+ * effort, provenance, trials: [{ ok, metrics: { name: value } }] }] }`. Each
+ * subject contributes the mean over its successful trials, one point per
+ * metric. Only `provenance: "measured"` configs chart — fixtured or curated
+ * rows never render as live measurements (ADR 0004) — and effort variants
+ * sharing a model id become separate series.
  */
 export const comparisonSnapshotPoints = (
   artifact: unknown,
@@ -118,7 +123,12 @@ export const comparisonSnapshotPoints = (
   for (const config of configs) {
     const id = typeof config.id === "string" ? config.id : undefined;
     if (id === undefined) continue;
-    const label = typeof config.modelName === "string" ? config.modelName : id;
+    if (config.provenance !== "measured") continue;
+    const effort = typeof config.effort === "string" ? config.effort : "";
+    const seriesId = effort === "" ? id : `${id}@${effort}`;
+    const modelName =
+      typeof config.modelName === "string" ? config.modelName : id;
+    const label = effort === "" ? modelName : `${modelName} (${effort})`;
     const measuredAt =
       typeof config.measuredAt === "string" ? config.measuredAt : generatedAt;
     const trials = Array.isArray(config.trials)
@@ -137,7 +147,7 @@ export const comparisonSnapshotPoints = (
       );
       if (mean === undefined) continue;
       points.push({
-        seriesId: id,
+        seriesId,
         seriesLabel: label,
         metric,
         measuredAt,
@@ -161,6 +171,16 @@ export const snapshotPointsFor = (
   artifact: unknown,
 ): ReadonlyArray<SnapshotPoint> =>
   snapshotPointExtractors[topicId]?.(artifact) ?? [];
+
+/** The measurement-instrument version an artifact was produced by. Artifacts
+ * written before the field existed are version 1. Different versions measure
+ * differently, so a tendency chart only connects same-version points — the
+ * snapshot charts frames matching the NEWEST frame's version and keeps older
+ * frames as listed (linked) trials only. */
+export const instrumentVersionOf = (artifact: unknown): number => {
+  const version = asRecord(artifact)?.instrumentVersion;
+  return typeof version === "number" && Number.isFinite(version) ? version : 1;
+};
 
 /**
  * A deterministic, clearly-labelled tendency placeholder (the analogue of

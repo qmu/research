@@ -110,3 +110,4 @@ Out of scope:
   20260712031600-migrate-llm-speed-snapshot-reference.md
 - 2026-07-12 — ticket archived — 20260712030400-research-development-guideline.md
 - 2026-07-12 — ticket archived — 20260712031500-snapshot-structure-site-tooling.md
+- 2026-07-12 — ticket archived — 20260712043000-comparison-instrument-v2.md

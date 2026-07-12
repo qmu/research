@@ -21,11 +21,13 @@ The topic order matches [LLMs Research](./) and
 
 ### LLM response speed
 
+- 2026-07-12T05:47:26.268Z: [English](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.data.json)
 - 2026-07-09T11:52:54.627Z: [English](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.data.json)
 - 2026-07-09T11:12:01.332Z: [English](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.data.json)
 
 ### LLM output accuracy
 
+- 2026-07-12T05:47:26.268Z: [English](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.data.json)
 - 2026-07-09T12:21:25.966Z: [English](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.data.json)
 - 2026-07-09T11:14:36.434Z: [English](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.data.json)
 

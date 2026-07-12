@@ -62,17 +62,15 @@ const result: ComparisonResult = {
   trials: 3,
   generatedAt: "2026-07-09T00:00:00.000Z",
   probe: {
-    throughputTargetWords: 400,
-    throughputTopic: "topic",
-    latencyPrompt: "hi",
+    speedTargetWords: 200,
+    speedTopic: "topic",
+    speedTrials: 3,
     schemaProbe: {
       depth: { start: 2, cap: 48 },
       breadth: { start: 2, cap: 192 },
       refineSteps: 4,
       maxTokens: 2048,
     },
-    lengthTargetWords: 100,
-    lengthTopic: "topic",
     informationAccuracy: {
       dataset: "truthfulqa",
       manifestVersion: "v1",
@@ -84,6 +82,7 @@ const result: ComparisonResult = {
   judgeModel: "claude-opus-4-8",
   estimate: { configCount: 2, callCount: 20, usdCost: 2, etaMinutes: 2 },
   artifactPath: "llm-model-comparison.data.json",
+  instrumentVersion: 2,
 };
 
 describe("renderSplitReport", () => {
