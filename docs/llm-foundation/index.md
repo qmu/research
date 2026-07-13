@@ -48,6 +48,11 @@ JSON スキーマ制約、長さ指示追従、情報精度の比較。
 生成レイテンシ、画像単価、機械検証可能なプロンプト追従、正確なテキスト描画の比較。
 英語ソースは [Image generation](/research-reports/image-generation-comparison)。
 
+### [音声 (TTS/STT/STS)](/research-reports/speech-comparison.insights.ja)
+
+音声合成の明瞭度とレイテンシ、音声認識の単語精度とレイテンシ、単価、リアルタイム音声対話の対応状況の比較。
+英語ソースは [Speech (TTS / STT / STS)](/research-reports/speech-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`

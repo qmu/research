@@ -141,9 +141,10 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // Like OCR and image-generation, the entrypoint defaults to its keyless
     // fixture and switches to a real run with --real.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
-    // Runnable but not yet published (no insights/translation stages until the
-    // publish-to-site ticket lands); the keyless fixture is CI-exercised.
-    stages: ["benchmark"],
+    // Published: a real run composes the current article and its Japanese
+    // translation, like the other published benchmark topics. The keyless
+    // fixture path still runs only the benchmark stage (CI-exercised).
+    stages: ["benchmark", "insights", "translation"],
   },
   {
     id: "availability",

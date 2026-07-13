@@ -25,5 +25,6 @@ Past generated frames are listed in [History](./history).
 - [OCR capability comparison](./ocr-comparison) — CER/WER and structured field extraction over synthetic documents.
 - [RAG vector store benchmark](./rag-benchmark) — Retrieval quality, ingestion time, query latency, cost, and operational constraints.
 - [Image generation](./image-generation-comparison) — Generation latency, per-image cost, rubric-checked prompt adherence, and exact-text rendering.
+- [Speech (TTS / STT / STS)](./speech-comparison) — Text-to-speech intelligibility & latency, speech-to-text word accuracy & latency, per-unit cost, and speech-to-speech realtime capability.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.
