@@ -1,9 +1,9 @@
 ---
 created_at: 2026-07-14T00:51:55+09:00
 author: a@qmu.jp
-type: research
-layer: [Research]
-effort: 3h
+type: enhancement
+layer: [Domain, Infrastructure]
+effort: 4h
 commit_hash:
 category: Added
 mission: periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc
@@ -45,3 +45,21 @@ Kicks off the **Agent VM Solutions** periodic-research mission. Per `CLAUDE.md` 
 ## Considerations
 
 Reuse the existing instrument patterns; do not fork a parallel design. Keep external SDKs behind `vendors/`. Ensure keyless CI stays green via a fixture path. Honour the proposal-first gate before any real (paid) runs.
+
+## Progress (2026-07-14, night /drive)
+
+Steps 1–3 and 5 are **done**; steps 4 (approval) and 6 (scaffold) are **blocked
+on the proposal-first gate** and left for a post-approval `/drive`.
+
+- Read the guideline and surveyed the current subject landscape (8 providers;
+  AWS Lambda microVMs GA ~2026-06; cold starts ~80ms E2B → ~2.8s Fly; published
+  rates ~$0.017–0.13/vCPU-hr).
+- Drafted the five-element proposal (cadence, subjects, metrics, cost/trial
+  range, accumulated history) and filled the mission Goal / Scope / Acceptance /
+  Changelog in
+  `.workaholic/missions/active/periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc/mission.md`.
+- **Did not scaffold code** — the guideline states no scaffolding before
+  approval, and this autonomous night run cannot clear the developer-approval
+  gate. On approval, resume at step 4→6: create the acceptance-list tickets and
+  scaffold `packages/tech/src/agent-vm/` behind `vendors/sandbox/` with a keyless
+  fixture path, then wire it into `publishedResearchTopics`.
