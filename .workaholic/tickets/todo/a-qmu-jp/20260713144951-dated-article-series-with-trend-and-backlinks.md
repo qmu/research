@@ -131,12 +131,23 @@ DONE:
 - All 7 current pages regenerated + JP re-translated; trend shows a
   first-survey note until ≥2 same-instrument surveys exist.
 
+- **D1 publish-all-runs to qmu (Japanese frames): DONE.** Commit `5a8f87d`.
+  `framePublishPlan(frames)` + the copy-plan/qmu-ticket commands +
+  `publish-research.sh` now mirror every dated survey's Japanese article to
+  `docs/llm-foundation-research/history/<topic>/<ts>/<base>.ja.md` — the exact
+  relative target the current article links, so 過去の調査 links resolve on
+  qmu-co-jp. Verified with copy-plan (11 frames) and a dry-run copy.
+
 REMAINING (this ticket stays open until these land):
-- **D1 publish-all-runs to qmu.** `publishPlan`/`renderQmuTicketPayload` still
-  emit one file per topic (latest). To make in-article 過去の調査 links resolve
-  on qmu-co-jp, the payload must also copy each `history/<topic>/<ts>/` EN+JP
-  frame under a mirrored path on qmu (so the relative links resolve unchanged),
-  and `scripts/publish-research.sh` must copy them. Update `site.test.ts`.
+- **Language-matched past-survey block + English-frame mirror (qmu dead-link
+  safety).** The block still lists English + Japanese + data.json links per
+  frame; on qmu only Japanese frames are mirrored, so the English/data links
+  would be dead there (research.qmu.dev resolves all today). Fix: make the
+  past-survey block a single link per frame in the current page's OWN language
+  (EN page → EN frame, JP page → JP frame), generated per language AFTER
+  translation (not translated, since translation keeps English URLs); and
+  mirror the English frames into qmu's `docs/en/...history/` section. This is
+  the one piece that makes both qmu language sections build clean.
 - **Drop the now-vestigial insights stage** from the real pipeline (it writes
   an unused `.insights.md` and costs an LLM call), or repurpose it as the §5
   考察 source only.
