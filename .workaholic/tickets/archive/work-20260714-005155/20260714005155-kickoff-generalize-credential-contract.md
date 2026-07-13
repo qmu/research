@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain, Infrastructure]
 effort: 4h
-commit_hash:
+commit_hash: 2e9679a
 category: Changed
 mission: support-iaas-hosted-models-vertex-ai-aws-bedrock
 depends_on:
