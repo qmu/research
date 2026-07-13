@@ -97,6 +97,8 @@ Out of scope:
 
 ## Changelog
 
+- 2026-07-13 — owner clarified the intended structure: a dated survey-article series per topic; each article embeds the trend through its run and links to all past articles; latest = current page. Decisions locked (publish all runs to qmu; stable slug = latest; don't rewrite old frames; regenerate current pages now). Ticketed — 20260713144951-dated-article-series-with-trend-and-backlinks.md
+
 <!-- Append-only, dated timeline relating this mission's tickets and reports over time.
      One line per event ("- YYYY-MM-DD — event — filename"); never rewrite past lines. -->
 
