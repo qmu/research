@@ -51,7 +51,7 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.104.1",
+    "@anthropic-ai/sdk": "^0.111.0",
     "@aws-sdk/client-s3vectors": "^3.1066.0",
     "@google/genai": "^2.8.0",
     "@types/better-sqlite3": "^7.6.13",
