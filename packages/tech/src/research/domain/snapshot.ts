@@ -271,6 +271,11 @@ const snapshotPointExtractors: Readonly<
     "promptAdherence",
     "textRenderAccuracy",
   ]),
+  "computer-use": statsRunsSnapshotPoints([
+    "taskSuccessRate",
+    "wallClockPerTaskMs",
+    "costPerTaskUsd",
+  ]),
   rag: ragSnapshotPoints,
 };
 

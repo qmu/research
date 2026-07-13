@@ -2,12 +2,16 @@ import type {
   CompletionClient,
   Completion,
   CompletionOptions,
+  ComputerUseAction,
+  ComputerUseClient,
+  ComputerUseTaskInput,
   GeneratedImage,
   ImageGenerationClient,
   JsonSchema,
   LlmClient,
   StreamedCompletion,
   StructuredCompletion,
+  TaskAttempt,
   VisionCapability,
   VisionClient,
   VisionImageInput,
@@ -125,6 +129,49 @@ export const createFixtureImageGenerationClient = (
       mimeType: "image/png",
       elapsedMs: 5 + (seed % 45),
       model,
+    });
+  },
+});
+
+// Deterministic computer-use stub for the keyless path: every task yields a
+// canned SUCCESSFUL trajectory whose length, per-action latency, and token usage
+// are seeded from the task id, so per-task stats are non-degenerate yet
+// byte-stable. It proves the scoring pipeline end to end without launching a
+// browser or calling any provider — the same "perfect fixture" convention the
+// image-generation judge uses (all constraints satisfied). Real, discriminating
+// numbers appear only after an owner runs the real path within the cost ceiling.
+export const createFixtureComputerUseClient = (
+  model = "fixture-computer-use",
+): ComputerUseClient => ({
+  model,
+  attemptTask: (task: ComputerUseTaskInput): Promise<TaskAttempt> => {
+    const seed = [...`${task.id}:${task.goal}`].reduce(
+      (sum, char) => (sum + char.charCodeAt(0)) % 997,
+      0,
+    );
+    const steps = 3 + (seed % 5);
+    const actions: ComputerUseAction[] = Array.from(
+      { length: steps },
+      (_unused, index) => ({
+        kind: index === 0 ? "navigate" : index % 2 === 0 ? "type" : "click",
+        target: index === 0 ? task.startUrl : `step-${index}`,
+        latencyMs: 40 + ((seed + index * 7) % 60),
+        recovered: false,
+      }),
+    );
+    const inputTokens = steps * (1_500 + (seed % 200));
+    const outputTokens = steps * (150 + (seed % 40));
+    const wallClockMs = actions.reduce(
+      (sum, action) => sum + action.latencyMs,
+      0,
+    );
+    return Promise.resolve({
+      taskId: task.id,
+      succeeded: true,
+      actions,
+      wallClockMs,
+      inputTokens,
+      outputTokens,
     });
   },
 });

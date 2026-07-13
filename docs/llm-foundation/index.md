@@ -53,6 +53,11 @@ JSON スキーマ制約、長さ指示追従、情報精度の比較。
 音声合成の明瞭度とレイテンシ、音声認識の単語精度とレイテンシ、単価、リアルタイム音声対話の対応状況の比較。
 英語ソースは [Speech (TTS / STT / STS)](/research-reports/speech-comparison)。
 
+### [コンピュータ操作](/research-reports/computer-use-comparison.insights.ja)
+
+API ネイティブなコンピュータ操作エージェントの、固定 Playwright ハーネス上での固定ブラウザタスク群に対するタスク成功率・手数・レイテンシ・実時間・タスク単価の比較。
+英語ソースは [Computer use](/research-reports/computer-use-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`

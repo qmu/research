@@ -1,0 +1,425 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "fixture": true,
+  "trials": 1,
+  "harness": "Playwright (repo Playwright MCP plugin)",
+  "suiteVersion": "1",
+  "runs": [
+    {
+      "id": "anthropic-computer-use-sonnet-5",
+      "provider": "anthropic",
+      "modelName": "Claude Sonnet 5 (Computer Use)",
+      "apiModelId": "claude-sonnet-5",
+      "toolVersion": "computer_20251124",
+      "apiSurface": "Messages API (beta computer-use-2025-11-24)",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "source": "https://platform.claude.com/docs/en/docs/agents-and-tools/tool-use/computer-use-tool",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "taskSuccessRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 8
+        },
+        "stepsToComplete": {
+          "mean": 4.625,
+          "stdDev": 1.3024701806293193,
+          "n": 8
+        },
+        "latencyPerActionMs": {
+          "mean": 73.59821428571429,
+          "stdDev": 7.001867462269167,
+          "n": 8
+        },
+        "wallClockPerTaskMs": {
+          "mean": 341.625,
+          "stdDev": 99.45700794097634,
+          "n": 8
+        },
+        "costPerTaskUsd": {
+          "mean": 0.033788250000000006,
+          "stdDev": 0.009355905663574976,
+          "n": 8
+        },
+        "recoveryRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 8
+        }
+      },
+      "calls": [
+        {
+          "taskId": "open-product-from-catalog",
+          "category": "navigation",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 405,
+          "latencyPerActionMs": 81,
+          "costUsd": 0.03678,
+          "recovered": false
+        },
+        {
+          "taskId": "search-and-open-first-result",
+          "category": "search",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 4,
+          "wallClockMs": 326,
+          "latencyPerActionMs": 81.5,
+          "costUsd": 0.028752,
+          "recovered": false
+        },
+        {
+          "taskId": "add-two-items-to-cart",
+          "category": "multi-step",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 350,
+          "latencyPerActionMs": 70,
+          "costUsd": 0.03723,
+          "recovered": false
+        },
+        {
+          "taskId": "submit-contact-form",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 3,
+          "wallClockMs": 186,
+          "latencyPerActionMs": 62,
+          "costUsd": 0.02106,
+          "recovered": false
+        },
+        {
+          "taskId": "apply-discount-code",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 360,
+          "latencyPerActionMs": 72,
+          "costUsd": 0.03693,
+          "recovered": false
+        },
+        {
+          "taskId": "read-order-total",
+          "category": "extraction",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 405,
+          "latencyPerActionMs": 81,
+          "costUsd": 0.03858,
+          "recovered": false
+        },
+        {
+          "taskId": "filter-catalog-by-category",
+          "category": "navigation",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 3,
+          "wallClockMs": 216,
+          "latencyPerActionMs": 72,
+          "costUsd": 0.02196,
+          "recovered": false
+        },
+        {
+          "taskId": "update-account-nickname",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 7,
+          "wallClockMs": 485,
+          "latencyPerActionMs": 69.28571428571429,
+          "costUsd": 0.049014,
+          "recovered": false
+        }
+      ]
+    },
+    {
+      "id": "openai-computer-use-preview",
+      "provider": "openai",
+      "modelName": "OpenAI computer-use-preview",
+      "apiModelId": "computer-use-preview",
+      "toolVersion": "computer",
+      "apiSurface": "Responses API",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 12,
+      "source": "https://developers.openai.com/api/docs/models/computer-use-preview",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "taskSuccessRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 8
+        },
+        "stepsToComplete": {
+          "mean": 4.625,
+          "stdDev": 1.3024701806293193,
+          "n": 8
+        },
+        "latencyPerActionMs": {
+          "mean": 73.59821428571429,
+          "stdDev": 7.001867462269167,
+          "n": 8
+        },
+        "wallClockPerTaskMs": {
+          "mean": 341.625,
+          "stdDev": 99.45700794097634,
+          "n": 8
+        },
+        "costPerTaskUsd": {
+          "mean": 0.031481249999999995,
+          "stdDev": 0.008724039754772851,
+          "n": 8
+        },
+        "recoveryRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 8
+        }
+      },
+      "calls": [
+        {
+          "taskId": "open-product-from-catalog",
+          "category": "navigation",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 405,
+          "latencyPerActionMs": 81,
+          "costUsd": 0.034425,
+          "recovered": false
+        },
+        {
+          "taskId": "search-and-open-first-result",
+          "category": "search",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 4,
+          "wallClockMs": 326,
+          "latencyPerActionMs": 81.5,
+          "costUsd": 0.02682,
+          "recovered": false
+        },
+        {
+          "taskId": "add-two-items-to-cart",
+          "category": "multi-step",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 350,
+          "latencyPerActionMs": 70,
+          "costUsd": 0.0348,
+          "recovered": false
+        },
+        {
+          "taskId": "submit-contact-form",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 3,
+          "wallClockMs": 186,
+          "latencyPerActionMs": 62,
+          "costUsd": 0.019575,
+          "recovered": false
+        },
+        {
+          "taskId": "apply-discount-code",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 360,
+          "latencyPerActionMs": 72,
+          "costUsd": 0.03435,
+          "recovered": false
+        },
+        {
+          "taskId": "read-order-total",
+          "category": "extraction",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 405,
+          "latencyPerActionMs": 81,
+          "costUsd": 0.035925,
+          "recovered": false
+        },
+        {
+          "taskId": "filter-catalog-by-category",
+          "category": "navigation",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 3,
+          "wallClockMs": 216,
+          "latencyPerActionMs": 72,
+          "costUsd": 0.020385,
+          "recovered": false
+        },
+        {
+          "taskId": "update-account-nickname",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 7,
+          "wallClockMs": 485,
+          "latencyPerActionMs": 69.28571428571429,
+          "costUsd": 0.04557,
+          "recovered": false
+        }
+      ]
+    },
+    {
+      "id": "google-gemini-2.5-computer-use",
+      "provider": "google",
+      "modelName": "Gemini 2.5 Computer Use",
+      "apiModelId": "gemini-2.5-computer-use-preview-10-2025",
+      "toolVersion": "computer_use",
+      "apiSurface": "Gemini API",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 10,
+      "source": "https://ai.google.dev/gemini-api/docs/computer-use",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "taskSuccessRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 8
+        },
+        "stepsToComplete": {
+          "mean": 4.625,
+          "stdDev": 1.3024701806293193,
+          "n": 8
+        },
+        "latencyPerActionMs": {
+          "mean": 73.59821428571429,
+          "stdDev": 7.001867462269167,
+          "n": 8
+        },
+        "wallClockPerTaskMs": {
+          "mean": 341.625,
+          "stdDev": 99.45700794097634,
+          "n": 8
+        },
+        "costPerTaskUsd": {
+          "mean": 0.0169621875,
+          "stdDev": 0.0046901316303299455,
+          "n": 8
+        },
+        "recoveryRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 8
+        }
+      },
+      "calls": [
+        {
+          "taskId": "open-product-from-catalog",
+          "category": "navigation",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 405,
+          "latencyPerActionMs": 81,
+          "costUsd": 0.01826875,
+          "recovered": false
+        },
+        {
+          "taskId": "search-and-open-first-result",
+          "category": "search",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 4,
+          "wallClockMs": 326,
+          "latencyPerActionMs": 81.5,
+          "costUsd": 0.014395,
+          "recovered": false
+        },
+        {
+          "taskId": "add-two-items-to-cart",
+          "category": "multi-step",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 350,
+          "latencyPerActionMs": 70,
+          "costUsd": 0.01855,
+          "recovered": false
+        },
+        {
+          "taskId": "submit-contact-form",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 3,
+          "wallClockMs": 186,
+          "latencyPerActionMs": 62,
+          "costUsd": 0.01063125,
+          "recovered": false
+        },
+        {
+          "taskId": "apply-discount-code",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 360,
+          "latencyPerActionMs": 72,
+          "costUsd": 0.0186125,
+          "recovered": false
+        },
+        {
+          "taskId": "read-order-total",
+          "category": "extraction",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 5,
+          "wallClockMs": 405,
+          "latencyPerActionMs": 81,
+          "costUsd": 0.01939375,
+          "recovered": false
+        },
+        {
+          "taskId": "filter-catalog-by-category",
+          "category": "navigation",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 3,
+          "wallClockMs": 216,
+          "latencyPerActionMs": 72,
+          "costUsd": 0.01111875,
+          "recovered": false
+        },
+        {
+          "taskId": "update-account-nickname",
+          "category": "form",
+          "repetition": 0,
+          "succeeded": true,
+          "steps": 7,
+          "wallClockMs": 485,
+          "latencyPerActionMs": 69.28571428571429,
+          "costUsd": 0.0247275,
+          "recovered": false
+        }
+      ]
+    }
+  ],
+  "nonSubjects": [
+    {
+      "providerName": "xAI (Grok)",
+      "reason": "exposes no API-native computer-use tool",
+      "lastVerified": "2026-07-14"
+    }
+  ],
+  "artifactPath": "computer-use-comparison.data.json"
+}

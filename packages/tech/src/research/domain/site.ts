@@ -492,6 +492,69 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-subject HistoryPoint series for latency, TTS intelligibility, and STT word accuracy, one point per dated frame; charts connect same-manifest-version points only",
     },
   },
+  {
+    id: "computer-use",
+    artifactBase: "computer-use-comparison",
+    npmScript: "npm run research -- computer-use --real",
+    source: {
+      text: "Computer use",
+      docsPath: "docs/research-reports/computer-use-comparison.md",
+      summary:
+        "Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.",
+    },
+    japanese: {
+      text: "コンピュータ操作",
+      docsPath: "docs/research-reports/computer-use-comparison.insights.ja.md",
+      summary:
+        "API ネイティブなコンピュータ操作エージェントの、固定 Playwright ハーネス上での固定ブラウザタスク群に対するタスク成功率・手数・レイテンシ・実時間・タスク単価の比較。",
+    },
+    dataPath: "docs/research-reports/computer-use-comparison.data.json",
+    qmuSlug: "computer-use",
+    design: {
+      cadence: "quarterly",
+      offCadenceTrigger:
+        "a new or updated computer-use model/tool at a covered provider (Anthropic, OpenAI, Google)",
+      subjects:
+        "API-native computer-use tools, one config per provider (Anthropic computer_20251124 on Claude Sonnet 5, OpenAI computer on computer-use-preview, Google computer_use on Gemini 2.5 Computer Use), all driven through one fixed Playwright harness; xAI exposes no computer-use tool and is recorded as not applicable",
+      metrics: [
+        {
+          name: "taskSuccessRate",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "stepsToComplete",
+          unit: "actions",
+          direction: "lower-is-better",
+        },
+        {
+          name: "latencyPerActionMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        {
+          name: "wallClockPerTaskMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        { name: "costPerTaskUsd", unit: "USD", direction: "lower-is-better" },
+        { name: "recoveryRate", unit: "ratio", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev, but each repetition re-pays the full multi-turn screenshot cost",
+      },
+      costPerRun: {
+        ceilingUsd: 40,
+        premises:
+          "3 subjects × 8 tasks × 1–3 repetitions, ~15 screenshot-dominated turns per task at each model's token rates; run `research -- computer-use --estimate` first",
+      },
+      accumulates:
+        "per-subject HistoryPoint series for success rate, wall-clock, and cost per task, one point per dated frame; charts connect same-suite-version, same-harness points only",
+    },
+  },
 ];
 
 /**

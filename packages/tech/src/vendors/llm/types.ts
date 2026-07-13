@@ -165,3 +165,63 @@ export type VisionClient = Readonly<{
     options?: VisionOptions,
   ) => Promise<StructuredCompletion>;
 }>;
+
+// ── Computer use (browser-driving agent) ─────────────────────────────────────
+// The port for the computer-use topic: a subject model, driven through the fixed
+// Playwright harness, attempts one browser task end to end and reports the full
+// trajectory. Deliberately provider-neutral — an Anthropic `computer_20251124`
+// tool loop, an OpenAI Responses `computer` tool loop, and a Gemini `computer_use`
+// loop all normalize to this one contract, so the benchmark domain never branches
+// on provider. Success is decided by the harness (it evaluates the task's
+// declarative predicate against the live DOM after the loop) and reported here as
+// a boolean; the domain scores trajectories, it does not drive the browser.
+
+export type ComputerUseActionKind =
+  | "navigate"
+  | "click"
+  | "type"
+  | "scroll"
+  | "key"
+  | "wait"
+  | "screenshot"
+  | "submit";
+
+// One actuated step. `target` is a provider-neutral description of what the
+// action addressed (a URL, a selector, or typed text); `latencyMs` is the
+// wall-clock from issuing the action to the next observation; `recovered` marks a
+// step the agent took to recover from a failed or rejected prior action (the
+// robustness signal the recovery-rate metric aggregates).
+export type ComputerUseAction = Readonly<{
+  kind: ComputerUseActionKind;
+  target: string;
+  latencyMs: number;
+  recovered: boolean;
+}>;
+
+// The minimal, provider-neutral task descriptor the harness needs to drive one
+// attempt. The domain's richer `BrowserTask` (goal + declarative success
+// predicate + optimal-step reference) narrows to this at the vendor boundary so
+// no topic-domain type leaks into an adapter.
+export type ComputerUseTaskInput = Readonly<{
+  id: string;
+  goal: string;
+  startUrl: string;
+}>;
+
+// The normalized outcome of one task attempt. Token counts are summed across all
+// turns of the loop (screenshots dominate the input side); `wallClockMs` is the
+// end-to-end time. Bytes/screenshots are never returned — only the trajectory and
+// usage the domain needs to score.
+export type TaskAttempt = Readonly<{
+  taskId: string;
+  succeeded: boolean;
+  actions: ReadonlyArray<ComputerUseAction>;
+  wallClockMs: number;
+  inputTokens: number;
+  outputTokens: number;
+}>;
+
+export type ComputerUseClient = Readonly<{
+  model: string;
+  attemptTask: (task: ComputerUseTaskInput) => Promise<TaskAttempt>;
+}>;

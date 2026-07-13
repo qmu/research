@@ -147,6 +147,17 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     stages: ["benchmark", "insights", "translation"],
   },
   {
+    id: "computer-use",
+    title:
+      "Computer use via Playwright: task success, steps, latency, wall-clock, and per-task cost over a pinned browser-task suite",
+    artifactBase: "computer-use-comparison",
+    modes: ["fixture", "estimate", "real"],
+    // Like OCR and image-generation, the entrypoint defaults to its keyless
+    // fixture and switches to a real run with --real.
+    modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    stages: ["benchmark", "insights", "translation"],
+  },
+  {
     id: "availability",
     title:
       "LLM provider availability: status-page incident history with 30/90-day derived-uptime trends",

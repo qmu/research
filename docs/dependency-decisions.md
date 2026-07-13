@@ -143,6 +143,34 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   registry cards. Domain scoring, reports, and datasets do not depend on
   Cloudflare APIs.
 
+### Computer-use tools + Playwright harness (packages/tech) — no new dependency
+
+- **Reason**: The `computer-use` topic measures the three API-native
+  computer-use tools (Anthropic `computer_20251124`, OpenAI Responses `computer`,
+  Google `computer_use`), each driven through **one fixed Playwright harness**
+  (the repository's existing Playwright MCP plugin — the actuation/observation
+  layer). The provider tools reuse the SDKs already taken on for other topics
+  (`@anthropic-ai/sdk`, `openai`, `@google/genai`); **no new package is added**.
+  Access is isolated behind the domain-neutral `ComputerUseClient` port
+  (`packages/tech/src/vendors/llm/types.ts`), with adapters in
+  `.../vendors/llm/computer-use.ts` and a keyless deterministic fixture in
+  `.../vendors/llm/fixture.ts`.
+- **Assessment**:
+  - License / dependency: none added — reuses existing provider SDKs and the
+    already-present Playwright MCP plugin.
+  - Surface stability: computer-use tools are preview-stage and move; tool
+    versions, model ids, and token prices are cited correct-as-of-source
+    (2026-07) in `src/computer-use/models.ts`, isolated for one-line correction.
+  - Sustainability: the real observe→think→act loop is a **gated follow-up**
+    (owner-triggered real trial within the $40/trial ceiling); until it lands the
+    adapters return an honest `error` row on a real run and the keyless fixture
+    renders `fixtured`. CI never launches a browser or calls a provider.
+- **Monitoring**: `npm audit` in CI (no package added), and the fixture stability
+  / published-page guards.
+- **Exit strategy**: Replace only the `ComputerUseClient` adapters and their
+  registry cards. Domain scoring, the task suite, and reports do not depend on any
+  provider tool or on Playwright.
+
 ### SciFact (BEIR) dataset — fetched, not committed, not a package
 
 - **Reason**: The `rag-benchmark` real run needs a citable public IR dataset with

@@ -4,21 +4,22 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain]
 effort: 4h
-commit_hash:
+commit_hash: 4414200
 category: Added
 mission: periodic-research-target-computer-use-via-playwright
 depends_on: [20260714005201-kickoff-propose-periodic-research.md]
-gate: awaiting-owner-approval-of-design-proposal
+gate: real-paid-trial-only
 ---
 
 # Build the Computer Use via Playwright research topic (fixture-first, keyless CI)
 
-> **GATED — do not promote to `todo/` until the owner approves the design
-> proposal below.** Per `docs/research-development-guideline.md` and `CLAUDE.md`,
-> no scaffolding and no paid run happens before approval. This ticket carries the
-> proposal drafted by the kickoff (`20260714005201-kickoff-propose-periodic-research.md`)
-> so that, on approval, a `/drive` can build the whole fixture path in one pass —
-> exactly as the image-generation-benchmark mission did.
+> **APPROVED (2026-07-14) for the keyless build + published pages scope.** The
+> owner approved the design proposal and the $40/trial ceiling; only the
+> **real (paid) trial** remains gated (guideline step 3, owner-triggered). This
+> ticket carries the proposal drafted by the kickoff
+> (`20260714005201-kickoff-propose-periodic-research.md`); the fixture path,
+> estimate, and published EN/JP pages are built now — mirroring the
+> image-generation-benchmark mission.
 
 ## Approved design (pending owner approval)
 
