@@ -115,3 +115,4 @@ Out of scope:
 - 2026-07-12 — All five acceptance criteria met: guideline + ADR 0005 (d7329e2),
   snapshot tooling + budget validator (e522aa0), instrument v2 (c79751f),
   llm-speed migration + real end-to-end loop, ~$3 actual (ec38a52) — mission.md
+- 2026-07-13 — story reported — work-20260622-191220.md
