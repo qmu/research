@@ -41,6 +41,10 @@ This run measured **47 of 47 configurations** across 4 providers and 19 models, 
 
 Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.
 
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+
 ## 5. Analysis
 
 Highest measured of the 47 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
@@ -394,3 +398,11 @@ It is projected from the combined comparison record
 `llm-model-comparison.real.data.json` — the same measurements, never re-run.
 
 The projection writes `llm-accuracy-comparison.data.json` and this Markdown page. The source sweep remains `llm-model-comparison.real.data.json`, so speed and accuracy stay auditable back to the same underlying run.
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+
+- 2026-07-12T05:47:26.268Z: [English](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.data.json)
+- 2026-07-09T12:21:25.966Z: [English](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.data.json)
+- 2026-07-09T11:14:36.434Z: [English](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.data.json)

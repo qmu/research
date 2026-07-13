@@ -36,6 +36,10 @@ Every value is curated catalog data with a cited source, not a live measurement.
 
 Every value is curated catalog data (provenance: `catalog`), not a measured value; prices are the USD-per-1M-token range across each provider's listed models. The full per-model catalog table is in section 7, Verification Data.
 
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+
 ## 5. Analysis
 
 Use this page to understand the comparison matrix before reading measurement pages. Model selection should not be based on this catalog alone: prices and effort controls constrain cost and runtime behavior, but measured speed, output accuracy, OCR capability, RAG behavior, and availability are covered by the other research topics.
@@ -93,3 +97,10 @@ No external resources are created. Re-rendering only rewrites the catalog Markdo
 - **xAI:** https://docs.x.ai/developers/models/grok-4.3
 
 The catalog regenerates from `packages/tech/src/llm-model-comparison/models.ts`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered.
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+
+- 2026-07-09T11:54:54.587Z: [English](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
+- 2026-07-09T11:02:05.370Z: [English](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)

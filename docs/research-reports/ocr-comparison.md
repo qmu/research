@@ -34,6 +34,10 @@ This run has **0 measured** of 19 model rows (non-measured rows are `fixtured` h
 
 There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
 
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+
 ## 5. Analysis
 
 Rows with `measured` provenance can be compared on OCR quality. Rows with `out-of-scope` provenance are integration coverage gaps, not OCR failures, because they were never sent through the image path.
@@ -108,3 +112,9 @@ The OCR fixture and real paths create no external cloud resources. They render l
 | synthetic-invoice-001 | rendered during fixture run |
 
 Generated: 2026-01-01T00:00:00.000Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+
+- 2026-07-09T11:03:48.277Z: [English](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison) · [Japanese](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja) · [data.json](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.data.json)

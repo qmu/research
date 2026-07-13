@@ -15,11 +15,13 @@ import {
 import {
   framesInTendencyWindow,
   instrumentVersionOf,
-  renderSnapshot,
-  snapshotBudgetProblems,
   snapshotPointsFor,
   type SnapshotPoint,
 } from "../research/domain/snapshot";
+import {
+  composeCurrentArticle,
+  currentArticleBlocks,
+} from "../research/domain/current-article";
 import { isDirectRun } from "./direct-run";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
@@ -33,7 +35,7 @@ const usage = (): string =>
     "  copy-plan     Print source and destination slugs for qmu copy",
     "  qmu-ticket    Print the qmu-co-jp handoff ticket body",
     "  write-indexes Regenerate docs/research-reports and docs/llm-foundation indexes",
-    "  write-snapshots Regenerate the snapshot page of every snapshot-mode topic",
+    "  compose-current-articles  Inject the trend + past-survey links into each topic's current page",
     "",
   ].join("\n");
 
@@ -127,19 +129,34 @@ export const main = async (): Promise<void> => {
     process.stdout.write(`${renderQmuTicketPayload()}\n`);
     return;
   }
-  if (command === "write-snapshots") {
+  // Compose each topic's CURRENT English page into the dated survey-article
+  // series view: inject the 推移 (trend) block into §4 and the 過去の調査
+  // (past surveys) links into §7, over the freshly-rendered measurement
+  // article. `write-snapshots` is kept as a deprecated alias.
+  if (command === "compose-current-articles" || command === "write-snapshots") {
     const root = repoRoot();
     const historyFrames = await readHistoryFrames();
     let written = 0;
     for (const topic of publishedResearchTopics) {
-      if (topic.articleMode !== "snapshot") continue;
+      const currentPath = resolve(root, topic.source.docsPath);
+      if (!(await exists(currentPath))) continue;
       const frames = framesInTendencyWindow(
         historyFrames.filter((frame) => frame.topicId === topic.id),
       );
-      // Chart only the frames measured by the same instrument version as the
-      // newest frame; older-instrument frames stay listed as trials but their
-      // numbers are not connected into the same tendency series.
+      // Points for the trend: the current run's artifact plus each past frame,
+      // filtered to the newest instrument version so only comparable runs
+      // connect into one series.
       const artifacts: { artifact: unknown; version: number }[] = [];
+      const currentDataPath =
+        topic.dataPath === undefined
+          ? undefined
+          : resolve(root, topic.dataPath);
+      if (currentDataPath !== undefined && (await exists(currentDataPath))) {
+        const artifact: unknown = JSON.parse(
+          await readFile(currentDataPath, "utf8"),
+        );
+        artifacts.push({ artifact, version: instrumentVersionOf(artifact) });
+      }
       for (const frame of frames) {
         if (frame.dataPath === undefined) continue;
         const artifact: unknown = JSON.parse(
@@ -153,29 +170,18 @@ export const main = async (): Promise<void> => {
         if (entry.version !== latestVersion) continue;
         points.push(...snapshotPointsFor(topic.id, entry.artifact));
       }
-      // The LLM-written tendency narrative is committed beside the reports and
-      // regenerated on real runs; the renderer falls back to the deterministic
-      // skeleton when the file is absent.
-      const narrativePath = resolve(
-        root,
-        `docs/research-reports/${topic.artifactBase}.tendency.md`,
+      const { trendBlock, relatedBlock } = currentArticleBlocks(
+        topic,
+        frames,
+        points,
       );
-      const narrative = (await exists(narrativePath))
-        ? await readFile(narrativePath, "utf8")
-        : undefined;
-      const markdown = renderSnapshot(
-        narrative === undefined
-          ? { topic, frames, points }
-          : { topic, frames, points, narrative },
-      );
-      const problems = snapshotBudgetProblems(markdown);
-      if (problems.length > 0) {
-        throw new Error(`snapshot for ${topic.id}: ${problems.join("; ")}`);
-      }
-      await writeText(resolve(root, topic.source.docsPath), markdown);
+      if (trendBlock === "" && relatedBlock === "") continue;
+      const article = await readFile(currentPath, "utf8");
+      const composed = composeCurrentArticle(article, trendBlock, relatedBlock);
+      await writeText(currentPath, composed);
       written += 1;
     }
-    process.stdout.write(`wrote ${written} snapshot page(s)\n`);
+    process.stdout.write(`composed ${written} current article(s)\n`);
     return;
   }
   if (command === "write-indexes") {

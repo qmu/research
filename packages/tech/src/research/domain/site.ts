@@ -187,11 +187,6 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       accumulates:
         "per-config HistoryPoint series for each speed metric, one point per dated frame; charts connect same-instrument-version points only",
     },
-    articleMode: "snapshot",
-    report: {
-      sourcePath: "docs/research-reports/llm-speed-comparison.report.md",
-      japanesePath: "docs/research-reports/llm-speed-comparison.insights.ja.md",
-    },
   },
   {
     id: "accuracy",

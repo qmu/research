@@ -33,6 +33,10 @@ This run has **0 measured** of 5 backend configuration(s) (non-measured rows are
 
 There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-backend table is in section 7, Verification Data.
 
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+
 ## 5. Analysis
 
 - **sqlite-vec** — store-isolated (fixed embedding). Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance. Operational metrics are mean ± sample stdDev across 5 trial(s).
@@ -79,3 +83,9 @@ The local fixture path creates no external resources. Managed-backend real runs 
 The complete run record is committed as [`rag-benchmark.data.json`](./rag-benchmark.data.json). It contains the dataset rows, backend registry facts, query-level results, retrieval metrics, operational timings, provenance, and generated timestamp.
 
 Generated: 2026-01-01T00:00:00.000Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+
+- 2026-07-09T11:02:46.726Z: [English](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark) · [Japanese](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja) · [data.json](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.data.json)

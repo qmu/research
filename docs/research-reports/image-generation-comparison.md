@@ -37,6 +37,10 @@ This run has **0 measured** of 3 model rows (non-measured rows are `fixtured` ha
 
 There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
 
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+
 ## 5. Analysis
 
 This run has no measured rows; every configuration was fixtured or errored, so no cross-model claim is made. The committed fixture page exists to prove the pipeline, not to compare models.

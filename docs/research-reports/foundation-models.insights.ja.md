@@ -1,35 +1,35 @@
 ---
 title: 対象モデル
 source_artifact: docs/research-reports/foundation-models.data.json
-source_commit: c3576bd
+source_commit: b6e5a10
 insights_model: source-report
 translated_from: foundation-models.md
 translation_model: claude-sonnet-5
-generated_at: 2026-07-13T03:20:32.203Z
+generated_at: 2026-07-13T06:58:50.921Z
 trials: 0
 provenance: llm-translation
 ---
 # 対象モデル
 
-これは**リファレンスカタログ**であり、ベンチマークではありません。比較対象となる基盤モデルを列挙し、各測定トピックで利用されるカタログ情報を記録しています。
+これは**参考用カタログ**であり、ベンチマークではありません。比較対象の基盤モデルを一覧にし、測定対象トピックで使用されるカタログ情報を記録するものです。
 
 ## 1. 調査の目的
 
-このカタログは、速度・精度・可用性に関する測定レポートを読む前に、どのプロバイダー、モデル名、APIモデルID、ティア、価格、努力度（effort）制御、APIサーフェスが対象範囲に含まれるかを読者が一箇所で確認できるようにするためのものです。
+このカタログは、速度・精度・可用性に関する測定レポートを読む前に、どのプロバイダー、モデル名、APIモデルID、ティア、価格、エフォート制御、APIサーフェスが対象範囲に含まれるかを読者が一箇所で確認できるようにするためのものです。
 
 ## 2. 測定対象
 
 ### 対象モデル
 
-4 プロバイダーにまたがる19の基盤モデルが掲載されている。信頼できる唯一の情報源（single source of truth）はモデルレジストリ（`packages/tech/src/llm-model-comparison/models.ts`）である。
+4プロバイダーにまたがる19の基盤モデルが対象として挙げられている。唯一の信頼できる情報源はモデルレジストリ（`packages/tech/src/llm-model-comparison/models.ts`）である。
 
 ### 対象メトリクス
 
-このトピックには測定されたメトリクスは存在しない。記録されるのは、プロバイダー、モデル、APIモデルID、ティア、APIサーフェス、リリースラベル、入出力のカタログ価格、対応するエフォートレベルといった、厳選されたカタログ項目のみである。
+このトピックには測定されたメトリクスは存在しない。記録されているのは、プロバイダー、モデル、APIモデルID、ティア、APIサーフェス、リリースラベル、入出力のカタログ価格、対応するeffortレベルといった、精選されたカタログ項目のみである。
 
 ## 3. 範囲と制約
 
-すべての値は出典が明記されたキュレーション済みのカタログデータであり、ライブ計測ではありません。スループット、レイテンシ、精度、OCR、RAG、可用性に関する数値はここには一切含まれていません。各セルは、その出典日時点でのみ正しいものとして扱ってください。プロバイダのカタログページはこのページが生成された後に変更される可能性があります。Vision/マルチモーダル対応は**要検証**であり、推測で記載するのではなく意図的に省略しています。
+すべての値は、出典が明記されたキュレーション済みカタログデータであり、実測値ではありません。スループット、レイテンシ、精度、OCR、RAG、可用性に関する数値はここには一切含まれていません。各セルは、その出典の日付時点でのみ正しいものとして扱ってください。プロバイダのカタログページは、本ページの生成後に変更される可能性があります。Vision／マルチモーダル対応については **要確認** とし、推測で埋めることはせず、意図的に省略しています。
 
 ## 4. 検証結果
 
@@ -40,11 +40,15 @@ provenance: llm-translation
 | Google | 3 | flagship, mid, small | $0.10–$2.00 | $0.40–$12.00 |
 | xAI | 4 | frontier, flagship, mid, small | $1.00–$1.25 | $2.00–$2.50 |
 
-いずれの値もキュレーションされたカタログデータ（provenance: `catalog`）であり、実測値ではありません。価格は各プロバイダーの掲載モデルにおける、100万トークンあたりのUSD価格帯です。モデルごとの完全なカタログ表はセクション7「検証データ」に記載しています。
+すべての値はキュレーションされたカタログデータ（provenance: `catalog`）であり、実測値ではありません。価格は各プロバイダーの掲載モデルにおける、100万トークンあたりのUSD価格帯です。モデルごとの詳細なカタログ表は、7節の検証データに掲載しています。
+
+**推移 / 調査間のトレンド**
+
+これはシリーズ内で最初の比較可能な調査であるため、まだグラフ化できる複数回にわたる調査のトレンドはありません。同一手法による2回目の調査がアーカイブされた時点で、ここにトレンドチャートが表示されます。過去の調査は検証データの項目にリンクされています。
 
 ## 5. 考察
 
-このページは、測定ページを読む前に比較マトリクスを理解するために利用してください。モデル選定はこのカタログのみに基づいて行うべきではありません。価格やeffort制御はコストや実行時の挙動を制約しますが、実測された速度、出力精度、OCR能力、RAGの挙動、可用性については他の調査トピックで扱われています。
+このページは、測定ページを読む前に比較マトリックスを理解するために使用してください。モデル選定はこのカタログのみに基づくべきではありません。価格やエフォート制御はコストと実行時間の挙動を制約しますが、測定された速度、出力精度、OCR性能、RAGの挙動、可用性については、他の調査トピックで扱っています。
 
 ## 6. 再現方法
 
@@ -57,17 +61,17 @@ npm run research -- foundation-models --fixture
 
 ### 再現コスト（目安）
 
-カタログ経路はキー不要かつコストゼロです。コミットされたモデルレジストリを読み込むのみで、プロバイダーのAPIは呼び出しません。
+カタログ経路はキー不要かつコストゼロです。コミットされたモデルレジストリを読み込むだけで、プロバイダーAPIは呼び出しません。
 
 ### クリーンアップ
 
-外部リソースは作成されません。再レンダリングは`docs/research-reports/`内のカタログMarkdownとJSON成果物を書き換えるだけです。
+外部リソースは作成されません。再レンダリングは `docs/research-reports/` 内のカタログMarkdownとJSON成果物を書き換えるだけです。
 
 ## 7. 検証データ
 
-**完全なカタログ**
+**全カタログ**
 
-| プロバイダー | モデル | API model id | ティア | API surface | リリース | 入力 $/MTok | 出力 $/MTok | Effort levels |
+| Provider | Model | API model id | Tier | API surface | Released | Input $/MTok | Output $/MTok | Effort levels |
 | -------- | ----- | ------------ | ---- | ----------- | -------- | ------------ | ------------- | ------------- |
 | Anthropic | Claude Fable 5 | `claude-fable-5` | frontier | chat | 2026-06 | $6.00 | $30.00 | low, medium, high, xhigh, max |
 | Anthropic | Claude Opus 4.8 | `claude-opus-4-8` | flagship | chat | 2026 | $5.00 | $25.00 | low, medium, high, xhigh, max |
@@ -89,7 +93,7 @@ npm run research -- foundation-models --fixture
 | xAI | Grok 4.20 Non-Reasoning | `grok-4.20-0309-non-reasoning` | mid | chat | 2026 | $1.25 | $2.50 | n/a |
 | xAI | Grok Build 0.1 | `grok-build-0.1` | small | chat | 2026 | $1.00 | $2.00 | n/a |
 
-**凡例。** すべての列はキュレーションされたカタログデータ（provenance: `catalog`）であり、測定値ではありません。コストは1MトークンあたりのUSDで、入力／出力の順です。「Effort levels」は、レジストリがそのモデルに対してスイープする reasoning-effort の設定であり、`n/a` はそのモデルがユーザー選択可能な effort 制御を公開していないことを意味します。
+**凡例。** すべての列はキュレーションされたカタログデータ（出所: `catalog`）であり、測定値ではない。コストは1Mトークンあたりの米ドルで、入力／出力の順。「Effort levels（推論努力レベル）」は、そのモデルに対してレジストリが掃引する推論努力度の設定であり、`n/a` はそのモデルがユーザーによる努力度の選択機能を持たないことを示す。
 
 **出典**
 
@@ -98,4 +102,11 @@ npm run research -- foundation-models --fixture
 - **Google:** https://ai.google.dev/gemini-api/docs/pricing
 - **xAI:** https://docs.x.ai/developers/models/grok-4.3
 
-このカタログは `packages/tech/src/llm-model-comparison/models.ts` から再生成されます。価格やティアの修正はそこでの1行編集で行われ、その後このページが再レンダリングされます。
+このカタログは `packages/tech/src/llm-model-comparison/models.ts` から再生成される。価格や階層の修正は、そこでの1行の編集で済み、その後このページが再レンダリングされる。
+
+**過去の調査 / Past surveys in this series**
+
+このトピックに関する過去の日付付き調査（新しい順）。それぞれが、その実行時点での完全な記事となっている。
+
+- 2026-07-09T11:54:54.587Z: [English](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
+- 2026-07-09T11:02:05.370Z: [English](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)
