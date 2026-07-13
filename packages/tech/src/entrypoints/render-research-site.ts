@@ -1,5 +1,5 @@
 import { constants, type Dirent } from "node:fs";
-import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
   publishPlan,
@@ -12,16 +12,7 @@ import {
   publishedResearchTopics,
   type ResearchHistoryFrame,
 } from "../research/domain/site";
-import {
-  framesInTendencyWindow,
-  instrumentVersionOf,
-  snapshotPointsFor,
-  type SnapshotPoint,
-} from "../research/domain/snapshot";
-import {
-  composeCurrentArticle,
-  currentArticleBlocks,
-} from "../research/domain/current-article";
+import { composeAllCurrentArticles } from "../research/current-article-runner";
 import { isDirectRun } from "./direct-run";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
@@ -132,55 +123,11 @@ export const main = async (): Promise<void> => {
   // Compose each topic's CURRENT English page into the dated survey-article
   // series view: inject the 推移 (trend) block into §4 and the 過去の調査
   // (past surveys) links into §7, over the freshly-rendered measurement
-  // article. `write-snapshots` is kept as a deprecated alias.
+  // article. The composition itself lives in `current-article-runner` so the
+  // real-run pipeline composes through the same code. `write-snapshots` is a
+  // deprecated alias.
   if (command === "compose-current-articles" || command === "write-snapshots") {
-    const root = repoRoot();
-    const historyFrames = await readHistoryFrames();
-    let written = 0;
-    for (const topic of publishedResearchTopics) {
-      const currentPath = resolve(root, topic.source.docsPath);
-      if (!(await exists(currentPath))) continue;
-      const frames = framesInTendencyWindow(
-        historyFrames.filter((frame) => frame.topicId === topic.id),
-      );
-      // Points for the trend: the current run's artifact plus each past frame,
-      // filtered to the newest instrument version so only comparable runs
-      // connect into one series.
-      const artifacts: { artifact: unknown; version: number }[] = [];
-      const currentDataPath =
-        topic.dataPath === undefined
-          ? undefined
-          : resolve(root, topic.dataPath);
-      if (currentDataPath !== undefined && (await exists(currentDataPath))) {
-        const artifact: unknown = JSON.parse(
-          await readFile(currentDataPath, "utf8"),
-        );
-        artifacts.push({ artifact, version: instrumentVersionOf(artifact) });
-      }
-      for (const frame of frames) {
-        if (frame.dataPath === undefined) continue;
-        const artifact: unknown = JSON.parse(
-          await readFile(resolve(root, frame.dataPath), "utf8"),
-        );
-        artifacts.push({ artifact, version: instrumentVersionOf(artifact) });
-      }
-      const latestVersion = artifacts[0]?.version;
-      const points: SnapshotPoint[] = [];
-      for (const entry of artifacts) {
-        if (entry.version !== latestVersion) continue;
-        points.push(...snapshotPointsFor(topic.id, entry.artifact));
-      }
-      const { trendBlock, relatedBlock } = currentArticleBlocks(
-        topic,
-        frames,
-        points,
-      );
-      if (trendBlock === "" && relatedBlock === "") continue;
-      const article = await readFile(currentPath, "utf8");
-      const composed = composeCurrentArticle(article, trendBlock, relatedBlock);
-      await writeText(currentPath, composed);
-      written += 1;
-    }
+    const written = await composeAllCurrentArticles();
     process.stdout.write(`composed ${written} current article(s)\n`);
     return;
   }

@@ -9,6 +9,9 @@ import {
 } from "../research/domain/topic";
 import { runInsightsStage } from "../research/insights-runner";
 import { runTranslationStage } from "../research/translate-runner";
+import { runReportTranslation } from "../research/report-translation-runner";
+import { composeTopicCurrentArticle } from "../research/current-article-runner";
+import { findPublishedResearchTopic } from "../research/domain/site";
 import { runSplitTopic } from "./run-split-topic";
 import { runReferenceTopic } from "./run-reference-topic";
 
@@ -126,7 +129,26 @@ export const main = async (): Promise<void> => {
       stage === "translation" &&
       (mode === "real" || mode === "estimate")
     ) {
-      await runTranslationStage({ spec, mode, generatedAt: nowIso() });
+      // The published Japanese page is a translation of the composed English
+      // CURRENT page (7-section article + 推移 + 過去の調査), not of the
+      // insights prose. On a real run, compose the freshly-rendered current
+      // page first, then translate it — so English → translate → Japanese
+      // holds and the two languages never fork (the speed EN/JP bug).
+      if (
+        mode === "real" &&
+        findPublishedResearchTopic(spec.id) !== undefined
+      ) {
+        await composeTopicCurrentArticle(spec.id);
+      }
+      if (findPublishedResearchTopic(spec.id) !== undefined) {
+        await runReportTranslation({
+          topicId: spec.id,
+          mode,
+          generatedAt: nowIso(),
+        });
+      } else {
+        await runTranslationStage({ spec, mode, generatedAt: nowIso() });
+      }
     } else {
       // No stage should reach here: planPipeline only emits benchmark on the
       // fixture path, and both LLM stages are handled above for real/estimate.
