@@ -42,7 +42,7 @@
     "ocr:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts --estimate"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
+    "@types/node": "^26.1.1",
     "eslint": "^10.7.0",
     "prettier": "^3.4.0",
     "tsx": "^4.19.0",
