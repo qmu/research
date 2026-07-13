@@ -146,23 +146,26 @@ DONE:
   design. A topic's 推移 block charts once it has two same-instrument real
   surveys.
 
-REMAINING (this ticket stays open until these land):
-- **Language-matched past-survey block + English-frame mirror (qmu dead-link
-  safety).** REAL but qmu-ship-time only (research.qmu.dev resolves all links
-  today). The block lists English + Japanese + data.json links per frame; on
-  qmu only Japanese frames are mirrored, so the English/data links would be
-  dead there. Fix: make the block a single link per frame in the current page's
-  OWN language (generated per language AFTER translation, since translation
-  keeps English URLs) and mirror English frames into qmu's `docs/en/...history/`
-  section. Needs a full re-translation of the current pages. Best done as a
-  focused follow-up before the next qmu `/ship`.
+- **Language-matched past-survey block + English-frame mirror: DONE.** Commit
+  `2d18332`. The past-survey block is now a single link per frame in the current
+  page's own language (trend composed pre-translation, links appended per
+  language post-translation); the qmu payload mirrors Japanese frames to the
+  Japanese section and English frames to the English section, so past-survey
+  links resolve in both. All current pages regenerated + re-translated; build
+  dead-link check green.
+
+DEFERRED (optional, tracked on the mission — NOT blocking):
 - **Drop the vestigial insights stage (LOW VALUE — optional).** `.insights.md`
   is now read by nothing (the published JP page is report-translation of the
   current page). Removing the `insights` stage from `topic.ts` would save one
   LLM call per topic per real run (owner-gated, monthly ≈ negligible) but
   cascades into stage-test churn, dead code (insights-runner/translate-runner),
-  and stale committed `.insights.md` orphans. Deferred as not worth the churn
-  now; revisit if the pipeline is refactored.
+  and stale committed `.insights.md` orphans. Not worth the churn now; revisit
+  if the pipeline is refactored.
+
+The ticket's substantive scope is complete; only the optional insights cleanup
+above remains, so the ticket is archived and the optional item is carried on the
+mission.
 
 ## Quality Gate
 
