@@ -244,6 +244,30 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   that shape, so swapping or dropping a provider is a `vendors/deep-research/`
   change with no domain impact.
 
+### LLM credential abstraction (packages/tech) — no new dependency
+
+- **Reason**: The `llm-model-comparison` entrypoint wired every provider's auth as
+  a single `Record<Provider, string>` of API-key strings. AWS Bedrock (SigV4) and
+  Google Vertex (GCP ADC) do not fit a single key, so before either adapter can be
+  added the credential contract must generalize. A discriminated-union
+  `Credential` (`apiKey | awsSigV4 | gcpAdc`) plus a declarative `CredentialSpec`
+  and a pure `resolveCredential(spec, env)` now live in
+  `packages/tech/src/vendors/llm/credentials.ts`. No new package is taken on — the
+  union is plain data (region/ids/project strings); the AWS and Google auth SDKs
+  will be added by their own adapter tickets, behind the vendors/ ACL, and are the
+  only place those SDK types may appear.
+- **Assessment**:
+  - License: n/a (repository code, MIT).
+  - Reputation / Development status / Sustainability: n/a (in-repo).
+- **Monitoring**: n/a.
+- **Exit strategy**: The credential union and resolver are self-contained and
+  unit-tested (`credentials.test.ts`). Single-key providers narrow to their API
+  key at the entrypoint via `requireApiKey`, so their adapters and tests are
+  behaviourally unchanged; a missing credential resolves to `null` and preserves
+  the keyless fixture fallback (`provenance: "fixtured"`). Adding or removing a
+  backend is an edit to `CREDENTIAL_SPEC` / `CLIENT_FACTORY` plus one vendor
+  adapter, with no change to the `CompletionClient` port.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
