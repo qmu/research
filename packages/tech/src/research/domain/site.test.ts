@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   findInternalResearchSource,
   findPublishedResearchTopic,
+  englishFramePublishPlan,
+  framePublishPlan,
   historyOverview,
   historyPathFor,
   internalResearchSources,
@@ -53,6 +55,60 @@ describe("research site metadata", () => {
         sourceSlug: topic.japanese.docsPath.replace(/^docs\/(.+)\.md$/, "$1"),
         destinationSlug: topic.qmuSlug,
       })),
+    );
+  });
+
+  it("publishes every dated survey's Japanese article under a mirrored path (D1)", () => {
+    const frames = [
+      {
+        topicId: "speed",
+        generatedAt: "2026-06-01T00:00:00.000Z",
+        sourcePath:
+          "docs/research-reports/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.md",
+        japanesePath:
+          "docs/research-reports/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja.md",
+      },
+      {
+        // A frame without a Japanese article is not copied.
+        topicId: "ocr",
+        generatedAt: "2026-06-02T00:00:00.000Z",
+        sourcePath:
+          "docs/research-reports/history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison.md",
+      },
+    ];
+    expect(framePublishPlan(frames)).toEqual([
+      {
+        sourceSlug:
+          "research-reports/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja",
+        destinationSlug:
+          "history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja",
+      },
+    ]);
+    // The Japanese frame mirrors to the Japanese section; the English frames
+    // (both have a sourcePath) mirror to the English section.
+    expect(englishFramePublishPlan(frames)).toEqual([
+      {
+        sourceSlug:
+          "research-reports/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison",
+        destinationSlug:
+          "history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison",
+      },
+      {
+        sourceSlug:
+          "research-reports/history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison",
+        destinationSlug: "history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison",
+      },
+    ]);
+    // The mirrored destinations equal the relative link targets the current
+    // articles use, so the links resolve in both language sections.
+    const payload = renderQmuTicketPayload(frames);
+    expect(payload).toContain("Past-survey articles (1 Japanese)");
+    expect(payload).toContain("Past-survey articles (2 English)");
+    expect(payload).toContain(
+      "docs/research-reports/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja.md -> docs/llm-foundation-research/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja.md",
+    );
+    expect(payload).toContain(
+      "docs/research-reports/history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison.md -> docs/en/llm-foundation-research/history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison.md",
     );
   });
 

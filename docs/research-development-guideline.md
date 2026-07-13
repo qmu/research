@@ -1,6 +1,6 @@
 ---
 title: Research development guideline
-description: How a terse research idea becomes a recurring topic with a compact snapshot article over dated uniform trial reports.
+description: How a terse research idea becomes a recurring topic published as a dated series of survey articles.
 ---
 
 # Research development guideline
@@ -8,8 +8,15 @@ description: How a terse research idea becomes a recurring topic with a compact 
 This guideline defines how a research topic is initiated and how its published
 article is structured. It is written for the AI agents that do the initiation
 work and for the developers who approve it. The structural decision it applies
-is recorded in [ADR 0005](./adr/0005-snapshot-articles-over-dated-trial-history);
-the per-topic build recipe remains `packages/tech/TEMPLATE.md`.
+is recorded in [ADR 0006](./adr/0006-dated-survey-article-series) (which
+supersedes ADR 0005's "snapshot" split); the per-topic build recipe remains
+`packages/tech/TEMPLATE.md`.
+
+Each published topic is a **dated series of survey articles**: the stable
+per-topic slug always holds the latest survey's article, and every article
+embeds its trend through that survey (§4) and links to all past surveys (§7).
+When a new survey runs, a new article is created and becomes the current page;
+the previous articles stay reachable at their dated slugs.
 
 ## Vocabulary
 
@@ -20,8 +27,8 @@ One concept, one word (see the [Glossary](./glossary)):
 | trial                | One full execution of a topic's measurement (`npm run research -- <topic> --real`), producing a data artifact and a report at a point in time.                       |
 | uniform trial report | The dated frame a trial leaves under `docs/research-reports/history/<topic-id>/<timestamp>/`: the full English report, the `data.json` artifact, and the Japanese translation, in the same format every time. |
 | cadence              | The agreed interval between recurring trials of a topic (for example, monthly).                                                                                      |
-| tendency window      | The span of recent trials a snapshot summarizes: the last 3 to 5 months.                                                                                             |
-| snapshot             | A topic's sidebar page: the latest, compact view describing tendencies over the tendency window and linking to each uniform trial report. Subject to the compactness budget below. |
+| tendency window      | The span of recent trials the current article's trend chart covers: the last 3 to 5 months.                                                                          |
+| current article      | A topic's page at its stable slug: the latest survey's 7-section article plus a 推移 (trend) block over the tendency window and a 過去の調査 (past surveys) links block. Replaced by the next survey's article; the old one stays at its dated slug. |
 
 ## Proposal-first protocol
 
@@ -81,53 +88,41 @@ npm run research:archive -- <topic> --generated-at <iso>
 npm run research:site -- write-indexes
 ```
 
-The archive step appends a new dated frame; existing frames are never modified
-(see ADR 0005). The snapshot regenerates from the frames in the tendency
-window.
+The archive step appends a new dated survey; existing surveys are never
+modified (see ADR 0006). The current article is regenerated from the latest
+survey, and its trend + past-survey blocks pick up the newly archived survey.
 
 ## Article structure
 
-Each published topic has two surfaces:
+Each published topic is a dated series of survey articles with one shape:
 
-- **The snapshot** is the page reached from the sidebar. It is
-  renderer-produced from the topic's shared metadata and its dated frames —
-  never hand-edited — and describes the tendencies over the tendency window:
-  what moved, what held, which subject leads on which metric. It embeds the
-  trend chart (`renderTimeSeriesChart` in
-  `packages/tech/src/research-report/domain/chart.js`) and links to every
-  uniform trial report it summarizes. It does not carry exhaustive
-  per-trial numbers.
-- **The uniform trial reports** carry the detail. Each keeps the standard
-  7-section outline enforced by
-  `packages/tech/src/research/domain/article-outline.ts` (Research Purpose,
-  Measurement Targets, Scope and Constraints, Verification Results, Analysis,
-  Reproduction, Verification Data), so every dated report of every topic reads
-  the same way. They live under
-  `docs/research-reports/history/<topic-id>/<timestamp>/` and accumulate;
-  a past frame is never overwritten. The availability topic's committed
-  status-history database (`docs/research-reports/availability-history/`)
-  is the same accumulate-and-summarize pattern applied to externally observed
-  data.
+- **The current article** is the page at the topic's stable slug. It is the
+  latest survey's standard 7-section article (Research Purpose, Measurement
+  Targets, Scope and Constraints, Verification Results, Analysis, Reproduction,
+  Verification Data — enforced by
+  `packages/tech/src/research/domain/article-outline.ts`), composed with two
+  cross-survey blocks by
+  `packages/tech/src/research/domain/current-article.ts`:
+  - a **推移 / Trend** block in §4 that embeds the trend chart
+    (`renderTimeSeriesChart` in
+    `packages/tech/src/research-report/domain/chart.js`) over the tendency
+    window (a plain note until two same-instrument surveys exist), and
+  - a **過去の調査 / Past surveys** block in §7 linking every earlier dated
+    survey, newest first.
+- **The past surveys** are the earlier dated articles under
+  `docs/research-reports/history/<topic-id>/<timestamp>/`. Each is a complete
+  7-section article for its run; they accumulate and a past article is never
+  overwritten. The availability topic's committed status-history database
+  (`docs/research-reports/availability-history/`) is the same
+  accumulate-and-summarize pattern applied to externally observed data.
 
-Sidebar order and labels come from `publishedResearchTopics` in `site.ts` and
-the generated indexes (`npm run research:site -- write-indexes`); no surface
-carries a hand-written topic list. Japanese pages follow through
-`npm run research:translate-report -- <topic>`.
-
-## Snapshot compactness budget
-
-Snapshots are loaded into LLM context windows when agents consult this
-research, so their size is capped:
-
-- **Budget: 1,500 tokens** under the 4-characters-per-token approximation the
-  insights cost estimate already uses — that is, **6,000 characters** of
-  Markdown, frontmatter included, SVG chart markup excluded.
-- Check: `wc -c` on the snapshot file with embedded `<svg>` elements stripped;
-  the result must be at most 6,000.
-- The budget is roughly double `INSIGHTS_OUTPUT_TOKENS` (700, in
-  `packages/tech/src/research/domain/insights.ts`), which bounds one trial's
-  analytical prose; a snapshot spans a whole tendency window and gets twice
-  that room, no more. Detail beyond the budget belongs in the trial reports.
+The current article is generated in English and the Japanese current page is a
+translation of it, so the two never fork. Sidebar order and labels come from
+`publishedResearchTopics` in `site.ts` and the generated indexes
+(`npm run research:site -- write-indexes`); the trend + past-survey blocks are
+composed by `npm run research:site -- compose-current-articles`, which the
+`research -- <topic> --real` pipeline also runs before translating. No surface
+carries a hand-written topic list.
 
 ## Worked example — llm-speed
 
@@ -143,8 +138,8 @@ the protocol produces its recurrence design rather than a new topic.
 **Step 2 — propose.**
 
 1. *Cadence:* monthly. Providers ship new model versions on a weeks-to-months
-   rhythm; a monthly trial bounds how stale the snapshot can be. A major model
-   release triggers an off-cadence trial.
+   rhythm; a monthly trial bounds how stale the current article can be. A major
+   model release triggers an off-cadence trial.
 2. *Subjects:* the models enumerated in the foundation-models catalog topic
    (`docs/research-reports/foundation-models.md`) — the same registry the
    speed topic already measures.
@@ -159,12 +154,13 @@ the protocol produces its recurrence design rather than a new topic.
    dollars (the llm-model-comparison precedent measured ~$46); the estimate
    decides, and an estimate outside the agreed range stops for re-approval.
 5. *Accumulated history:* per-model `HistoryPoint` series for each metric,
-   one point per monthly frame. After three or more frames, the snapshot's
-   trend chart shows per-model latency and throughput movement across the
-   tendency window.
+   one point per monthly survey. After three or more surveys, the current
+   article's 推移 (trend) block shows per-model latency and throughput movement
+   across the tendency window.
 
 **Steps 3–4.** The next real run validates the design; each later cadence tick
-appends a frame under `docs/research-reports/history/speed/<timestamp>/` and
-regenerates the snapshot at `docs/research-reports/llm-speed-comparison.md`:
-a tendency narrative and trend chart within the compactness budget, linking to
-every dated frame in the window.
+appends a dated survey under `docs/research-reports/history/speed/<timestamp>/`
+and regenerates the current article at
+`docs/research-reports/llm-speed-comparison.md`: the latest survey's 7-section
+report plus the 推移 (trend) block and the 過去の調査 links to every earlier
+dated survey in the window.

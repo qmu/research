@@ -14,6 +14,68 @@ const metric = (run: OcrModelRun, key: keyof OcrModelRun["stats"]): string => {
 const sentence = (value: string): string =>
   value.endsWith(".") ? value : `${value}.`;
 
+const medianOf = (values: ReadonlyArray<number>): number => {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const lower = sorted[mid - 1];
+  const upper = sorted[mid];
+  if (upper === undefined) return 0;
+  return sorted.length % 2 === 0 && lower !== undefined
+    ? (lower + upper) / 2
+    : upper;
+};
+
+/**
+ * The §4 overview: one aggregated row per metric over the measured runs
+ * (best model, median, worst). The exhaustive per-model table lives in §7
+ * Verification Data — §4 stays a concise, decision-relevant summary by the
+ * site-wide article policy.
+ */
+const overviewSection = (result: OcrComparisonResult): string => {
+  const measured = result.runs.filter((run) => run.provenance === "measured");
+  const counts = `This run has **${measured.length} measured** of ${result.runs.length} model rows (non-measured rows are \`fixtured\` harness checks or \`out-of-scope\` integration gaps).`;
+  if (measured.length === 0) {
+    return `${counts}
+
+There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.`;
+  }
+  const aspects: ReadonlyArray<{
+    key: keyof OcrModelRun["stats"];
+    title: string;
+    better: "higher" | "lower";
+  }> = [
+    {
+      key: "characterErrorRate",
+      title: "Character error rate",
+      better: "lower",
+    },
+    { key: "wordErrorRate", title: "Word error rate", better: "lower" },
+    { key: "fieldAccuracy", title: "Field accuracy", better: "higher" },
+  ];
+  const rows = aspects.map((aspect) => {
+    const value = (run: OcrModelRun): number => run.stats[aspect.key].mean;
+    const sorted = [...measured].sort((a, b) =>
+      aspect.better === "higher" ? value(b) - value(a) : value(a) - value(b),
+    );
+    const best = sorted[0];
+    const worst = sorted[sorted.length - 1];
+    if (best === undefined || worst === undefined) {
+      return `| ${aspect.title} | n/a | n/a | n/a |`;
+    }
+    return (
+      `| ${aspect.title} | ${pct(value(best))} — ${best.modelName} | ` +
+      `${pct(medianOf(measured.map(value)))} | ${pct(value(worst))} |`
+    );
+  });
+  return `${counts}
+
+| Metric | Best (model) | Median | Worst |
+| ------ | ------------ | ------ | ----- |
+${rows.join("\n")}
+
+"Best"/"Worst" follow each metric's own direction (lower error is better, higher accuracy is better). The full per-model table with provenance and per-row notes is in section 7, Verification Data.`;
+};
+
 const resultRows = (result: OcrComparisonResult): string =>
   result.runs
     .map(
@@ -64,9 +126,7 @@ export const renderOcrComparisonReport = (
 - Rows marked \`out-of-scope\` are not sent through the image path. A provider/model needs an explicit \`VisionClient\` adapter before it can enter the OCR run.
 - Real model numbers remain not measured until an owner runs the real path after reviewing \`--estimate\`.
 - The synthetic fixture covers clean Latin/digit document layouts only. It does not measure Japanese OCR, handwriting, skew, stamps, scans, photos, or multi-page splitting.`,
-    verificationResults: `| Model | Provider | Provenance | Measured at | CER | WER | Field accuracy | Note |
-| ----- | -------- | ---------- | ----------- | --- | --- | -------------- | ---- |
-${resultRows(result)}`,
+    verificationResults: overviewSection(result),
     analysis:
       "Rows with `measured` provenance can be compared on OCR quality. Rows with `out-of-scope` provenance are integration coverage gaps, not OCR failures, because they were never sent through the image path.",
     reproductionSteps: `\`\`\`sh
@@ -81,7 +141,13 @@ npm run ocr:real
       "`ocr:fixture` is keyless and costless. `ocr:estimate` previews the owner-gated real path. `ocr:real` calls configured vision-capable providers and incurs provider token/image charges.",
     cleanup:
       "The OCR fixture and real paths create no external cloud resources. They render local report/data artifacts; review those files before committing.",
-    verificationData: `**Dataset.** ${result.dataset.dataset.name} (\`${result.dataset.dataset.id}\`), manifest version ${result.dataset.dataset.manifestVersion}. Source: ${result.dataset.dataset.source}. License: ${sentence(result.dataset.dataset.license)} ${sentence(result.dataset.dataset.imageDistribution)}
+    verificationData: `**Per-model results**
+
+| Model | Provider | Provenance | Measured at | CER | WER | Field accuracy | Note |
+| ----- | -------- | ---------- | ----------- | --- | --- | -------------- | ---- |
+${resultRows(result)}
+
+**Dataset.** ${result.dataset.dataset.name} (\`${result.dataset.dataset.id}\`), manifest version ${result.dataset.dataset.manifestVersion}. Source: ${result.dataset.dataset.source}. License: ${sentence(result.dataset.dataset.license)} ${sentence(result.dataset.dataset.imageDistribution)}
 
 **Preprocessing.** Images are rendered as ${result.dataset.preprocessing.mimeType} at ${result.dataset.preprocessing.resolution.widthPx}×${result.dataset.preprocessing.resolution.heightPx}px, ${result.dataset.preprocessing.resolution.dpi} DPI. ${result.dataset.preprocessing.pageSplitting} ${result.dataset.preprocessing.rendering}
 

@@ -110,6 +110,17 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     stages: ["benchmark", "insights", "translation"],
   },
   {
+    id: "image-generation",
+    title:
+      "Image generation comparison: prompt adherence, exact-text rendering, latency, and per-image cost",
+    artifactBase: "image-generation-comparison",
+    modes: ["fixture", "estimate", "real"],
+    // Like OCR, the entrypoint defaults to its keyless fixture and switches to
+    // a real run with --real.
+    modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    stages: ["benchmark", "insights", "translation"],
+  },
+  {
     id: "availability",
     title:
       "LLM provider availability: status-page incident history with 30/90-day derived-uptime trends",

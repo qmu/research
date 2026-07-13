@@ -187,11 +187,6 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       accumulates:
         "per-config HistoryPoint series for each speed metric, one point per dated frame; charts connect same-instrument-version points only",
     },
-    articleMode: "snapshot",
-    report: {
-      sourcePath: "docs/research-reports/llm-speed-comparison.report.md",
-      japanesePath: "docs/research-reports/llm-speed-comparison.insights.ja.md",
-    },
   },
   {
     id: "accuracy",
@@ -377,6 +372,64 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-backend HistoryPoint series for retrieval and latency metrics, one point per dated frame",
     },
   },
+  {
+    id: "image-generation",
+    artifactBase: "image-generation-comparison",
+    npmScript: "npm run research -- image-generation --real",
+    source: {
+      text: "Image generation",
+      docsPath: "docs/research-reports/image-generation-comparison.md",
+      summary:
+        "Generation latency, per-image cost, rubric-checked prompt adherence, and exact-text rendering.",
+    },
+    japanese: {
+      text: "画像生成",
+      docsPath:
+        "docs/research-reports/image-generation-comparison.insights.ja.md",
+      summary:
+        "生成レイテンシ、画像単価、機械検証可能なプロンプト追従、正確なテキスト描画の比較。",
+    },
+    dataPath: "docs/research-reports/image-generation-comparison.data.json",
+    qmuSlug: "image-generation",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger:
+        "an image-generation model release or retirement at a covered provider",
+      subjects:
+        "API-accessible image-generation models in the curated image-model registry (OpenAI, Google, xAI; Anthropic exposes no image-generation API and is recorded as not applicable)",
+      metrics: [
+        {
+          name: "generationLatencyMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        { name: "costPerImageUsd", unit: "USD", direction: "reference" },
+        {
+          name: "promptAdherence",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "textRenderAccuracy",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 20,
+        premises:
+          "3 models × 8 prompts × 1–3 repetitions at $0.02–$0.04 catalog per image plus one vision-judge read per image; run `research -- image-generation --estimate` first",
+      },
+      accumulates:
+        "per-model HistoryPoint series for latency, adherence, and text accuracy, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
 ];
 
 /**
@@ -479,6 +532,54 @@ export const publishPlan = (): ReadonlyArray<PublishPlanEntry> =>
     sourceSlug: stripMarkdown(topic.japanese.docsPath).replace(/^docs\//, ""),
     destinationSlug: topic.qmuSlug,
   }));
+
+/**
+ * D1 (owner, 2026-07-13): every dated survey is published to qmu-co-jp, so a
+ * current article's 過去の調査 links resolve there. Each frame's Japanese
+ * article is copied under a MIRRORED path (`history/<topic>/<ts>/<base>.ja`) —
+ * the same relative path the current page links — so the links work unchanged
+ * once qmu-co-jp holds the frames beside the topic pages. Pure: the caller
+ * supplies the frames it read from disk.
+ */
+export const framePublishPlan = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): ReadonlyArray<PublishPlanEntry> =>
+  frames
+    .filter((frame) => frame.japanesePath !== undefined)
+    .map((frame) => {
+      const japanesePath = frame.japanesePath as string;
+      return {
+        // Source: docs-relative, no `docs/` prefix, no `.md` (the publish
+        // script's slug form) — e.g. research-reports/history/speed/<ts>/llm-speed-comparison.ja
+        sourceSlug: stripMarkdown(japanesePath).replace(/^docs\//, ""),
+        // Destination mirrors the in-article link target under the topic pages.
+        destinationSlug: stripMarkdown(japanesePath).replace(
+          /^docs\/research-reports\//,
+          "",
+        ),
+      };
+    });
+
+/**
+ * The English counterpart of `framePublishPlan`: each dated English survey,
+ * mirrored under the qmu-co-jp English section so the English current pages'
+ * past-survey links resolve there too.
+ */
+export const englishFramePublishPlan = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): ReadonlyArray<PublishPlanEntry> =>
+  frames
+    .filter((frame) => frame.sourcePath !== undefined)
+    .map((frame) => {
+      const sourcePath = frame.sourcePath as string;
+      return {
+        sourceSlug: stripMarkdown(sourcePath).replace(/^docs\//, ""),
+        destinationSlug: stripMarkdown(sourcePath).replace(
+          /^docs\/research-reports\//,
+          "",
+        ),
+      };
+    });
 
 export const historyStamp = (generatedAt: string): string =>
   generatedAt.replace(/[:.]/g, "-");
@@ -681,8 +782,12 @@ ${renderHistorySections(
 )}
 `;
 
-export const renderQmuTicketPayload = (): string =>
-  [
+export const renderQmuTicketPayload = (
+  frames: ReadonlyArray<ResearchHistoryFrame> = [],
+): string => {
+  const framePlan = framePublishPlan(frames);
+  const englishFramePlan = englishFramePublishPlan(frames);
+  return [
     "# Reflect LLMs Research reports",
     "",
     `Sidebar group label: the qmu-co-jp navigation group holding these articles must read 「${QMU_RESEARCH_GROUP_LABEL}」 (the <テーマ>について convention).`,
@@ -714,5 +819,28 @@ export const renderQmuTicketPayload = (): string =>
           ]),
           "",
         ]),
+    ...(framePlan.length === 0
+      ? []
+      : [
+          `Past-survey articles (${framePlan.length} Japanese): copy each dated Japanese survey under the mirrored path below, so the 過去の調査 links in the Japanese current pages resolve on qmu-co-jp. These are the earlier runs of each topic, kept as their own articles:`,
+          "",
+          ...framePlan.map(
+            (entry) =>
+              `- docs/${entry.sourceSlug}.md -> docs/llm-foundation-research/${entry.destinationSlug}.md`,
+          ),
+          "",
+        ]),
+    ...(englishFramePlan.length === 0
+      ? []
+      : [
+          `Past-survey articles (${englishFramePlan.length} English): copy each dated English survey under the mirrored path below, so the past-survey links in the English current pages resolve in the English section:`,
+          "",
+          ...englishFramePlan.map(
+            (entry) =>
+              `- docs/${entry.sourceSlug}.md -> docs/en/llm-foundation-research/${entry.destinationSlug}.md`,
+          ),
+          "",
+        ]),
     "Update both qmu-co-jp index/table-of-contents entries from the same order.",
   ].join("\n");
+};

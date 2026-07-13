@@ -90,7 +90,7 @@ describe("renderSplitReport", () => {
     const md = renderSplitReport(
       projectComparison(result, "speed", "llm-model-comparison.data.json"),
     );
-    expect(md).toContain("# LLM response speed comparison");
+    expect(md).toContain("# LLM response speed");
     expect(md).toContain("Throughput (tok/s)");
     expect(md).toContain("TTFT (ms)");
     expect(md).toContain("| Anthropic | Claude Fable 5 |");

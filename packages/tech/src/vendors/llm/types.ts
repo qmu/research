@@ -131,6 +131,24 @@ export type CompletionClient = Readonly<{
   ) => Promise<StructuredCompletion>;
 }>;
 
+// One generated image, normalized across providers: base64 bytes + MIME type,
+// with the wall-clock the adapter measured around its own SDK call. Bytes stay
+// in memory for judging and hashing; they are never committed to the repo.
+export type GeneratedImage = Readonly<{
+  base64: string;
+  mimeType: VisionMimeType;
+  elapsedMs: number;
+  model: string;
+}>;
+
+// The image-generation port. Deliberately minimal (one prompt in, one image
+// out) so every provider's differently-shaped image API normalizes to the same
+// contract and the benchmark domain never branches on provider.
+export type ImageGenerationClient = Readonly<{
+  model: string;
+  generateImage: (prompt: string) => Promise<GeneratedImage>;
+}>;
+
 // Separate from `CompletionClient` so text-only probes keep their existing
 // contract. Vision callers opt into this port explicitly, with a typed capability
 // record showing that image input is supported for the chosen model/configuration.

@@ -23,11 +23,11 @@ export default defineConfig({
     "llm-foundation/_generated/**",
     "research-reports/*.real.md",
     "research-reports/*.fixture.md",
-    // Committed LLM-written tendency narratives are embedded into snapshot
-    // pages by `research:site -- write-snapshots`, not served standalone.
+    // Legacy side files from the retired snapshot layout (tendency narratives
+    // and working full reports). None are produced now — each topic's current
+    // page is the composed dated survey article — but the globs stay so any
+    // stale copy is never served standalone.
     "research-reports/*.tendency.md",
-    // A snapshot topic's working full report; the served detail pages are its
-    // dated copies under research-reports/history/.
     "research-reports/*.report.md",
   ],
   sitemap: { hostname: "https://research.qmu.dev" },

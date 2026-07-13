@@ -107,7 +107,9 @@ export type GroupSpec = Readonly<{
 export const GROUP_SPECS: Readonly<Record<ProbeGroup, GroupSpec>> = {
   speed: {
     group: "speed",
-    title: "LLM response speed comparison",
+    // Sidebar-page title: must equal the topic's sidebar label (source.text in
+    // site.ts) — published pages carry title == sidebar label by policy.
+    title: "LLM response speed",
     summary:
       "sustained generation throughput, time-to-first-token, and total response latency",
     // "speed" is the v2 unified probe; the v1 probe names stay so projecting a

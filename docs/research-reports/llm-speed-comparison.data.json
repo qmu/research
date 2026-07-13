@@ -1,6 +1,6 @@
 {
   "group": "speed",
-  "title": "LLM response speed comparison",
+  "title": "LLM response speed",
   "summary": "sustained generation throughput, time-to-first-token, and total response latency",
   "generatedAt": "2026-07-12T05:47:26.268Z",
   "trials": 3,

@@ -1,7 +1,8 @@
 import { constants, type Dirent } from "node:fs";
-import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
+  framePublishPlan,
   publishPlan,
   publishSlugs,
   renderJapaneseHistoryIndex,
@@ -13,13 +14,9 @@ import {
   type ResearchHistoryFrame,
 } from "../research/domain/site";
 import {
-  framesInTendencyWindow,
-  instrumentVersionOf,
-  renderSnapshot,
-  snapshotBudgetProblems,
-  snapshotPointsFor,
-  type SnapshotPoint,
-} from "../research/domain/snapshot";
+  appendAllRelated,
+  composeAllCurrentArticles,
+} from "../research/current-article-runner";
 import { isDirectRun } from "./direct-run";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
@@ -33,7 +30,8 @@ const usage = (): string =>
     "  copy-plan     Print source and destination slugs for qmu copy",
     "  qmu-ticket    Print the qmu-co-jp handoff ticket body",
     "  write-indexes Regenerate docs/research-reports and docs/llm-foundation indexes",
-    "  write-snapshots Regenerate the snapshot page of every snapshot-mode topic",
+    "  compose-current-articles  Inject the trend block into each topic's current page (before translation)",
+    "  append-past-surveys       Append the per-language past-survey links to EN + JP current pages (after translation)",
     "",
   ].join("\n");
 
@@ -116,66 +114,40 @@ export const main = async (): Promise<void> => {
     return;
   }
   if (command === "copy-plan") {
+    // D1: the plan is the per-topic latest pages plus every dated survey's
+    // Japanese article (mirrored under history/), so qmu-co-jp holds the past
+    // surveys the current articles link to.
+    const frames = await readHistoryFrames();
+    const entries = [...publishPlan(), ...framePublishPlan(frames)];
     process.stdout.write(
-      `${publishPlan()
+      `${entries
         .map((entry) => `${entry.sourceSlug}\t${entry.destinationSlug}`)
         .join("\n")}\n`,
     );
     return;
   }
   if (command === "qmu-ticket") {
-    process.stdout.write(`${renderQmuTicketPayload()}\n`);
+    const frames = await readHistoryFrames();
+    process.stdout.write(`${renderQmuTicketPayload(frames)}\n`);
     return;
   }
-  if (command === "write-snapshots") {
-    const root = repoRoot();
-    const historyFrames = await readHistoryFrames();
-    let written = 0;
-    for (const topic of publishedResearchTopics) {
-      if (topic.articleMode !== "snapshot") continue;
-      const frames = framesInTendencyWindow(
-        historyFrames.filter((frame) => frame.topicId === topic.id),
-      );
-      // Chart only the frames measured by the same instrument version as the
-      // newest frame; older-instrument frames stay listed as trials but their
-      // numbers are not connected into the same tendency series.
-      const artifacts: { artifact: unknown; version: number }[] = [];
-      for (const frame of frames) {
-        if (frame.dataPath === undefined) continue;
-        const artifact: unknown = JSON.parse(
-          await readFile(resolve(root, frame.dataPath), "utf8"),
-        );
-        artifacts.push({ artifact, version: instrumentVersionOf(artifact) });
-      }
-      const latestVersion = artifacts[0]?.version;
-      const points: SnapshotPoint[] = [];
-      for (const entry of artifacts) {
-        if (entry.version !== latestVersion) continue;
-        points.push(...snapshotPointsFor(topic.id, entry.artifact));
-      }
-      // The LLM-written tendency narrative is committed beside the reports and
-      // regenerated on real runs; the renderer falls back to the deterministic
-      // skeleton when the file is absent.
-      const narrativePath = resolve(
-        root,
-        `docs/research-reports/${topic.artifactBase}.tendency.md`,
-      );
-      const narrative = (await exists(narrativePath))
-        ? await readFile(narrativePath, "utf8")
-        : undefined;
-      const markdown = renderSnapshot(
-        narrative === undefined
-          ? { topic, frames, points }
-          : { topic, frames, points, narrative },
-      );
-      const problems = snapshotBudgetProblems(markdown);
-      if (problems.length > 0) {
-        throw new Error(`snapshot for ${topic.id}: ${problems.join("; ")}`);
-      }
-      await writeText(resolve(root, topic.source.docsPath), markdown);
-      written += 1;
-    }
-    process.stdout.write(`wrote ${written} snapshot page(s)\n`);
+  // Compose each topic's CURRENT English page into the dated survey-article
+  // series view: inject the 推移 (trend) block into §4 and the 過去の調査
+  // (past surveys) links into §7, over the freshly-rendered measurement
+  // article. The composition itself lives in `current-article-runner` so the
+  // real-run pipeline composes through the same code. `write-snapshots` is a
+  // deprecated alias.
+  if (command === "compose-current-articles" || command === "write-snapshots") {
+    const written = await composeAllCurrentArticles();
+    process.stdout.write(`composed ${written} current article(s)\n`);
+    return;
+  }
+  // Append the per-language 過去の調査 (past surveys) links to every topic's EN
+  // and JP current pages. Run AFTER translation, so each page links its own
+  // language's frames.
+  if (command === "append-past-surveys") {
+    const written = await appendAllRelated();
+    process.stdout.write(`appended past surveys to ${written} page(s)\n`);
     return;
   }
   if (command === "write-indexes") {

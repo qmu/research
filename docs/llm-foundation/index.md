@@ -43,6 +43,11 @@ JSON スキーマ制約、長さ指示追従、情報精度の比較。
 検索品質、取り込み時間、クエリレイテンシ、コスト、運用制約の比較。
 英語ソースは [RAG vector store benchmark](/research-reports/rag-benchmark)。
 
+### [画像生成](/research-reports/image-generation-comparison.insights.ja)
+
+生成レイテンシ、画像単価、機械検証可能なプロンプト追従、正確なテキスト描画の比較。
+英語ソースは [Image generation](/research-reports/image-generation-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`

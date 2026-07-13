@@ -2,6 +2,8 @@ import OpenAI from "openai";
 import type {
   CompletionClient,
   CompletionOptions,
+  GeneratedImage,
+  ImageGenerationClient,
   JsonSchema,
   StreamedCompletion,
   StructuredCompletion,
@@ -131,3 +133,43 @@ export const createOpenAiCompatibleCompletionClient = (
     },
   };
 };
+
+// The Images API adapter behind the domain-named ImageGenerationClient.
+// Parameterized by base URL for OpenAI-compatible image endpoints (xAI's Grok
+// Imagine speaks the same protocol); the default reaches api.openai.com. The
+// image models used here return base64 PNG bytes.
+export const createOpenAiCompatibleImageGenerationClient = (
+  apiModelId: string,
+  apiKey: string,
+  baseURL?: string,
+): ImageGenerationClient => {
+  const client = new OpenAI({ apiKey, baseURL });
+  return {
+    model: apiModelId,
+    generateImage: async (prompt): Promise<GeneratedImage> => {
+      const startedAt = Date.now();
+      const response = await client.images.generate({
+        model: apiModelId,
+        prompt,
+        n: 1,
+        size: "1024x1024",
+      } as unknown as OpenAI.Images.ImageGenerateParamsNonStreaming);
+      const base64 = response.data?.[0]?.b64_json;
+      if (base64 === undefined || base64 === "") {
+        throw new Error(`image generation returned no image (${apiModelId})`);
+      }
+      return {
+        base64,
+        mimeType: "image/png",
+        elapsedMs: Date.now() - startedAt,
+        model: apiModelId,
+      };
+    },
+  };
+};
+
+export const createOpenAiImageGenerationClient = (
+  apiModelId: string,
+  apiKey: string,
+): ImageGenerationClient =>
+  createOpenAiCompatibleImageGenerationClient(apiModelId, apiKey);

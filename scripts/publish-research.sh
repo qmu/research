@@ -155,7 +155,9 @@ while read -r slug dest_slug; do
     continue
   fi
 
-  mkdir -p "$DEST_DIR"
+  # Destinations may be nested (D1 mirrors past surveys under history/<topic>/<ts>/),
+  # so create the destination's own directory, not just the top-level one.
+  mkdir -p "$(dirname "$DEST")"
   cp "$SRC" "$DEST"
   echo "copied: $REL -> docs/llm-foundation-research/${dest_slug:-$(basename "$slug")}.md"
   copied=$((copied + 1))

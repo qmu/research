@@ -42,3 +42,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 ### ベクトルDBの比較
 
 - 2026-07-09T11:02:46.726Z: [English](../research-reports/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark) · [Japanese](../research-reports/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja) · [data.json](../research-reports/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.data.json)
+
+### 画像生成
+
+まだ日付別フレームは保存されていない。

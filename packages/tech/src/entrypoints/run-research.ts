@@ -9,6 +9,12 @@ import {
 } from "../research/domain/topic";
 import { runInsightsStage } from "../research/insights-runner";
 import { runTranslationStage } from "../research/translate-runner";
+import { runReportTranslation } from "../research/report-translation-runner";
+import {
+  appendRelatedToTopicPages,
+  composeTopicCurrentArticle,
+} from "../research/current-article-runner";
+import { findPublishedResearchTopic } from "../research/domain/site";
 import { runSplitTopic } from "./run-split-topic";
 import { runReferenceTopic } from "./run-reference-topic";
 
@@ -36,6 +42,7 @@ const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   accuracy: () => Promise.resolve({ main: () => runSplitTopic("accuracy") }),
   rag: () => import("./run-rag-benchmark"),
   ocr: () => import("./run-ocr-comparison"),
+  "image-generation": () => import("./run-image-generation"),
   availability: () => import("./run-llm-availability"),
 };
 
@@ -125,7 +132,29 @@ export const main = async (): Promise<void> => {
       stage === "translation" &&
       (mode === "real" || mode === "estimate")
     ) {
-      await runTranslationStage({ spec, mode, generatedAt: nowIso() });
+      // The published Japanese page is a translation of the composed English
+      // CURRENT page (7-section article + 推移 + 過去の調査), not of the
+      // insights prose. On a real run, compose the freshly-rendered current
+      // page first, then translate it — so English → translate → Japanese
+      // holds and the two languages never fork (the speed EN/JP bug).
+      const published = findPublishedResearchTopic(spec.id) !== undefined;
+      if (mode === "real" && published) {
+        await composeTopicCurrentArticle(spec.id);
+      }
+      if (published) {
+        await runReportTranslation({
+          topicId: spec.id,
+          mode,
+          generatedAt: nowIso(),
+        });
+        // The per-language past-survey links are appended after translation, so
+        // the English and Japanese pages each link their own-language frames.
+        if (mode === "real") {
+          await appendRelatedToTopicPages(spec.id);
+        }
+      } else {
+        await runTranslationStage({ spec, mode, generatedAt: nowIso() });
+      }
     } else {
       // No stage should reach here: planPipeline only emits benchmark on the
       // fixture path, and both LLM stages are handled above for real/estimate.

@@ -1,5 +1,8 @@
-import type { CompletionClient } from "./types";
-import { createOpenAiCompatibleCompletionClient } from "./openai";
+import type { CompletionClient, ImageGenerationClient } from "./types";
+import {
+  createOpenAiCompatibleCompletionClient,
+  createOpenAiCompatibleImageGenerationClient,
+} from "./openai";
 
 // xAI's API is OpenAI-compatible (the Chat Completions protocol) served at a
 // different base URL, so its whole Grok lineup (grok-4.3, the 4.20 reasoning/
@@ -15,3 +18,12 @@ export const createXaiCompletionClient = (
   apiKey: string,
 ): CompletionClient =>
   createOpenAiCompatibleCompletionClient(apiModelId, apiKey, XAI_BASE_URL);
+
+// Grok Imagine speaks the OpenAI Images protocol at the same base URL, so the
+// image-generation port is the OpenAI adapter with the URL swapped, like the
+// completion client above.
+export const createXaiImageGenerationClient = (
+  apiModelId: string,
+  apiKey: string,
+): ImageGenerationClient =>
+  createOpenAiCompatibleImageGenerationClient(apiModelId, apiKey, XAI_BASE_URL);

@@ -30,27 +30,13 @@ The measured metrics are character error rate (CER), word error rate (WER), and 
 
 ## 4. Verification Results
 
-| Model | Provider | Provenance | Measured at | CER | WER | Field accuracy | Note |
-| ----- | -------- | ---------- | ----------- | --- | --- | -------------- | ---- |
-| Claude Fable 5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
-| Claude Opus 4.8 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
-| Claude Sonnet 5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
-| Claude Haiku 4.5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
-| GPT-5.5 | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| GPT-5.4 | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| GPT-5.4 mini | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| GPT-5.4 nano | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| o4-mini | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| GPT Realtime | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| GPT-5.3 Codex | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| GPT-5.1 Codex mini | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| Gemini 3.1 Pro | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| Gemini 3.5 Flash | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| Gemini 3.1 Flash-Lite | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| Grok 4.3 | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| Grok 4.20 Reasoning | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| Grok 4.20 Non-Reasoning | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
-| Grok Build 0.1 | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+This run has **0 measured** of 19 model rows (non-measured rows are `fixtured` harness checks or `out-of-scope` integration gaps).
+
+There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
+
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
 
 ## 5. Analysis
 
@@ -79,6 +65,30 @@ The OCR fixture and real paths create no external cloud resources. They render l
 
 ## 7. Verification Data
 
+**Per-model results**
+
+| Model | Provider | Provenance | Measured at | CER | WER | Field accuracy | Note |
+| ----- | -------- | ---------- | ----------- | --- | --- | -------------- | ---- |
+| Claude Fable 5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
+| Claude Opus 4.8 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
+| Claude Sonnet 5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
+| Claude Haiku 4.5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
+| GPT-5.5 | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| GPT-5.4 | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| GPT-5.4 mini | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| GPT-5.4 nano | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| o4-mini | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| GPT Realtime | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| GPT-5.3 Codex | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| GPT-5.1 Codex mini | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Gemini 3.1 Pro | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Gemini 3.5 Flash | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Gemini 3.1 Flash-Lite | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Grok 4.3 | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Grok 4.20 Reasoning | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Grok 4.20 Non-Reasoning | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Grok Build 0.1 | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+
 **Dataset.** QMU synthetic document OCR fixture v1 (`qmu-synthetic-document-ocr-v1`), manifest version 2026-07-08. Source: Repository-authored deterministic synthetic document manifest. License: MIT; generated document text, field ground truth, and rendered images are authored for this repository and may be redistributed under the repository license. Images are rendered deterministically at run time from this manifest; no third-party document images are committed.
 
 **Preprocessing.** Images are rendered as image/png at 960×640px, 150 DPI. One manifest item is rendered as one image/page; multi-page documents are out of scope for this v1 fixture. White background, black fixed 5x7 bitmap text, no rotation, no blur, no compression loss.
@@ -102,3 +112,9 @@ The OCR fixture and real paths create no external cloud resources. They render l
 | synthetic-invoice-001 | rendered during fixture run |
 
 Generated: 2026-01-01T00:00:00.000Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
+
+- [2026-07-09T11:03:48.277Z](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison)

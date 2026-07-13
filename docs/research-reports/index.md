@@ -24,5 +24,6 @@ Past generated frames are listed in [History](./history).
 - [LLM API availability](./llm-availability) — Status-page incident history and derived 30/90-day availability trends.
 - [OCR capability comparison](./ocr-comparison) — CER/WER and structured field extraction over synthetic documents.
 - [RAG vector store benchmark](./rag-benchmark) — Retrieval quality, ingestion time, query latency, cost, and operational constraints.
+- [Image generation](./image-generation-comparison) — Generation latency, per-image cost, rubric-checked prompt adherence, and exact-text rendering.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

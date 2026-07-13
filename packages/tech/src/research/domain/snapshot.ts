@@ -158,11 +158,120 @@ export const comparisonSnapshotPoints = (
   return points;
 };
 
+/**
+ * Points from a `{ runs: [{ id, modelName, measuredAt, provenance,
+ * stats: { <metric>: { mean } } }] }`-shaped artifact (OCR, image-generation).
+ * One point per measured run per named metric; only `provenance: "measured"`
+ * rows chart.
+ */
+export const statsRunsSnapshotPoints =
+  (metrics: ReadonlyArray<string>) =>
+  (artifact: unknown): ReadonlyArray<SnapshotPoint> => {
+    const root = asRecord(artifact);
+    if (root === undefined) return [];
+    const generatedAt =
+      typeof root.generatedAt === "string" ? root.generatedAt : "";
+    const runs = Array.isArray(root.runs) ? root.runs : [];
+    const points: SnapshotPoint[] = [];
+    for (const run of runs) {
+      const r = asRecord(run);
+      if (r === undefined || r.provenance !== "measured") continue;
+      const id =
+        typeof r.id === "string"
+          ? r.id
+          : typeof r.modelName === "string"
+            ? r.modelName
+            : undefined;
+      if (id === undefined) continue;
+      const label = typeof r.modelName === "string" ? r.modelName : id;
+      const measuredAt =
+        typeof r.measuredAt === "string" ? r.measuredAt : generatedAt;
+      const stats = asRecord(r.stats);
+      for (const metric of metrics) {
+        const value = asRecord(stats?.[metric])?.mean;
+        if (typeof value === "number" && Number.isFinite(value)) {
+          points.push({
+            seriesId: id,
+            seriesLabel: label,
+            metric,
+            measuredAt,
+            value,
+          });
+        }
+      }
+    }
+    return points;
+  };
+
+/**
+ * Points from the RAG artifact: `{ runs: [{ backend: { id, name },
+ * measuredAt, provenance, retrieval: { recallAtK, ndcgAtK },
+ * operational: { queryLatencyP50Ms, costUsd } }] }`. One series per backend.
+ */
+export const ragSnapshotPoints = (
+  artifact: unknown,
+): ReadonlyArray<SnapshotPoint> => {
+  const root = asRecord(artifact);
+  if (root === undefined) return [];
+  const generatedAt =
+    typeof root.generatedAt === "string" ? root.generatedAt : "";
+  const runs = Array.isArray(root.runs) ? root.runs : [];
+  const grouped: Readonly<
+    Record<"retrieval" | "operational", ReadonlyArray<string>>
+  > = {
+    retrieval: ["recallAtK", "ndcgAtK"],
+    operational: ["queryLatencyP50Ms", "costUsd"],
+  };
+  const points: SnapshotPoint[] = [];
+  for (const run of runs) {
+    const r = asRecord(run);
+    if (r === undefined || r.provenance !== "measured") continue;
+    const backend = asRecord(r.backend);
+    const id =
+      typeof backend?.id === "string"
+        ? backend.id
+        : typeof backend?.name === "string"
+          ? backend.name
+          : undefined;
+    if (id === undefined) continue;
+    const label = typeof backend?.name === "string" ? backend.name : id;
+    const measuredAt =
+      typeof r.measuredAt === "string" ? r.measuredAt : generatedAt;
+    for (const [group, metrics] of Object.entries(grouped)) {
+      const source = asRecord(r[group]);
+      for (const metric of metrics) {
+        const value = source?.[metric];
+        if (typeof value === "number" && Number.isFinite(value)) {
+          points.push({
+            seriesId: id,
+            seriesLabel: label,
+            metric,
+            measuredAt,
+            value,
+          });
+        }
+      }
+    }
+  }
+  return points;
+};
+
 const snapshotPointExtractors: Readonly<
   Record<string, (artifact: unknown) => ReadonlyArray<SnapshotPoint>>
 > = {
   speed: comparisonSnapshotPoints,
   accuracy: comparisonSnapshotPoints,
+  ocr: statsRunsSnapshotPoints([
+    "characterErrorRate",
+    "wordErrorRate",
+    "fieldAccuracy",
+  ]),
+  "image-generation": statsRunsSnapshotPoints([
+    "generationLatencyMs",
+    "promptAdherence",
+    "textRenderAccuracy",
+  ]),
+  rag: ragSnapshotPoints,
 };
 
 /** Points for one topic's artifact; topics without an extractor chart nothing. */
