@@ -4,8 +4,8 @@ author: a@qmu.jp
 type: research
 layer: [Research]
 effort: 3h
-commit_hash:
-category: Added
+commit_hash: aa66185
+category: Changed
 mission: periodic-research-target-computer-use-via-playwright
 depends_on:
 ---
