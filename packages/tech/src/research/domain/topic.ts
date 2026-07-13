@@ -121,6 +121,18 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     stages: ["benchmark", "insights", "translation"],
   },
   {
+    id: "deep-research",
+    title:
+      "Deep research API comparison: rubric answer quality, citation validity, source diversity, latency, and per-query cost",
+    artifactBase: "deep-research-comparison",
+    modes: ["fixture", "estimate", "real"],
+    // Like OCR / image-generation, the entrypoint defaults to its keyless
+    // fixture and switches to a real run with --real. The skeleton runs only the
+    // benchmark stage; insights/translation are added when the topic publishes.
+    modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    stages: ["benchmark"],
+  },
+  {
     id: "availability",
     title:
       "LLM provider availability: status-page incident history with 30/90-day derived-uptime trends",

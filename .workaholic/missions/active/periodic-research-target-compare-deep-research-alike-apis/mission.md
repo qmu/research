@@ -8,6 +8,7 @@ author: a@qmu.jp
 assignee: a@qmu.jp
 tickets:
   - 20260714005156-kickoff-propose-periodic-research.md
+  - 20260714013000-scaffold-deep-research-instrument.md
 stories: []
 concerns: []
 ---
@@ -73,7 +74,7 @@ dated survey series like the other topics.
      (post-approval) are created by /ticket once the proposal is approved. -->
 
 - [ ] Proposal-first design (cadence, subjects, metrics, cost/trial range, accumulated history) drafted with cited current offerings and developer-approved (#20260714005156-kickoff-propose-periodic-research.md + `proposal.md`)
-- [ ] Topic `deep-research` scaffolded under `packages/tech/src/deep-research/` with layered `domain/ entrypoints/ vendors/`, a subject registry, and a keyless fixture path that keeps CI green (#scaffold-deep-research-instrument.md — post-approval)
+- [x] Topic `deep-research` scaffolded under `packages/tech/src/deep-research/` with layered `domain/ entrypoints/ vendors/`, a subject registry, and a keyless fixture path that keeps CI green (#20260714013000-scaffold-deep-research-instrument.md)
 - [ ] All five subjects reachable behind `vendors/` (OpenAI o3-deep-research, Perplexity sonar-deep-research, Gemini Deep Research, Grok DeepSearch, Anthropic build-your-own baseline), dependencies recorded in `docs/dependency-decisions.md` (#deep-research-subject-vendors.md — post-approval)
 - [ ] Metrics + graders implemented (rubric quality via LLM judge, citation count, citation validity, source diversity, latency, cost per query) and recorded in full in the `.data.json` artifact (#deep-research-metrics-and-graders.md — post-approval)
 - [ ] `npm run research -- deep-research --estimate` prices a trial, and the first disposable validation trial runs `--real` within the approved budget (#deep-research-first-validation-trial.md — post-approval)
@@ -84,3 +85,4 @@ dated survey series like the other topics.
 
 - 2026-07-14 — Mission created (scaffold) — mission.md
 - 2026-07-14 — Kickoff drafted the proposal-first design (5 elements, 5 subjects with cited 2026-07 offerings, Floor/Mid/Ceiling cost tiers) and filled Goal/Scope/Acceptance; scaffolding + first paid trial held at the proposal-first approval gate — 20260714005156-kickoff-propose-periodic-research.md, proposal.md
+- 2026-07-14 — Built the keyless `deep-research` skeleton (layered domain/vendors, 5-subject registry, 4-question rubric manifest, tested pure scorers, fixture path, `--estimate` ≈ $32 in the Floor range, report page); real subject clients + judge and publishing remain gated on approval. tsc/tests/lint green — 20260714013000-scaffold-deep-research-instrument.md

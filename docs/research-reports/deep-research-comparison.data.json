@@ -1,0 +1,1300 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "fixture": true,
+  "trials": 1,
+  "judgeModel": "fixture-judge",
+  "manifestVersion": "2026-07",
+  "runs": [
+    {
+      "id": "openai-o3-deep-research",
+      "provider": "openai",
+      "displayName": "OpenAI o3 Deep Research",
+      "apiModelId": "o3-deep-research",
+      "access": "Responses API, web search always-on",
+      "approxCostPerQueryUsd": 3,
+      "source": "https://developers.openai.com/api/docs/models/o3-deep-research",
+      "baseline": false,
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "answerQuality": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "sourceDiversity": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "citationCount": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "latencyMs": {
+          "mean": 1435,
+          "stdDev": 192.9784098459376,
+          "n": 4
+        },
+        "costUsd": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 4
+        }
+      },
+      "calls": [
+        {
+          "questionId": "http3-quic",
+          "repetition": 0,
+          "latencyMs": 1685,
+          "costUsd": 0,
+          "reportCharLength": 152,
+          "citationCount": 4,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 4,
+          "searchCount": 8,
+          "judgeAnswers": [
+            {
+              "rubricId": "head-of-line",
+              "satisfied": true
+            },
+            {
+              "rubricId": "quic-udp",
+              "satisfied": true
+            },
+            {
+              "rubricId": "tls13",
+              "satisfied": true
+            },
+            {
+              "rubricId": "spec-citation",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/685-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/685-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/685-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/685-3",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "grid-batteries",
+          "repetition": 0,
+          "latencyMs": 1290,
+          "costUsd": 0,
+          "reportCharLength": 192,
+          "citationCount": 5,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com",
+            "arxiv.org"
+          ],
+          "sourceDiversity": 5,
+          "searchCount": 10,
+          "judgeAnswers": [
+            {
+              "rubricId": "energy-density",
+              "satisfied": true
+            },
+            {
+              "rubricId": "materials-cost",
+              "satisfied": true
+            },
+            {
+              "rubricId": "commercialization",
+              "satisfied": true
+            },
+            {
+              "rubricId": "sourced",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/290-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/290-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/290-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/290-3",
+              "valid": true
+            },
+            {
+              "url": "https://arxiv.org/290-4",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "svb-collapse",
+          "repetition": 0,
+          "latencyMs": 1276,
+          "costUsd": 0,
+          "reportCharLength": 115,
+          "citationCount": 3,
+          "citationDomains": [
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "duration-risk",
+              "satisfied": true
+            },
+            {
+              "rubricId": "deposit-concentration",
+              "satisfied": true
+            },
+            {
+              "rubricId": "bank-run",
+              "satisfied": true
+            },
+            {
+              "rubricId": "dated-sources",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://rfc-editor.org/276-0",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/276-1",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/276-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "intermittent-fasting",
+          "repetition": 0,
+          "latencyMs": 1489,
+          "costUsd": 0,
+          "reportCharLength": 182,
+          "citationCount": 3,
+          "citationDomains": [
+            "arxiv.org",
+            "en.wikipedia.org",
+            "rfc-editor.org"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "weight-vs-metabolic",
+              "satisfied": true
+            },
+            {
+              "rubricId": "limitations",
+              "satisfied": true
+            },
+            {
+              "rubricId": "peer-reviewed",
+              "satisfied": true
+            },
+            {
+              "rubricId": "no-overclaim",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://arxiv.org/489-0",
+              "valid": true
+            },
+            {
+              "url": "https://en.wikipedia.org/489-1",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/489-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        }
+      ]
+    },
+    {
+      "id": "perplexity-sonar-deep-research",
+      "provider": "perplexity",
+      "displayName": "Perplexity Sonar Deep Research",
+      "apiModelId": "sonar-deep-research",
+      "access": "OpenAI-compatible chat endpoint",
+      "approxCostPerQueryUsd": 0.5,
+      "source": "https://docs.perplexity.ai/docs/getting-started/pricing",
+      "baseline": false,
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "answerQuality": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "sourceDiversity": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "citationCount": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "latencyMs": {
+          "mean": 1435,
+          "stdDev": 192.9784098459376,
+          "n": 4
+        },
+        "costUsd": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 4
+        }
+      },
+      "calls": [
+        {
+          "questionId": "http3-quic",
+          "repetition": 0,
+          "latencyMs": 1685,
+          "costUsd": 0,
+          "reportCharLength": 152,
+          "citationCount": 4,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 4,
+          "searchCount": 8,
+          "judgeAnswers": [
+            {
+              "rubricId": "head-of-line",
+              "satisfied": true
+            },
+            {
+              "rubricId": "quic-udp",
+              "satisfied": true
+            },
+            {
+              "rubricId": "tls13",
+              "satisfied": true
+            },
+            {
+              "rubricId": "spec-citation",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/685-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/685-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/685-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/685-3",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "grid-batteries",
+          "repetition": 0,
+          "latencyMs": 1290,
+          "costUsd": 0,
+          "reportCharLength": 192,
+          "citationCount": 5,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com",
+            "arxiv.org"
+          ],
+          "sourceDiversity": 5,
+          "searchCount": 10,
+          "judgeAnswers": [
+            {
+              "rubricId": "energy-density",
+              "satisfied": true
+            },
+            {
+              "rubricId": "materials-cost",
+              "satisfied": true
+            },
+            {
+              "rubricId": "commercialization",
+              "satisfied": true
+            },
+            {
+              "rubricId": "sourced",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/290-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/290-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/290-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/290-3",
+              "valid": true
+            },
+            {
+              "url": "https://arxiv.org/290-4",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "svb-collapse",
+          "repetition": 0,
+          "latencyMs": 1276,
+          "costUsd": 0,
+          "reportCharLength": 115,
+          "citationCount": 3,
+          "citationDomains": [
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "duration-risk",
+              "satisfied": true
+            },
+            {
+              "rubricId": "deposit-concentration",
+              "satisfied": true
+            },
+            {
+              "rubricId": "bank-run",
+              "satisfied": true
+            },
+            {
+              "rubricId": "dated-sources",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://rfc-editor.org/276-0",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/276-1",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/276-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "intermittent-fasting",
+          "repetition": 0,
+          "latencyMs": 1489,
+          "costUsd": 0,
+          "reportCharLength": 182,
+          "citationCount": 3,
+          "citationDomains": [
+            "arxiv.org",
+            "en.wikipedia.org",
+            "rfc-editor.org"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "weight-vs-metabolic",
+              "satisfied": true
+            },
+            {
+              "rubricId": "limitations",
+              "satisfied": true
+            },
+            {
+              "rubricId": "peer-reviewed",
+              "satisfied": true
+            },
+            {
+              "rubricId": "no-overclaim",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://arxiv.org/489-0",
+              "valid": true
+            },
+            {
+              "url": "https://en.wikipedia.org/489-1",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/489-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        }
+      ]
+    },
+    {
+      "id": "gemini-deep-research",
+      "provider": "google",
+      "displayName": "Gemini Deep Research",
+      "apiModelId": "deep-research-preview-04-2026",
+      "access": "Interactions API, background=True",
+      "approxCostPerQueryUsd": 2,
+      "source": "https://ai.google.dev/gemini-api/docs/deep-research",
+      "baseline": false,
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "answerQuality": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "sourceDiversity": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "citationCount": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "latencyMs": {
+          "mean": 1435,
+          "stdDev": 192.9784098459376,
+          "n": 4
+        },
+        "costUsd": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 4
+        }
+      },
+      "calls": [
+        {
+          "questionId": "http3-quic",
+          "repetition": 0,
+          "latencyMs": 1685,
+          "costUsd": 0,
+          "reportCharLength": 152,
+          "citationCount": 4,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 4,
+          "searchCount": 8,
+          "judgeAnswers": [
+            {
+              "rubricId": "head-of-line",
+              "satisfied": true
+            },
+            {
+              "rubricId": "quic-udp",
+              "satisfied": true
+            },
+            {
+              "rubricId": "tls13",
+              "satisfied": true
+            },
+            {
+              "rubricId": "spec-citation",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/685-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/685-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/685-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/685-3",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "grid-batteries",
+          "repetition": 0,
+          "latencyMs": 1290,
+          "costUsd": 0,
+          "reportCharLength": 192,
+          "citationCount": 5,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com",
+            "arxiv.org"
+          ],
+          "sourceDiversity": 5,
+          "searchCount": 10,
+          "judgeAnswers": [
+            {
+              "rubricId": "energy-density",
+              "satisfied": true
+            },
+            {
+              "rubricId": "materials-cost",
+              "satisfied": true
+            },
+            {
+              "rubricId": "commercialization",
+              "satisfied": true
+            },
+            {
+              "rubricId": "sourced",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/290-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/290-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/290-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/290-3",
+              "valid": true
+            },
+            {
+              "url": "https://arxiv.org/290-4",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "svb-collapse",
+          "repetition": 0,
+          "latencyMs": 1276,
+          "costUsd": 0,
+          "reportCharLength": 115,
+          "citationCount": 3,
+          "citationDomains": [
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "duration-risk",
+              "satisfied": true
+            },
+            {
+              "rubricId": "deposit-concentration",
+              "satisfied": true
+            },
+            {
+              "rubricId": "bank-run",
+              "satisfied": true
+            },
+            {
+              "rubricId": "dated-sources",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://rfc-editor.org/276-0",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/276-1",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/276-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "intermittent-fasting",
+          "repetition": 0,
+          "latencyMs": 1489,
+          "costUsd": 0,
+          "reportCharLength": 182,
+          "citationCount": 3,
+          "citationDomains": [
+            "arxiv.org",
+            "en.wikipedia.org",
+            "rfc-editor.org"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "weight-vs-metabolic",
+              "satisfied": true
+            },
+            {
+              "rubricId": "limitations",
+              "satisfied": true
+            },
+            {
+              "rubricId": "peer-reviewed",
+              "satisfied": true
+            },
+            {
+              "rubricId": "no-overclaim",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://arxiv.org/489-0",
+              "valid": true
+            },
+            {
+              "url": "https://en.wikipedia.org/489-1",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/489-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        }
+      ]
+    },
+    {
+      "id": "grok-deepsearch",
+      "provider": "xai",
+      "displayName": "Grok DeepSearch",
+      "apiModelId": "grok-4-deepsearch",
+      "access": "chat + built-in Web/X Search tool calls (billed separately)",
+      "approxCostPerQueryUsd": 1.5,
+      "source": "https://x.ai/api",
+      "baseline": false,
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "answerQuality": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "sourceDiversity": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "citationCount": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "latencyMs": {
+          "mean": 1435,
+          "stdDev": 192.9784098459376,
+          "n": 4
+        },
+        "costUsd": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 4
+        }
+      },
+      "calls": [
+        {
+          "questionId": "http3-quic",
+          "repetition": 0,
+          "latencyMs": 1685,
+          "costUsd": 0,
+          "reportCharLength": 152,
+          "citationCount": 4,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 4,
+          "searchCount": 8,
+          "judgeAnswers": [
+            {
+              "rubricId": "head-of-line",
+              "satisfied": true
+            },
+            {
+              "rubricId": "quic-udp",
+              "satisfied": true
+            },
+            {
+              "rubricId": "tls13",
+              "satisfied": true
+            },
+            {
+              "rubricId": "spec-citation",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/685-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/685-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/685-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/685-3",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "grid-batteries",
+          "repetition": 0,
+          "latencyMs": 1290,
+          "costUsd": 0,
+          "reportCharLength": 192,
+          "citationCount": 5,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com",
+            "arxiv.org"
+          ],
+          "sourceDiversity": 5,
+          "searchCount": 10,
+          "judgeAnswers": [
+            {
+              "rubricId": "energy-density",
+              "satisfied": true
+            },
+            {
+              "rubricId": "materials-cost",
+              "satisfied": true
+            },
+            {
+              "rubricId": "commercialization",
+              "satisfied": true
+            },
+            {
+              "rubricId": "sourced",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/290-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/290-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/290-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/290-3",
+              "valid": true
+            },
+            {
+              "url": "https://arxiv.org/290-4",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "svb-collapse",
+          "repetition": 0,
+          "latencyMs": 1276,
+          "costUsd": 0,
+          "reportCharLength": 115,
+          "citationCount": 3,
+          "citationDomains": [
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "duration-risk",
+              "satisfied": true
+            },
+            {
+              "rubricId": "deposit-concentration",
+              "satisfied": true
+            },
+            {
+              "rubricId": "bank-run",
+              "satisfied": true
+            },
+            {
+              "rubricId": "dated-sources",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://rfc-editor.org/276-0",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/276-1",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/276-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "intermittent-fasting",
+          "repetition": 0,
+          "latencyMs": 1489,
+          "costUsd": 0,
+          "reportCharLength": 182,
+          "citationCount": 3,
+          "citationDomains": [
+            "arxiv.org",
+            "en.wikipedia.org",
+            "rfc-editor.org"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "weight-vs-metabolic",
+              "satisfied": true
+            },
+            {
+              "rubricId": "limitations",
+              "satisfied": true
+            },
+            {
+              "rubricId": "peer-reviewed",
+              "satisfied": true
+            },
+            {
+              "rubricId": "no-overclaim",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://arxiv.org/489-0",
+              "valid": true
+            },
+            {
+              "url": "https://en.wikipedia.org/489-1",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/489-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        }
+      ]
+    },
+    {
+      "id": "anthropic-baseline",
+      "provider": "anthropic",
+      "displayName": "Anthropic build-your-own (Claude + web_search)",
+      "apiModelId": "claude-opus-4-8",
+      "access": "Messages API, self-orchestrated agentic loop (web_search tool + extended thinking)",
+      "approxCostPerQueryUsd": 1,
+      "source": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use",
+      "baseline": true,
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "answerQuality": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 4
+        },
+        "sourceDiversity": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "citationCount": {
+          "mean": 3.75,
+          "stdDev": 0.9574271077563381,
+          "n": 4
+        },
+        "latencyMs": {
+          "mean": 1435,
+          "stdDev": 192.9784098459376,
+          "n": 4
+        },
+        "costUsd": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 4
+        }
+      },
+      "calls": [
+        {
+          "questionId": "http3-quic",
+          "repetition": 0,
+          "latencyMs": 1685,
+          "costUsd": 0,
+          "reportCharLength": 152,
+          "citationCount": 4,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 4,
+          "searchCount": 8,
+          "judgeAnswers": [
+            {
+              "rubricId": "head-of-line",
+              "satisfied": true
+            },
+            {
+              "rubricId": "quic-udp",
+              "satisfied": true
+            },
+            {
+              "rubricId": "tls13",
+              "satisfied": true
+            },
+            {
+              "rubricId": "spec-citation",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/685-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/685-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/685-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/685-3",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "grid-batteries",
+          "repetition": 0,
+          "latencyMs": 1290,
+          "costUsd": 0,
+          "reportCharLength": 192,
+          "citationCount": 5,
+          "citationDomains": [
+            "en.wikipedia.org",
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com",
+            "arxiv.org"
+          ],
+          "sourceDiversity": 5,
+          "searchCount": 10,
+          "judgeAnswers": [
+            {
+              "rubricId": "energy-density",
+              "satisfied": true
+            },
+            {
+              "rubricId": "materials-cost",
+              "satisfied": true
+            },
+            {
+              "rubricId": "commercialization",
+              "satisfied": true
+            },
+            {
+              "rubricId": "sourced",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://en.wikipedia.org/290-0",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/290-1",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/290-2",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/290-3",
+              "valid": true
+            },
+            {
+              "url": "https://arxiv.org/290-4",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "svb-collapse",
+          "repetition": 0,
+          "latencyMs": 1276,
+          "costUsd": 0,
+          "reportCharLength": 115,
+          "citationCount": 3,
+          "citationDomains": [
+            "rfc-editor.org",
+            "nature.com",
+            "reuters.com"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "duration-risk",
+              "satisfied": true
+            },
+            {
+              "rubricId": "deposit-concentration",
+              "satisfied": true
+            },
+            {
+              "rubricId": "bank-run",
+              "satisfied": true
+            },
+            {
+              "rubricId": "dated-sources",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://rfc-editor.org/276-0",
+              "valid": true
+            },
+            {
+              "url": "https://nature.com/276-1",
+              "valid": true
+            },
+            {
+              "url": "https://reuters.com/276-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        },
+        {
+          "questionId": "intermittent-fasting",
+          "repetition": 0,
+          "latencyMs": 1489,
+          "costUsd": 0,
+          "reportCharLength": 182,
+          "citationCount": 3,
+          "citationDomains": [
+            "arxiv.org",
+            "en.wikipedia.org",
+            "rfc-editor.org"
+          ],
+          "sourceDiversity": 3,
+          "searchCount": 6,
+          "judgeAnswers": [
+            {
+              "rubricId": "weight-vs-metabolic",
+              "satisfied": true
+            },
+            {
+              "rubricId": "limitations",
+              "satisfied": true
+            },
+            {
+              "rubricId": "peer-reviewed",
+              "satisfied": true
+            },
+            {
+              "rubricId": "no-overclaim",
+              "satisfied": true
+            }
+          ],
+          "answerQuality": 1,
+          "citationChecks": [
+            {
+              "url": "https://arxiv.org/489-0",
+              "valid": true
+            },
+            {
+              "url": "https://en.wikipedia.org/489-1",
+              "valid": true
+            },
+            {
+              "url": "https://rfc-editor.org/489-2",
+              "valid": true
+            }
+          ],
+          "citationValidity": 1
+        }
+      ]
+    }
+  ],
+  "artifactPath": "deep-research-comparison.data.json"
+}
