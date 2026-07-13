@@ -9,12 +9,14 @@ import {
   publishedResearchTopics,
   publishSlugs,
   publishPlan,
+  QMU_RESEARCH_GROUP_LABEL,
   renderJapaneseHistoryIndex,
   renderJapaneseIndex,
   renderQmuTicketPayload,
   renderSourceHistoryIndex,
   renderSourceIndex,
   reportFrameSources,
+  retiredQmuSlugs,
   researchSiteTopics,
   sourceResearchItems,
   type ResearchSiteTopic,
@@ -176,13 +178,29 @@ describe("research site metadata", () => {
   it("renders a qmu handoff payload with ordered destination slugs", () => {
     const payload = renderQmuTicketPayload();
     expect(payload).toContain("Reflect LLMs Research reports");
+    expect(QMU_RESEARCH_GROUP_LABEL).toBe("LLM基礎検証について");
+    expect(payload).toContain(`「${QMU_RESEARCH_GROUP_LABEL}」`);
     for (const [index, topic] of researchSiteTopics.entries()) {
       expect(payload).toContain(
-        `${index + 1}. ${topic.source.docsPath} -> docs/en/llm-foundation-research/${topic.qmuSlug}.md`,
+        `${index + 1}. ${topic.source.docsPath} -> docs/en/llm-foundation-research/${topic.qmuSlug}.md (title: ${topic.source.text})`,
       );
       expect(payload).toContain(
-        `${index + 1}. ${topic.japanese.docsPath} -> docs/llm-foundation-research/${topic.qmuSlug}.md`,
+        `${index + 1}. ${topic.japanese.docsPath} -> docs/llm-foundation-research/${topic.qmuSlug}.md (title: ${topic.japanese.text})`,
       );
+    }
+  });
+
+  it("instructs qmu-co-jp to delete retired published copies", () => {
+    expect(retiredQmuSlugs).toContain("llm-benchmark");
+    expect(findPublishedResearchTopic("llm-benchmark")).toBeUndefined();
+    expect(findInternalResearchSource("llm-benchmark")?.npmScript).toBe(
+      "npm run benchmark",
+    );
+    const payload = renderQmuTicketPayload();
+    expect(payload).toContain("Delete the following retired copies");
+    for (const slug of retiredQmuSlugs) {
+      expect(payload).toContain(`- docs/llm-foundation-research/${slug}.md`);
+      expect(payload).toContain(`- docs/en/llm-foundation-research/${slug}.md`);
     }
   });
 

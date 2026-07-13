@@ -12,7 +12,7 @@ this repository; the pages here are the written-up results.
 
 - [LLMs Research](/research-reports/) — English reports, data artifacts, and
   history kept as reproducible source material.
-- [LLMs Research (Japanese)](/llm-foundation/) — Japanese generated and
+- [LLM基礎検証](/llm-foundation/) — Japanese generated and
   translated articles in the same topic order.
 - [Research development guideline](/research-development-guideline) — how a
   research idea becomes a recurring topic with a snapshot article and dated

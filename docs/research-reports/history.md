@@ -10,7 +10,7 @@ This page lists dated report frames committed under
 Japanese translation, and `data.json` artifact when available.
 
 The topic order matches [LLMs Research](./) and
-[LLMs Research (Japanese)](../llm-foundation/).
+[LLM基礎検証](../llm-foundation/).
 
 ## Frames
 
@@ -42,8 +42,3 @@ The topic order matches [LLMs Research](./) and
 ### RAG vector store benchmark
 
 - 2026-07-09T11:02:46.726Z: [English](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark) · [Japanese](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja) · [data.json](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.data.json)
-
-### LLM exact-match benchmark
-
-- 2026-07-09T19:20:00.000Z: [English](./history/llm-benchmark/2026-07-09T19-20-00-000Z/llm-benchmark) · [Japanese](./history/llm-benchmark/2026-07-09T19-20-00-000Z/llm-benchmark.ja)
-- 2026-07-09T10:47:19.438Z: [English](./history/llm-benchmark/2026-07-09T10-47-19-438Z/llm-benchmark) · [Japanese](./history/llm-benchmark/2026-07-09T10-47-19-438Z/llm-benchmark.ja)

@@ -118,7 +118,9 @@ export const GROUP_SPECS: Readonly<Record<ProbeGroup, GroupSpec>> = {
   },
   accuracy: {
     group: "accuracy",
-    title: "LLM output accuracy comparison",
+    // Sidebar-page title: must equal the topic's sidebar label (source.text in
+    // site.ts) — published pages carry title == sidebar label by policy.
+    title: "LLM output accuracy",
     summary:
       "JSON-schema structural limits, length-instruction following, and factual information accuracy",
     metrics: [

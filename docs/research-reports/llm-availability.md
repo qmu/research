@@ -1,9 +1,9 @@
 ---
-title: LLM provider availability — status-page history and 30/90-day trends
+title: LLM API availability
 description: A longitudinal record built from each LLM provider's own public status-page incident history, with 30-day and 90-day derived uptime trends. Not an SLA or ranking.
 ---
 
-# LLM provider availability — status-page history and 30/90-day trends
+# LLM API availability
 
 This report is a **longitudinal record** of each provider's availability, built from **their own public status-page incident history**.
 

@@ -1,4 +1,5 @@
 ---
+title: OCR能力
 source_artifact: docs/research-reports/ocr-comparison.data.json
 source_commit: df5a2b0
 insights_model: source-report
@@ -8,7 +9,7 @@ generated_at: 2026-07-09T11:03:48.277Z
 trials: 0
 provenance: llm-translation
 ---
-# OCR比較
+# OCR能力
 
 本レポートは、LLM基盤研究のためのOCR比較ハーネスを記録したものです。コミットされたレポートは、キー不要のフィクスチャパスによって生成されています。実際のモデル数値は、provenanceが`measured`である場合を除き含まれていません。
 

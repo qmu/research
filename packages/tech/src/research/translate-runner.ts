@@ -11,6 +11,7 @@ import {
 import type { LlmClient } from "../vendors/llm/types";
 import { createFixtureTranslationClient } from "../vendors/llm/fixture";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
+import { findPublishedResearchTopic } from "./domain/site";
 
 /**
  * Effectful glue for the translation pipeline stage: read a topic's English
@@ -70,8 +71,12 @@ const buildInput = (
   insightsMarkdown: string,
 ): TranslateInput => {
   const { frontmatter, body } = splitFrontmatter(insightsMarkdown);
+  // A published page must carry its sidebar label as title and H1; an internal
+  // topic (not in publishedResearchTopics) keeps the translated heading.
+  const published = findPublishedResearchTopic(spec.id);
   return {
     topicId: spec.id,
+    ...(published === undefined ? {} : { title: published.japanese.text }),
     englishBody: body,
     sourceInsights: `${spec.artifactBase}.insights.md`,
     sourceArtifact:

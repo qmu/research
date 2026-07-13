@@ -31,6 +31,13 @@ const RAW_BLOCK_PATTERN = /^<svg\b.*<\/svg>$/gm;
 
 export type TranslateInput = Readonly<{
   topicId: string;
+  /**
+   * The published page's sidebar label (site.ts `japanese.text`). When set,
+   * the rendered page carries it as both the frontmatter `title` and the H1 —
+   * published pages must have title == sidebar label, and an LLM-translated H1
+   * would drift from the label otherwise.
+   */
+  title?: string;
   /** The English insights body (prose only; frontmatter is re-derived). */
   englishBody: string;
   /** Base filename of the English insights this is translated from. */
@@ -296,13 +303,27 @@ const YAML_NEEDS_QUOTE = /: | #|^[\s"'`>|&*!?%@#{}[\],-]|\s$/;
 const yamlString = (value: string): string =>
   YAML_NEEDS_QUOTE.test(value) ? JSON.stringify(value) : value;
 
+/**
+ * Force the page's H1 to the sidebar label: replace the first H1 line, or
+ * prepend one when the body has none. Pure; leaves every other line intact.
+ */
+export const forceTitleHeading = (body: string, title: string): string => {
+  const lines = body.split("\n");
+  const index = lines.findIndex((line) => /^#\s+/.test(line));
+  if (index === -1) return `# ${title}\n\n${body}`;
+  lines[index] = `# ${title}`;
+  return lines.join("\n");
+};
+
 /** Assemble the translation markdown: provenance frontmatter + Japanese body. */
 export const renderTranslationMarkdown = (
   body: string,
   provenance: TranslationProvenance,
+  title?: string,
 ): string => {
   const frontmatter = [
     "---",
+    ...(title === undefined ? [] : [`title: ${yamlString(title)}`]),
     `source_artifact: ${yamlString(provenance.source_artifact)}`,
     `source_commit: ${yamlString(provenance.source_commit)}`,
     `insights_model: ${yamlString(provenance.insights_model)}`,
@@ -341,10 +362,14 @@ export const translateInsights = async (
       await translateChunk(client, withEnglishBody(input, chunk)),
     );
   }
-  const body = restoreRawBlocks(
+  const restored = restoreRawBlocks(
     translatedChunks.map((chunk) => chunk.trim()).join("\n\n"),
     protectedBody.blocks,
   );
+  const body =
+    input.title === undefined
+      ? restored
+      : forceTitleHeading(restored, input.title);
   const missingNumbers = verifyNumbersPreserved(input.englishBody, body);
   const provenance: TranslationProvenance = {
     source_artifact: input.sourceArtifact,
@@ -357,7 +382,7 @@ export const translateInsights = async (
     provenance: "llm-translation",
   };
   return {
-    markdown: renderTranslationMarkdown(body, provenance),
+    markdown: renderTranslationMarkdown(body, provenance, input.title),
     provenance,
     missingNumbers,
   };

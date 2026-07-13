@@ -1,6 +1,6 @@
 {
   "group": "accuracy",
-  "title": "LLM output accuracy comparison",
+  "title": "LLM output accuracy",
   "summary": "JSON-schema structural limits, length-instruction following, and factual information accuracy",
   "generatedAt": "2026-07-12T05:47:26.268Z",
   "trials": 3,

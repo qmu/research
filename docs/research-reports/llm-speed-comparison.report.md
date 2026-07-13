@@ -30,6 +30,51 @@ This topic covers sustained generation throughput, time-to-first-token, and tota
 
 ## 4. Verification Results
 
+This run measured **47 of 47 configurations** across 4 providers and 19 models, over 3 trials per configuration×probe.
+
+| Aspect | Best (configuration) | Median | Worst |
+| ------ | -------------------- | ------ | ----- |
+| Sustained throughput during generation | 9278.0 tok/s — Gemini 3.1 Flash-Lite [high] | 274.5 tok/s | 47.8 tok/s |
+| Time to first token | 0 ms — Claude Fable 5 [max] | 5594 ms | 37966 ms |
+| Total response time | 1726 ms — Gemini 3.1 Flash-Lite [low] | 7943 ms | 38918 ms |
+
+Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.
+
+## 5. Analysis
+
+Highest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [high]** at 9278 ± 17042 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
+
+Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
+
+Lowest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [low]** at 1726 ± 108 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
+
+## 6. Reproduction
+
+### Reproduction Steps
+
+```sh
+git clone https://github.com/qmu/research
+cd research/packages/tech
+npm install
+
+# Keyless self-test (projects the committed compare fixture):
+npm run research -- speed --fixture
+
+# Against real providers, run the shared sweep, then project:
+npm run compare
+npm run research -- speed --real
+```
+
+### Reproduction Cost (Estimate)
+
+The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.
+
+### Cleanup
+
+The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.
+
+## 7. Verification Data
+
 | Provider | Model | Tier | Effort | Cost (in / out per MTok) | Throughput (tok/s) | TTFT (ms) | Total latency (ms) |
 | -------- | ----- | ---- | ------ | ------------------------ | --- | --- | --- |
 | Anthropic | Claude Fable 5 | frontier | low | $6.00 / $30.00 | 272 ± 14 tok/s (95% CI, n=3) | 9888 ± 729 ms (95% CI, n=3) | 12820 ± 506 ms (95% CI, n=3) |
@@ -245,41 +290,6 @@ Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at
 | Grok Build 0.1 [n/a] | 36444 ± 6613 ms (95% CI, n=3) | 29735–40428 | 3 |
 
 Lowest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [low]** at 1726 ± 108 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
-
-## 5. Analysis
-
-Highest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [high]** at 9278 ± 17042 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
-
-Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
-
-Lowest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [low]** at 1726 ± 108 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
-
-## 6. Reproduction
-
-### Reproduction Steps
-
-```sh
-git clone https://github.com/qmu/research
-cd research/packages/tech
-npm install
-
-# Keyless self-test (projects the committed compare fixture):
-npm run research -- speed --fixture
-
-# Against real providers, run the shared sweep, then project:
-npm run compare
-npm run research -- speed --real
-```
-
-### Reproduction Cost (Estimate)
-
-The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.
-
-### Cleanup
-
-The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.
-
-## 7. Verification Data
 
 The projected artifact preserves this topic's prompts, raw trial outputs, token
 counts, timing values, and (for accuracy) schema-conformance results and

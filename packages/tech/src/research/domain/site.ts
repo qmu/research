@@ -1,5 +1,13 @@
 export const EN_RESEARCH_TITLE = "LLMs Research";
-export const JA_RESEARCH_TITLE = "LLMs Research (Japanese)";
+export const JA_RESEARCH_TITLE = "LLM基礎検証";
+
+/**
+ * The qmu-co-jp sidebar group the published articles live under. qmu-co-jp
+ * groups follow the 「<テーマ>について」 convention, so the group label is the
+ * Japanese surface title plus について. Carried in the publish ticket payload
+ * so the qmu-co-jp drive applies it instead of inventing its own label.
+ */
+export const QMU_RESEARCH_GROUP_LABEL = `${JA_RESEARCH_TITLE}について`;
 
 export type ResearchPage = Readonly<{
   text: string;
@@ -108,7 +116,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "A reference catalog of the compared models: provider, tier, price, effort, and API surface.",
     },
     japanese: {
-      text: "対象基盤モデル（カタログ）",
+      text: "対象モデル",
       docsPath: "docs/research-reports/foundation-models.insights.ja.md",
       summary:
         "対象モデルのプロバイダー、tier、価格、effort、API サーフェスの参照カタログ。",
@@ -145,7 +153,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       summary: "Sustained throughput, time-to-first-token, and total latency.",
     },
     japanese: {
-      text: "LLM応答速度",
+      text: "応答速度",
       docsPath: "docs/research-reports/llm-speed-comparison.insights.ja.md",
       summary: "持続スループット、time-to-first-token、総レイテンシの比較。",
     },
@@ -196,7 +204,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "JSON-schema limits, length-instruction following, and information accuracy.",
     },
     japanese: {
-      text: "LLM出力精度",
+      text: "出力精度",
       docsPath: "docs/research-reports/llm-accuracy-comparison.insights.ja.md",
       summary: "JSON スキーマ制約、長さ指示追従、情報精度の比較。",
     },
@@ -250,7 +258,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "Status-page incident history and derived 30/90-day availability trends.",
     },
     japanese: {
-      text: "LLM API可用性",
+      text: "API可用性",
       docsPath: "docs/research-reports/llm-availability.insights.ja.md",
       summary: "公開ステータスページ由来のインシデント履歴と 30/90 日の傾向。",
     },
@@ -288,7 +296,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "CER/WER and structured field extraction over synthetic documents.",
     },
     japanese: {
-      text: "OCR能力の比較",
+      text: "OCR能力",
       docsPath: "docs/research-reports/ocr-comparison.insights.ja.md",
       summary: "視覚対応モデルの文字起こしと構造化抽出の比較。",
     },
@@ -333,7 +341,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "Retrieval quality, ingestion time, query latency, cost, and operational constraints.",
     },
     japanese: {
-      text: "RAGベクトルストアベンチマーク",
+      text: "ベクトルDBの比較",
       docsPath: "docs/research-reports/rag-benchmark.insights.ja.md",
       summary:
         "検索品質、取り込み時間、クエリレイテンシ、コスト、運用制約の比較。",
@@ -369,43 +377,15 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-backend HistoryPoint series for retrieval and latency metrics, one point per dated frame",
     },
   },
-  {
-    id: "llm-benchmark",
-    artifactBase: "llm-benchmark",
-    npmScript: "npm run benchmark",
-    source: {
-      text: "LLM exact-match benchmark",
-      docsPath: "docs/research-reports/llm-benchmark.md",
-      summary:
-        "A small exact-match accuracy benchmark that exercises the publication pipeline.",
-    },
-    japanese: {
-      text: "LLM完全一致ベンチマーク",
-      docsPath: "docs/research-reports/llm-benchmark.ja.md",
-      summary:
-        "研究から公開までのパイプラインを再現できる小さな完全一致精度ベンチマーク。",
-    },
-    qmuSlug: "llm-benchmark",
-    design: {
-      cadence: "on demand",
-      offCadenceTrigger: "a pipeline change that needs end-to-end exercise",
-      subjects: "the configured model over the small exact-match task set",
-      metrics: [
-        { name: "exactMatch", unit: "ratio", direction: "higher-is-better" },
-      ],
-      trialsPerRun: {
-        minimum: 1,
-        maximum: 1,
-        premises: "small task set; each request costs a few hundred tokens",
-      },
-      costPerRun: {
-        ceilingUsd: 1,
-        premises: "cost follows the selected model's pricing per request",
-      },
-      accumulates: "one dated frame per archived pipeline exercise",
-    },
-  },
 ];
+
+/**
+ * Slugs that were once published to qmu-co-jp but have since been retired from
+ * the published set. The publish ticket instructs qmu-co-jp to DELETE these
+ * copies (Japanese and English), so an unpublish here propagates instead of
+ * leaving a stale page on the corporate site.
+ */
+export const retiredQmuSlugs: ReadonlyArray<string> = ["llm-benchmark"];
 
 /**
  * The pages a dated trial frame is copied from. For a snapshot topic the full
@@ -420,6 +400,21 @@ export const reportFrameSources = (
 });
 
 export const internalResearchSources = [
+  // The original pipeline seed/self-test (packages/tech TEMPLATE proof). It
+  // stays runnable and CI-exercised (`npm run benchmark:fixture`) but was
+  // judged not sufficient for publication (owner, 2026-07-13), so it is an
+  // internal source: off the sidebar, indexes, and the qmu copy set.
+  {
+    id: "llm-benchmark",
+    artifactBase: "llm-benchmark",
+    npmScript: "npm run benchmark",
+    sourceForTopicIds: [],
+    dataPaths: [],
+    sideMarkdownPaths: [
+      "docs/research-reports/llm-benchmark.md",
+      "docs/research-reports/llm-benchmark.ja.md",
+    ],
+  },
   {
     id: "llm-model-comparison",
     artifactBase: "llm-model-comparison",
@@ -690,21 +685,34 @@ export const renderQmuTicketPayload = (): string =>
   [
     "# Reflect LLMs Research reports",
     "",
-    "Copy the following English and Japanese report files in order, preserving this order in the qmu-co-jp navigation and indexes:",
+    `Sidebar group label: the qmu-co-jp navigation group holding these articles must read 「${QMU_RESEARCH_GROUP_LABEL}」 (the <テーマ>について convention).`,
+    "",
+    "Copy the following English and Japanese report files in order, preserving this order in the qmu-co-jp navigation and indexes. Each article's sidebar label and page title must both use the title given here (it equals the source page's frontmatter title):",
     "",
     "English reports:",
     "",
     ...publishedResearchTopics.map(
       (topic, index) =>
-        `${index + 1}. ${topic.source.docsPath} -> docs/en/llm-foundation-research/${topic.qmuSlug}.md`,
+        `${index + 1}. ${topic.source.docsPath} -> docs/en/llm-foundation-research/${topic.qmuSlug}.md (title: ${topic.source.text})`,
     ),
     "",
     "Japanese reports:",
     "",
     ...publishedResearchTopics.map(
       (topic, index) =>
-        `${index + 1}. ${topic.japanese.docsPath} -> docs/llm-foundation-research/${topic.qmuSlug}.md`,
+        `${index + 1}. ${topic.japanese.docsPath} -> docs/llm-foundation-research/${topic.qmuSlug}.md (title: ${topic.japanese.text})`,
     ),
     "",
+    ...(retiredQmuSlugs.length === 0
+      ? []
+      : [
+          "Delete the following retired copies (both languages) and remove them from navigation and indexes:",
+          "",
+          ...retiredQmuSlugs.flatMap((slug) => [
+            `- docs/llm-foundation-research/${slug}.md`,
+            `- docs/en/llm-foundation-research/${slug}.md`,
+          ]),
+          "",
+        ]),
     "Update both qmu-co-jp index/table-of-contents entries from the same order.",
   ].join("\n");

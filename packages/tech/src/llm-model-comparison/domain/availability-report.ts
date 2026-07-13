@@ -140,8 +140,9 @@ export const renderAvailabilityReport = (
   report: AvailabilityRunReport,
 ): string =>
   renderEnglishResearchArticle({
-    title:
-      "LLM provider availability — status-page history and 30/90-day trends",
+    // Sidebar-page title: must equal the topic's sidebar label (source.text in
+    // site.ts) — published pages carry title == sidebar label by policy.
+    title: "LLM API availability",
     description:
       "A longitudinal record built from each LLM provider's own public status-page incident history, with 30-day and 90-day derived uptime trends. Not an SLA or ranking.",
     introduction:

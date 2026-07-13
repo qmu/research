@@ -151,6 +151,51 @@ const aspectSection = (
   );
 };
 
+const formatValue = (aspect: SplitAspect, value: number): string =>
+  aspect.kind === "percent"
+    ? `${(value * 100).toFixed(0)}%`
+    : `${value.toFixed(aspect.digits)}${aspect.unit === undefined ? "" : ` ${aspect.unit}`}`;
+
+const medianOf = (values: ReadonlyArray<number>): number => {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const lower = sorted[mid - 1];
+  const upper = sorted[mid];
+  if (upper === undefined) return 0;
+  return sorted.length % 2 === 0 && lower !== undefined
+    ? (lower + upper) / 2
+    : upper;
+};
+
+/**
+ * The §4 results overview: one aggregated row per aspect (best configuration,
+ * median, worst) so a reader gets the decision-relevant picture at a glance.
+ * The exhaustive per-configuration tables live in §7 Verification Data.
+ */
+const overviewTable = (
+  aspects: ReadonlyArray<SplitAspect>,
+  measuredRuns: ReadonlyArray<ConfigRun>,
+): string => {
+  const header =
+    "| Aspect | Best (configuration) | Median | Worst |\n| ------ | -------------------- | ------ | ----- |";
+  const rows = aspects.map((aspect) => {
+    const value = (run: ConfigRun): number => run.stats[aspect.key].mean;
+    const sorted = [...measuredRuns].sort((a, b) =>
+      aspect.better === "higher" ? value(b) - value(a) : value(a) - value(b),
+    );
+    const best = sorted[0];
+    const worst = sorted[sorted.length - 1];
+    if (best === undefined || worst === undefined) {
+      return `| ${aspect.title} | n/a | n/a | n/a |`;
+    }
+    return (
+      `| ${aspect.title} | ${formatValue(aspect, value(best))} — ${label(best)} | ` +
+      `${formatValue(aspect, medianOf(measuredRuns.map(value)))} | ${formatValue(aspect, value(worst))} |`
+    );
+  });
+  return `${header}\n${rows.join("\n")}`;
+};
+
 const speedTransparency = (artifact: SplitArtifact): string => {
   const speedPrompt = buildSpeedPrompt(
     artifact.probe.speedTargetWords,
@@ -272,13 +317,11 @@ ${
     ? "- **This run includes non-measured configurations.** `n/a (fixtured)` and `n/a (error)` cells are not live measurements.\n"
     : ""
 }${omittedNote}`,
-    verificationResults: `${headlineTable(artifact)}
+    verificationResults: `This run measured **${measuredRuns.length} of ${configs.length} configurations** across ${plural(providers, "provider")} and ${plural(models, "model")}, over ${trialCount} per configuration×probe.
 
-**Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. \`n/a (fixtured)\` means the deterministic fixture client produced the cell; \`n/a (error)\` means every trial for that configuration failed.
+${overviewTable(aspects, measuredRuns)}
 
-Each detail table reports observed min-max and contributing trial count for one measured aspect.
-
-${aspectSections}`,
+Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.`,
     analysis:
       analysis === ""
         ? "This run has no measured values for this topic; every configuration was fixtured or errored."
@@ -299,7 +342,15 @@ npm run research -- ${artifact.group} --real
       "The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.",
     cleanup:
       "The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.",
-    verificationData: `${transparencySection(artifact)}
+    verificationData: `${headlineTable(artifact)}
+
+**Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. \`n/a (fixtured)\` means the deterministic fixture client produced the cell; \`n/a (error)\` means every trial for that configuration failed.
+
+Each detail table reports observed min-max and contributing trial count for one measured aspect.
+
+${aspectSections}
+
+${transparencySection(artifact)}
 
 The projection writes \`${artifact.artifactPath}\` and this Markdown page. The source sweep remains \`${artifact.sourceArtifact}\`, so speed and accuracy stay auditable back to the same underlying run.`,
   });

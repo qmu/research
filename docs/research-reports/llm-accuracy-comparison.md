@@ -1,9 +1,9 @@
 ---
-title: LLM output accuracy comparison
+title: LLM output accuracy
 description: A reproducible accuracy comparison of 19 large language models across 4 providers and 47 model×effort configurations, covering JSON-schema structural limits, length-instruction following, and factual information accuracy, over 3 trials. Projected from the shared LLM comparison sweep.
 ---
 
-# LLM output accuracy comparison
+# LLM output accuracy
 
 The numbers here are a **projection of the combined LLM comparison sweep**: the same trials, model×effort matrix, statistics, and provenance, restricted to this topic's probes.
 
@@ -29,6 +29,54 @@ This topic covers JSON-schema structural limits, length-instruction following, a
 - **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
 
 ## 4. Verification Results
+
+This run measured **47 of 47 configurations** across 4 providers and 19 models, over 3 trials per configuration×probe.
+
+| Aspect | Best (configuration) | Median | Worst |
+| ------ | -------------------- | ------ | ----- |
+| Maximum schema nesting depth accepted | 48 — Grok 4.3 [none] | 15 | 0 |
+| Maximum schema field breadth accepted | 192 — GPT-5.5 [none] | 192 | 0 |
+| Length instruction accuracy | 100% — GPT-5.5 [medium] | 95% | 0% |
+| Information accuracy | 62% — Claude Fable 5 [low] | 37% | 0% |
+
+Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.
+
+## 5. Analysis
+
+Highest measured of the 47 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+
+Highest measured of the 47 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+
+Highest measured of the 47 measured configuration(s): **GPT-5.5 [medium]** at 100% ± 0pp (95% CI, n=3). Opposite end of this measurement: o4-mini [high] at 0% ± 0pp (95% CI, n=3).
+
+Highest measured of the 47 measured configuration(s): **Claude Fable 5 [low]** at 62% (n=1). Opposite end of this measurement: GPT-5.3 Codex [xhigh] at 0% (n=1).
+
+## 6. Reproduction
+
+### Reproduction Steps
+
+```sh
+git clone https://github.com/qmu/research
+cd research/packages/tech
+npm install
+
+# Keyless self-test (projects the committed compare fixture):
+npm run research -- accuracy --fixture
+
+# Against real providers, run the shared sweep, then project:
+npm run compare
+npm run research -- accuracy --real
+```
+
+### Reproduction Cost (Estimate)
+
+The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.
+
+### Cleanup
+
+The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.
+
+## 7. Verification Data
 
 | Provider | Model | Tier | Effort | Cost (in / out per MTok) | Max schema depth | Max schema breadth | Length accuracy | Information accuracy |
 | -------- | ----- | ---- | ------ | ------------------------ | --- | --- | --- | --- |
@@ -299,43 +347,6 @@ Highest measured of the 47 measured configuration(s): **GPT-5.5 [medium]** at 10
 | Grok Build 0.1 [n/a] | 36% (n=1) | 0.361–0.361 | 1 |
 
 Highest measured of the 47 measured configuration(s): **Claude Fable 5 [low]** at 62% (n=1). Opposite end of this measurement: GPT-5.3 Codex [xhigh] at 0% (n=1).
-
-## 5. Analysis
-
-Highest measured of the 47 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
-
-Highest measured of the 47 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
-
-Highest measured of the 47 measured configuration(s): **GPT-5.5 [medium]** at 100% ± 0pp (95% CI, n=3). Opposite end of this measurement: o4-mini [high] at 0% ± 0pp (95% CI, n=3).
-
-Highest measured of the 47 measured configuration(s): **Claude Fable 5 [low]** at 62% (n=1). Opposite end of this measurement: GPT-5.3 Codex [xhigh] at 0% (n=1).
-
-## 6. Reproduction
-
-### Reproduction Steps
-
-```sh
-git clone https://github.com/qmu/research
-cd research/packages/tech
-npm install
-
-# Keyless self-test (projects the committed compare fixture):
-npm run research -- accuracy --fixture
-
-# Against real providers, run the shared sweep, then project:
-npm run compare
-npm run research -- accuracy --real
-```
-
-### Reproduction Cost (Estimate)
-
-The fixture projection is keyless and costless. The real path bills the shared `npm run compare` sweep; run `npm run compare -- --estimate` before a provider run to preview call count, estimated cost, and ETA.
-
-### Cleanup
-
-The projection creates no external resources. Real runs write local `.real` Markdown/data artifacts and update the shared comparison history; review those files before committing.
-
-## 7. Verification Data
 
 The projected artifact preserves this topic's prompts, raw trial outputs, token
 counts, timing values, and (for accuracy) schema-conformance results and
