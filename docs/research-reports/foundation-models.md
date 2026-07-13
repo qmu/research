@@ -27,6 +27,40 @@ Every value is curated catalog data with a cited source, not a live measurement.
 
 ## 4. Verification Results
 
+| Provider | Models | Tiers | Input $/MTok | Output $/MTok |
+| -------- | ------ | ----- | ------------ | ------------- |
+| Anthropic | 4 | frontier, flagship, mid, small | $1.00–$6.00 | $5.00–$30.00 |
+| OpenAI | 8 | flagship, mid, small | $0.15–$5.00 | $0.60–$30.00 |
+| Google | 3 | flagship, mid, small | $0.10–$2.00 | $0.40–$12.00 |
+| xAI | 4 | frontier, flagship, mid, small | $1.00–$1.25 | $2.00–$2.50 |
+
+Every value is curated catalog data (provenance: `catalog`), not a measured value; prices are the USD-per-1M-token range across each provider's listed models. The full per-model catalog table is in section 7, Verification Data.
+
+## 5. Analysis
+
+Use this page to understand the comparison matrix before reading measurement pages. Model selection should not be based on this catalog alone: prices and effort controls constrain cost and runtime behavior, but measured speed, output accuracy, OCR capability, RAG behavior, and availability are covered by the other research topics.
+
+## 6. Reproduction
+
+### Reproduction Steps
+
+```sh
+cd packages/tech
+npm run research -- foundation-models --fixture
+```
+
+### Reproduction Cost (Estimate)
+
+The catalog path is keyless and costless. It reads the committed model registry and does not call provider APIs.
+
+### Cleanup
+
+No external resources are created. Re-rendering only rewrites the catalog Markdown and JSON artifact in `docs/research-reports/`.
+
+## 7. Verification Data
+
+**Full catalog**
+
 | Provider | Model | API model id | Tier | API surface | Released | Input $/MTok | Output $/MTok | Effort levels |
 | -------- | ----- | ------------ | ---- | ----------- | -------- | ------------ | ------------- | ------------- |
 | Anthropic | Claude Fable 5 | `claude-fable-5` | frontier | chat | 2026-06 | $6.00 | $30.00 | low, medium, high, xhigh, max |
@@ -51,28 +85,7 @@ Every value is curated catalog data with a cited source, not a live measurement.
 
 **Legend.** Every column is curated catalog data (provenance: `catalog`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; `n/a` means the model exposes no user-selectable effort control.
 
-## 5. Analysis
-
-Use this page to understand the comparison matrix before reading measurement pages. Model selection should not be based on this catalog alone: prices and effort controls constrain cost and runtime behavior, but measured speed, output accuracy, OCR capability, RAG behavior, and availability are covered by the other research topics.
-
-## 6. Reproduction
-
-### Reproduction Steps
-
-```sh
-cd packages/tech
-npm run research -- foundation-models --fixture
-```
-
-### Reproduction Cost (Estimate)
-
-The catalog path is keyless and costless. It reads the committed model registry and does not call provider APIs.
-
-### Cleanup
-
-No external resources are created. Re-rendering only rewrites the catalog Markdown and JSON artifact in `docs/research-reports/`.
-
-## 7. Verification Data
+**Sources**
 
 - **Anthropic:** https://platform.claude.com/docs/en/about-claude/models/overview
 - **OpenAI:** https://developers.openai.com/api/docs/pricing

@@ -29,13 +29,9 @@ Retrieval quality is recall@3, nDCG@3, and MRR against the committed qrels, show
 
 ## 4. Verification Results
 
-| Backend | Kind | Embedding | Store isolated | Provenance | Recall@k (95% CI) | nDCG@k (95% CI) | MRR (95% CI) | Ingest ms (mean±sd) | Query p50 ms (mean±sd) | Query p95 ms (mean±sd) | Cost | Cost note |
-| ------- | ---- | --------- | -------------- | ---------- | -------- | ------ | --- | --------- | ------------ | ------------ | ---- | --------- |
-| sqlite-vec | self-managed | fixed | yes | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Local SQLite extension; no API cost for benchmark queries. |
-| OpenAI vector store (File Search) | managed | managed | no | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Storage $0.10/GB/day after the first free GB; search calls $2.50 per 1k (platform.openai.com/pricing, 2026-07). |
-| AWS S3 Vectors | self-managed | fixed | yes | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Storage + PUT/query request pricing per AWS S3 Vectors (docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-pricing.html, 2026-07); this benchmark's volume is well under $0.01. |
-| Cloudflare Vectorize | self-managed | fixed | yes | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Priced per stored-vector-dimension and per queried-vector-dimension (developers.cloudflare.com/vectorize/platform/pricing, 2026-07); this benchmark's volume is within the free allotment. |
-| Cloudflare AutoRAG | managed | managed | no | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Managed pipeline priced on the underlying Workers AI + R2 + Vectorize usage (developers.cloudflare.com/autorag, 2026-07); no separate AutoRAG fee as of source. |
+This run has **0 measured** of 5 backend configuration(s) (non-measured rows are `fixtured` credential-absent cards or `error` rows, never faked numbers).
+
+There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-backend table is in section 7, Verification Data.
 
 ## 5. Analysis
 
@@ -67,6 +63,16 @@ npm run rag:estimate
 The local fixture path creates no external resources. Managed-backend real runs must clean up provider resources; the RAG runner includes teardown and `npm run rag:sweep` for orphan checks.
 
 ## 7. Verification Data
+
+**Per-backend results**
+
+| Backend | Kind | Embedding | Store isolated | Provenance | Recall@k (95% CI) | nDCG@k (95% CI) | MRR (95% CI) | Ingest ms (mean±sd) | Query p50 ms (mean±sd) | Query p95 ms (mean±sd) | Cost | Cost note |
+| ------- | ---- | --------- | -------------- | ---------- | -------- | ------ | --- | --------- | ------------ | ------------ | ---- | --------- |
+| sqlite-vec | self-managed | fixed | yes | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Local SQLite extension; no API cost for benchmark queries. |
+| OpenAI vector store (File Search) | managed | managed | no | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Storage $0.10/GB/day after the first free GB; search calls $2.50 per 1k (platform.openai.com/pricing, 2026-07). |
+| AWS S3 Vectors | self-managed | fixed | yes | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Storage + PUT/query request pricing per AWS S3 Vectors (docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-pricing.html, 2026-07); this benchmark's volume is well under $0.01. |
+| Cloudflare Vectorize | self-managed | fixed | yes | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Priced per stored-vector-dimension and per queried-vector-dimension (developers.cloudflare.com/vectorize/platform/pricing, 2026-07); this benchmark's volume is within the free allotment. |
+| Cloudflare AutoRAG | managed | managed | no | fixtured | 100.0% ± 28.1pp | 100.0% ± 0.0pp | 1.000 ± 0.000 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | $0.0000 | Managed pipeline priced on the underlying Workers AI + R2 + Vectorize usage (developers.cloudflare.com/autorag, 2026-07); no separate AutoRAG fee as of source. |
 
 **Dataset.** The benchmark uses SciFact miniature subset (`scifact-mini`). Source: https://github.com/allenai/scifact. License note: SciFact is Apache-2.0; this miniature fixture is repository-authored from SciFact-style claims. The run contains 5 documents, 3 queries, and 3 relevance judgments.
 

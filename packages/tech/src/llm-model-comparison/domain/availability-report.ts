@@ -56,6 +56,28 @@ const trendTable = (
   return `${header}\n${rows.join("\n")}`;
 };
 
+/**
+ * The §4 overview: one compact row per provider (30/90-day derived uptime and
+ * incident counts). The detailed per-window tables and the incident list live
+ * in §7 Verification Data — §4 stays a concise, decision-relevant summary by
+ * the site-wide article policy.
+ */
+const overviewTable = (
+  trends: ReadonlyArray<ProviderAvailabilityTrend>,
+): string => {
+  const header =
+    "| Provider | Uptime 30d | Uptime 90d | Incidents 30d | Incidents 90d |\n" +
+    "| -------- | ---------- | ---------- | ------------- | ------------- |";
+  const rows = trends.map((trend) =>
+    trend.available
+      ? `| ${escapeCell(trend.providerName)} | ${pct(trend.window30.uptimePct)} | ` +
+        `${pct(trend.window90.uptimePct)} | ${trend.window30.incidentCount} | ` +
+        `${trend.window90.incidentCount} |`
+      : `| ${escapeCell(trend.providerName)} | not retrievable | — | — | — |`,
+  );
+  return `${header}\n${rows.join("\n")}`;
+};
+
 const uptimeChart = (
   trends: ReadonlyArray<ProviderAvailabilityTrend>,
 ): string => {
@@ -156,23 +178,13 @@ export const renderAvailabilityReport = (
 - Weighting: critical outage ×1.0, major ×0.5, minor ×0.1; planned maintenance is excluded and reported separately.
 - Because status pages log incidents at different scopes, a single incident counts toward the index for at most **24 hours**. Its full duration is preserved in the incident record.
 - Source: ${report.fixture ? "committed accumulated history (keyless, deterministic render)" : "live status-page fetch + LLM extraction (this run updated the history)"}.`,
-    verificationResults: `**Last 30 days**
+    verificationResults: `${overviewTable(report.trends)}
 
-${trendTable(report.trends, (t) => t.window30)}
-
-**Last 90 days**
-
-${trendTable(report.trends, (t) => t.window90)}
+Derived uptime is the impact-weighted index over each provider's own reported incidents (see Scope). The detailed 30/90-day windows (downtime and maintenance hours) and the recent incident history are in section 7, Verification Data.
 
 **Daily uptime trend (90 days)**
 
-${uptimeChart(report.trends)}
-
-**Recent incident history**
-
-Most recent incidents from the accumulated per-provider record.
-
-${recentSection(report.recent)}`,
+${uptimeChart(report.trends)}`,
     analysis:
       "Read these figures as observational status-page summaries. A high derived uptime value means the accumulated source record had little weighted incident time in the window; it does not prove actual API availability or future reliability.",
     reproductionSteps: `\`\`\`sh
@@ -188,7 +200,21 @@ npm run availability
       "`availability:fixture` is keyless and costless. `availability:estimate` prices the LLM extraction step without fetching/writing. `availability` fetches public status pages and uses the configured LLM extractor, so provider-model token costs apply.",
     cleanup:
       "The fixture path creates no external resources. The real path updates local accumulated history and report artifacts; review those files before committing. No provider-side resources are created.",
-    verificationData: `Each provider's record traces to its public status source, the fetch cutoff (\`as of\`), and the model that extracted it.
+    verificationData: `**Last 30 days**
+
+${trendTable(report.trends, (t) => t.window30)}
+
+**Last 90 days**
+
+${trendTable(report.trends, (t) => t.window90)}
+
+**Recent incident history**
+
+Most recent incidents from the accumulated per-provider record.
+
+${recentSection(report.recent)}
+
+Each provider's record traces to its public status source, the fetch cutoff (\`as of\`), and the model that extracted it.
 
 ${provenanceTable(report.trends)}
 

@@ -49,4 +49,30 @@ describe("published pages", () => {
       expect(markdown, page.path).not.toMatch(/^```mermaid/m);
     }
   });
+
+  // Site-wide article policy: §4 検証結果 / Verification Results is a concise
+  // aggregated overview (charts allowed); exhaustive per-subject tables belong
+  // in §7 検証データ. The budget keeps a raw result dump from creeping back
+  // into §4. Pages without a numbered §4 (snapshot pages) are exempt.
+  const SECTION4_BUDGET_CHARS = 3_000;
+
+  const section4Of = (markdown: string): string | undefined => {
+    const match = markdown.match(/^## 4\..*$/m);
+    if (match === null || match.index === undefined) return undefined;
+    const rest = markdown.slice(match.index + match[0].length);
+    const next = rest.search(/^## /m);
+    return next === -1 ? rest : rest.slice(0, next);
+  };
+
+  it("keeps section 4 a concise overview within the budget", () => {
+    for (const page of publishedPages) {
+      const markdown = readFileSync(repoPath(page.path), "utf8");
+      const section = section4Of(markdown);
+      if (section === undefined) continue;
+      const withoutSvg = section.replace(/<svg[\s\S]*?<\/svg>/g, "");
+      expect(withoutSvg.length, page.path).toBeLessThanOrEqual(
+        SECTION4_BUDGET_CHARS,
+      );
+    }
+  });
 });
