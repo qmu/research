@@ -138,23 +138,31 @@ DONE:
   relative target the current article links, so 過去の調査 links resolve on
   qmu-co-jp. Verified with copy-plan (11 frames) and a dry-run copy.
 
+- **Docs restated: DONE.** Commit `c1a1cc2`. ADR 0006 supersedes 0005; the
+  guideline and the mission body are in dated-article-series / 推移 / 過去の調査
+  terms; the "snapshot compactness budget" section is gone.
+- **Trend point extractors: DONE (speed, accuracy, ocr, image-generation,
+  rag).** Commit `514d2a6`. Availability keeps its native 90-day chart, by
+  design. A topic's 推移 block charts once it has two same-instrument real
+  surveys.
+
 REMAINING (this ticket stays open until these land):
 - **Language-matched past-survey block + English-frame mirror (qmu dead-link
-  safety).** The block still lists English + Japanese + data.json links per
-  frame; on qmu only Japanese frames are mirrored, so the English/data links
-  would be dead there (research.qmu.dev resolves all today). Fix: make the
-  past-survey block a single link per frame in the current page's OWN language
-  (EN page → EN frame, JP page → JP frame), generated per language AFTER
-  translation (not translated, since translation keeps English URLs); and
-  mirror the English frames into qmu's `docs/en/...history/` section. This is
-  the one piece that makes both qmu language sections build clean.
-- **Drop the now-vestigial insights stage** from the real pipeline (it writes
-  an unused `.insights.md` and costs an LLM call), or repurpose it as the §5
-  考察 source only.
-- **Docs:** restate ADR 0005 + `docs/research-development-guideline.md` +
-  the `living-research-development-guideline` mission body in
-  dated-article-series terms (drop "snapshot"); add trend point extractors for
-  ocr/rag/availability/image-generation so their 推移 charts populate.
+  safety).** REAL but qmu-ship-time only (research.qmu.dev resolves all links
+  today). The block lists English + Japanese + data.json links per frame; on
+  qmu only Japanese frames are mirrored, so the English/data links would be
+  dead there. Fix: make the block a single link per frame in the current page's
+  OWN language (generated per language AFTER translation, since translation
+  keeps English URLs) and mirror English frames into qmu's `docs/en/...history/`
+  section. Needs a full re-translation of the current pages. Best done as a
+  focused follow-up before the next qmu `/ship`.
+- **Drop the vestigial insights stage (LOW VALUE — optional).** `.insights.md`
+  is now read by nothing (the published JP page is report-translation of the
+  current page). Removing the `insights` stage from `topic.ts` would save one
+  LLM call per topic per real run (owner-gated, monthly ≈ negligible) but
+  cascades into stage-test churn, dead code (insights-runner/translate-runner),
+  and stale committed `.insights.md` orphans. Deferred as not worth the churn
+  now; revisit if the pipeline is refactored.
 
 ## Quality Gate
 
