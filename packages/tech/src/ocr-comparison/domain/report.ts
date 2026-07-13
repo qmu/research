@@ -48,7 +48,9 @@ export const renderOcrComparisonReport = (
   result: OcrComparisonResult,
 ): string =>
   renderEnglishResearchArticle({
-    title: "OCR comparison",
+    // Sidebar-page title: must equal the topic's sidebar label (source.text in
+    // site.ts) — published pages carry title == sidebar label by policy.
+    title: "OCR capability comparison",
     description:
       "Reproducible OCR capability harness for vision-capable foundation models, using deterministic document images and CER/WER/field-level scoring.",
     introduction:

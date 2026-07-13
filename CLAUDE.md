@@ -39,8 +39,8 @@ Run `make help`. Common: `make install`, `make build`, `make test`, `make lint`,
 This repository has two delivery surfaces:
 
 1. **Preview site** — `make docs` serves the VitePress site under `docs/`. The
-   site exposes `LLMs Research` (English source reports) and `LLMs Research
-   (Japanese)` in the same topic order. The order and labels come from
+   site exposes `LLMs Research` (English source reports) and `LLM基礎検証`
+   (Japanese articles) in the same topic order. The order and labels come from
    `packages/tech/src/research/domain/site.ts`, not parallel hand-written lists.
 2. **Foundational research** — each topic is runnable through `npm run research
    -- <topic> --real` or its topic-specific npm script. After a run, use

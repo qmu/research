@@ -7,7 +7,7 @@ description: English reports, data artifacts, and history kept as reproducible s
 
 English reports, data artifacts, and history are kept here as reproducible
 source material. The public reading line for the Japanese canonical articles is
-[LLMs Research (Japanese)](../llm-foundation/).
+[LLM基礎検証](../llm-foundation/).
 
 These are organized by research topic. Current reports and data artifacts are
 the reproducible source for each topic; keyless fixture outputs remain available
@@ -24,6 +24,5 @@ Past generated frames are listed in [History](./history).
 - [LLM API availability](./llm-availability) — Status-page incident history and derived 30/90-day availability trends.
 - [OCR capability comparison](./ocr-comparison) — CER/WER and structured field extraction over synthetic documents.
 - [RAG vector store benchmark](./rag-benchmark) — Retrieval quality, ingestion time, query latency, cost, and operational constraints.
-- [LLM exact-match benchmark](./llm-benchmark) — A small exact-match accuracy benchmark that exercises the publication pipeline.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

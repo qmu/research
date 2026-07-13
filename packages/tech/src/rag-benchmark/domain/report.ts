@@ -223,7 +223,9 @@ export const renderRagBenchmarkReport = (
   const historyCharts = historyChartsSection(result, options.history);
 
   return renderEnglishResearchArticle({
-    title: "RAG backend benchmark",
+    // Sidebar-page title: must equal the topic's sidebar label (source.text in
+    // site.ts) — published pages carry title == sidebar label by policy.
+    title: "RAG vector store benchmark",
     description:
       "A reproducible benchmark topic comparing vector-store retrieval quality and operational behavior across self-managed (fixed-embedding) and fully-managed backends.",
     introduction:

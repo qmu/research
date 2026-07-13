@@ -109,11 +109,30 @@ describe("renderSplitReport", () => {
     const md = renderSplitReport(
       projectComparison(result, "accuracy", "llm-model-comparison.data.json"),
     );
-    expect(md).toContain("# LLM output accuracy comparison");
+    expect(md).toContain("# LLM output accuracy");
     expect(md).toContain("Max schema depth");
     expect(md).toContain("Length accuracy");
     expect(md).not.toContain("Throughput (tok/s)");
     expect(md).not.toContain("TTFT (ms)");
+  });
+
+  it("keeps section 4 as an aggregated overview and the tables in section 7", () => {
+    const md = renderSplitReport(
+      projectComparison(result, "speed", "llm-model-comparison.data.json"),
+    );
+    const results = md.slice(
+      md.indexOf("## 4. Verification Results"),
+      md.indexOf("## 5. Analysis"),
+    );
+    const data = md.slice(md.indexOf("## 7. Verification Data"));
+    // §4: one aggregated row per aspect, no per-configuration table.
+    expect(results).toContain("| Aspect | Best (configuration) |");
+    expect(results).toContain("section 7, Verification Data");
+    expect(results).not.toContain("| Provider | Model | Tier |");
+    expect(results).not.toContain("| Configuration | Mean ± 95% CI |");
+    // §7: the full per-configuration tables live here.
+    expect(data).toContain("| Provider | Model | Tier |");
+    expect(data).toContain("| Configuration | Mean ± 95% CI |");
   });
 
   it("does not advertise omitted accuracy metrics as measured coverage", () => {

@@ -1,4 +1,5 @@
 ---
+title: 対象モデル
 source_artifact: docs/research-reports/foundation-models.data.json
 source_commit: c7072d1
 insights_model: source-report
@@ -8,7 +9,7 @@ generated_at: 2026-07-09T11:54:54.587Z
 trials: 0
 provenance: llm-translation
 ---
-# ファウンデーションモデルカタログ
+# 対象モデル
 
 これは**ベンチマークではなく参照用カタログ**です。4 プロバイダーにまたがる 19
 個のファウンデーションモデルについて、そのキュレーション済みティア、価格、対応するエフォートレベル、API サーフェスを一覧にしています。すべての値は出典を明記した**キュレーション済みカタログデータ**であり——**未測定 (not measured)**：スループット、レイテンシ、精度、可用性の数値はここには一切記載されていません。測定済みの挙動については、速度・精度・可用性の各トピックを参照してください。

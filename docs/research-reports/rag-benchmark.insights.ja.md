@@ -1,4 +1,5 @@
 ---
+title: ベクトルDBの比較
 source_artifact: docs/research-reports/rag-benchmark.data.json
 source_commit: df5a2b0
 insights_model: source-report
@@ -8,7 +9,7 @@ generated_at: 2026-07-09T11:02:46.726Z
 trials: 0
 provenance: llm-translation
 ---
-# RAGバックエンドベンチマーク
+# ベクトルDBの比較
 
 本レポートは、ベクトルストアおよびRAGデータベースバックエンドのベンチマークハーネスを記録するものです。キュレーションされたバックエンドの事実と、実測された検索・運用挙動を分離して扱います。コミットされたレポートはキーレスフィクスチャパスによって生成されており、実際のローカルsqlite-vec実行でも同じデータセット、埋め込み、スコアリング、レポートレンダラーが使用されています。
 

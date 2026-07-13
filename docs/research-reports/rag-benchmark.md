@@ -1,9 +1,9 @@
 ---
-title: RAG backend benchmark
+title: RAG vector store benchmark
 description: A reproducible benchmark topic comparing vector-store retrieval quality and operational behavior across self-managed (fixed-embedding) and fully-managed backends.
 ---
 
-# RAG backend benchmark
+# RAG vector store benchmark
 
 This report records a benchmark harness for vector-store and RAG-database backends. It separates curated backend facts from measured retrieval and operational behavior.
 

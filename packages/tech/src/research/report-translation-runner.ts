@@ -70,6 +70,8 @@ const buildInput = (
   const { frontmatter, body } = splitFrontmatter(englishMarkdown);
   return {
     topicId: topic.id,
+    // Published pages carry the sidebar label as title and H1 by policy.
+    title: topic.japanese.text,
     englishBody: body,
     sourceInsights: reportFrameSources(topic).source.replace(
       /^docs\/research-reports\//,
