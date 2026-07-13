@@ -116,3 +116,9 @@ Out of scope:
   snapshot tooling + budget validator (e522aa0), instrument v2 (c79751f),
   llm-speed migration + real end-to-end loop, ~$3 actual (ec38a52) — mission.md
 - 2026-07-13 — story reported — work-20260622-191220.md
+- 2026-07-13 — concern deferred (stuck) — 15-json-artifact-link-resolution-deferred.md
+- 2026-07-13 — concern deferred (stuck) — 15-model-ids-require-periodic-live-verification.md
+- 2026-07-13 — concern deferred (stuck) — 15-fixture-determinism-depends-on-careful-seeding.md
+- 2026-07-13 — concern deferred (stuck) — 15-jp-pages-are-overwritten-by-the.md
+- 2026-07-13 — concern deferred (stuck) — 15-only-llm-speed-is-migrated-to.md
+- 2026-07-13 — concern deferred (stuck) — 15-real-run-cloud-backend-credentials-and.md
