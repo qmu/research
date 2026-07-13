@@ -8,9 +8,9 @@ origin_branch: work-20260622-191220
 origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
 severity: low
-status: active
+status: resolved
 resolved_by_pr:
-resolved_by_commit:
+resolved_by_commit: 6995212
 ---
 
 # Only llm-speed is migrated to the snapshot structure
