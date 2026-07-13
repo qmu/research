@@ -35,7 +35,16 @@ The working model this mission establishes:
   runnable topic under `packages/`.
 
 Efficiency is a first-class constraint: research articles are consumed by
-Claude Code as context, so they must stay compact. The article structure is:
+Claude Code as context, so they must stay compact.
+
+> **Structure update (2026-07-13, [ADR 0006](../../../docs/adr/0006-dated-survey-article-series.md)):**
+> the "snapshot" split below was superseded. Each topic now publishes a **dated
+> series of survey articles**: the stable slug always holds the latest survey's
+> 7-section article, composed with a 推移 (trend) block and a 過去の調査 (past
+> surveys) links block; earlier surveys stay at their dated slugs. The original
+> two-surface framing is kept below as the mission's history.
+
+The original article structure was:
 
 - **Snapshot article** — the page a developer reaches from the sidebar. It is
   the latest view, compact, describing the tendencies observed over the last

@@ -1,5 +1,15 @@
 # 0005 — Snapshot articles over dated uniform trial history
 
+> **Superseded by [ADR 0006](./0006-dated-survey-article-series.md) (2026-07-13).**
+> The two-surface split below (a separate compact "snapshot" sidebar page plus
+> hidden full trial reports) was only ever half-built — for the `speed` topic —
+> and it forked the English and Japanese pages (the Japanese page was translated
+> from the hidden full report, not the sidebar snapshot). The owner found the
+> "snapshot" framing misleading. ADR 0006 replaces it: each topic publishes a
+> dated series of survey articles, the latest is the current page, and every
+> article embeds its own trend and links to all past surveys. This ADR is kept
+> as the historical record.
+
 ## Context
 
 The repository exists for living research: recurring measurements that answer
