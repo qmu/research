@@ -149,6 +149,28 @@ export type ImageGenerationClient = Readonly<{
   generateImage: (prompt: string) => Promise<GeneratedImage>;
 }>;
 
+// One generated SVG document, normalized across providers: the SVG source the
+// model emitted (already unwrapped from any Markdown fences / prose by the
+// adapter), plus the output-token count and the wall-clock the adapter measured.
+// SVG is text, so — unlike raster images — the bytes are cheap to keep, score
+// mechanically, and even commit as fixtures.
+export type GeneratedSvg = Readonly<{
+  svg: string;
+  outputTokens: number;
+  elapsedMs: number;
+  model: string;
+}>;
+
+// The SVG-generation port. Deliberately minimal (one prompt in, one SVG document
+// out) so a text model reached over `CompletionClient` and any dedicated vector
+// tool both normalize to the same contract and the benchmark domain never
+// branches on provider. An adapter over a text completion unwraps the SVG from
+// the model's fences/prose before returning it.
+export type SvgGenerationClient = Readonly<{
+  model: string;
+  generateSvg: (prompt: string) => Promise<GeneratedSvg>;
+}>;
+
 // Separate from `CompletionClient` so text-only probes keep their existing
 // contract. Vision callers opt into this port explicitly, with a typed capability
 // record showing that image input is supported for the chosen model/configuration.
