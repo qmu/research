@@ -40,3 +40,15 @@ same-instrument-version points only.
 A single instrument version tag gates chart continuity — bump it when the fixed
 task or metric set changes. Needs ≥2 archived trials to draw a line (a plain note
 until then).
+
+## Progress (2026-07-14)
+
+The **pure projection core is done** (keyless, unit-tested):
+`packages/tech/src/agent-vm/domain/history.ts` — `toHistoryPoint`,
+`buildHistoryEntry`, `appendHistory`, and `providerTrends` (per-provider,
+same-instrument-version series for `coldStartMsP50` and `publishedVcpuHourUsd`),
+with `AGENT_VM_INSTRUMENT_VERSION` in `models.ts` and 6 tests in
+`domain/history.test.ts`. **Remaining** (publish-coupled, so it rides with
+#20260714024002): feed `providerTrends` into the shared current-article composer
+(`research/domain/current-article.ts`) so the 推移 block renders, and archive
+real frames to accumulate the series.

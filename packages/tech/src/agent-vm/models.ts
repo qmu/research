@@ -153,6 +153,13 @@ export const FIXED_TASK: FixedTask = {
     "A bounded CPU loop (fixed iteration count) run inside a warm sandbox; wall-clock isolates platform compute, not I/O.",
 };
 
+/**
+ * Instrument version. Bumped whenever the fixed task or the tracked metric set
+ * changes, so trend charts connect only same-version history points (a metric
+ * measured under a different task is not comparable). See `domain/history.ts`.
+ */
+export const AGENT_VM_INSTRUMENT_VERSION = "1";
+
 /** Deterministic per-provider fixture timings (ms), grounded in the 2026-07
  * landscape survey. Used ONLY by the keyless fixture provisioner so the
  * self-test renders a realistic, byte-stable page without booting anything. */
