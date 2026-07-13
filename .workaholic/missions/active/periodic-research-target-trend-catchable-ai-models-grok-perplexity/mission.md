@@ -55,7 +55,7 @@ or scaffolding occurs before the proposal is approved.
 
 ## Acceptance
 
-- [ ] Proposal-first design (cadence, subjects, metrics, cost/trial range,
+- [x] Proposal-first design (cadence, subjects, metrics, cost/trial range,
   accumulated history) drafted and approved by the developer
   (#20260714005200-kickoff-propose-periodic-research.md)
 - [ ] `trend-recency` instrument scaffolded behind `domain/ entrypoints/ vendors/`
@@ -80,3 +80,10 @@ or scaffolding occurs before the proposal is approved.
   20260714010000-scaffold-trend-recency-instrument.md,
   20260714010001-trend-recency-first-validation-trial.md,
   20260714010002-trend-recency-publish-topic.md
+- 2026-07-14 — proposal approved by owner (in-session); scaffolding authorized —
+  proposal.md
+- 2026-07-14 — keyless instrument skeleton built (SVG-parity): domain
+  (types/manifest/extract/score), config registry, Perplexity Sonar vendor ACL,
+  grounded-answer port + fixture client, run/estimate; 23 new tests, full suite
+  328 green, tsc + prettier + eslint clean —
+  packages/tech/src/trend-recency/, packages/tech/src/vendors/llm/perplexity.ts

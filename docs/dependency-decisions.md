@@ -367,6 +367,24 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   adapter MUST tear down every sandbox it boots (zero orphaned resources, like
   the RAG teardown guarantee).
 
+### Perplexity Sonar — reuses the installed `openai` SDK, no new package
+
+- **Reason**: The `trend-recency` topic compares web-grounded knowledge recency,
+  and Perplexity Sonar is its one search-native subject with no ungrounded twin.
+  Sonar's API speaks the OpenAI Chat Completions protocol at a different base URL
+  (`https://api.perplexity.ai`) and returns the sources it grounded on, so the
+  anti-corruption layer at `packages/tech/src/vendors/llm/perplexity.ts` wraps the
+  already-installed `openai` SDK with the base URL swapped — the same pattern as
+  the xAI adapter. **No new dependency is taken on.**
+- **License**: no new package; `openai` is already a dependency. Sonar usage is a
+  paid API keyed on `PERPLEXITY_API_KEY`; the keyless fixture path
+  (`createFixtureGroundedAnswerClient`) renders the subject deterministically so
+  CI needs no key or spend.
+- **Exit strategy**: the Sonar-specific facts (base URL, the `citations` /
+  `search_results` response extensions) are confined to `perplexity.ts` behind the
+  provider-neutral `GroundedAnswerClient` port; dropping or swapping the provider
+  is a registry + adapter change with no domain impact.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

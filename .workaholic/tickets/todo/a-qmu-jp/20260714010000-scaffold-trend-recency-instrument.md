@@ -53,3 +53,36 @@ this ticket — CI-green keyless fixture path only.
 Key-gated everywhere with a deterministic fixture fallback. Confirm
 `PERPLEXITY_API_KEY` provisioning before wiring the vendor. Do not register the
 topic in `site.ts` yet — that is the publish ticket.
+
+## Night-run progress (2026-07-14, approved in-session)
+
+**Keyless skeleton built (SVG-parity) — CI green.** Not yet fully done; kept in
+todo for the remaining wiring below.
+
+Built:
+- `packages/tech/src/trend-recency/domain/` — `types.ts`, `manifest.ts` (seed
+  probe schema), `extract.ts`, `score.ts` (+ 14 tests). Mechanical metrics:
+  recencyAccuracy (keyword proxy), abstentionRate, citationValidity,
+  citationFreshnessDays, latencyMs.
+- `packages/tech/src/trend-recency/models.ts` — 10-config registry (6 grounded +
+  4 ungrounded controls).
+- `packages/tech/src/vendors/llm/types.ts` — `GroundedAnswer` / `GroundedCitation`
+  / `GroundedAnswerClient` port.
+- `packages/tech/src/vendors/llm/fixture.ts` — `createFixtureGroundedAnswerClient`
+  (grounded cites a dated source; control abstains).
+- `packages/tech/src/vendors/llm/perplexity.ts` — Sonar ACL + citation parser
+  (+ 4 tests); recorded in `docs/dependency-decisions.md`.
+- `run.ts` — runner + `estimate` (+ 5 tests). Full suite 328 green; tsc/prettier/
+  eslint clean.
+
+Remaining before this ticket archives:
+1. **Grounded search-tool wiring for the 4 chat providers** (xAI Live Search,
+   Google Search grounding, OpenAI/Anthropic web-search tools). `run.ts` currently
+   throws a clear "not wired yet" for these on the real path; fixture + Perplexity
+   real + ungrounded-control real all work. Needs per-provider tool params
+   verified against live APIs.
+2. **Entrypoint + npm scripts** (`src/entrypoints/run-trend-recency.ts`,
+   `trend-recency` / `:fixture` / `:estimate`) — not yet wired into the research
+   runner (same split as the SVG scaffold's follow-up).
+3. **Ground-truth history DB** under `docs/research-reports/trend-recency-history/`
+   — real per-trial probe generation (belongs with the first-trial ticket).

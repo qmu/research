@@ -161,6 +161,30 @@ export type GeneratedSvg = Readonly<{
   model: string;
 }>;
 
+// One source a grounded answer cited, normalized across providers. Field names
+// mirror the trend-recency domain's `Citation` so a returned array flows straight
+// through without a mapping step, while this port stays free of any domain import
+// (the same self-contained convention as `GeneratedSvg`). `publishedDateIso`
+// drives the freshness metric and is absent when a surface returns bare URLs.
+export type GroundedCitation = Readonly<{
+  url: string;
+  publishedDateIso?: string;
+  title?: string;
+}>;
+
+// One grounded answer: the model's text plus the sources it cited, with the
+// output-token count and the wall-clock the adapter measured. Perplexity Sonar
+// returns citations natively; a plain completion adapter fills `citations` from
+// URLs found in the prose. Kept distinct from `Completion` so ungrounded text
+// probes keep their existing contract.
+export type GroundedAnswer = Readonly<{
+  answer: string;
+  citations: ReadonlyArray<GroundedCitation>;
+  outputTokens: number;
+  elapsedMs: number;
+  model: string;
+}>;
+
 // The SVG-generation port. Deliberately minimal (one prompt in, one SVG document
 // out) so a text model reached over `CompletionClient` and any dedicated vector
 // tool both normalize to the same contract and the benchmark domain never
@@ -169,6 +193,15 @@ export type GeneratedSvg = Readonly<{
 export type SvgGenerationClient = Readonly<{
   model: string;
   generateSvg: (prompt: string) => Promise<GeneratedSvg>;
+}>;
+
+// The grounded-answer port for the trend-recency topic. Deliberately minimal
+// (one question in, one cited answer out) so a search-native product (Sonar), a
+// tool-augmented chat model, and an ungrounded control all normalize to the same
+// contract and the benchmark domain never branches on provider.
+export type GroundedAnswerClient = Readonly<{
+  model: string;
+  answer: (question: string) => Promise<GroundedAnswer>;
 }>;
 
 // Separate from `CompletionClient` so text-only probes keep their existing

@@ -7,13 +7,15 @@ import type {
   ComputerUseTaskInput,
   GeneratedImage,
   GeneratedSvg,
+  GroundedAnswer,
+  GroundedAnswerClient,
   ImageGenerationClient,
   JsonSchema,
   LlmClient,
   StreamedCompletion,
   StructuredCompletion,
-  TaskAttempt,
   SvgGenerationClient,
+  TaskAttempt,
   VisionCapability,
   VisionClient,
   VisionImageInput,
@@ -174,6 +176,10 @@ export const createFixtureComputerUseClient = (
       wallClockMs,
       inputTokens,
       outputTokens,
+    });
+  },
+});
+
 // Canned valid SVG documents for the keyless SVG-generation path. The static
 // document carries several drawable elements and a `<path>` so the complexity
 // metric has signal; the animated one carries a SMIL `<animate>` so the
@@ -434,3 +440,42 @@ const buildStructured = (
     model,
   };
 };
+
+// Deterministic grounded-answer stub for the keyless trend-recency path. A
+// `grounded` client answers with a fixed, cited sentence and one dated source, so
+// citation-validity and freshness have signal; an ungrounded control returns an
+// honest abstention with no citations, so the keyless run shows the exact
+// grounded-vs-control contrast the topic measures — all with no API, key, or
+// cost, the same convention as the SVG/OCR/image fixtures. Latency is seeded from
+// the question text so per-probe latency stats are non-degenerate yet byte-stable.
+export const createFixtureGroundedAnswerClient = (
+  model = "fixture-grounded",
+  grounded = true,
+): GroundedAnswerClient => ({
+  model,
+  answer: (question: string): Promise<GroundedAnswer> => {
+    const seed = [...question].reduce(
+      (sum, char) => (sum + char.charCodeAt(0)) % 997,
+      0,
+    );
+    const text = grounded
+      ? `Based on recent reporting, here is what the sources say about the question. [1]`
+      : `I don't have reliable information about very recent events beyond my training cutoff.`;
+    const citations = grounded
+      ? [
+          {
+            url: `https://news.example.com/article/${seed}`,
+            publishedDateIso: "2026-01-02",
+            title: "Fixture source",
+          },
+        ]
+      : [];
+    return Promise.resolve({
+      answer: text,
+      citations,
+      outputTokens: Math.max(1, Math.ceil(text.length / 4)),
+      elapsedMs: 8 + (seed % 40),
+      model,
+    });
+  },
+});
