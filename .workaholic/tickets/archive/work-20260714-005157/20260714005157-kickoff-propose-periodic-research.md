@@ -48,18 +48,23 @@ Reuse the existing instrument patterns; do not fork a parallel design. Keep exte
 
 ## Progress (2026-07-14, night /drive)
 
-Steps 1–3 and 5 are **done**; steps 4 (approval) and 6 (scaffold) are **blocked
-on the proposal-first gate** and left for a post-approval `/drive`.
+Steps 1–3, 5, and 6 are **done**. Only step 4 (developer approval) remains — an
+external action tracked as the mission's first acceptance item. Following the
+svg-generation (`8a3a6f9`) / speech (`75af304`) precedent, the keyless skeleton
+was built ahead of approval; only the paid trial and publish are gated.
 
-- Read the guideline and surveyed the current subject landscape (8 providers;
-  AWS Lambda microVMs GA ~2026-06; cold starts ~80ms E2B → ~2.8s Fly; published
-  rates ~$0.017–0.13/vCPU-hr).
-- Drafted the five-element proposal (cadence, subjects, metrics, cost/trial
-  range, accumulated history) and filled the mission Goal / Scope / Acceptance /
-  Changelog in
-  `.workaholic/missions/active/periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc/mission.md`.
-- **Did not scaffold code** — the guideline states no scaffolding before
-  approval, and this autonomous night run cannot clear the developer-approval
-  gate. On approval, resume at step 4→6: create the acceptance-list tickets and
-  scaffold `packages/tech/src/agent-vm/` behind `vendors/sandbox/` with a keyless
-  fixture path, then wire it into `publishedResearchTopics`.
+- Surveyed the landscape (8 providers; AWS Lambda microVMs GA ~2026-06; cold
+  starts ~80ms E2B → ~2.8s Fly; published rates ~$0.017–0.13/vCPU-hr).
+- Drafted the five-element proposal and filled the mission
+  Goal/Scope/Acceptance/Changelog.
+- **Scaffolded** `packages/tech/src/agent-vm/` (registry `models.ts`, domain
+  `types`/`probe`/`report`, `run.ts`) behind `packages/tech/src/vendors/sandbox/`
+  (port + keyless fixture provisioner), a thin `run-agent-vm` entrypoint, wired
+  into the unified CLI (`topic.ts` + `run-research.ts`) and package scripts.
+  Generated the keyless page + artifact
+  (`docs/research-reports/agent-vm-comparison.{md,data.json}`). 323 tests + lint
+  green.
+- Created 5 follow-on tickets (#20260714024001…024005): real probe adapters,
+  publish wiring, history/trend, first validation trial (gated), JP translation.
+- **Held for approval:** the real (`--real`) paid trial and publishing to the
+  site/qmu — these run only after the proposal is approved.

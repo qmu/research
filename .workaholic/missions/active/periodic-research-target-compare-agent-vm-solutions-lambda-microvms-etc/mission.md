@@ -8,6 +8,11 @@ author: a@qmu.jp
 assignee: a@qmu.jp
 tickets:
   - 20260714005157-kickoff-propose-periodic-research.md
+  - 20260714024001-agent-vm-real-coldstart-cost-probe.md
+  - 20260714024002-agent-vm-wire-into-published-topics.md
+  - 20260714024003-agent-vm-history-and-trend-composition.md
+  - 20260714024004-agent-vm-first-validation-trial.md
+  - 20260714024005-agent-vm-japanese-translation-and-publish.md
 stories: []
 concerns: []
 ---
@@ -33,8 +38,11 @@ move, published as a dated survey series like the other research topics.
 
 ## Proposal (proposal-first — awaiting developer approval)
 
-Per `CLAUDE.md` and `docs/research-development-guideline.md`, no paid run and no
-scaffolding happens before this proposal is approved. The five required elements:
+Per `CLAUDE.md` and `docs/research-development-guideline.md`, the keyless
+skeleton is built ahead of approval (precedent: svg-generation `8a3a6f9`, speech
+`75af304`); the proposal-first gate blocks **paid (real) trials and publishing to
+the site/qmu**, which stay held until this proposal is approved. The five
+required elements:
 
 **Working topic id:** `agent-vm` (slug `agent-vm-comparison`). "Sandbox" is the
 umbrella term the market uses, but the mission names "VM Solutions", so the id
@@ -156,17 +164,18 @@ pen-test of it).
      Ticket filenames marked (planned) are created after the proposal is approved (gate). -->
 
 - [ ] Proposal (cadence, subjects, metrics, cost/trial range, accumulated history) approved by the developer (#20260714005157-kickoff-propose-periodic-research.md)
-- [ ] `agent-vm` subject registry + capability schema behind an anti-corruption `vendors/sandbox/` layer, with a keyless fixture path (planned: #agent-vm-subject-registry-and-vendor-port.md)
-- [ ] Keyless reference-catalog renderer + result page for the nine reference metrics (planned: #agent-vm-reference-catalog-renderer.md)
-- [ ] Gated real cold-start / warm-reuse / fixed-task cost probe with `--estimate`, one vendor adapter per reachable provider (planned: #agent-vm-real-coldstart-cost-probe.md)
-- [ ] `agent-vm` topic wired into `publishedResearchTopics` with `ResearchDesign` metadata; English/Japanese indexes regenerate from it (planned: #agent-vm-wire-into-published-topics.md)
-- [ ] Per-provider accumulated `HistoryPoint` history + 推移/過去の調査 composition into the current article (planned: #agent-vm-history-and-trend-composition.md)
-- [ ] First validation trial run + design review; cadence confirmed or revised (planned, gated on approval + credentials: #agent-vm-first-validation-trial.md)
-- [ ] Japanese translation + qmu publish wiring for the topic (planned: #agent-vm-japanese-translation-and-publish.md)
+- [x] `agent-vm` subject registry + capability schema behind an anti-corruption `vendors/sandbox/` layer, with a keyless fixture path (#20260714005157-kickoff-propose-periodic-research.md — scaffolded 2026-07-14)
+- [x] Keyless reference-catalog renderer + result page for the nine reference metrics (#20260714005157-kickoff-propose-periodic-research.md — `docs/research-reports/agent-vm-comparison.md`)
+- [ ] Gated real cold-start / warm-reuse / fixed-task cost probe with `--estimate`, one vendor adapter per reachable provider (#20260714024001-agent-vm-real-coldstart-cost-probe.md)
+- [ ] `agent-vm` topic wired into `publishedResearchTopics` with `ResearchDesign` metadata; English/Japanese indexes regenerate from it (#20260714024002-agent-vm-wire-into-published-topics.md)
+- [ ] Per-provider accumulated `HistoryPoint` history + 推移/過去の調査 composition into the current article (#20260714024003-agent-vm-history-and-trend-composition.md)
+- [ ] First validation trial run + design review; cadence confirmed or revised (gated on approval + credentials: #20260714024004-agent-vm-first-validation-trial.md)
+- [ ] Japanese translation + qmu publish wiring for the topic (#20260714024005-agent-vm-japanese-translation-and-publish.md)
 
 ## Changelog
 
 <!-- Append-only, dated timeline relating this mission's tickets and reports over time. -->
 
 - 2026-07-14 — mission created (scaffold) — mission.md
-- 2026-07-14 — kickoff proposal drafted (cadence, 8 subjects, 9 reference + 5 measured metrics, $1–$8/trial range, per-provider history); Goal/Scope/Acceptance filled; awaiting developer approval before scaffolding (proposal-first gate) — 20260714005157-kickoff-propose-periodic-research.md
+- 2026-07-14 — kickoff proposal drafted (cadence, 8 subjects, 9 reference + 5 measured metrics, $1–$8/trial range, per-provider history); Goal/Scope/Acceptance filled — 20260714005157-kickoff-propose-periodic-research.md
+- 2026-07-14 — keyless skeleton scaffolded (registry + `vendors/sandbox` port + fixture, percentile/cost domain, fixture/estimate runner, 7-section report, tests; `docs/research-reports/agent-vm-comparison.{md,data.json}`); 323 tests + lint green; 5 follow-on tickets created (real probe, publish, history, first trial, JP). Paid trial + publish held for approval — 20260714005157-kickoff-propose-periodic-research.md

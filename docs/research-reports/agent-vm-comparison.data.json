@@ -1,0 +1,444 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "fixture": true,
+  "repetitions": 5,
+  "task": {
+    "id": "cpu-bound-loop-v1",
+    "description": "A bounded CPU loop (fixed iteration count) run inside a warm sandbox; wall-clock isolates platform compute, not I/O."
+  },
+  "runs": [
+    {
+      "card": {
+        "id": "aws-lambda-microvm",
+        "providerName": "AWS Lambda microVMs",
+        "isolationModel": "firecracker",
+        "publishedVcpuHourUsd": 0.1,
+        "publishedGbHourUsd": 0.011,
+        "billingGranularity": "per-100ms",
+        "maxRuntimeSeconds": 900,
+        "snapshotResume": false,
+        "filesystemPersistence": "ephemeral",
+        "networkEgress": "restricted",
+        "gpuAvailable": false,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://aws.amazon.com/lambda/pricing/"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 612,
+        "coldStartMsP95": 654,
+        "coldStartStat": {
+          "mean": 614.4,
+          "stdDev": 27.033312782565144,
+          "n": 5
+        },
+        "warmReuseMs": 72,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 0.000003277777777777778,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 600
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 624
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 582
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 654
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 612
+          }
+        ]
+      }
+    },
+    {
+      "card": {
+        "id": "fly-machines",
+        "providerName": "Fly.io Machines",
+        "isolationModel": "firecracker",
+        "publishedVcpuHourUsd": 0.0219,
+        "publishedGbHourUsd": 0.0053,
+        "billingGranularity": "per-second",
+        "maxRuntimeSeconds": null,
+        "snapshotResume": true,
+        "filesystemPersistence": "persistent",
+        "networkEgress": "open",
+        "gpuAvailable": true,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://fly.io/docs/about/pricing/"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 2856,
+        "coldStartMsP95": 3052,
+        "coldStartStat": {
+          "mean": 2867.2,
+          "stdDev": 126.15545965197067,
+          "n": 5
+        },
+        "warmReuseMs": 336,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 7.178333333333333e-7,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 2800
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 2912
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 2716
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 3052
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 2856
+          }
+        ]
+      }
+    },
+    {
+      "card": {
+        "id": "e2b",
+        "providerName": "E2B",
+        "isolationModel": "firecracker",
+        "publishedVcpuHourUsd": 0.1,
+        "publishedGbHourUsd": 0.0108,
+        "billingGranularity": "per-second",
+        "maxRuntimeSeconds": 86400,
+        "snapshotResume": true,
+        "filesystemPersistence": "persistent",
+        "networkEgress": "open",
+        "gpuAvailable": false,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://e2b.dev/docs/pricing"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 92,
+        "coldStartMsP95": 98,
+        "coldStartStat": {
+          "mean": 92.2,
+          "stdDev": 4.147288270665544,
+          "n": 5
+        },
+        "warmReuseMs": 11,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 0.000003277777777777778,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 90
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 94
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 87
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 98
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 92
+          }
+        ]
+      }
+    },
+    {
+      "card": {
+        "id": "modal",
+        "providerName": "Modal",
+        "isolationModel": "gvisor",
+        "publishedVcpuHourUsd": 0.135,
+        "publishedGbHourUsd": 0.0067,
+        "billingGranularity": "per-second",
+        "maxRuntimeSeconds": 86400,
+        "snapshotResume": true,
+        "filesystemPersistence": "persistent",
+        "networkEgress": "open",
+        "gpuAvailable": true,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://modal.com/pricing"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 408,
+        "coldStartMsP95": 436,
+        "coldStartStat": {
+          "mean": 409.6,
+          "stdDev": 18.022208521710095,
+          "n": 5
+        },
+        "warmReuseMs": 48,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 0.000004425000000000001,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 400
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 416
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 388
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 436
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 408
+          }
+        ]
+      }
+    },
+    {
+      "card": {
+        "id": "daytona",
+        "providerName": "Daytona",
+        "isolationModel": "container",
+        "publishedVcpuHourUsd": 0.05,
+        "publishedGbHourUsd": 0.0125,
+        "billingGranularity": "per-second",
+        "maxRuntimeSeconds": null,
+        "snapshotResume": true,
+        "filesystemPersistence": "persistent",
+        "networkEgress": "open",
+        "gpuAvailable": true,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://www.daytona.io/pricing"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 153,
+        "coldStartMsP95": 164,
+        "coldStartStat": {
+          "mean": 153.8,
+          "stdDev": 6.797058187186571,
+          "n": 5
+        },
+        "warmReuseMs": 18,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 0.000001638888888888889,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 150
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 156
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 146
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 164
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 153
+          }
+        ]
+      }
+    },
+    {
+      "card": {
+        "id": "cloudflare-sandbox",
+        "providerName": "Cloudflare Containers / Sandbox SDK",
+        "isolationModel": "container",
+        "publishedVcpuHourUsd": 0.072,
+        "publishedGbHourUsd": 0.009,
+        "billingGranularity": "per-second",
+        "maxRuntimeSeconds": null,
+        "snapshotResume": false,
+        "filesystemPersistence": "ephemeral",
+        "networkEgress": "open",
+        "gpuAvailable": false,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://developers.cloudflare.com/containers/pricing/"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 510,
+        "coldStartMsP95": 545,
+        "coldStartStat": {
+          "mean": 512,
+          "stdDev": 22.52776065213762,
+          "n": 5
+        },
+        "warmReuseMs": 60,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 0.00000236,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 500
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 520
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 485
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 545
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 510
+          }
+        ]
+      }
+    },
+    {
+      "card": {
+        "id": "vercel-sandbox",
+        "providerName": "Vercel Sandbox",
+        "isolationModel": "firecracker",
+        "publishedVcpuHourUsd": 0.128,
+        "publishedGbHourUsd": 0.0212,
+        "billingGranularity": "per-second",
+        "maxRuntimeSeconds": 2700,
+        "snapshotResume": false,
+        "filesystemPersistence": "ephemeral",
+        "networkEgress": "open",
+        "gpuAvailable": false,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://vercel.com/docs/vercel-sandbox"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 255,
+        "coldStartMsP95": 273,
+        "coldStartStat": {
+          "mean": 256.2,
+          "stdDev": 11.30044246921332,
+          "n": 5
+        },
+        "warmReuseMs": 30,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 0.000004195555555555556,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 250
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 260
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 243
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 273
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 255
+          }
+        ]
+      }
+    },
+    {
+      "card": {
+        "id": "northflank",
+        "providerName": "Northflank Sandboxes",
+        "isolationModel": "kata",
+        "publishedVcpuHourUsd": 0.01667,
+        "publishedGbHourUsd": 0.00833,
+        "billingGranularity": "per-second",
+        "maxRuntimeSeconds": null,
+        "snapshotResume": true,
+        "filesystemPersistence": "persistent",
+        "networkEgress": "open",
+        "gpuAvailable": true,
+        "apiReachable": false,
+        "lastVerified": "2026-07-14",
+        "source": "https://northflank.com/pricing"
+      },
+      "measurement": {
+        "provenance": "fixtured",
+        "repetitions": 5,
+        "coldStartMsP50": 1224,
+        "coldStartMsP95": 1308,
+        "coldStartStat": {
+          "mean": 1228.8,
+          "stdDev": 54.06662556513029,
+          "n": 5
+        },
+        "warmReuseMs": 144,
+        "fixedTaskWallClockMs": 118,
+        "measuredCostUsd": 5.464055555555556e-7,
+        "samples": [
+          {
+            "repetition": 1,
+            "coldStartMs": 1200
+          },
+          {
+            "repetition": 2,
+            "coldStartMs": 1248
+          },
+          {
+            "repetition": 3,
+            "coldStartMs": 1164
+          },
+          {
+            "repetition": 4,
+            "coldStartMs": 1308
+          },
+          {
+            "repetition": 5,
+            "coldStartMs": 1224
+          }
+        ]
+      }
+    }
+  ],
+  "artifactPath": "agent-vm-comparison.data.json"
+}

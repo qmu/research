@@ -184,6 +184,17 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     kind: "catalog",
   },
   {
+    id: "agent-vm",
+    title:
+      "Agent VM / sandbox comparison: isolation model, published price, capability, and probed cold-start latency and fixed-task cost",
+    artifactBase: "agent-vm-comparison",
+    modes: ["fixture", "estimate", "real"],
+    // The entrypoint defaults to its keyless fixture and switches to a real
+    // (credential-gated) probe with --real, like OCR and image-generation.
+    modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    stages: ["benchmark"],
+  },
+  {
     id: "agent-sdk",
     title:
       "Agent SDK comparison: agent framework/runtime design comparison (design-comparison, not measured)",
