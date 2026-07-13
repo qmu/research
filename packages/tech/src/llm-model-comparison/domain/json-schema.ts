@@ -179,32 +179,42 @@ const warmBisect = (
         phase: "bisect",
       };
 
+// Exhaustive per-phase transition table: one handler per phase, so adding a
+// phase forces a compile error here instead of falling into a default arm.
+const WARM_AXIS_TRANSITIONS: Readonly<
+  Record<
+    WarmAxisState["phase"],
+    (state: WarmAxisState, probed: number, conformed: boolean) => WarmAxisState
+  >
+> = {
+  confirm: (state, probed, conformed) =>
+    conformed
+      ? probed + 1 >= state.cap
+        ? { ...state, lo: probed, next: state.cap, phase: "cap" }
+        : { ...state, lo: probed, next: probed + 1, phase: "increment" }
+      : warmBisect(state, 0, probed),
+  increment: (state, probed, conformed) =>
+    conformed
+      ? { ...state, lo: probed, next: state.cap, phase: "cap" }
+      : { ...state, hi: probed, next: null, phase: "done" },
+  cap: (state, probed, conformed) =>
+    conformed
+      ? { ...state, lo: state.cap, next: null, phase: "done" }
+      : warmBisect(state, state.lo, probed),
+  bisect: (state, probed, conformed) =>
+    conformed
+      ? warmBisect(state, probed, state.hi ?? state.cap)
+      : warmBisect(state, state.lo, probed),
+  done: (state) => state,
+};
+
 export const advanceWarmAxis = (
   state: WarmAxisState,
   conformed: boolean,
 ): WarmAxisState => {
   const probed = state.next;
   if (probed === null) return state;
-  switch (state.phase) {
-    case "confirm":
-      return conformed
-        ? probed + 1 >= state.cap
-          ? { ...state, lo: probed, next: state.cap, phase: "cap" }
-          : { ...state, lo: probed, next: probed + 1, phase: "increment" }
-        : warmBisect(state, 0, probed);
-    case "increment":
-      return conformed
-        ? { ...state, lo: probed, next: state.cap, phase: "cap" }
-        : { ...state, hi: probed, next: null, phase: "done" };
-    case "cap":
-      return conformed
-        ? { ...state, lo: state.cap, next: null, phase: "done" }
-        : warmBisect(state, state.lo, probed);
-    default:
-      return conformed
-        ? warmBisect(state, probed, state.hi ?? state.cap)
-        : warmBisect(state, state.lo, probed);
-  }
+  return WARM_AXIS_TRANSITIONS[state.phase](state, probed, conformed);
 };
 
 // Instruct the model to return a JSON object conforming to a schema of the given
