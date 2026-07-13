@@ -533,6 +533,33 @@ export const publishPlan = (): ReadonlyArray<PublishPlanEntry> =>
     destinationSlug: topic.qmuSlug,
   }));
 
+/**
+ * D1 (owner, 2026-07-13): every dated survey is published to qmu-co-jp, so a
+ * current article's 過去の調査 links resolve there. Each frame's Japanese
+ * article is copied under a MIRRORED path (`history/<topic>/<ts>/<base>.ja`) —
+ * the same relative path the current page links — so the links work unchanged
+ * once qmu-co-jp holds the frames beside the topic pages. Pure: the caller
+ * supplies the frames it read from disk.
+ */
+export const framePublishPlan = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): ReadonlyArray<PublishPlanEntry> =>
+  frames
+    .filter((frame) => frame.japanesePath !== undefined)
+    .map((frame) => {
+      const japanesePath = frame.japanesePath as string;
+      return {
+        // Source: docs-relative, no `docs/` prefix, no `.md` (the publish
+        // script's slug form) — e.g. research-reports/history/speed/<ts>/llm-speed-comparison.ja
+        sourceSlug: stripMarkdown(japanesePath).replace(/^docs\//, ""),
+        // Destination mirrors the in-article link target under the topic pages.
+        destinationSlug: stripMarkdown(japanesePath).replace(
+          /^docs\/research-reports\//,
+          "",
+        ),
+      };
+    });
+
 export const historyStamp = (generatedAt: string): string =>
   generatedAt.replace(/[:.]/g, "-");
 
@@ -734,8 +761,11 @@ ${renderHistorySections(
 )}
 `;
 
-export const renderQmuTicketPayload = (): string =>
-  [
+export const renderQmuTicketPayload = (
+  frames: ReadonlyArray<ResearchHistoryFrame> = [],
+): string => {
+  const framePlan = framePublishPlan(frames);
+  return [
     "# Reflect LLMs Research reports",
     "",
     `Sidebar group label: the qmu-co-jp navigation group holding these articles must read 「${QMU_RESEARCH_GROUP_LABEL}」 (the <テーマ>について convention).`,
@@ -767,5 +797,17 @@ export const renderQmuTicketPayload = (): string =>
           ]),
           "",
         ]),
+    ...(framePlan.length === 0
+      ? []
+      : [
+          `Past-survey articles (${framePlan.length}): copy each dated Japanese survey under the mirrored path below, so the 過去の調査 links inside the current articles resolve on qmu-co-jp. These are the earlier runs of each topic, kept as their own articles:`,
+          "",
+          ...framePlan.map(
+            (entry) =>
+              `- docs/${entry.sourceSlug}.md -> docs/llm-foundation-research/${entry.destinationSlug}.md`,
+          ),
+          "",
+        ]),
     "Update both qmu-co-jp index/table-of-contents entries from the same order.",
   ].join("\n");
+};

@@ -2,6 +2,7 @@ import { constants, type Dirent } from "node:fs";
 import { access, mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
+  framePublishPlan,
   publishPlan,
   publishSlugs,
   renderJapaneseHistoryIndex,
@@ -109,15 +110,21 @@ export const main = async (): Promise<void> => {
     return;
   }
   if (command === "copy-plan") {
+    // D1: the plan is the per-topic latest pages plus every dated survey's
+    // Japanese article (mirrored under history/), so qmu-co-jp holds the past
+    // surveys the current articles link to.
+    const frames = await readHistoryFrames();
+    const entries = [...publishPlan(), ...framePublishPlan(frames)];
     process.stdout.write(
-      `${publishPlan()
+      `${entries
         .map((entry) => `${entry.sourceSlug}\t${entry.destinationSlug}`)
         .join("\n")}\n`,
     );
     return;
   }
   if (command === "qmu-ticket") {
-    process.stdout.write(`${renderQmuTicketPayload()}\n`);
+    const frames = await readHistoryFrames();
+    process.stdout.write(`${renderQmuTicketPayload(frames)}\n`);
     return;
   }
   // Compose each topic's CURRENT English page into the dated survey-article
