@@ -58,6 +58,11 @@ JSON スキーマ制約、長さ指示追従、情報精度の比較。
 API ネイティブなコンピュータ操作エージェントの、固定 Playwright ハーネス上での固定ブラウザタスク群に対するタスク成功率・手数・レイテンシ・実時間・タスク単価の比較。
 英語ソースは [Computer use](/research-reports/computer-use-comparison)。
 
+### [SVG生成](/research-reports/svg-generation-comparison.insights.ja)
+
+フロンティアLLMによるSVG生成の描画妥当性、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。
+英語ソースは [SVG generation](/research-reports/svg-generation-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`

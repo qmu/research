@@ -158,6 +158,17 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     stages: ["benchmark", "insights", "translation"],
   },
   {
+    id: "svg-generation",
+    title:
+      "SVG generation comparison: render validity, path complexity, animation presence, latency, and token cost",
+    artifactBase: "svg-generation-comparison",
+    modes: ["fixture", "estimate", "real"],
+    // Like OCR and image-generation, the entrypoint defaults to its keyless
+    // fixture and switches to a real run with --real.
+    modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    stages: ["benchmark", "insights", "translation"],
+  },
+  {
     id: "availability",
     title:
       "LLM provider availability: status-page incident history with 30/90-day derived-uptime trends",

@@ -29,4 +29,6 @@ Past generated frames are listed in [History](./history).
 
 - [Computer use](./computer-use-comparison) — Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.
 
+- [SVG generation](./svg-generation-comparison) — Render validity, path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.
+
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

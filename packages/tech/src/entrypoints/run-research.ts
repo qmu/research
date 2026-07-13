@@ -46,6 +46,7 @@ const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   "deep-research": () => import("./run-deep-research"),
   speech: () => import("./run-speech-comparison"),
   "computer-use": () => import("./run-computer-use"),
+  "svg-generation": () => import("./run-svg-generation"),
   availability: () => import("./run-llm-availability"),
   "agent-vm": () => import("./run-agent-vm"),
 };

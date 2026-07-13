@@ -555,6 +555,68 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-subject HistoryPoint series for success rate, wall-clock, and cost per task, one point per dated frame; charts connect same-suite-version, same-harness points only",
     },
   },
+  {
+    id: "svg-generation",
+    artifactBase: "svg-generation-comparison",
+    npmScript: "npm run research -- svg-generation --real",
+    source: {
+      text: "SVG generation",
+      docsPath: "docs/research-reports/svg-generation-comparison.md",
+      summary:
+        "Render validity, path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.",
+    },
+    japanese: {
+      text: "SVG生成",
+      docsPath:
+        "docs/research-reports/svg-generation-comparison.insights.ja.md",
+      summary:
+        "フロンティアLLMによるSVG生成の描画妥当性、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。",
+    },
+    dataPath: "docs/research-reports/svg-generation-comparison.data.json",
+    qmuSlug: "svg-generation",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a frontier text-model release at a covered provider",
+      subjects:
+        "one text flagship per provider from the foundation-models catalog (Claude Opus 4.8, GPT-5.5, Gemini 3.1 Pro, Grok 4.3); SVG is emitted through each provider's completion API, so no provider is a non-subject",
+      metrics: [
+        {
+          name: "renderValidity",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        { name: "pathComplexity", unit: "count", direction: "reference" },
+        {
+          name: "animationPresence",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "generationLatencyMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        {
+          name: "outputTokenCostUsd",
+          unit: "USD",
+          direction: "lower-is-better",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 5,
+        premises:
+          "4 models × 5 prompts × 1–3 repetitions at a few hundred output tokens per SVG at catalog token prices; run `research -- svg-generation --estimate` first",
+      },
+      accumulates:
+        "per-model HistoryPoint series for render validity, animation presence, and mean token cost, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
 ];
 
 /**
