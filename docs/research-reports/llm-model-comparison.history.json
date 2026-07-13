@@ -1,0 +1,3192 @@
+{
+  "entries": [
+    {
+      "generatedAt": "2026-07-06T13:08:50.282Z",
+      "trials": 1,
+      "points": [
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 69.79040097205346,
+          "ttftMs": 3613,
+          "totalLatencyMs": 4678,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 65.56323316728266,
+          "ttftMs": 3434,
+          "totalLatencyMs": 4418,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 71.28606507059546,
+          "ttftMs": 4103,
+          "totalLatencyMs": 4545,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "xhigh",
+          "provenance": "measured",
+          "throughputTokensPerSec": 66.26731561213029,
+          "ttftMs": 3466,
+          "totalLatencyMs": 4253,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "max",
+          "provenance": "measured",
+          "throughputTokensPerSec": 130.6701030927835,
+          "ttftMs": 5842,
+          "totalLatencyMs": 6826,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 66.56628892939219,
+          "ttftMs": 1237,
+          "totalLatencyMs": 1783,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 73,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 59.84685153520184,
+          "ttftMs": 1176,
+          "totalLatencyMs": 1935,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 73,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 66.38523301051238,
+          "ttftMs": 1078,
+          "totalLatencyMs": 2014,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 73,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "xhigh",
+          "provenance": "measured",
+          "throughputTokensPerSec": 62.52975718139978,
+          "ttftMs": 2143,
+          "totalLatencyMs": 2896,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 73,
+          "lengthAccuracy": 0.99,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "max",
+          "provenance": "measured",
+          "throughputTokensPerSec": 60.61617172728284,
+          "ttftMs": 1643,
+          "totalLatencyMs": 2343,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 73,
+          "lengthAccuracy": 0.99,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 85.07223113964687,
+          "ttftMs": 792,
+          "totalLatencyMs": 1665,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 0.9299999999999999,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 82.33107369341789,
+          "ttftMs": 938,
+          "totalLatencyMs": 1757,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 0.95,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 83.79394207384479,
+          "ttftMs": 872,
+          "totalLatencyMs": 1678,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "xhigh",
+          "provenance": "measured",
+          "throughputTokensPerSec": 89.8864012352487,
+          "ttftMs": 961,
+          "totalLatencyMs": 1589,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 0,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "max",
+          "provenance": "measured",
+          "throughputTokensPerSec": 154.30635511908793,
+          "ttftMs": 16739,
+          "totalLatencyMs": 16758,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 72,
+          "lengthAccuracy": 0,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "anthropic-claude-haiku-4-5",
+          "provider": "anthropic",
+          "modelName": "Claude Haiku 4.5",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": 83.484809140483,
+          "ttftMs": 842,
+          "totalLatencyMs": 1148,
+          "maxSchemaDepth": 21,
+          "maxSchemaBreadth": 73,
+          "lengthAccuracy": 0.97,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-5",
+          "provider": "openai",
+          "modelName": "GPT-5.5",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": 32.839950200580994,
+          "ttftMs": 1405,
+          "totalLatencyMs": 1868,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.96,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-5",
+          "provider": "openai",
+          "modelName": "GPT-5.5",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 38.263688253118175,
+          "ttftMs": 912,
+          "totalLatencyMs": 1380,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-5",
+          "provider": "openai",
+          "modelName": "GPT-5.5",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 28.42402896969096,
+          "ttftMs": 1057,
+          "totalLatencyMs": 1580,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-5",
+          "provider": "openai",
+          "modelName": "GPT-5.5",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 34.22090092419052,
+          "ttftMs": 1098,
+          "totalLatencyMs": 1326,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4",
+          "provider": "openai",
+          "modelName": "GPT-5.4",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": 60.99316300827636,
+          "ttftMs": 677,
+          "totalLatencyMs": 1349,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.9299999999999999,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4",
+          "provider": "openai",
+          "modelName": "GPT-5.4",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 47.817813516665645,
+          "ttftMs": 1099,
+          "totalLatencyMs": 1387,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4",
+          "provider": "openai",
+          "modelName": "GPT-5.4",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 64.18442099603467,
+          "ttftMs": 1194,
+          "totalLatencyMs": 1617,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4",
+          "provider": "openai",
+          "modelName": "GPT-5.4",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 70.95017295944653,
+          "ttftMs": 837,
+          "totalLatencyMs": 1081,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.4 mini",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": 108.65710140254716,
+          "ttftMs": 853,
+          "totalLatencyMs": 1279,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.97,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.4 mini",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 137.77410012412082,
+          "ttftMs": 410,
+          "totalLatencyMs": 678,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.4 mini",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 141.94277108433735,
+          "ttftMs": 946,
+          "totalLatencyMs": 1209,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.4 mini",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 145.7638425617078,
+          "ttftMs": 596,
+          "totalLatencyMs": 827,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-nano",
+          "provider": "openai",
+          "modelName": "GPT-5.4 nano",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": 161.72106824925817,
+          "ttftMs": 1130,
+          "totalLatencyMs": 1858,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.91,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-nano",
+          "provider": "openai",
+          "modelName": "GPT-5.4 nano",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 140.03974927381134,
+          "ttftMs": 368,
+          "totalLatencyMs": 623,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-nano",
+          "provider": "openai",
+          "modelName": "GPT-5.4 nano",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 157.6662615037333,
+          "ttftMs": 399,
+          "totalLatencyMs": 643,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-4-nano",
+          "provider": "openai",
+          "modelName": "GPT-5.4 nano",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 165.07384882710687,
+          "ttftMs": 467,
+          "totalLatencyMs": 596,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-o4-mini",
+          "provider": "openai",
+          "modelName": "o4-mini",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 147.4245115452931,
+          "ttftMs": 930,
+          "totalLatencyMs": 1136,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-o4-mini",
+          "provider": "openai",
+          "modelName": "o4-mini",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 223.31288343558282,
+          "ttftMs": 2876,
+          "totalLatencyMs": 3254,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 7,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-o4-mini",
+          "provider": "openai",
+          "modelName": "o4-mini",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 201.53846153846155,
+          "ttftMs": 7409,
+          "totalLatencyMs": 7633,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 2,
+          "lengthAccuracy": 0,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-realtime",
+          "provider": "openai",
+          "modelName": "GPT Realtime",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": 127.3561507936508,
+          "ttftMs": 1137,
+          "totalLatencyMs": 1336,
+          "maxSchemaDepth": 0,
+          "maxSchemaBreadth": 0,
+          "lengthAccuracy": 0.99,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-3-codex",
+          "provider": "openai",
+          "modelName": "GPT-5.3 Codex",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 51.42464812907655,
+          "ttftMs": 873,
+          "totalLatencyMs": 1383,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-3-codex",
+          "provider": "openai",
+          "modelName": "GPT-5.3 Codex",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 58.08499891767083,
+          "ttftMs": 760,
+          "totalLatencyMs": 1529,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 127,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-3-codex",
+          "provider": "openai",
+          "modelName": "GPT-5.3 Codex",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 57.53457462731246,
+          "ttftMs": 1783,
+          "totalLatencyMs": 4284,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-3-codex",
+          "provider": "openai",
+          "modelName": "GPT-5.3 Codex",
+          "effort": "xhigh",
+          "provenance": "measured",
+          "throughputTokensPerSec": 0,
+          "ttftMs": 2430,
+          "totalLatencyMs": 3072,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-1-codex-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.1 Codex mini",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 183.7255457896229,
+          "ttftMs": 725,
+          "totalLatencyMs": 944,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 13,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-1-codex-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.1 Codex mini",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 219.43986820428336,
+          "ttftMs": 641,
+          "totalLatencyMs": 932,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 6,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "openai-gpt-5-1-codex-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.1 Codex mini",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 192.87833827893175,
+          "ttftMs": 522,
+          "totalLatencyMs": 818,
+          "maxSchemaDepth": 10,
+          "maxSchemaBreadth": 57,
+          "lengthAccuracy": 0,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-1-pro",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Pro",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 167.08229426433914,
+          "ttftMs": 6530,
+          "totalLatencyMs": 6530,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-1-pro",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Pro",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 155.3708439897698,
+          "ttftMs": 4206,
+          "totalLatencyMs": 4394,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-1-pro",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Pro",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 145.69948186528498,
+          "ttftMs": 7122,
+          "totalLatencyMs": 7123,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.73,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-5-flash",
+          "provider": "google",
+          "modelName": "Gemini 3.5 Flash",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 267.0157068062827,
+          "ttftMs": 2762,
+          "totalLatencyMs": 2762,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-5-flash",
+          "provider": "google",
+          "modelName": "Gemini 3.5 Flash",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 254.66562986003112,
+          "ttftMs": 2680,
+          "totalLatencyMs": 2680,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.27,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-5-flash",
+          "provider": "google",
+          "modelName": "Gemini 3.5 Flash",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 221.27831715210357,
+          "ttftMs": 3082,
+          "totalLatencyMs": 3084,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.15000000000000002,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-1-flash-lite",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Flash-Lite",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 250,
+          "ttftMs": 928,
+          "totalLatencyMs": 931,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-1-flash-lite",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Flash-Lite",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 453.06513409961684,
+          "ttftMs": 1250,
+          "totalLatencyMs": 1250,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "google-gemini-3-1-flash-lite",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Flash-Lite",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 460.4612850082372,
+          "ttftMs": 1259,
+          "totalLatencyMs": 1259,
+          "maxSchemaDepth": 15,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.6599999999999999,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "xai-grok-4-3",
+          "provider": "xai",
+          "modelName": "Grok 4.3",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": 99.0787134313884,
+          "ttftMs": 584,
+          "totalLatencyMs": 779,
+          "maxSchemaDepth": 48,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.99,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "xai-grok-4-3",
+          "provider": "xai",
+          "modelName": "Grok 4.3",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": 76.16416732438832,
+          "ttftMs": 3083,
+          "totalLatencyMs": 3258,
+          "maxSchemaDepth": 48,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "xai-grok-4-3",
+          "provider": "xai",
+          "modelName": "Grok 4.3",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": 177.06143424433543,
+          "ttftMs": 7150,
+          "totalLatencyMs": 7273,
+          "maxSchemaDepth": 48,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "xai-grok-4-3",
+          "provider": "xai",
+          "modelName": "Grok 4.3",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": 195.9782955633578,
+          "ttftMs": 3735,
+          "totalLatencyMs": 3962,
+          "maxSchemaDepth": 22,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "xai-grok-4-20-0309-reasoning",
+          "provider": "xai",
+          "modelName": "Grok 4.20 Reasoning",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": 104.10370606012407,
+          "ttftMs": 2532,
+          "totalLatencyMs": 2637,
+          "maxSchemaDepth": 32,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.99,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "xai-grok-4-20-0309-non-reasoning",
+          "provider": "xai",
+          "modelName": "Grok 4.20 Non-Reasoning",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": 96.49805447470817,
+          "ttftMs": 362,
+          "totalLatencyMs": 522,
+          "maxSchemaDepth": 48,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 0.97,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        },
+        {
+          "id": "xai-grok-build-0-1",
+          "provider": "xai",
+          "modelName": "Grok Build 0.1",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": 226.89551112787626,
+          "ttftMs": 9531,
+          "totalLatencyMs": 9681,
+          "maxSchemaDepth": 11,
+          "maxSchemaBreadth": 192,
+          "lengthAccuracy": 1,
+          "measuredAt": "2026-07-06T13:08:50.282Z"
+        }
+      ]
+    },
+    {
+      "generatedAt": "2026-07-12T05:47:26.268Z",
+      "trials": 3,
+      "points": [
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 271.5678429984813,
+            "stdDev": 12.307803819634637,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 9888.333333333334,
+            "stdDev": 644.4892034265068,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 12820,
+            "stdDev": 447.50754183588907,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 72,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9316666666666666,
+            "stdDev": 0.054848275573014436,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.6202380952380953,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 468.0431848327365,
+            "stdDev": 328.4214786624322,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 12148.333333333334,
+            "stdDev": 10526.469699444982,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 21810,
+            "stdDev": 972.0838441204545,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 72,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.6666666666666666,
+            "stdDev": 0.5773502691896258,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5345755693581781,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-fable-5",
+          "provider": "anthropic",
+          "modelName": "Claude Fable 5",
+          "effort": "max",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 92.69714542363437,
+            "stdDev": 1.991002225522602,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 22100.333333333332,
+            "stdDev": 480.5229789857436,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 72,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5115440115440116,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 60.44003698197425,
+            "stdDev": 8.749367057059686,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 1559.6666666666667,
+            "stdDev": 1088.884444435374,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 7750,
+            "stdDev": 1733.8393812576758,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 73,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9633333333333333,
+            "stdDev": 0.00763762615825974,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5543484293484293,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 63.416401381167695,
+            "stdDev": 5.621236587986289,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 975.3333333333334,
+            "stdDev": 71.69611797952058,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 6977.333333333333,
+            "stdDev": 407.2570850621673,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 73,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9616666666666666,
+            "stdDev": 0.005773502691896263,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5165565428723323,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-opus-4-8",
+          "provider": "anthropic",
+          "modelName": "Claude Opus 4.8",
+          "effort": "max",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 65.67344508120065,
+            "stdDev": 3.435824910837485,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 864.3333333333334,
+            "stdDev": 187.64150216125785,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 6623.333333333333,
+            "stdDev": 480.94213096102663,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 73,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9716666666666667,
+            "stdDev": 0.00763762615825974,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.511699948796723,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 79.4500907219195,
+            "stdDev": 2.928779037500431,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 1196.3333333333333,
+            "stdDev": 495.65041443877897,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 5879.666666666667,
+            "stdDev": 467.38884596589736,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 72,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.975,
+            "stdDev": 0.031224989991992018,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.46993464052287587,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 190.42631797983404,
+            "stdDev": 199.09942941607275,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 2772.3333333333335,
+            "stdDev": 2388.7800931298248,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 7338,
+            "stdDev": 1004.1210086438786,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 72,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9616666666666666,
+            "stdDev": 0.020816659994661344,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5599415204678363,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-sonnet-5",
+          "provider": "anthropic",
+          "modelName": "Claude Sonnet 5",
+          "effort": "max",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 124.10172831153325,
+            "stdDev": 5.706122184126857,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 16526.333333333332,
+            "stdDev": 774.7040295063227,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 72,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3627917833800187,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "anthropic-claude-haiku-4-5",
+          "provider": "anthropic",
+          "modelName": "Claude Haiku 4.5",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 85.14050292197714,
+            "stdDev": 9.47933947881716,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 853,
+            "stdDev": 115.49458861782226,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 3882,
+            "stdDev": 573.4143353631822,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 21,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 73,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9316666666666666,
+            "stdDev": 0.044814432199162486,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5304551820728292,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-5",
+          "provider": "openai",
+          "modelName": "GPT-5.5",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 47.767077528584764,
+            "stdDev": 3.1351335429772504,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 1295.3333333333333,
+            "stdDev": 704.6512139586033,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 6263.666666666667,
+            "stdDev": 605.1300135783493,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.995,
+            "stdDev": 0.008660254037844393,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3588217338217338,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-5",
+          "provider": "openai",
+          "modelName": "GPT-5.5",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 533.559045528249,
+            "stdDev": 93.6492444191815,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 10768.333333333334,
+            "stdDev": 421.8297444862481,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 12439.333333333334,
+            "stdDev": 418.9037280012358,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.4034188034188034,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-5",
+          "provider": "openai",
+          "modelName": "GPT-5.5",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 705.5855989441696,
+            "stdDev": 64.66690506499324,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 12352.666666666666,
+            "stdDev": 1806.745785475459,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 13930.666666666666,
+            "stdDev": 1856.849572079907,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9983333333333334,
+            "stdDev": 0.0028867513459481316,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.31794871794871793,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4",
+          "provider": "openai",
+          "modelName": "GPT-5.4",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 84.06910412336141,
+            "stdDev": 2.325229337845655,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 559.3333333333334,
+            "stdDev": 105.99213807322378,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 3209.3333333333335,
+            "stdDev": 26.350205565295564,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.945,
+            "stdDev": 0.015000000000000013,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5866013071895425,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4",
+          "provider": "openai",
+          "modelName": "GPT-5.4",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 1029.811555554098,
+            "stdDev": 102.13730524679688,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 6614.333333333333,
+            "stdDev": 646.5735328122652,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 7607.666666666667,
+            "stdDev": 624.6489680879441,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9966666666666667,
+            "stdDev": 0.0028867513459481316,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5023606023606023,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4",
+          "provider": "openai",
+          "modelName": "GPT-5.4",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 1521.5014410894157,
+            "stdDev": 694.6541248885771,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 7369.333333333333,
+            "stdDev": 2899.3248064563813,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 8246,
+            "stdDev": 2886.4783040930693,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.5607142857142857,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.4 mini",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 130.1588255006153,
+            "stdDev": 15.319972463046842,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 567.3333333333334,
+            "stdDev": 23.797758998135375,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 2388.3333333333335,
+            "stdDev": 286.82108244223144,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9766666666666666,
+            "stdDev": 0.01527525231651948,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.14444444444444446,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.4 mini",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 1442.169743915826,
+            "stdDev": 135.92182252814584,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 5594.333333333333,
+            "stdDev": 217.1873231414148,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 6449.666666666667,
+            "stdDev": 229.51325306686178,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9966666666666667,
+            "stdDev": 0.0028867513459481316,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3680555555555555,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.4 mini",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 2951.7348293718023,
+            "stdDev": 3058.4611393642926,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 7211,
+            "stdDev": 3242.0067859275064,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 7942.666666666667,
+            "stdDev": 2882.526727253944,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.7866666666666666,
+            "stdDev": 0.3695041722813605,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.4792250233426704,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4-nano",
+          "provider": "openai",
+          "modelName": "GPT-5.4 nano",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 182.47890483712482,
+            "stdDev": 10.813167175870566,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 592,
+            "stdDev": 70.16409338115899,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 1751,
+            "stdDev": 135.96690773861116,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9033333333333333,
+            "stdDev": 0.0028867513459481316,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.2601495726495726,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4-nano",
+          "provider": "openai",
+          "modelName": "GPT-5.4 nano",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 926.872789739865,
+            "stdDev": 216.57223043387071,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 5617.666666666667,
+            "stdDev": 818.2324445616498,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 6918.333333333333,
+            "stdDev": 702.0073598854455,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.26387403446226976,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-4-nano",
+          "provider": "openai",
+          "modelName": "GPT-5.4 nano",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 907.15870839954,
+            "stdDev": 69.10147637094921,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 6160.666666666667,
+            "stdDev": 321.8079137207992,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 7551.333333333333,
+            "stdDev": 312.60571545212247,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.41893939393939394,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-o4-mini",
+          "provider": "openai",
+          "modelName": "o4-mini",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 1078.472781667685,
+            "stdDev": 92.30236063515933,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 6121,
+            "stdDev": 767.6021104713041,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 7380.333333333333,
+            "stdDev": 748.9074264108572,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.40208427050532314,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-o4-mini",
+          "provider": "openai",
+          "modelName": "o4-mini",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 999.9600713818518,
+            "stdDev": 726.9492118275922,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 4896.333333333333,
+            "stdDev": 4422.595655645374,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 9088.666666666666,
+            "stdDev": 1587.5734103761417,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 7,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.6666666666666666,
+            "stdDev": 0.5773502691896258,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-o4-mini",
+          "provider": "openai",
+          "modelName": "o4-mini",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 183.79138048667116,
+            "stdDev": 3.6712070490780944,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 11146,
+            "stdDev": 220.1158785730825,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-realtime",
+          "provider": "openai",
+          "modelName": "GPT Realtime",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 131.52628469113438,
+            "stdDev": 3.101623036301937,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 1137.3333333333333,
+            "stdDev": 580.1295832254491,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 3594.6666666666665,
+            "stdDev": 1292.1092575062426,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.6366666666666667,
+            "stdDev": 0.35405978779484876,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.6013952713952714,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-3-codex",
+          "provider": "openai",
+          "modelName": "GPT-5.3 Codex",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 574.2825841695861,
+            "stdDev": 103.34639842026283,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 7581.666666666667,
+            "stdDev": 222.62374835882477,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 9396.333333333334,
+            "stdDev": 595.3959466887001,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3086452762923351,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-3-codex",
+          "provider": "openai",
+          "modelName": "GPT-5.3 Codex",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 863.0730910359956,
+            "stdDev": 373.1336792063134,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 11015.333333333334,
+            "stdDev": 3720.332825612963,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 12711,
+            "stdDev": 3607.9983370284417,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.2352474323062558,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-3-codex",
+          "provider": "openai",
+          "modelName": "GPT-5.3 Codex",
+          "effort": "xhigh",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 373.6702127659575,
+            "stdDev": 647.2157937857108,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 10810.333333333334,
+            "stdDev": 10005.59395205169,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 17586.333333333332,
+            "stdDev": 3192.0290307785945,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.4066666666666667,
+            "stdDev": 0.5254839039716948,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-1-codex-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.1 Codex mini",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 730.7109606234311,
+            "stdDev": 472.55242344428484,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 3795,
+            "stdDev": 2710.4294862622787,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 5090,
+            "stdDev": 2701.5867559639833,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9733333333333333,
+            "stdDev": 0.046188021535170036,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3923076923076923,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-1-codex-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.1 Codex mini",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 576.3148766624522,
+            "stdDev": 507.32180189013104,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 3813.6666666666665,
+            "stdDev": 3409.487107078326,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 8021.666666666667,
+            "stdDev": 1781.092174294563,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 3,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.6666666666666666,
+            "stdDev": 0.5773502691896258,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.39883040935672515,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "openai-gpt-5-1-codex-mini",
+          "provider": "openai",
+          "modelName": "GPT-5.1 Codex mini",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 316.6926677067083,
+            "stdDev": 548.5277908525461,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 1726,
+            "stdDev": 2989.5196938638824,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 8873.333333333334,
+            "stdDev": 2090.3010150055743,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 10,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.3333333333333333,
+            "stdDev": 0.5773502691896258,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.43694083694083696,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-1-pro",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Pro",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 266.47273422395796,
+            "stdDev": 4.441122797880993,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 14977,
+            "stdDev": 39.88734135035826,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 15276,
+            "stdDev": 37.72267222772003,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.35666666666666663,
+            "stdDev": 0.010408329997330672,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.30808080808080807,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-1-pro",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Pro",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 302.11039050480093,
+            "stdDev": 39.57150466335299,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 15376.333333333334,
+            "stdDev": 798.2432795416028,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 15646.333333333334,
+            "stdDev": 763.859498424503,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 191,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.3633333333333333,
+            "stdDev": 0.00763762615825974,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3747474747474748,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-1-pro",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Pro",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 274.4808882108653,
+            "stdDev": 14.026640590384815,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 15497.333333333334,
+            "stdDev": 865.5300880577944,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 15782,
+            "stdDev": 872.7273342803009,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.355,
+            "stdDev": 0.0050000000000000044,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3636363636363636,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-5-flash",
+          "provider": "google",
+          "modelName": "Gemini 3.5 Flash",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 717.3503252356298,
+            "stdDev": 370.344036553342,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 7707.333333333333,
+            "stdDev": 178.70739585516134,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 7857.333333333333,
+            "stdDev": 250.0246654498978,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.27666666666666667,
+            "stdDev": 0.13567731325956206,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3034188034188034,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-5-flash",
+          "provider": "google",
+          "modelName": "Gemini 3.5 Flash",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 578.7393548675542,
+            "stdDev": 140.3632209359048,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 8118,
+            "stdDev": 705.582737884084,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 8261.333333333334,
+            "stdDev": 735.7066897434964,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.15833333333333335,
+            "stdDev": 0.025658007197234444,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3034188034188034,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-5-flash",
+          "provider": "google",
+          "modelName": "Gemini 3.5 Flash",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 982.2052643220527,
+            "stdDev": 468.1988871678759,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 8049.666666666667,
+            "stdDev": 529.9644642174919,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 8143,
+            "stdDev": 523.951333617923,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.2866666666666667,
+            "stdDev": 0.15332427509475902,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.13675213675213674,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-1-flash-lite",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Flash-Lite",
+          "effort": "low",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 256.4114180735385,
+            "stdDev": 5.719620791851833,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 814.6666666666666,
+            "stdDev": 101.08082574520913,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 1726.3333333333333,
+            "stdDev": 95.82449234581593,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9716666666666667,
+            "stdDev": 0.011547005383792525,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.4247474747474748,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-1-flash-lite",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Flash-Lite",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 730.3153717627401,
+            "stdDev": 245.35597699933004,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 4695.666666666667,
+            "stdDev": 151.01765901156503,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 4816,
+            "stdDev": 127.80062597655773,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.37166666666666665,
+            "stdDev": 0.00763762615825974,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.13030303030303028,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "google-gemini-3-1-flash-lite",
+          "provider": "google",
+          "modelName": "Gemini 3.1 Flash-Lite",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 9277.980658686685,
+            "stdDev": 15059.720655123723,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 4990.666666666667,
+            "stdDev": 114.0058478032304,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 5089,
+            "stdDev": 182.56779562672054,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 15,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.35333333333333333,
+            "stdDev": 0.01527525231651948,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.30808080808080807,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "xai-grok-4-3",
+          "provider": "xai",
+          "modelName": "Grok 4.3",
+          "effort": "none",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 107.57276926224989,
+            "stdDev": 11.049249915550776,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 524.3333333333334,
+            "stdDev": 23.860706890897706,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 2382.3333333333335,
+            "stdDev": 164.2112460623003,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 48,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.8933333333333334,
+            "stdDev": 0.014433756729740658,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.2803030303030303,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "xai-grok-4-3",
+          "provider": "xai",
+          "modelName": "Grok 4.3",
+          "effort": "medium",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 257.53215038929324,
+            "stdDev": 15.637464626149592,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 19640.333333333332,
+            "stdDev": 4833.87942891973,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 20490.333333333332,
+            "stdDev": 4792.062638711365,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 47,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.9683333333333334,
+            "stdDev": 0.05484827557301443,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3451178451178451,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "xai-grok-4-3",
+          "provider": "xai",
+          "modelName": "Grok 4.3",
+          "effort": "high",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 249.6582467748112,
+            "stdDev": 6.065932388583269,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 23565,
+            "stdDev": 4639.254358191626,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 24422.666666666668,
+            "stdDev": 4597.74187328229,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 36,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.39141414141414144,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "xai-grok-4-20-0309-reasoning",
+          "provider": "xai",
+          "modelName": "Grok 4.20 Reasoning",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 229.09000539821727,
+            "stdDev": 32.43804660775134,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 37965.666666666664,
+            "stdDev": 14509.542802353673,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 38918.333333333336,
+            "stdDev": 14348.301269952946,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 32,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.98,
+            "stdDev": 0.025980762113533184,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3611111111111111,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "xai-grok-4-20-0309-non-reasoning",
+          "provider": "xai",
+          "modelName": "Grok 4.20 Non-Reasoning",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 100.27086424763381,
+            "stdDev": 1.719157075051318,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 435.3333333333333,
+            "stdDev": 35.24674925909244,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 2919,
+            "stdDev": 108.29589096544707,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 48,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 0.7983333333333333,
+            "stdDev": 0.033291640592396934,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3929292929292929,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        },
+        {
+          "id": "xai-grok-build-0-1",
+          "provider": "xai",
+          "modelName": "Grok Build 0.1",
+          "effort": "n/a",
+          "provenance": "measured",
+          "throughputTokensPerSec": {
+            "mean": 272.71809224134194,
+            "stdDev": 3.934733462570666,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "ttftMs": {
+            "mean": 35660,
+            "stdDev": 5821.433414546627,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "totalLatencyMs": {
+            "mean": 36443.666666666664,
+            "stdDev": 5843.933293025626,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "maxSchemaDepth": {
+            "mean": 48,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "maxSchemaBreadth": {
+            "mean": 192,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "lengthAccuracy": {
+            "mean": 1,
+            "stdDev": 0,
+            "n": 3,
+            "method": "trial-sample-std-dev"
+          },
+          "informationAccuracy": {
+            "mean": 0.3611111111111111,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "measuredAt": "2026-07-12T05:47:26.268Z"
+        }
+      ]
+    }
+  ]
+}

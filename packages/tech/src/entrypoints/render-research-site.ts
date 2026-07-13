@@ -1,0 +1,214 @@
+import { constants, type Dirent } from "node:fs";
+import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import {
+  publishPlan,
+  publishSlugs,
+  renderJapaneseHistoryIndex,
+  renderJapaneseIndex,
+  renderQmuTicketPayload,
+  renderSourceHistoryIndex,
+  renderSourceIndex,
+  publishedResearchTopics,
+  type ResearchHistoryFrame,
+} from "../research/domain/site";
+import {
+  framesInTendencyWindow,
+  instrumentVersionOf,
+  renderSnapshot,
+  snapshotBudgetProblems,
+  snapshotPointsFor,
+  type SnapshotPoint,
+} from "../research/domain/snapshot";
+import { isDirectRun } from "./direct-run";
+
+const repoRoot = (): string => resolve(process.cwd(), "../..");
+
+const usage = (): string =>
+  [
+    "Usage: research-site <command>",
+    "",
+    "Commands:",
+    "  slugs         Print qmu publish slugs in sidebar order",
+    "  copy-plan     Print source and destination slugs for qmu copy",
+    "  qmu-ticket    Print the qmu-co-jp handoff ticket body",
+    "  write-indexes Regenerate docs/research-reports and docs/llm-foundation indexes",
+    "  write-snapshots Regenerate the snapshot page of every snapshot-mode topic",
+    "",
+  ].join("\n");
+
+const writeText = async (path: string, text: string): Promise<void> => {
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, text, "utf8");
+};
+
+const exists = async (path: string): Promise<boolean> => {
+  try {
+    await access(path, constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const generatedAtFromStamp = (stamp: string): string => {
+  const match = /^(.+T\d{2})-(\d{2})-(\d{2})-(\d+)Z$/.exec(stamp);
+  if (match === null) return stamp;
+  const [, dateAndHour, minute, second, milliseconds] = match;
+  return `${dateAndHour}:${minute}:${second}.${milliseconds}Z`;
+};
+
+const readHistoryFrames = async (): Promise<
+  ReadonlyArray<ResearchHistoryFrame>
+> => {
+  const root = repoRoot();
+  const frames: ResearchHistoryFrame[] = [];
+
+  for (const topic of publishedResearchTopics) {
+    const topicDir = resolve(root, "docs/research-reports/history", topic.id);
+    let entries: Dirent[];
+    try {
+      entries = await readdir(topicDir, { withFileTypes: true });
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") continue;
+      throw error;
+    }
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const directory = `docs/research-reports/history/${topic.id}/${entry.name}`;
+      const sourcePath = `${directory}/${topic.artifactBase}.md`;
+      const japanesePath = `${directory}/${topic.artifactBase}.ja.md`;
+      const dataPath = `${directory}/${topic.artifactBase}.data.json`;
+      const frame: {
+        topicId: string;
+        generatedAt: string;
+        sourcePath?: string;
+        japanesePath?: string;
+        dataPath?: string;
+      } = {
+        topicId: topic.id,
+        generatedAt: generatedAtFromStamp(entry.name),
+      };
+      if (await exists(resolve(root, sourcePath)))
+        frame.sourcePath = sourcePath;
+      if (await exists(resolve(root, japanesePath)))
+        frame.japanesePath = japanesePath;
+      if (await exists(resolve(root, dataPath))) frame.dataPath = dataPath;
+
+      if (
+        frame.sourcePath !== undefined ||
+        frame.japanesePath !== undefined ||
+        frame.dataPath !== undefined
+      ) {
+        frames.push(frame);
+      }
+    }
+  }
+
+  return frames;
+};
+
+export const main = async (): Promise<void> => {
+  const [command] = process.argv.slice(2);
+  if (command === "slugs") {
+    process.stdout.write(`${publishSlugs().join(" ")}\n`);
+    return;
+  }
+  if (command === "copy-plan") {
+    process.stdout.write(
+      `${publishPlan()
+        .map((entry) => `${entry.sourceSlug}\t${entry.destinationSlug}`)
+        .join("\n")}\n`,
+    );
+    return;
+  }
+  if (command === "qmu-ticket") {
+    process.stdout.write(`${renderQmuTicketPayload()}\n`);
+    return;
+  }
+  if (command === "write-snapshots") {
+    const root = repoRoot();
+    const historyFrames = await readHistoryFrames();
+    let written = 0;
+    for (const topic of publishedResearchTopics) {
+      if (topic.articleMode !== "snapshot") continue;
+      const frames = framesInTendencyWindow(
+        historyFrames.filter((frame) => frame.topicId === topic.id),
+      );
+      // Chart only the frames measured by the same instrument version as the
+      // newest frame; older-instrument frames stay listed as trials but their
+      // numbers are not connected into the same tendency series.
+      const artifacts: { artifact: unknown; version: number }[] = [];
+      for (const frame of frames) {
+        if (frame.dataPath === undefined) continue;
+        const artifact: unknown = JSON.parse(
+          await readFile(resolve(root, frame.dataPath), "utf8"),
+        );
+        artifacts.push({ artifact, version: instrumentVersionOf(artifact) });
+      }
+      const latestVersion = artifacts[0]?.version;
+      const points: SnapshotPoint[] = [];
+      for (const entry of artifacts) {
+        if (entry.version !== latestVersion) continue;
+        points.push(...snapshotPointsFor(topic.id, entry.artifact));
+      }
+      // The LLM-written tendency narrative is committed beside the reports and
+      // regenerated on real runs; the renderer falls back to the deterministic
+      // skeleton when the file is absent.
+      const narrativePath = resolve(
+        root,
+        `docs/research-reports/${topic.artifactBase}.tendency.md`,
+      );
+      const narrative = (await exists(narrativePath))
+        ? await readFile(narrativePath, "utf8")
+        : undefined;
+      const markdown = renderSnapshot(
+        narrative === undefined
+          ? { topic, frames, points }
+          : { topic, frames, points, narrative },
+      );
+      const problems = snapshotBudgetProblems(markdown);
+      if (problems.length > 0) {
+        throw new Error(`snapshot for ${topic.id}: ${problems.join("; ")}`);
+      }
+      await writeText(resolve(root, topic.source.docsPath), markdown);
+      written += 1;
+    }
+    process.stdout.write(`wrote ${written} snapshot page(s)\n`);
+    return;
+  }
+  if (command === "write-indexes") {
+    const historyFrames = await readHistoryFrames();
+    await writeText(
+      resolve(repoRoot(), "docs/research-reports/index.md"),
+      renderSourceIndex(),
+    );
+    await writeText(
+      resolve(repoRoot(), "docs/research-reports/history.md"),
+      renderSourceHistoryIndex(historyFrames),
+    );
+    await writeText(
+      resolve(repoRoot(), "docs/llm-foundation/index.md"),
+      renderJapaneseIndex(),
+    );
+    await writeText(
+      resolve(repoRoot(), "docs/llm-foundation/history.md"),
+      renderJapaneseHistoryIndex(historyFrames),
+    );
+    process.stdout.write(
+      `wrote research site indexes (${historyFrames.length} history frames)\n`,
+    );
+    return;
+  }
+
+  process.stderr.write(usage());
+  process.exitCode = 1;
+};
+
+if (isDirectRun(import.meta.url)) {
+  main().catch((error: unknown) => {
+    process.stderr.write(`research-site failed: ${String(error)}\n`);
+    process.exitCode = 1;
+  });
+}

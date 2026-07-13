@@ -13,3 +13,18 @@ docs/.vitepress/dist/
 .env.*
 !.env.example
 .DS_Store
+
+# Real-run comparison report + artifact are REGENERATED on demand
+# (`npm run compare:render`) from the committed history/ archives — the real-data
+# source of truth. The rendered `.real` outputs are non-deterministic and not
+# committed (unlike the byte-stable fixture `llm-model-comparison.md`/`.data.json`).
+docs/research-reports/*.real.md
+docs/research-reports/*.real.data.json
+docs/research-reports/*.fixture.md
+docs/research-reports/*.fixture.data.json
+
+# Regenerable artifact-to-draft skeletons for the canonical LLM foundation IA.
+docs/llm-foundation/_generated/
+
+# BEIR/SciFact corpus cache (fetched, CC BY-NC — never committed; see scripts/fetch-scifact.sh)
+packages/tech/.cache/

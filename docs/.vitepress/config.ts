@@ -1,4 +1,10 @@
 import { defineConfig } from "vitepress";
+import {
+  EN_RESEARCH_TITLE,
+  JA_RESEARCH_TITLE,
+  japaneseResearchItems,
+  sourceResearchItems,
+} from "../../packages/tech/src/research/domain/site";
 
 // The base path is environment-driven so the same build can serve from a
 // subpath (e.g. GitHub Pages) or the dev tunnel root.
@@ -10,23 +16,62 @@ export default defineConfig({
   title: "qmu research",
   description: "Public, reproducible foundational research for qmu.co.jp.",
   cleanUrls: true,
-  // Role and template READMEs are documentation for editors, not site pages.
-  srcExclude: ["**/README.md"],
+  // Role/template READMEs and combined compare side files are source material,
+  // not public site pages. Speed and accuracy carry the public split articles.
+  srcExclude: [
+    "**/README.md",
+    "llm-foundation/_generated/**",
+    "research-reports/*.real.md",
+    "research-reports/*.fixture.md",
+    // Committed LLM-written tendency narratives are embedded into snapshot
+    // pages by `research:site -- write-snapshots`, not served standalone.
+    "research-reports/*.tendency.md",
+    // A snapshot topic's working full report; the served detail pages are its
+    // dated copies under research-reports/history/.
+    "research-reports/*.report.md",
+  ],
   sitemap: { hostname: "https://research.qmu.dev" },
+  markdown: {
+    // High-contrast code themes so syntax-highlighted tokens (comments,
+    // keywords) in code blocks meet WCAG 2.2 AA (4.5:1). The default
+    // github-light theme's comment (#6A737D, 4.46:1) and keyword (#D73A49,
+    // 4.24:1) colors fall just under the threshold on the report pages.
+    theme: {
+      light: "github-light-high-contrast",
+      dark: "github-dark-high-contrast",
+    },
+  },
   themeConfig: {
+    outline: false,
     nav: [
       { text: "Home", link: "/" },
-      { text: "Research reports", link: "/research-reports/" },
+      {
+        text: EN_RESEARCH_TITLE,
+        items: sourceResearchItems(),
+      },
+      {
+        text: JA_RESEARCH_TITLE,
+        items: japaneseResearchItems(),
+      },
     ],
     sidebar: [
       {
-        text: "Research reports",
+        text: EN_RESEARCH_TITLE,
         link: "/research-reports/",
-        items: [],
+        items: sourceResearchItems(),
+      },
+      {
+        text: JA_RESEARCH_TITLE,
+        link: "/llm-foundation/",
+        items: japaneseResearchItems(),
       },
       {
         text: "Project",
         items: [
+          {
+            text: "Research development guideline",
+            link: "/research-development-guideline",
+          },
           { text: "Glossary", link: "/glossary" },
           { text: "Dependency decisions", link: "/dependency-decisions" },
         ],

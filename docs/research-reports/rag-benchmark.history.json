@@ -1,0 +1,245 @@
+{
+  "entries": [
+    {
+      "generatedAt": "2026-07-08T13:08:52.187Z",
+      "trials": 5,
+      "points": [
+        {
+          "id": "sqlite-vec",
+          "provenance": "measured",
+          "recallAtK": {
+            "mean": 0.91,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "ndcgAtK": {
+            "mean": 0.8771714541790311,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "mrr": {
+            "mean": 0.8649999999999999,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "ingestMs": {
+            "mean": 4.062158200000001,
+            "stdDev": 0.39861304827325966,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p50Ms": {
+            "mean": 0.2641508,
+            "stdDev": 0.0022046561409888774,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p95Ms": {
+            "mean": 0.2934342,
+            "stdDev": 0.01291945046044916,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "costUsd": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "run-total"
+          },
+          "measuredAt": "2026-07-08T13:08:52.187Z"
+        },
+        {
+          "id": "openai-vector-store",
+          "provenance": "measured",
+          "recallAtK": {
+            "mean": 0.84,
+            "stdDev": 0.010954451150103331,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "ndcgAtK": {
+            "mean": 0.8208621566433163,
+            "stdDev": 0.007733485521482373,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "mrr": {
+            "mean": 0.8133333333333335,
+            "stdDev": 0.006912147117775876,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "ingestMs": {
+            "mean": 200292.05713220002,
+            "stdDev": 31830.062195516286,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p50Ms": {
+            "mean": 1690.5847301999997,
+            "stdDev": 42.26854138484834,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p95Ms": {
+            "mean": 2242.9580912,
+            "stdDev": 57.32626423944022,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "costUsd": {
+            "mean": 1.25,
+            "stdDev": 0,
+            "n": 5,
+            "method": "run-total"
+          },
+          "measuredAt": "2026-07-08T13:08:52.187Z"
+        },
+        {
+          "id": "s3-vectors",
+          "provenance": "fixtured",
+          "recallAtK": {
+            "mean": 0.19,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "ndcgAtK": {
+            "mean": 0.16658149897702995,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "mrr": {
+            "mean": 0.16166666666666668,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "ingestMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p50Ms": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p95Ms": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "costUsd": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "run-total"
+          },
+          "measuredAt": "2026-07-08T13:08:52.187Z"
+        },
+        {
+          "id": "vectorize",
+          "provenance": "measured",
+          "recallAtK": {
+            "mean": 0.91,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "ndcgAtK": {
+            "mean": 0.8771714541790311,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "mrr": {
+            "mean": 0.8649999999999999,
+            "stdDev": 0,
+            "n": 1,
+            "method": "single-trial"
+          },
+          "ingestMs": {
+            "mean": 32872.2221118,
+            "stdDev": 11563.997060274232,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p50Ms": {
+            "mean": 163.75605420000002,
+            "stdDev": 1.8669982387135944,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "p95Ms": {
+            "mean": 183.02545880000002,
+            "stdDev": 6.473634139401361,
+            "n": 5,
+            "method": "trial-sample-std-dev"
+          },
+          "costUsd": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "run-total"
+          },
+          "measuredAt": "2026-07-08T13:08:52.187Z"
+        },
+        {
+          "id": "autorag",
+          "provenance": "error",
+          "recallAtK": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "error-zero"
+          },
+          "ndcgAtK": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "error-zero"
+          },
+          "mrr": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "error-zero"
+          },
+          "ingestMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "error-zero"
+          },
+          "p50Ms": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "error-zero"
+          },
+          "p95Ms": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "error-zero"
+          },
+          "costUsd": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 5,
+            "method": "error-zero"
+          },
+          "measuredAt": "2026-07-08T13:08:52.187Z"
+        }
+      ]
+    }
+  ]
+}

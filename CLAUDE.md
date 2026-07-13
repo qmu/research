@@ -23,6 +23,11 @@ site (`../qmu-co-jp`) as a one-directional Markdown copy.
 - **One runner.** All common operations run through `make`; CI invokes the same
   targets. Do not put build logic inline in workflow YAML.
 - **Objective docs.** Write reports and docs in factual, verifiable language.
+- **Proposal-first research.** A new or changed research topic starts from
+  `docs/research-development-guideline.md`: the agent proposes cadence,
+  subjects, metrics, cost/trial-count range, and accumulated history for
+  developer approval before building; articles ship as a compact snapshot
+  over dated uniform trial reports.
 
 ## Commands
 
@@ -33,13 +38,50 @@ Run `make help`. Common: `make install`, `make build`, `make test`, `make lint`,
 
 This repository has two delivery surfaces:
 
-1. **Preview site** — `make docs` builds the VitePress site under `docs/`. It is a
-   static site; deploy the build output to the configured static host.
-2. **Foundational research** — `make publish` runs `scripts/publish-research.sh`,
-   which copies finished `docs/research-reports/<slug>.md` into
-   `../qmu-co-jp/docs/research/<slug>.md`. The corporate site (Astro) then renders
-   it at `/research/<slug>`. Commit and deploy `qmu-co-jp` separately from its own
-   repository.
+1. **Preview site** — `make docs` serves the VitePress site under `docs/`. The
+   site exposes `LLMs Research` (English source reports) and `LLMs Research
+   (Japanese)` in the same topic order. The order and labels come from
+   `packages/tech/src/research/domain/site.ts`, not parallel hand-written lists.
+2. **Foundational research** — each topic is runnable through `npm run research
+   -- <topic> --real` or its topic-specific npm script. After a run, use
+   `npm run research:archive -- <topic> --generated-at <iso>` to keep the
+   current English Markdown, data artifact when present, and Japanese Markdown as
+   a dated frame under `docs/research-reports/history/<topic>/<timestamp>/`.
+   `npm run research:translate-report -- <topic> --estimate` prices the
+   full-report Japanese translation; running it without `--estimate` writes the
+   Japanese page configured in the shared metadata. `npm run research:site --
+   write-indexes` regenerates the English and Japanese indexes from the same
+   metadata.
+3. **Corporate copy** — `scripts/publish-research.sh copy --all` gets its ordered
+   source/destination plan from `npm run research:site -- copy-plan` and copies
+   Japanese Markdown into
+   `../qmu-co-jp/docs/llm-foundation-research/<name>.md`. The corporate site
+   (Astro) renders the copies; commit and deploy `qmu-co-jp` separately. See
+   `docs/adr/0003-*` for the boundary.
+
+### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
+
+Publishing does not edit `qmu-co-jp` directly — that repo has its own writing
+conventions (である体), docker Astro build, and `/ship` deploy. Instead, this
+repo's `/ship` generates a **publish ticket** into the sibling `qmu-co-jp` repo,
+and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
+
+1. Refresh the published Markdown and indexes from the shared metadata:
+   `npm run research:site -- write-indexes` in `packages/tech`, then
+   `scripts/publish-research.sh copy --all` (or a single slug), so
+   `../qmu-co-jp/docs/llm-foundation-research/*.md` matches this repo's Japanese
+   reports and order.
+2. Locate the `qmu-co-jp` checkout as a **sibling of this repo** (`../qmu-co-jp`).
+   **If there is no `qmu-co-jp` repo at the same directory level, ask the user**
+   for its path.
+3. **Ask the user which `qmu-co-jp` worktree** to generate the ticket in
+   (`git -C <qmu-co-jp> worktree list`); if there is only one, use it.
+4. Write a ticket into that worktree's `.workaholic/tickets/todo/` using
+   `npm run research:site -- qmu-ticket` as the ordered payload. The ticket tells
+   qmu-co-jp to copy/delete Markdown, update navigation and JP/EN indexes in the
+   same order, verify with the docker Astro build, then commit and deploy via
+   that repo's own `/ship` (`scripts/deploy.sh`).
+5. **Tell the user to run `/drive` in `qmu-co-jp`** to apply the ticket.
 
 CI must be green before merge to `main` (type-check, tests, lint, dependency
 audit, and — once the site lands — an accessibility check).

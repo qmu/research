@@ -1,0 +1,3 @@
+# trips
+
+* [llm-model-comparison](llm-model-comparison/plan.md) - "Implement ticket .workaholic/tickets/todo/a-qmu-jp/20260623215050-llm-model-comparison-poc.md — fundamental LLM model-comparison PoC (second packages/tech research topic): multi-provider (Anthropic/OpenAI/Google) comparison behind one CompletionClient, curated model registry, three live probes (speed, nested-JSON depth, length accuracy), fixture path for keyless CI, generated docs/research-reports/llm-model-comparison.md, VitePress + CI wiring, and ADR 0004. Pause before the first real compare run so the user can populate .env."

@@ -2,6 +2,11 @@
 
 A research topic is a subfolder of this project, not a new package.
 
+Step 0 precedes this recipe: follow the proposal-first protocol in
+`docs/research-development-guideline.md` (propose cadence, subjects, metrics,
+cost/trial-count range, and accumulated history; get developer approval) before
+scaffolding anything below.
+
 1. Create `src/<topic>/domain/` for the topic's pure logic (scoring,
    aggregation, result shaping). No vendor or entrypoint types here.
 2. Put any external SDK access (LLM provider, database engine) behind an

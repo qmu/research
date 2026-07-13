@@ -1,0 +1,735 @@
+{
+  "provider": "anthropic",
+  "providerName": "Anthropic (Claude)",
+  "sourceUrl": "https://status.claude.com/api/v2/incidents.json",
+  "sourceKind": "statuspage-json",
+  "lastFetchedAt": "2026-07-09T03:55:03.571Z",
+  "asOf": "2026-07-09T03:55:03.571Z",
+  "available": true,
+  "note": null,
+  "extraction": {
+    "model": "claude-sonnet-5",
+    "extractedAt": "2026-07-09T03:55:03.571Z"
+  },
+  "incidents": [
+    {
+      "id": "t5kjpnysf4vp",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "major",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-09T03:28:18.197Z",
+      "endedAt": "2026-07-09T03:50:34.059Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/sddyj2h6b61s"
+    },
+    {
+      "id": "rvb96c56gn6k",
+      "title": "Degraded performance for Claude Code on the web, Cowork Remote, Claude Tag, and Claude Code Review sessions",
+      "impact": "minor",
+      "affectedProducts": [
+        "Claude Code"
+      ],
+      "startedAt": "2026-07-08T19:07:26.000Z",
+      "endedAt": "2026-07-08T21:04:34.858Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/th3djdzw5lsy"
+    },
+    {
+      "id": "dcxc66flmxbd",
+      "title": "Elevated errors on multiple models",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-08T18:00:18.069Z",
+      "endedAt": "2026-07-08T21:04:18.634Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/kt72q7m6rz9c"
+    },
+    {
+      "id": "4y9nybhbljfc",
+      "title": "Issues authorizing to MCP Servers",
+      "impact": "minor",
+      "affectedProducts": [],
+      "startedAt": "2026-07-08T12:00:00.000Z",
+      "endedAt": "2026-07-08T19:00:00.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/scs5bf95ysv0"
+    },
+    {
+      "id": "n3v83qmtlbqm",
+      "title": "Elevated errors on Claude Sonnet 5",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-08T06:26:16.864Z",
+      "endedAt": "2026-07-08T06:40:31.473Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/vsdzgydjjt1j"
+    },
+    {
+      "id": "l9zyw879cyd6",
+      "title": "Elevated errors for some models",
+      "impact": "major",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-07T20:02:33.237Z",
+      "endedAt": "2026-07-07T23:46:13.329Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/g0yp6phqpdrn"
+    },
+    {
+      "id": "hh9hj15mxkrx",
+      "title": "Elevated errors on Claude Sonnet 5",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-07T06:58:17.713Z",
+      "endedAt": "2026-07-07T07:37:01.085Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/fy2df2j6wzq7"
+    },
+    {
+      "id": "d23j8s7t8rx2",
+      "title": "Claude Tag seeing elevated GitHub operation failures",
+      "impact": "minor",
+      "affectedProducts": [
+        "Claude Code"
+      ],
+      "startedAt": "2026-07-06T21:49:14.387Z",
+      "endedAt": "2026-07-07T15:52:01.226Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/0l8p9n8ky411"
+    },
+    {
+      "id": "k5yvlfppnp4f",
+      "title": "Elevated errors on Claude.ai",
+      "impact": "critical",
+      "affectedProducts": [],
+      "startedAt": "2026-07-06T19:18:49.184Z",
+      "endedAt": "2026-07-06T20:05:43.735Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/nhdng5lxrsdm"
+    },
+    {
+      "id": "tl8x3p1msff2",
+      "title": "Elevated errors on several models",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-06T07:36:23.498Z",
+      "endedAt": "2026-07-06T09:13:37.323Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/9jtzhk8dgpf7"
+    },
+    {
+      "id": "c0052w6jxl47",
+      "title": "Elevated errors across many models",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-03T23:42:20.784Z",
+      "endedAt": "2026-07-04T00:20:18.266Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/qxyj0p4s8s1r"
+    },
+    {
+      "id": "mphfs246cjg1",
+      "title": "Elevated errors on Claude Fable 5 and Claude Mythos 5",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-03T21:54:20.402Z",
+      "endedAt": "2026-07-03T22:06:42.392Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/vcwhhf28sp2s"
+    },
+    {
+      "id": "lcccgkzvj2yx",
+      "title": "Elevated errors on Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-07-02T00:38:30.690Z",
+      "endedAt": "2026-07-02T01:19:36.020Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/lv9trc80pvyx"
+    },
+    {
+      "id": "7ykkywg6yln4",
+      "title": "Elevated error rates on Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork",
+        "Claude for Government"
+      ],
+      "startedAt": "2026-06-30T14:31:04.499Z",
+      "endedAt": "2026-06-30T15:28:26.509Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/f2wj8x9fk5c5"
+    },
+    {
+      "id": "lxpx271gkx7p",
+      "title": "Elevated errors on Opus 4.5",
+      "impact": "minor",
+      "affectedProducts": [
+        "Claude API (api.anthropic.com)"
+      ],
+      "startedAt": "2026-06-29T13:35:42.792Z",
+      "endedAt": "2026-06-29T14:27:35.715Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/t354swgk93v0"
+    },
+    {
+      "id": "9284yk6xxd0h",
+      "title": "elevated errors on Opus 48",
+      "impact": "none",
+      "affectedProducts": [],
+      "startedAt": "2026-06-27T18:23:19.659Z",
+      "endedAt": "2026-06-27T18:00:00.000Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/86p1g659mdnm"
+    },
+    {
+      "id": "wkzf38t1yh8z",
+      "title": "Elevated errors on Opus 4.8 Fast",
+      "impact": "none",
+      "affectedProducts": [],
+      "startedAt": "2026-06-24T18:22:47.847Z",
+      "endedAt": "2026-06-24T18:33:56.506Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/qw162hld7mzp"
+    },
+    {
+      "id": "8b0rggdfh1hv",
+      "title": "Elevated error rate on Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-24T13:16:17.535Z",
+      "endedAt": "2026-06-24T14:56:21.835Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/wnw8wdn9sfwm"
+    },
+    {
+      "id": "18bq2kw867g5",
+      "title": "Claude.ai is experiencing elevated error rates",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai"
+      ],
+      "startedAt": "2026-06-23T18:24:12.282Z",
+      "endedAt": "2026-06-23T18:32:57.379Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/hl3355csbyxv"
+    },
+    {
+      "id": "jbhf20wjmzrf",
+      "title": "Elevated error rate across multiple models",
+      "impact": "critical",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-23T14:19:06.024Z",
+      "endedAt": "2026-06-23T16:44:28.022Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/kx1ygc7qfvx1"
+    },
+    {
+      "id": "2stpj60m2fr9",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-23T06:28:56.188Z",
+      "endedAt": "2026-06-23T08:45:58.019Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/7tlhvndrdpm9"
+    },
+    {
+      "id": "bbcpk0t2cj4p",
+      "title": "Elevated errors across many models",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-22T19:14:18.930Z",
+      "endedAt": "2026-06-22T19:45:45.449Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/2lhl1q3958qt"
+    },
+    {
+      "id": "dymmnf6xk0mg",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-22T08:11:50.406Z",
+      "endedAt": "2026-06-22T14:44:16.735Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/jjzw7yp300my"
+    },
+    {
+      "id": "lv35v0q9nsj2",
+      "title": "Elevated Error Rates for Opus 4.8, Opus 4.7, Opus 4.6, Sonnet 4.6, and Haiku 4.5",
+      "impact": "major",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-22T00:37:06.355Z",
+      "endedAt": "2026-06-22T02:06:43.543Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/n57njqf1mk5l"
+    },
+    {
+      "id": "nbp7j8k3kgw2",
+      "title": "Opus 4.8 errors",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-20T17:07:13.895Z",
+      "endedAt": "2026-06-20T18:02:23.277Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/61p6brhqlxks"
+    },
+    {
+      "id": "1p98mj17s1z2",
+      "title": "Elevated error rates on the Claude API",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-19T08:17:59.764Z",
+      "endedAt": "2026-06-19T08:45:47.997Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/05r0qhzdjrx5"
+    },
+    {
+      "id": "46z2bnxchg61",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-19T06:07:26.665Z",
+      "endedAt": "2026-06-19T07:17:19.953Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/wy80wxj6y429"
+    },
+    {
+      "id": "jlbvcpfwwq8z",
+      "title": "Service disruption on Claude services",
+      "impact": "major",
+      "affectedProducts": [
+        "claude.ai"
+      ],
+      "startedAt": "2026-06-18T07:41:30.325Z",
+      "endedAt": "2026-06-18T08:19:22.116Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/0hjwxjxbpdfz"
+    },
+    {
+      "id": "s107yx224p9r",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-17T15:34:18.375Z",
+      "endedAt": "2026-06-17T16:28:10.294Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/jhq0vtzfn0yv"
+    },
+    {
+      "id": "k8563n9wd0r8",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-17T08:24:34.946Z",
+      "endedAt": "2026-06-17T10:03:12.447Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/rd83d4611qzr"
+    },
+    {
+      "id": "zw75lhl39skc",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-17T05:08:19.986Z",
+      "endedAt": "2026-06-17T06:37:45.424Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/nbnfb446kwm9"
+    },
+    {
+      "id": "8chgzf3fs27n",
+      "title": "Elevated errors on Claude Sonnet 4.6 and Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-17T00:47:11.147Z",
+      "endedAt": "2026-06-17T02:50:39.111Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/fx46sjxykmsc"
+    },
+    {
+      "id": "41395mspl1rf",
+      "title": "Elevated errors for Claude Opus 4.8",
+      "impact": "major",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-16T20:50:01.923Z",
+      "endedAt": "2026-06-16T22:02:34.876Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/tslzsk6f4hlf"
+    },
+    {
+      "id": "8q88rrz9rjd0",
+      "title": "Opus 4.8 errors",
+      "impact": "none",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Code"
+      ],
+      "startedAt": "2026-06-16T19:59:26.501Z",
+      "endedAt": "2026-06-16T20:16:07.194Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/0qxpsl8p5gr7"
+    },
+    {
+      "id": "xmhsglsz3h3w",
+      "title": "Elevated errors across many models",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-16T17:29:52.477Z",
+      "endedAt": "2026-06-16T19:32:23.759Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/1tl45njm4dyl"
+    },
+    {
+      "id": "slm0mhv6r1pf",
+      "title": "Elevated errors on Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-15T06:20:31.010Z",
+      "endedAt": "2026-06-15T08:56:11.620Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/b1vb5315yt9v"
+    },
+    {
+      "id": "1trjx6gxk1bt",
+      "title": "Elevated errors on Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-13T02:03:03.005Z",
+      "endedAt": "2026-06-13T02:11:58.215Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/wdbhcs86nngm"
+    },
+    {
+      "id": "s9w82lp9dcn9",
+      "title": "We’ve suspended access to Claude Mythos 5 and Claude Fable 5",
+      "impact": "critical",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-13T00:50:43.823Z",
+      "endedAt": "2026-07-01T19:26:26.285Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/kqx0j625mrgv"
+    },
+    {
+      "id": "j8ghp7dk6lym",
+      "title": "Elevated errors across models",
+      "impact": "major",
+      "affectedProducts": [],
+      "startedAt": "2026-06-11T16:54:52.458Z",
+      "endedAt": "2026-06-11T17:56:08.221Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/7pwy7kxz7yzr"
+    },
+    {
+      "id": "sp7cf0cghqsk",
+      "title": "Elevated errors on Claude Opus 4.6",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-11T14:37:07.537Z",
+      "endedAt": "2026-06-11T15:01:51.449Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/r2r8c96brb9n"
+    },
+    {
+      "id": "32lyxmplb5wz",
+      "title": "Elevated errors on Claude Haiku 4.5",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-10T13:06:47.542Z",
+      "endedAt": "2026-06-10T17:21:33.620Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/hrq9j1llp424"
+    },
+    {
+      "id": "xwrtmlm3tnxf",
+      "title": "Elevated errors on Claude Opus 4.6",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-09T20:32:27.244Z",
+      "endedAt": "2026-06-09T22:10:31.955Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/l9wbh8vqh3k2"
+    },
+    {
+      "id": "wtcn4knnnfzc",
+      "title": "Fable not available in the model picker in Claude Code Desktop",
+      "impact": "major",
+      "affectedProducts": [
+        "Claude Code"
+      ],
+      "startedAt": "2026-06-09T18:24:06.699Z",
+      "endedAt": "2026-06-09T21:03:01.644Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/jb2jyj5prfmm"
+    },
+    {
+      "id": "cmsxwks3fzd9",
+      "title": "Elevated errors on Claude Opus 4.8 (Fast Mode)",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-09T03:13:08.252Z",
+      "endedAt": "2026-06-09T03:42:08.379Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/pck33z3r9h36"
+    },
+    {
+      "id": "1gjynxqv85rk",
+      "title": "Elevated errors on Claude Opus 4.8",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-08T22:20:42.574Z",
+      "endedAt": "2026-06-08T22:36:14.494Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/b1ym53l7ntdq"
+    },
+    {
+      "id": "8b7xx9g8rkhm",
+      "title": "Elevated errors on Claude Opus 4.7",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-08T21:05:25.920Z",
+      "endedAt": "2026-06-08T21:56:44.884Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/9ph775tb1mgl"
+    },
+    {
+      "id": "829kf0y1f7pn",
+      "title": "Elevated errors on Claude Haiku 4.5",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-08T19:10:50.150Z",
+      "endedAt": "2026-06-08T19:52:06.416Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/1yggzs0zxvn4"
+    },
+    {
+      "id": "3n1flr3mnpgl",
+      "title": "Elevated errors on Claude Opus 4.7",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-08T17:15:03.838Z",
+      "endedAt": "2026-06-08T19:22:14.510Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/qhh9nm2syrzr"
+    },
+    {
+      "id": "1h2k3ryt64wl",
+      "title": "Elevated errors on Claude Opus 4.7",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude Console (platform.claude.com)",
+        "Claude API (api.anthropic.com)",
+        "Claude Code"
+      ],
+      "startedAt": "2026-06-07T14:35:14.282Z",
+      "endedAt": "2026-06-07T15:41:04.372Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/8qky14s62z49"
+    },
+    {
+      "id": "s4pq658bt69h",
+      "title": "Degraded performance for multiple models",
+      "impact": "minor",
+      "affectedProducts": [
+        "claude.ai",
+        "Claude API (api.anthropic.com)",
+        "Claude Code",
+        "Claude Cowork"
+      ],
+      "startedAt": "2026-06-07T03:31:30.631Z",
+      "endedAt": "2026-06-07T04:28:29.254Z",
+      "reportedUptimePct": null,
+      "sourceUrl": "https://stspg.io/j020f82m0mg8"
+    }
+  ]
+}

@@ -37,3 +37,9 @@ jobs:
       # dataset -> grade -> score -> result-page pipeline without credentials.
       - name: Benchmark pipeline self-test
         run: npm run benchmark:fixture
+
+      # Also keyless: regenerates the model-comparison report end to end with the
+      # fixture clients. The real `compare` target (which needs provider keys) is
+      # never run in CI.
+      - name: Comparison pipeline self-test
+        run: npm run compare:fixture

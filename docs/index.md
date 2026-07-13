@@ -10,7 +10,13 @@ this repository; the pages here are the written-up results.
 
 ## Browse
 
-- [Research reports](/research-reports/) — finished studies.
+- [LLMs Research](/research-reports/) — English reports, data artifacts, and
+  history kept as reproducible source material.
+- [LLMs Research (Japanese)](/llm-foundation/) — Japanese generated and
+  translated articles in the same topic order.
+- [Research development guideline](/research-development-guideline) — how a
+  research idea becomes a recurring topic with a snapshot article and dated
+  trial history.
 - [Glossary](/glossary) — the project's shared vocabulary.
 - [Dependency decisions](/dependency-decisions) — why each external dependency
   was adopted.

@@ -1,0 +1,123 @@
+{
+  "dataset": {
+    "id": "qmu-synthetic-document-ocr-v1",
+    "name": "QMU synthetic document OCR fixture v1",
+    "manifestVersion": "2026-07-08",
+    "source": "Repository-authored deterministic synthetic document manifest",
+    "license": "MIT; generated document text, field ground truth, and rendered images are authored for this repository and may be redistributed under the repository license.",
+    "imageDistribution": "Images are rendered deterministically at run time from this manifest; no third-party document images are committed.",
+    "realDatasetStatus": "No third-party real-image OCR corpus is adopted in this revision. Future real-image datasets must use a manifest plus gitignored fetch/cache path before measurements are published."
+  },
+  "normalization": {
+    "unicode": "NFKC",
+    "case": "preserve for CER/WER; field values use field-specific uppercase/currency/date normalization",
+    "whitespace": "collapse runs of whitespace to one ASCII space, trim ends, and normalize line endings before scoring",
+    "punctuation": "preserve punctuation for CER/WER; field values strip grouping commas from numeric totals and uppercase currency codes",
+    "scoring": "CER and WER divide edit distance by the reference length. Field accuracy is exact normalized-field matches divided by required ground-truth field count."
+  },
+  "preprocessing": {
+    "mimeType": "image/png",
+    "resolution": {
+      "widthPx": 960,
+      "heightPx": 640,
+      "dpi": 150
+    },
+    "pageSplitting": "One manifest item is rendered as one image/page; multi-page documents are out of scope for this v1 fixture.",
+    "rendering": "White background, black fixed 5x7 bitmap text, no rotation, no blur, no compression loss.",
+    "languageScript": "Latin uppercase letters, Arabic numerals, ASCII punctuation, ISO dates, and currency codes. Japanese script is not included in this fixture.",
+    "layoutDifficulty": "Single-page receipt/form hybrid with headings, aligned labels, tabular item lines, and total fields. Handwriting, stamps, photos, skew, and overlapping columns are out of scope."
+  },
+  "schema": {
+    "description": "Required structured extraction fields for each document.",
+    "fields": [
+      {
+        "name": "document_type",
+        "type": "string",
+        "normalization": "uppercase-trim"
+      },
+      {
+        "name": "vendor",
+        "type": "string",
+        "normalization": "uppercase-collapse-space"
+      },
+      {
+        "name": "document_id",
+        "type": "string",
+        "normalization": "uppercase-trim"
+      },
+      {
+        "name": "date",
+        "type": "string",
+        "normalization": "iso-date"
+      },
+      {
+        "name": "currency",
+        "type": "string",
+        "normalization": "uppercase-trim"
+      },
+      {
+        "name": "total",
+        "type": "string",
+        "normalization": "decimal-string"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "synthetic-receipt-001",
+      "license": "MIT repository-authored synthetic item",
+      "referenceText": "QMU OFFICE SUPPLY\nRECEIPT R-2026-0708\nDATE 2026-07-08\nVENDOR KANDA STATIONERY\nITEM NOTEBOOK A5 3 4.50\nITEM GEL PEN 12 1.20\nSUBTOTAL 27.90\nTAX 2.23\nTOTAL USD 30.13\nTHANK YOU",
+      "fields": {
+        "document_type": "RECEIPT",
+        "vendor": "KANDA STATIONERY",
+        "document_id": "R-2026-0708",
+        "date": "2026-07-08",
+        "currency": "USD",
+        "total": "30.13"
+      },
+      "render": {
+        "title": "QMU OFFICE SUPPLY",
+        "lines": [
+          "QMU OFFICE SUPPLY",
+          "RECEIPT R-2026-0708",
+          "DATE 2026-07-08",
+          "VENDOR KANDA STATIONERY",
+          "ITEM NOTEBOOK A5 3 4.50",
+          "ITEM GEL PEN 12 1.20",
+          "SUBTOTAL 27.90",
+          "TAX 2.23",
+          "TOTAL USD 30.13",
+          "THANK YOU"
+        ]
+      }
+    },
+    {
+      "id": "synthetic-invoice-001",
+      "license": "MIT repository-authored synthetic item",
+      "referenceText": "QMU CLOUD LAB\nINVOICE INV-2026-0142\nDATE 2026-07-09\nVENDOR QMU CLOUD LAB\nBILL TO RESEARCH TEAM\nSERVICE VISION TEST 2 45.00\nSERVICE REPORTING 1 60.00\nSUBTOTAL 150.00\nTAX 15.00\nTOTAL JPY 165.00",
+      "fields": {
+        "document_type": "INVOICE",
+        "vendor": "QMU CLOUD LAB",
+        "document_id": "INV-2026-0142",
+        "date": "2026-07-09",
+        "currency": "JPY",
+        "total": "165.00"
+      },
+      "render": {
+        "title": "QMU CLOUD LAB",
+        "lines": [
+          "QMU CLOUD LAB",
+          "INVOICE INV-2026-0142",
+          "DATE 2026-07-09",
+          "VENDOR QMU CLOUD LAB",
+          "BILL TO RESEARCH TEAM",
+          "SERVICE VISION TEST 2 45.00",
+          "SERVICE REPORTING 1 60.00",
+          "SUBTOTAL 150.00",
+          "TAX 15.00",
+          "TOTAL JPY 165.00"
+        ]
+      }
+    }
+  ]
+}

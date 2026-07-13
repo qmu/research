@@ -1,0 +1,312 @@
+{
+  "provenance": "catalog",
+  "generatedFrom": "packages/tech/src/llm-model-comparison/models.ts",
+  "rows": [
+    {
+      "provider": "Anthropic",
+      "modelName": "Claude Fable 5",
+      "apiModelId": "claude-fable-5",
+      "tier": "frontier",
+      "apiSurface": "chat",
+      "released": "2026-06",
+      "inputCostPerMTok": 6,
+      "outputCostPerMTok": 30,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "provider": "Anthropic",
+      "modelName": "Claude Opus 4.8",
+      "apiModelId": "claude-opus-4-8",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "provider": "Anthropic",
+      "modelName": "Claude Sonnet 5",
+      "apiModelId": "claude-sonnet-5",
+      "tier": "mid",
+      "apiSurface": "chat",
+      "released": "2026-06",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "provider": "Anthropic",
+      "modelName": "Claude Haiku 4.5",
+      "apiModelId": "claude-haiku-4-5-20251001",
+      "tier": "small",
+      "apiSurface": "chat",
+      "released": "2025-10",
+      "inputCostPerMTok": 1,
+      "outputCostPerMTok": 5,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "GPT-5.5",
+      "apiModelId": "gpt-5.5",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "effortLevels": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "GPT-5.4",
+      "apiModelId": "gpt-5.4",
+      "tier": "mid",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 2.5,
+      "outputCostPerMTok": 15,
+      "effortLevels": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "GPT-5.4 mini",
+      "apiModelId": "gpt-5.4-mini",
+      "tier": "small",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 0.5,
+      "outputCostPerMTok": 2,
+      "effortLevels": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "GPT-5.4 nano",
+      "apiModelId": "gpt-5.4-nano",
+      "tier": "small",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 0.15,
+      "outputCostPerMTok": 0.6,
+      "effortLevels": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "o4-mini",
+      "apiModelId": "o4-mini",
+      "tier": "mid",
+      "apiSurface": "chat",
+      "released": "2025",
+      "inputCostPerMTok": 1.1,
+      "outputCostPerMTok": 4.4,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "GPT Realtime",
+      "apiModelId": "gpt-realtime",
+      "tier": "flagship",
+      "apiSurface": "realtime",
+      "released": "2025",
+      "inputCostPerMTok": 4,
+      "outputCostPerMTok": 16,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "GPT-5.3 Codex",
+      "apiModelId": "gpt-5.3-codex",
+      "tier": "flagship",
+      "apiSurface": "responses",
+      "released": "2026",
+      "inputCostPerMTok": 1.75,
+      "outputCostPerMTok": 14,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ],
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.3-codex"
+    },
+    {
+      "provider": "OpenAI",
+      "modelName": "GPT-5.1 Codex mini",
+      "apiModelId": "gpt-5.1-codex-mini",
+      "tier": "small",
+      "apiSurface": "responses",
+      "released": "2026",
+      "inputCostPerMTok": 0.25,
+      "outputCostPerMTok": 2,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.1-codex-mini"
+    },
+    {
+      "provider": "Google",
+      "modelName": "Gemini 3.1 Pro",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 12,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "provider": "Google",
+      "modelName": "Gemini 3.5 Flash",
+      "apiModelId": "gemini-3.5-flash",
+      "tier": "mid",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 0.3,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "provider": "Google",
+      "modelName": "Gemini 3.1 Flash-Lite",
+      "apiModelId": "gemini-3.1-flash-lite",
+      "tier": "small",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 0.1,
+      "outputCostPerMTok": 0.4,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "provider": "xAI",
+      "modelName": "Grok 4.3",
+      "apiModelId": "grok-4.3",
+      "tier": "frontier",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ],
+      "source": "https://docs.x.ai/developers/models/grok-4.3"
+    },
+    {
+      "provider": "xAI",
+      "modelName": "Grok 4.20 Reasoning",
+      "apiModelId": "grok-4.20-0309-reasoning",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://docs.x.ai/developers/models"
+    },
+    {
+      "provider": "xAI",
+      "modelName": "Grok 4.20 Non-Reasoning",
+      "apiModelId": "grok-4.20-0309-non-reasoning",
+      "tier": "mid",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://docs.x.ai/developers/models"
+    },
+    {
+      "provider": "xAI",
+      "modelName": "Grok Build 0.1",
+      "apiModelId": "grok-build-0.1",
+      "tier": "small",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 1,
+      "outputCostPerMTok": 2,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://docs.x.ai/developers/models"
+    }
+  ]
+}
