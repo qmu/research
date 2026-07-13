@@ -130,3 +130,13 @@ structured path (×4).
   explicitly defers shipping.
 - Any follow-up (steps 2–5) leaves `compare:fixture` byte-stable, tsc + vitest +
   lint + `make build` green, and every non-measured cell flagged honestly.
+
+## Resolution (2026-07-13, archived without further work)
+
+PR #15 ("Initialize the research monorepo and build the living LLM research
+platform", branch `work-20260622-191220`) was merged to `main`; the shipped
+result was reflected onto qmu-co-jp as v0.1.0. The standing owner-deferred ship
+decision is therefore resolved. The optional follow-ups (error-config cleanup,
+breadth pinning, multi-trial rigor, publish decision) were split into dedicated
+tickets during earlier drives and are archived under
+`archive/work-20260622-191220/`.

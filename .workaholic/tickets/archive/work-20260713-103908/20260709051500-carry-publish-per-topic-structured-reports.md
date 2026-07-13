@@ -155,3 +155,13 @@ and a closing `考察` section holding the LLM analysis over the same numbers.
   `npm run lint`, `make build` green; all keyless fixtures byte-stable; publish
   dry-run lists exactly the four reports + agent-sdk + catalog; and any real run
   leaves zero `rag-bench-*` cloud resources.
+
+## Resolution (2026-07-13, archived without further work)
+
+Superseded and completed by later drives on `work-20260622-191220`: the
+availability redesign shipped as tickets `20260709052000` +
+`20260709120000`, the publish boundary and per-topic pipeline were reworked
+(`20260709190517`, `20260709223740`, `20260710002018`, `20260712031500`), and
+PR #15 merged with the result published to qmu-co-jp as v0.1.0. The remaining
+outward-facing follow-up is the owner's editorial feedback, tracked as
+`20260713103908-qmu-co-jp-editorial-alignment.md`.
