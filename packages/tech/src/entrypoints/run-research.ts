@@ -36,6 +36,7 @@ const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   accuracy: () => Promise.resolve({ main: () => runSplitTopic("accuracy") }),
   rag: () => import("./run-rag-benchmark"),
   ocr: () => import("./run-ocr-comparison"),
+  "image-generation": () => import("./run-image-generation"),
   availability: () => import("./run-llm-availability"),
 };
 

@@ -41,12 +41,14 @@ keyless and deterministic).
 
 ## Acceptance
 
-- [ ] Research design (cadence, subjects, metrics, cost/trial range, history) proposed and owner-approved before scaffolding (#20260713120500-image-generation-benchmark-topic.md)
-- [ ] Topic runnable via `npm run research -- image-generation` with fixture/estimate/real modes; keyless fixture byte-stable and CI-suitable (#20260713120500-image-generation-benchmark-topic.md)
-- [ ] Published EN + JP pages in `publishedResearchTopics` passing the title==sidebar-label, no-mermaid, and 7-section outline guards (#20260713120500-image-generation-benchmark-topic.md)
+- [x] Research design (cadence, subjects, metrics, cost/trial range, history) proposed and owner-approved before scaffolding (#20260713120500-image-generation-benchmark-topic.md)
+- [x] Topic runnable via `npm run research -- image-generation` with fixture/estimate/real modes; keyless fixture byte-stable and CI-suitable (#20260713120500-image-generation-benchmark-topic.md)
+- [x] Published EN + JP pages in `publishedResearchTopics` passing the title==sidebar-label, no-mermaid, section-4 budget, and 7-section outline guards (#20260713120500-image-generation-benchmark-topic.md)
 - [ ] First real trial run within the approved cost ceiling, committed as a dated history frame with the design-validation review (step 3 of the guideline)
 - [ ] qmu-co-jp receives the new article through the publish ticket flow on the next `/ship`
 
 ## Changelog
 
 - 2026-07-13 — mission created; design proposal drafted for owner approval — 20260713120500-image-generation-benchmark-topic.md
+- 2026-07-13 — design approved (fixture-only for this drive); topic built end to end: registry (ids/prices web-verified), rubric manifest v1, scoring, §4-policy report, ImageGenerationClient port + openai/google/xai/fixture adapters, unified-CLI wiring, published EN/JP pages, all guards green; estimate ~$0.95/trial (ceiling $20) — 20260713120500-image-generation-benchmark-topic.md
+- 2026-07-13 — remaining: owner-triggered first real trial (guideline step 3) and the qmu-co-jp reflection on the next /ship

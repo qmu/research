@@ -2,6 +2,8 @@ import type {
   CompletionClient,
   Completion,
   CompletionOptions,
+  GeneratedImage,
+  ImageGenerationClient,
   JsonSchema,
   LlmClient,
   StreamedCompletion,
@@ -105,6 +107,27 @@ export const FIXTURE_VISION_IMAGE: VisionImageInput = {
 };
 
 export const FIXTURE_VISION_INSTRUCTION = "Describe the fixture image.";
+
+// Deterministic image-generation stub for the keyless path: every prompt yields
+// the same committed 1x1 PNG, with a latency seeded from the prompt text so
+// per-prompt latency stats are non-degenerate yet byte-stable.
+export const createFixtureImageGenerationClient = (
+  model = "fixture-image",
+): ImageGenerationClient => ({
+  model,
+  generateImage: (prompt: string): Promise<GeneratedImage> => {
+    const seed = [...prompt].reduce(
+      (sum, char) => (sum + char.charCodeAt(0)) % 997,
+      0,
+    );
+    return Promise.resolve({
+      base64: FIXTURE_VISION_IMAGE.base64,
+      mimeType: "image/png",
+      elapsedMs: 5 + (seed % 45),
+      model,
+    });
+  },
+});
 
 const FIXTURE_VISION_TEXT =
   "Fixture vision response: one transparent 1x1 PNG page.";

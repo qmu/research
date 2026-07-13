@@ -39,7 +39,11 @@
     "ocr": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts",
     "ocr:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts",
     "ocr:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts --real",
-    "ocr:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts --estimate"
+    "ocr:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-ocr-comparison.ts --estimate",
+    "imagegen": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts",
+    "imagegen:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts",
+    "imagegen:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts --real",
+    "imagegen:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts --estimate"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

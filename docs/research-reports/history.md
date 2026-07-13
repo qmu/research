@@ -42,3 +42,7 @@ The topic order matches [LLMs Research](./) and
 ### RAG vector store benchmark
 
 - 2026-07-09T11:02:46.726Z: [English](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark) · [Japanese](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja) · [data.json](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.data.json)
+
+### Image generation
+
+No dated frames have been archived yet.

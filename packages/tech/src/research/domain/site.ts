@@ -377,6 +377,64 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-backend HistoryPoint series for retrieval and latency metrics, one point per dated frame",
     },
   },
+  {
+    id: "image-generation",
+    artifactBase: "image-generation-comparison",
+    npmScript: "npm run research -- image-generation --real",
+    source: {
+      text: "Image generation",
+      docsPath: "docs/research-reports/image-generation-comparison.md",
+      summary:
+        "Generation latency, per-image cost, rubric-checked prompt adherence, and exact-text rendering.",
+    },
+    japanese: {
+      text: "画像生成",
+      docsPath:
+        "docs/research-reports/image-generation-comparison.insights.ja.md",
+      summary:
+        "生成レイテンシ、画像単価、機械検証可能なプロンプト追従、正確なテキスト描画の比較。",
+    },
+    dataPath: "docs/research-reports/image-generation-comparison.data.json",
+    qmuSlug: "image-generation",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger:
+        "an image-generation model release or retirement at a covered provider",
+      subjects:
+        "API-accessible image-generation models in the curated image-model registry (OpenAI, Google, xAI; Anthropic exposes no image-generation API and is recorded as not applicable)",
+      metrics: [
+        {
+          name: "generationLatencyMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        { name: "costPerImageUsd", unit: "USD", direction: "reference" },
+        {
+          name: "promptAdherence",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "textRenderAccuracy",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 20,
+        premises:
+          "3 models × 8 prompts × 1–3 repetitions at $0.02–$0.04 catalog per image plus one vision-judge read per image; run `research -- image-generation --estimate` first",
+      },
+      accumulates:
+        "per-model HistoryPoint series for latency, adherence, and text accuracy, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
 ];
 
 /**

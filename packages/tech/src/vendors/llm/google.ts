@@ -2,6 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import type {
   CompletionClient,
   CompletionOptions,
+  GeneratedImage,
+  ImageGenerationClient,
   JsonSchema,
   StreamedCompletion,
   StructuredCompletion,
@@ -117,6 +119,42 @@ export const createGoogleCompletionClient = (
         elapsedMs: Date.now() - startedAt,
         model: apiModelId,
       };
+    },
+  };
+};
+
+// Gemini image models (e.g. gemini-2.5-flash-image) return the image as an
+// inline-data part of a generateContent response; this adapter extracts the
+// first image part into the provider-neutral GeneratedImage.
+export const createGoogleImageGenerationClient = (
+  apiModelId: string,
+  apiKey: string,
+): ImageGenerationClient => {
+  const client = new GoogleGenAI({ apiKey });
+  return {
+    model: apiModelId,
+    generateImage: async (prompt): Promise<GeneratedImage> => {
+      const startedAt = Date.now();
+      const response = await client.models.generateContent({
+        model: apiModelId,
+        contents: prompt,
+      } as unknown as Parameters<typeof client.models.generateContent>[0]);
+      const parts = response.candidates?.[0]?.content?.parts ?? [];
+      for (const part of parts) {
+        const inline = (
+          part as { inlineData?: { data?: string; mimeType?: string } }
+        ).inlineData;
+        if (inline?.data) {
+          return {
+            base64: inline.data,
+            mimeType:
+              inline.mimeType === "image/jpeg" ? "image/jpeg" : "image/png",
+            elapsedMs: Date.now() - startedAt,
+            model: apiModelId,
+          };
+        }
+      }
+      throw new Error(`image generation returned no image (${apiModelId})`);
     },
   };
 };
