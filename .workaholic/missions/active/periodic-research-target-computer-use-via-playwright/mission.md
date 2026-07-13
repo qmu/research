@@ -36,7 +36,7 @@ Done means: a `computer-use` research topic exists following the proposal-first
 protocol and TEMPLATE.md — pure domain scoring (task-suite success predicates,
 metric aggregation), the three API-native computer-use tools (Anthropic
 `computer_20251124` on Claude Sonnet 5, OpenAI `computer` on
-`computer-use-preview`, Google `computer_use` on Gemini 3.5 Flash) behind
+`computer-use-preview`, Google `computer_use` on Gemini 2.5 Computer Use) behind
 `vendors/` anti-corruption adapters, a fixed Playwright actuation/observation
 harness, a committed deterministic browser-task suite, a thin runner with
 fixture/estimate/real modes, a published EN page + JP translation wired through
@@ -47,8 +47,10 @@ committed as a dated frame within the $40 ceiling.
 The full five-element design proposal (cadence, subjects, metrics,
 cost/trial-count range, accumulated history, and the reproducible task-suite
 decision) lives in the build ticket
-`#20260714010000-computer-use-via-playwright-topic.md`, drafted by the kickoff
-and **awaiting owner approval** before any scaffolding or paid run.
+`#20260714010000-computer-use-via-playwright-topic.md`. It was **approved on
+2026-07-14** for the keyless build + published pages (both now shipped); only the
+real (paid) Playwright-harness trial remains gated
+(`#20260714013000-computer-use-first-real-trial.md`, guideline step 3).
 
 Out of scope: desktop-OS tasks (OSWorld) and mobile (AndroidWorld) — v1 is
 browser-only; a second DOM-first harness (`browser-use`) — a later
