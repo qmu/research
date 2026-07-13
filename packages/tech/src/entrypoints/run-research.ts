@@ -44,6 +44,7 @@ const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   ocr: () => import("./run-ocr-comparison"),
   "image-generation": () => import("./run-image-generation"),
   "deep-research": () => import("./run-deep-research"),
+  speech: () => import("./run-speech-comparison"),
   availability: () => import("./run-llm-availability"),
 };
 
