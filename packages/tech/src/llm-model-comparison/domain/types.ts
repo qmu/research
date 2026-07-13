@@ -19,8 +19,17 @@ import type { EffortLevel } from "./effort";
 // not an accident — the domain names a provider only as a tag, never importing an
 // SDK type. `xai` and `perplexity` are OpenAI-compatible endpoints reached through
 // a base-URL variant of the OpenAI adapter (xAI's Grok lineup; Perplexity's
-// search-grounded Sonar lineup).
-export type Provider = "anthropic" | "openai" | "google" | "xai" | "perplexity";
+// search-grounded Sonar lineup). `bedrock` and `vertex` are IaaS transports for
+// Claude models — the same weights served through AWS Bedrock (SigV4) and Google
+// Vertex (GCP ADC), so a config can name "Claude on Bedrock", not just first-party.
+export type Provider =
+  | "anthropic"
+  | "openai"
+  | "google"
+  | "xai"
+  | "perplexity"
+  | "bedrock"
+  | "vertex";
 
 // The CURATED half: static, cited, human-authored catalog data. Every field is a
 // column of the comparison table except `apiModelId` (the wire id, isolated here

@@ -289,6 +289,36 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   Sonar cards in `models.ts`. Sonar's search grounding stays behind the ACL; the
   `CompletionClient` port is unchanged.
 
+### @anthropic-ai/bedrock-sdk, @anthropic-ai/vertex-sdk (packages/tech)
+
+- **Reason**: The IaaS-hosted-models mission measures Claude AS SERVED through the
+  IaaS platforms enterprises actually consume it on — AWS Bedrock and Google
+  Vertex AI. Both serve the Anthropic Messages API but authenticate differently
+  from the first-party key (Bedrock: AWS SigV4; Vertex: GCP ADC), which is why the
+  official Anthropic Bedrock/Vertex SDKs are adopted rather than hand-signing
+  requests. Both wrap the already-adopted `@anthropic-ai/sdk` and expose the same
+  `.messages` surface, so the completion-client wiring is shared
+  (`vendors/llm/messages-completion.ts`) and only the client construction differs
+  per transport (`vendors/llm/bedrock.ts`, `vendors/llm/vertex.ts`).
+- **Assessment**:
+  - License: MIT (same as `@anthropic-ai/sdk`) — compatible with this MIT repo.
+  - Reputation: first-party Anthropic SDKs; same maintainer and release cadence as
+    the core SDK already in use.
+  - Development status / Sustainability: actively maintained alongside the core SDK.
+- **Auth**: Bedrock resolves through the `awsSigV4` credential spec (AWS_REGION /
+  AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / optional AWS_SESSION_TOKEN); Vertex
+  through the `gcpAdc` spec (GOOGLE_CLOUD_PROJECT / GOOGLE_CLOUD_LOCATION plus
+  ambient ADC). A missing/partial credential set resolves to `null` and falls back
+  to the keyless fixture path (`provenance: "fixtured"`), so CI stays green without
+  cloud credentials. The `@aws-sdk`/`google-auth-library` transitive types never
+  leave the `vendors/` ACL.
+- **Monitoring**: Dependabot / npm audit, tracked with the core SDK.
+- **Exit strategy**: Each transport is a single adapter file plus a `Provider`
+  union member, `CREDENTIAL_SPEC`/`CLIENT_FACTORY` entry, and model cards; the
+  shared Messages client and the `CompletionClient` port are unchanged. Dropping a
+  backend removes its SDK, adapter, and registry entries. Bedrock's `anthropic.`
+  wire-id prefix is applied only at that adapter's boundary.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

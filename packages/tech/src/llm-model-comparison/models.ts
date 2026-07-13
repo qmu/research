@@ -343,4 +343,61 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     effortLevels: ["n/a"],
     source: "https://docs.perplexity.ai/guides/pricing",
   },
+  // ── AWS Bedrock (Claude, IaaS transport) ────────────────────────────────────
+  // The same Claude weights served through AWS Bedrock's Messages endpoint (see
+  // vendors/llm/bedrock.ts), measured AS SERVED — latency, price, and region can
+  // differ from the first-party API. KEY-GATED on AWS SigV4 credentials
+  // (AWS_REGION / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY); the keyless
+  // CI/fixture path renders them deterministically. `apiModelId` is the
+  // first-party id — the adapter adds Bedrock's `anthropic.` wire prefix. Bedrock
+  // supports adaptive thinking/effort, so the effort ladder mirrors first-party.
+  // Prices are curated best-known Bedrock on-demand estimates — treat each cell as
+  // correct only as of its source.
+  {
+    id: "bedrock-claude-opus-4-8",
+    provider: "bedrock",
+    tier: "flagship",
+    modelName: "Claude Opus 4.8 (Bedrock)",
+    apiModelId: "claude-opus-4-8",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 25,
+    effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    source:
+      "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock",
+  },
+  {
+    id: "bedrock-claude-sonnet-5",
+    provider: "bedrock",
+    tier: "mid",
+    modelName: "Claude Sonnet 5 (Bedrock)",
+    apiModelId: "claude-sonnet-5",
+    released: "2026-06",
+    inputCostPerMTok: 3,
+    outputCostPerMTok: 15,
+    effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    source:
+      "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock",
+  },
+  // ── Google Vertex AI (Claude, IaaS transport) ───────────────────────────────
+  // The same Claude weights served through Google Vertex AI (see
+  // vendors/llm/vertex.ts), measured AS SERVED. KEY-GATED on GCP ADC routing
+  // facts (GOOGLE_CLOUD_PROJECT / GOOGLE_CLOUD_LOCATION plus ambient ADC); the
+  // keyless CI/fixture path renders them deterministically. Vertex model ids are
+  // the bare first-party ids (no prefix). Vertex supports adaptive thinking/effort,
+  // so the effort ladder mirrors first-party. Prices are curated best-known Vertex
+  // estimates — treat each cell as correct only as of its source.
+  {
+    id: "vertex-claude-opus-4-8",
+    provider: "vertex",
+    tier: "flagship",
+    modelName: "Claude Opus 4.8 (Vertex)",
+    apiModelId: "claude-opus-4-8",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 25,
+    effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    source:
+      "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai",
+  },
 ];

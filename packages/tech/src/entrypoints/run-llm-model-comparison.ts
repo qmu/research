@@ -33,12 +33,19 @@ import {
 } from "../llm-model-comparison/domain/matrix";
 import type { CompletionClient } from "../vendors/llm/types";
 import type { Credential, CredentialSpec } from "../vendors/llm/credentials";
-import { resolveCredential, requireApiKey } from "../vendors/llm/credentials";
+import {
+  resolveCredential,
+  requireApiKey,
+  requireAwsSigV4,
+  requireGcpAdc,
+} from "../vendors/llm/credentials";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
 import { createOpenAiCompletionClient } from "../vendors/llm/openai";
 import { createOpenAiResponsesCompletionClient } from "../vendors/llm/openai-responses";
 import { createXaiCompletionClient } from "../vendors/llm/xai";
 import { createPerplexityCompletionClient } from "../vendors/llm/perplexity";
+import { createBedrockCompletionClient } from "../vendors/llm/bedrock";
+import { createVertexCompletionClient } from "../vendors/llm/vertex";
 import { createGoogleCompletionClient } from "../vendors/llm/google";
 import { createOpenAiRealtimeCompletionClient } from "../vendors/llm/openai-realtime";
 import { createFixtureCompletionClient } from "../vendors/llm/fixture";
@@ -142,6 +149,21 @@ const CREDENTIAL_SPEC: Record<ModelCard["provider"], CredentialSpec> = {
   google: { kind: "apiKey", apiKeyEnv: "GOOGLE_API_KEY" },
   xai: { kind: "apiKey", apiKeyEnv: "XAI_API_KEY" },
   perplexity: { kind: "apiKey", apiKeyEnv: "PERPLEXITY_API_KEY" },
+  // AWS Bedrock authenticates with SigV4; a missing/partial AWS credential set
+  // resolves to null → the fixture fallback, exactly like a missing apiKey.
+  bedrock: {
+    kind: "awsSigV4",
+    regionEnv: "AWS_REGION",
+    accessKeyIdEnv: "AWS_ACCESS_KEY_ID",
+    secretAccessKeyEnv: "AWS_SECRET_ACCESS_KEY",
+    sessionTokenEnv: "AWS_SESSION_TOKEN",
+  },
+  // Google Vertex authenticates with GCP ADC; the routing facts come from env.
+  vertex: {
+    kind: "gcpAdc",
+    projectIdEnv: "GOOGLE_CLOUD_PROJECT",
+    locationEnv: "GOOGLE_CLOUD_LOCATION",
+  },
 };
 
 // Build a live client from a resolved (non-null) credential. The factory contract
@@ -164,6 +186,11 @@ const CLIENT_FACTORY: Record<
   // Perplexity is OpenAI-compatible too (search-grounded Sonar lineup).
   perplexity: (id, cred) =>
     createPerplexityCompletionClient(id, requireApiKey(cred, "perplexity")),
+  // IaaS transports for Claude: each narrows the credential to its own shape.
+  bedrock: (id, cred) =>
+    createBedrockCompletionClient(id, requireAwsSigV4(cred, "bedrock")),
+  vertex: (id, cred) =>
+    createVertexCompletionClient(id, requireGcpAdc(cred, "vertex")),
 };
 
 // Build the live client for a model, or undefined when no credential resolves (the

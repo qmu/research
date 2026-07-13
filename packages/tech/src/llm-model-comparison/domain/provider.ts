@@ -6,6 +6,8 @@ const PROVIDER_DISPLAY_NAMES = {
   google: "Google",
   xai: "xAI",
   perplexity: "Perplexity",
+  bedrock: "AWS Bedrock",
+  vertex: "Google Vertex AI",
 } satisfies Record<Provider, string>;
 
 export const providerDisplayName = (provider: Provider | string): string =>

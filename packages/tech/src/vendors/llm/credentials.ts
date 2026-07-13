@@ -137,3 +137,29 @@ export const requireApiKey = (
   }
   return credential.apiKey;
 };
+
+// Narrow a resolved credential to AWS SigV4 material (Bedrock), or fail loudly.
+export const requireAwsSigV4 = (
+  credential: Credential,
+  provider: string,
+): AwsSigV4Credential => {
+  if (credential.kind !== "awsSigV4") {
+    throw new Error(
+      `${provider}: expected an awsSigV4 credential, got "${credential.kind}"`,
+    );
+  }
+  return credential;
+};
+
+// Narrow a resolved credential to GCP ADC routing facts (Vertex), or fail loudly.
+export const requireGcpAdc = (
+  credential: Credential,
+  provider: string,
+): GcpAdcCredential => {
+  if (credential.kind !== "gcpAdc") {
+    throw new Error(
+      `${provider}: expected a gcpAdc credential, got "${credential.kind}"`,
+    );
+  }
+  return credential;
+};
