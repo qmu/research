@@ -5,11 +5,13 @@ import {
   comparisonSnapshotPoints,
   framesInTendencyWindow,
   instrumentVersionOf,
+  ragSnapshotPoints,
   renderSnapshot,
   SNAPSHOT_CHAR_BUDGET,
   snapshotBudgetProblems,
   snapshotFixtureNarrative,
   snapshotPointsFor,
+  statsRunsSnapshotPoints,
   stripSvgMarkup,
   TENDENCY_WINDOW_MONTHS,
 } from "./snapshot";
@@ -301,5 +303,85 @@ describe("instrumentVersionOf", () => {
     expect(instrumentVersionOf({})).toBe(1);
     expect(instrumentVersionOf(undefined)).toBe(1);
     expect(instrumentVersionOf({ instrumentVersion: "2" })).toBe(1);
+  });
+});
+
+describe("statsRunsSnapshotPoints (ocr / image-generation shape)", () => {
+  const extract = statsRunsSnapshotPoints([
+    "characterErrorRate",
+    "fieldAccuracy",
+  ]);
+
+  it("emits one point per measured run per named metric", () => {
+    const points = extract({
+      generatedAt: "2026-07-01T00:00:00.000Z",
+      runs: [
+        {
+          id: "m1",
+          modelName: "Model One",
+          provenance: "measured",
+          measuredAt: "2026-07-01T00:00:00.000Z",
+          stats: {
+            characterErrorRate: { mean: 0.1, n: 2 },
+            fieldAccuracy: { mean: 0.9, n: 2 },
+          },
+        },
+      ],
+    });
+    expect(points).toEqual([
+      {
+        seriesId: "m1",
+        seriesLabel: "Model One",
+        metric: "characterErrorRate",
+        measuredAt: "2026-07-01T00:00:00.000Z",
+        value: 0.1,
+      },
+      {
+        seriesId: "m1",
+        seriesLabel: "Model One",
+        metric: "fieldAccuracy",
+        measuredAt: "2026-07-01T00:00:00.000Z",
+        value: 0.9,
+      },
+    ]);
+  });
+
+  it("skips fixtured/errored runs and missing metrics", () => {
+    expect(
+      extract({
+        runs: [
+          {
+            id: "f",
+            provenance: "fixtured",
+            stats: { characterErrorRate: { mean: 0 } },
+          },
+          { id: "e", provenance: "error", stats: {} },
+        ],
+      }),
+    ).toEqual([]);
+  });
+});
+
+describe("ragSnapshotPoints", () => {
+  it("emits retrieval and operational metrics per measured backend", () => {
+    const points = ragSnapshotPoints({
+      generatedAt: "2026-07-01T00:00:00.000Z",
+      runs: [
+        {
+          backend: { id: "sqlite-vec", name: "sqlite-vec" },
+          provenance: "measured",
+          measuredAt: "2026-07-01T00:00:00.000Z",
+          retrieval: { recallAtK: 0.8, ndcgAtK: 0.7 },
+          operational: { queryLatencyP50Ms: 12, costUsd: 0.01 },
+        },
+      ],
+    });
+    expect(points.map((p) => p.metric).sort()).toEqual([
+      "costUsd",
+      "ndcgAtK",
+      "queryLatencyP50Ms",
+      "recallAtK",
+    ]);
+    expect(points.every((p) => p.seriesId === "sqlite-vec")).toBe(true);
   });
 });
