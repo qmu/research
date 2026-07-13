@@ -98,6 +98,7 @@ Out of scope:
 ## Changelog
 
 - 2026-07-13 — owner clarified the intended structure: a dated survey-article series per topic; each article embeds the trend through its run and links to all past articles; latest = current page. Decisions locked (publish all runs to qmu; stable slug = latest; don't rewrite old frames; regenerate current pages now). Ticketed — 20260713144951-dated-article-series-with-trend-and-backlinks.md
+- 2026-07-13 — core built (commits 6995212, f3cc3ac): all 7 topics unified on the composed dated-article model (§4 推移 + §7 過去の調査), speed EN/JP inconsistency fixed, real-run pipeline composes-then-translates the current page. Remaining on the ticket: D1 publish-all-runs to qmu, drop the vestigial insights stage, and rewrite ADR 0005 / guideline / this mission body out of "snapshot" terms.
 
 <!-- Append-only, dated timeline relating this mission's tickets and reports over time.
      One line per event ("- YYYY-MM-DD — event — filename"); never rewrite past lines. -->

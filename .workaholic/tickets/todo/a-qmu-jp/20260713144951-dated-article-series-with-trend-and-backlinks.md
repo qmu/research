@@ -113,6 +113,38 @@ topic's current page, not to build new machinery from scratch.
   structure in these terms (dated article series; trend + back-links in each
   article; latest = current page); stop using "snapshot".
 
+## Progress (2026-07-13 drive on work-20260713-115558)
+
+DONE:
+- Composed-article model built (`research/domain/current-article.ts` +
+  `research/current-article-runner.ts`): each topic's current page gets a
+  推移 (trend) block in §4 and a 過去の調査 (past surveys) links block in §7,
+  as bold-labelled blocks that keep the 7-section outline intact. Commit
+  `6995212`.
+- speed unified off the snapshot special-case; its title matches its sidebar
+  label; orphan `.report.md` removed. The reported EN/JP inconsistency is
+  fixed — JP current page `translated_from` now points at the English current
+  page.
+- Real-run pipeline reconciled: `research -- <topic> --real` composes the
+  current page then translates it (not the insights prose), so future real
+  runs stay consistent. Commit `f3cc3ac`.
+- All 7 current pages regenerated + JP re-translated; trend shows a
+  first-survey note until ≥2 same-instrument surveys exist.
+
+REMAINING (this ticket stays open until these land):
+- **D1 publish-all-runs to qmu.** `publishPlan`/`renderQmuTicketPayload` still
+  emit one file per topic (latest). To make in-article 過去の調査 links resolve
+  on qmu-co-jp, the payload must also copy each `history/<topic>/<ts>/` EN+JP
+  frame under a mirrored path on qmu (so the relative links resolve unchanged),
+  and `scripts/publish-research.sh` must copy them. Update `site.test.ts`.
+- **Drop the now-vestigial insights stage** from the real pipeline (it writes
+  an unused `.insights.md` and costs an LLM call), or repurpose it as the §5
+  考察 source only.
+- **Docs:** restate ADR 0005 + `docs/research-development-guideline.md` +
+  the `living-research-development-guideline` mission body in
+  dated-article-series terms (drop "snapshot"); add trend point extractors for
+  ocr/rag/availability/image-generation so their 推移 charts populate.
+
 ## Quality Gate
 
 - [ ] Every topic's current page (EN and JP) contains the run's results, a 推移
