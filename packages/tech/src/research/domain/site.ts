@@ -560,6 +560,27 @@ export const framePublishPlan = (
       };
     });
 
+/**
+ * The English counterpart of `framePublishPlan`: each dated English survey,
+ * mirrored under the qmu-co-jp English section so the English current pages'
+ * past-survey links resolve there too.
+ */
+export const englishFramePublishPlan = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): ReadonlyArray<PublishPlanEntry> =>
+  frames
+    .filter((frame) => frame.sourcePath !== undefined)
+    .map((frame) => {
+      const sourcePath = frame.sourcePath as string;
+      return {
+        sourceSlug: stripMarkdown(sourcePath).replace(/^docs\//, ""),
+        destinationSlug: stripMarkdown(sourcePath).replace(
+          /^docs\/research-reports\//,
+          "",
+        ),
+      };
+    });
+
 export const historyStamp = (generatedAt: string): string =>
   generatedAt.replace(/[:.]/g, "-");
 
@@ -765,6 +786,7 @@ export const renderQmuTicketPayload = (
   frames: ReadonlyArray<ResearchHistoryFrame> = [],
 ): string => {
   const framePlan = framePublishPlan(frames);
+  const englishFramePlan = englishFramePublishPlan(frames);
   return [
     "# Reflect LLMs Research reports",
     "",
@@ -800,11 +822,22 @@ export const renderQmuTicketPayload = (
     ...(framePlan.length === 0
       ? []
       : [
-          `Past-survey articles (${framePlan.length}): copy each dated Japanese survey under the mirrored path below, so the 過去の調査 links inside the current articles resolve on qmu-co-jp. These are the earlier runs of each topic, kept as their own articles:`,
+          `Past-survey articles (${framePlan.length} Japanese): copy each dated Japanese survey under the mirrored path below, so the 過去の調査 links in the Japanese current pages resolve on qmu-co-jp. These are the earlier runs of each topic, kept as their own articles:`,
           "",
           ...framePlan.map(
             (entry) =>
               `- docs/${entry.sourceSlug}.md -> docs/llm-foundation-research/${entry.destinationSlug}.md`,
+          ),
+          "",
+        ]),
+    ...(englishFramePlan.length === 0
+      ? []
+      : [
+          `Past-survey articles (${englishFramePlan.length} English): copy each dated English survey under the mirrored path below, so the past-survey links in the English current pages resolve in the English section:`,
+          "",
+          ...englishFramePlan.map(
+            (entry) =>
+              `- docs/${entry.sourceSlug}.md -> docs/en/llm-foundation-research/${entry.destinationSlug}.md`,
           ),
           "",
         ]),

@@ -401,8 +401,8 @@ The projection writes `llm-accuracy-comparison.data.json` and this Markdown page
 
 **過去の調査 / Past surveys in this series**
 
-Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- 2026-07-12T05:47:26.268Z: [English](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.data.json)
-- 2026-07-09T12:21:25.966Z: [English](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.data.json)
-- 2026-07-09T11:14:36.434Z: [English](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison) · [Japanese](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja) · [data.json](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.data.json)
+- [2026-07-12T05:47:26.268Z](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison)
+- [2026-07-09T12:21:25.966Z](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison)
+- [2026-07-09T11:14:36.434Z](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison)

@@ -319,8 +319,8 @@ The projection writes `llm-speed-comparison.data.json` and this Markdown page. T
 
 **過去の調査 / Past surveys in this series**
 
-Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- 2026-07-12T05:47:26.268Z: [English](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.data.json)
-- 2026-07-09T11:52:54.627Z: [English](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.data.json)
-- 2026-07-09T11:12:01.332Z: [English](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.data.json)
+- [2026-07-12T05:47:26.268Z](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison)
+- [2026-07-09T11:52:54.627Z](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison)
+- [2026-07-09T11:12:01.332Z](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison)

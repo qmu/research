@@ -115,6 +115,6 @@ Generated: 2026-01-01T00:00:00.000Z
 
 **過去の調査 / Past surveys in this series**
 
-Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- 2026-07-09T11:03:48.277Z: [English](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison) · [Japanese](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja) · [data.json](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.data.json)
+- [2026-07-09T11:03:48.277Z](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison)

@@ -10,7 +10,10 @@ import {
 import { runInsightsStage } from "../research/insights-runner";
 import { runTranslationStage } from "../research/translate-runner";
 import { runReportTranslation } from "../research/report-translation-runner";
-import { composeTopicCurrentArticle } from "../research/current-article-runner";
+import {
+  appendRelatedToTopicPages,
+  composeTopicCurrentArticle,
+} from "../research/current-article-runner";
 import { findPublishedResearchTopic } from "../research/domain/site";
 import { runSplitTopic } from "./run-split-topic";
 import { runReferenceTopic } from "./run-reference-topic";
@@ -134,18 +137,21 @@ export const main = async (): Promise<void> => {
       // insights prose. On a real run, compose the freshly-rendered current
       // page first, then translate it — so English → translate → Japanese
       // holds and the two languages never fork (the speed EN/JP bug).
-      if (
-        mode === "real" &&
-        findPublishedResearchTopic(spec.id) !== undefined
-      ) {
+      const published = findPublishedResearchTopic(spec.id) !== undefined;
+      if (mode === "real" && published) {
         await composeTopicCurrentArticle(spec.id);
       }
-      if (findPublishedResearchTopic(spec.id) !== undefined) {
+      if (published) {
         await runReportTranslation({
           topicId: spec.id,
           mode,
           generatedAt: nowIso(),
         });
+        // The per-language past-survey links are appended after translation, so
+        // the English and Japanese pages each link their own-language frames.
+        if (mode === "real") {
+          await appendRelatedToTopicPages(spec.id);
+        }
       } else {
         await runTranslationStage({ spec, mode, generatedAt: nowIso() });
       }

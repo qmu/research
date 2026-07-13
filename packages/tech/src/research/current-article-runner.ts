@@ -8,8 +8,11 @@ import {
   type ResearchSiteTopic,
 } from "./domain/site";
 import {
+  appendRelatedBlock,
+  buildRelatedBlock,
+  buildTrendBlock,
   composeCurrentArticle,
-  currentArticleBlocks,
+  type ArticleLanguage,
 } from "./domain/current-article";
 import {
   framesInTendencyWindow,
@@ -19,17 +22,19 @@ import {
 } from "./domain/snapshot";
 
 /**
- * The effectful driver for the dated survey-article composition: it reads a
- * topic's dated history frames and its current artifact, builds the 推移 and
- * 過去の調査 blocks (pure, in `domain/current-article.ts`), and injects them
- * into the topic's freshly-rendered current page. Kept here (not in an
- * entrypoint) so both the `research:site -- compose-current-articles` command
- * and the `research -- <topic> --real` pipeline compose through the same code —
- * the pipeline composes the current page BEFORE translating it, so the Japanese
- * current page is always a translation of the composed English current page.
+ * The effectful driver for the dated survey-article composition (pure blocks in
+ * `domain/current-article.ts`), in two steps around translation:
+ *   1. `composeTopicCurrentArticle` injects the 推移 (trend) block into the
+ *      English current page BEFORE translation, so its caption translates.
+ *   2. `appendRelatedToTopicPages` appends the 過去の調査 (past surveys) links
+ *      AFTER translation, once per language, so the English and Japanese pages
+ *      each link their own-language frames (translation would keep English
+ *      URLs). The `research -- <topic> --real` pipeline runs both around the
+ *      translation step, and the `compose-current-articles` /
+ *      `append-past-surveys` CLI commands run them for the whole site.
  *
- * Composition is not idempotent (it appends blocks), so a caller must compose a
- * FRESHLY-rendered measurement article, never an already-composed one.
+ * Neither step is idempotent (both add blocks), so a caller must run them on a
+ * FRESHLY-rendered / freshly-translated article, never on an already-composed one.
  */
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
@@ -137,8 +142,12 @@ const trendPointsFor = async (
   return points;
 };
 
-/** Compose one topic's freshly-rendered current page in place. Returns true if
- * a page was written, false if there was no current page to compose. */
+/**
+ * Compose the 推移 (trend) block into one topic's freshly-rendered English
+ * current page, BEFORE translation (so the Japanese page gets the translated
+ * trend). The 過去の調査 links are added later, per language, by
+ * `appendRelatedToTopicPages`. Returns true if a page was written.
+ */
 export const composeTopicCurrentArticle = async (
   topicId: string,
 ): Promise<boolean> => {
@@ -149,23 +158,62 @@ export const composeTopicCurrentArticle = async (
   if (!(await exists(currentPath))) return false;
   const frames = framesInTendencyWindow(await readHistoryFrames(topicId));
   const points = await trendPointsFor(topic, frames);
-  const { trendBlock, relatedBlock } = currentArticleBlocks(
-    topic,
-    frames,
-    points,
-  );
   const article = await readFile(currentPath, "utf8");
-  const composed = composeCurrentArticle(article, trendBlock, relatedBlock);
+  const composed = composeCurrentArticle(
+    article,
+    buildTrendBlock(topic, points),
+  );
   await mkdir(dirname(currentPath), { recursive: true });
   await writeFile(currentPath, composed, "utf8");
   return true;
 };
 
-/** Compose every published topic's current page (the site-wide command). */
+/**
+ * Append the 過去の調査 (past surveys) block to a topic's English and Japanese
+ * current pages, AFTER translation — each page links its own-language frames,
+ * so the links resolve in both qmu-co-jp language sections. Returns the number
+ * of pages written.
+ */
+export const appendRelatedToTopicPages = async (
+  topicId: string,
+): Promise<number> => {
+  const topic = findPublishedResearchTopic(topicId);
+  if (topic === undefined) return 0;
+  const root = repoRoot();
+  const frames = framesInTendencyWindow(await readHistoryFrames(topicId));
+  let written = 0;
+  const pages: ReadonlyArray<{ path: string; language: ArticleLanguage }> = [
+    { path: topic.source.docsPath, language: "en" },
+    { path: topic.japanese.docsPath, language: "ja" },
+  ];
+  for (const page of pages) {
+    const absolute = resolve(root, page.path);
+    if (!(await exists(absolute))) continue;
+    const block = buildRelatedBlock(frames, page.language);
+    if (block === "") continue;
+    const article = await readFile(absolute, "utf8");
+    await writeFile(absolute, appendRelatedBlock(article, block), "utf8");
+    written += 1;
+  }
+  return written;
+};
+
+/** Compose the trend into every published topic's current page (site-wide
+ * command; run BEFORE translation). */
 export const composeAllCurrentArticles = async (): Promise<number> => {
   let written = 0;
   for (const topic of publishedResearchTopics) {
     if (await composeTopicCurrentArticle(topic.id)) written += 1;
+  }
+  return written;
+};
+
+/** Append past-survey links to every published topic's EN and JP current pages
+ * (site-wide command; run AFTER translation). */
+export const appendAllRelated = async (): Promise<number> => {
+  let written = 0;
+  for (const topic of publishedResearchTopics) {
+    written += await appendRelatedToTopicPages(topic.id);
   }
   return written;
 };

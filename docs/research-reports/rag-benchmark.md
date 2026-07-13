@@ -86,6 +86,6 @@ Generated: 2026-01-01T00:00:00.000Z
 
 **過去の調査 / Past surveys in this series**
 
-Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- 2026-07-09T11:02:46.726Z: [English](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark) · [Japanese](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja) · [data.json](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.data.json)
+- [2026-07-09T11:02:46.726Z](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark)

@@ -100,7 +100,7 @@ The catalog regenerates from `packages/tech/src/llm-model-comparison/models.ts`;
 
 **過去の調査 / Past surveys in this series**
 
-Earlier dated surveys of this topic, newest first. Each is a complete article for its run.
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- 2026-07-09T11:54:54.587Z: [English](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
-- 2026-07-09T11:02:05.370Z: [English](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)
+- [2026-07-09T11:54:54.587Z](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models)
+- [2026-07-09T11:02:05.370Z](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models)

@@ -13,7 +13,10 @@ import {
   publishedResearchTopics,
   type ResearchHistoryFrame,
 } from "../research/domain/site";
-import { composeAllCurrentArticles } from "../research/current-article-runner";
+import {
+  appendAllRelated,
+  composeAllCurrentArticles,
+} from "../research/current-article-runner";
 import { isDirectRun } from "./direct-run";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
@@ -27,7 +30,8 @@ const usage = (): string =>
     "  copy-plan     Print source and destination slugs for qmu copy",
     "  qmu-ticket    Print the qmu-co-jp handoff ticket body",
     "  write-indexes Regenerate docs/research-reports and docs/llm-foundation indexes",
-    "  compose-current-articles  Inject the trend + past-survey links into each topic's current page",
+    "  compose-current-articles  Inject the trend block into each topic's current page (before translation)",
+    "  append-past-surveys       Append the per-language past-survey links to EN + JP current pages (after translation)",
     "",
   ].join("\n");
 
@@ -136,6 +140,14 @@ export const main = async (): Promise<void> => {
   if (command === "compose-current-articles" || command === "write-snapshots") {
     const written = await composeAllCurrentArticles();
     process.stdout.write(`composed ${written} current article(s)\n`);
+    return;
+  }
+  // Append the per-language 過去の調査 (past surveys) links to every topic's EN
+  // and JP current pages. Run AFTER translation, so each page links its own
+  // language's frames.
+  if (command === "append-past-surveys") {
+    const written = await appendAllRelated();
+    process.stdout.write(`appended past surveys to ${written} page(s)\n`);
     return;
   }
   if (command === "write-indexes") {

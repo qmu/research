@@ -1,49 +1,49 @@
 ---
 title: API可用性
 source_artifact: docs/research-reports/llm-availability.data.json
-source_commit: b6e5a10
+source_commit: 734686c
 insights_model: source-report
 translated_from: llm-availability.md
 translation_model: claude-sonnet-5
-generated_at: 2026-07-13T07:01:19.230Z
+generated_at: 2026-07-13T10:14:22.221Z
 trials: 0
 provenance: llm-translation
 ---
 # API可用性
 
-本レポートは、各プロバイダーの**公開ステータスページのインシデント履歴**をもとに構築された、可用性に関する**縦断的記録**である。
+本レポートは、各プロバイダーが公開している**ステータスページのインシデント履歴**をもとに構築した、各社の可用性に関する**経時的な記録**です。
 
 ## 1. 調査の目的
 
-本調査の目的は、各プロバイダが自社のインシデントについて報告している内容を比較可能かつ再現可能な形で記録し、その記録からローリング可用性指標を導出することである。モデルAPIそのものを検証するものではなく、参照元のステータスページに記載されている範囲を超えてプロバイダの信頼性を主張するものでもない。
+本調査の目的は、各プロバイダが自社のインシデントについて報告している内容を比較可能かつ再現可能な形で記録し、その記録からローリング可用性指数を導出することにある。モデルAPIそのものを検証するものではなく、情報源となるステータスページに示された範囲を超えてプロバイダの信頼性を主張するものでもない。
 
 ## 2. 測定対象
 
 ### 対象モデル
 
-対象セットは、このリポジトリに含まれるLLMプロバイダーの各プロバイダーステータスソースである。プロバイダーはアルファベット順に列挙されており、記録は `2026-07-09T03:55:03.571Z` 時点で評価されている。
+対象セットは、本リポジトリにおけるLLMプロバイダーのプロバイダーステータス情報源である。プロバイダーはアルファベット順に列挙され、記録は`2026-07-09T03:55:03.571Z`時点で評価されている。
 
 ### 対象メトリクス
 
-メトリクスは、各ステータスソースについて算出された30日間および90日間の稼働率指数、インシデント件数、重大/致命的インシデント件数、加重ダウンタイム分数、計画メンテナンス分数、90日分の日次トレンドポイント、および出所情報から構成される。
+メトリクスは、30日間および90日間の稼働率指数、インシデント件数、重大/致命的インシデント件数、加重ダウンタイム分数、計画メンテナンス分数、90日間の日次トレンドポイント、および各ステータス情報源のプロベナンスから導出される。
 
 ## 3. 範囲と制約
 
-- **SLAでもランキングでもありません。** 導出された稼働率は、各プロバイダーが自ら報告した内容に基づく加重指標であり、サービス保証や「最も信頼性の高いプロバイダー」であることを主張するものではありません。
-- 重み付け：重大障害（critical outage）は×1.0、大規模障害（major）は×0.5、軽微障害（minor）は×0.1とし、計画メンテナンスは除外して別途報告します。
-- ステータスページはそれぞれ異なる範囲でインシデントを記録しているため、1件のインシデントが指標にカウントされるのは最大**24時間**までとします。ただし、インシデントの完全な継続時間は記録として保持されます。
-- 出典：コミット済みの累積履歴（キー不要・決定論的レンダリング）。
+- **SLAでもランキングでもありません。** 導出された稼働率は、各プロバイダーが自社について報告した内容に基づく加重指標であり、サービス保証や「最も信頼性の高いプロバイダー」を示すものではありません。
+- 重み付け：重大な障害は×1.0、大規模障害は×0.5、軽微な障害は×0.1とし、計画的なメンテナンスは対象外として別途報告します。
+- ステータスページはインシデントを異なる範囲で記録するため、単一のインシデントが指標に反映されるのは最大**24時間**までとしています。ただし、インシデント記録には実際の全期間が保持されます。
+- 出典：コミット済みの累積履歴（キー不要、決定的レンダリング）。
 
 ## 4. 検証結果
 
-| プロバイダー | 稼働率 30日 | 稼働率 90日 | インシデント 30日 | インシデント 90日 |
+| プロバイダー | 稼働率 30日 | 稼働率 90日 | インシデント数 30日 | インシデント数 90日 |
 | -------- | ---------- | ---------- | ------------- | ------------- |
 | Anthropic (Claude) | 94.730% | 98.144% | 40 | 49 |
 | Google Cloud | 100.000% | 99.889% | 1 | 1 |
 | OpenAI | 98.187% | 99.352% | 19 | 25 |
 | xAI | 取得不可 | — | — | — |
 
-算出された稼働率は、各プロバイダー自身が報告したインシデントに基づく影響度加重インデックスです（詳細は「範囲」を参照）。30日・90日の詳細なウィンドウ（ダウンタイムおよびメンテナンス時間）と直近のインシデント履歴は、7章の検証データに記載しています。
+算出された稼働率は、各プロバイダー自身が報告したインシデントに基づくインパクト加重指数です（詳細は「範囲と制約」を参照）。詳細な30日／90日のウィンドウ（ダウンタイムおよびメンテナンス時間）と直近のインシデント履歴は、セクション7「検証データ」に記載しています。
 
 **日次稼働率の推移（90日間）**
 
@@ -51,11 +51,11 @@ provenance: llm-translation
 
 **推移 / Trend across surveys**
 
-本調査はこのシリーズにおける最初の比較可能な調査であるため、複数回にわたる調査間の推移を示すグラフはまだ存在しません。同一手法による2回目の調査がアーカイブされた時点で、ここに推移グラフが表示されるようになります。過去の調査については、検証データの項にリンクを記載しています。
+これは本シリーズにおける最初の比較可能な調査であるため、まだ複数回の調査にまたがる推移を示すチャートはありません。同一の測定手法による2回目の調査がアーカイブされた時点で、ここに推移チャートが表示されるようになります。過去の調査については「検証データ」の下にリンクを掲載しています。
 
 ## 5. 考察
 
-これらの数値は、観測ベースのステータスページの要約として読むべきものです。導出された稼働率の値が高いということは、集計元の記録において当該期間内の重み付けされたインシデント時間が少なかったことを意味するに過ぎず、実際のAPI可用性や将来の信頼性を証明するものではありません。
+これらの数値は、あくまでステータスページ上の観測結果を集計したものとして読み取るべきである。導出された稼働率が高いということは、集計元の記録において当該期間中の加重インシデント時間が少なかったことを意味するにすぎず、実際のAPI可用性や将来の信頼性を証明するものではない。
 
 ## 6. 再現方法
 
@@ -73,17 +73,17 @@ npm run availability
 
 ### 再現コスト（目安）
 
-`availability:fixture` はキー不要でコストもかかりません。`availability:estimate` はフェッチや書き込みを行わず、LLM抽出ステップの料金を見積もります。`availability` は公開ステータスページを取得し、設定されたLLM抽出器を使用するため、プロバイダー・モデルごとのトークンコストが発生します。
+`availability:fixture` はキー不要かつコストゼロです。`availability:estimate` はフェッチ・書き込みを行わずにLLM抽出ステップの料金を見積もります。`availability` は公開ステータスページを取得し、設定済みのLLM抽出器を使用するため、プロバイダー・モデルごとのトークンコストが発生します。
 
 ### クリーンアップ
 
-フィクスチャ経路では外部リソースは作成されません。実データ経路ではローカルの累積履歴とレポートの成果物が更新されるため、コミット前にそれらのファイルを確認してください。プロバイダー側のリソースは作成されません。
+フィクスチャ経路では外部リソースは作成されません。実データ経路ではローカルの累積履歴とレポート成果物が更新されるため、コミット前にこれらのファイルを確認してください。プロバイダー側でリソースが作成されることはありません。
 
 ## 7. 検証データ
 
 **過去30日間**
 
-| プロバイダー | 導出稼働率 | インシデント数 | 重大/致命的 | ダウンタイム | メンテナンス |
+| プロバイダー | 導出稼働率 | インシデント数 | 重大/深刻 | ダウンタイム | メンテナンス |
 | -------- | -------------- | --------- | -------------- | -------- | ----------- |
 | Anthropic (Claude) | 94.730% | 40 | 9 | 37.9 h | 0.0 h |
 | Google Cloud | 100.000% | 1 | 0 | 0.0 h | 0.0 h |
@@ -92,7 +92,7 @@ npm run availability
 
 **過去90日間**
 
-| プロバイダー | 導出稼働率 | インシデント数 | 重大/致命的 | ダウンタイム | メンテナンス |
+| プロバイダー | 導出稼働率 | インシデント数 | 重大/深刻 | ダウンタイム | メンテナンス |
 | -------- | -------------- | --------- | -------------- | -------- | ----------- |
 | Anthropic (Claude) | 98.144% | 49 | 10 | 40.1 h | 0.0 h |
 | Google Cloud | 99.889% | 1 | 0 | 2.4 h | 0.0 h |
@@ -101,38 +101,38 @@ npm run availability
 
 **直近のインシデント履歴**
 
-各プロバイダーごとに蓄積された記録から、最新のインシデントを示す。
+各プロバイダーについて蓄積された記録の中から、最新のインシデントを示す。
 
-- **Anthropic (Claude)** — Claude Opus 4.8におけるエラー率上昇 [影響度: major] (2026-07-09T03:28:18.197Z → 2026-07-09T03:50:34.059Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/sddyj2h6b61s)
-- **Anthropic (Claude)** — Web版Claude Code、Cowork Remote、Claude Tag、Claude Code Reviewセッションにおけるパフォーマンス低下 [影響度: minor] (2026-07-08T19:07:26.000Z → 2026-07-08T21:04:34.858Z) — Claude Code [詳細](https://stspg.io/th3djdzw5lsy)
-- **Anthropic (Claude)** — 複数モデルにおけるエラー率上昇 [影響度: minor] (2026-07-08T18:00:18.069Z → 2026-07-08T21:04:18.634Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/kt72q7m6rz9c)
-- **Anthropic (Claude)** — MCPサーバーへの認可における問題 [影響度: minor] (2026-07-08T12:00:00.000Z → 2026-07-08T19:00:00.000Z) [詳細](https://stspg.io/scs5bf95ysv0)
-- **Anthropic (Claude)** — Claude Sonnet 5におけるエラー率上昇 [影響度: minor] (2026-07-08T06:26:16.864Z → 2026-07-08T06:40:31.473Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/vsdzgydjjt1j)
-- **Anthropic (Claude)** — 一部モデルにおけるエラー率上昇 [影響度: major] (2026-07-07T20:02:33.237Z → 2026-07-07T23:46:13.329Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/g0yp6phqpdrn)
-- **Google Cloud** — デリー、チェンナイ、ムンバイおよび周辺地域を発信元とするGoogle Cloudへのネットワークトラフィックにおいて、断続的なレイテンシ上昇およびパケットロスの可能性が発生 [影響度: minor] (2026-06-05T07:00:00.000Z → 2026-06-26T19:00:00.000Z) — Hybrid Connectivity, Media CDN, Virtual Private Cloud (VPC)
-- **Google Cloud** — Vertex AI Gemini APIの顧客がグローバルエンドポイントへのアクセス時にエラー率の増加を経験 [影響度: minor] (2026-02-27T12:37:00.000Z → 2026-02-27T14:35:00.000Z) — Agent Assist, Dialogflow CX, Google Cloud Support, Vertex Gemini API
-- **Google Cloud** — us-east1における複数プロダクトでのエラー率上昇 [影響度: minor] (2025-07-18T14:42:00.000Z → 2025-07-18T16:47:00.000Z) — AlloyDB for PostgreSQL, Apigee, Artifact Registry, Certificate Authority Service, Cloud Armor, Cloud Billing, Cloud Build, Cloud External Key Manager, Cloud Firestore, Cloud HSM, Cloud Key Management Service, Cloud Load Balancing, Cloud Memorystore, Cloud Monitoring, Cloud Run, Cloud Spanner, Cloud Storage for Firebase, Cloud Workflows, Database Migration Service, Dataproc Metastore, Dialogflow CX, Eventarc, Google App Engine, Google BigQuery, Google Cloud Bigtable, Google Cloud Console, Google Cloud Dataflow, Google Cloud Dataproc, Google Cloud Pub/Sub, Google Cloud SQL, Google Cloud Storage, Google Cloud Support, Google Cloud Tasks, Google Compute Engine, Google Kubernetes Engine, Hybrid Connectivity, Identity and Access Management, Media CDN, Memorystore for Memcached, Memorystore for Redis, Memorystore for Redis Cluster, Persistent Disk, Private Service Connect, Secret Manager, Service Directory, Vertex AI Online Prediction, Virtual Private Cloud (VPC)
-- **OpenAI** — ChatGPTにおける画像生成のエラー率上昇 [影響度: minor] (2026-07-07T11:29:14.000Z → 2026-07-07T16:12:58.000Z)
-- **OpenAI** — FedRAMPワークスペースにおいて、Codex、ワークスペース分析、会話検索、カスタムGPTの検索、ChatGPTユーザー招待、およびComplianceログプラットフォームのダウンロードエンドポイントが動作しない [影響度: minor] (2026-07-01T03:38:18.000Z → 継続中)
+- **Anthropic (Claude)** — Claude Opus 4.8でのエラー増加 [影響度: major] (2026-07-09T03:28:18.197Z → 2026-07-09T03:50:34.059Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/sddyj2h6b61s)
+- **Anthropic (Claude)** — Claude Code on the web、Cowork Remote、Claude Tag、Claude Code Reviewセッションでのパフォーマンス低下 [影響度: minor] (2026-07-08T19:07:26.000Z → 2026-07-08T21:04:34.858Z) — Claude Code [詳細](https://stspg.io/th3djdzw5lsy)
+- **Anthropic (Claude)** — 複数モデルでのエラー増加 [影響度: minor] (2026-07-08T18:00:18.069Z → 2026-07-08T21:04:18.634Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/kt72q7m6rz9c)
+- **Anthropic (Claude)** — MCPサーバーへの認証時の問題 [影響度: minor] (2026-07-08T12:00:00.000Z → 2026-07-08T19:00:00.000Z) [詳細](https://stspg.io/scs5bf95ysv0)
+- **Anthropic (Claude)** — Claude Sonnet 5でのエラー増加 [影響度: minor] (2026-07-08T06:26:16.864Z → 2026-07-08T06:40:31.473Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/vsdzgydjjt1j)
+- **Anthropic (Claude)** — 一部モデルでのエラー増加 [影響度: major] (2026-07-07T20:02:33.237Z → 2026-07-07T23:46:13.329Z) — claude.ai, Claude API (api.anthropic.com), Claude Code, Claude Cowork [詳細](https://stspg.io/g0yp6phqpdrn)
+- **Google Cloud** — Delhi、Chennai、Mumbaiおよび周辺地域から発信されたGoogle Cloudへのネットワークトラフィックにおいて、断続的なレイテンシ増加とパケットロスの可能性が発生 [影響度: minor] (2026-06-05T07:00:00.000Z → 2026-06-26T19:00:00.000Z) — Hybrid Connectivity, Media CDN, Virtual Private Cloud (VPC)
+- **Google Cloud** — Vertex AI Gemini APIの利用者がグローバルエンドポイントへのアクセス時にエラー率の増加を経験 [影響度: minor] (2026-02-27T12:37:00.000Z → 2026-02-27T14:35:00.000Z) — Agent Assist, Dialogflow CX, Google Cloud Support, Vertex Gemini API
+- **Google Cloud** — us-east1における複数プロダクトでのエラー率増加 [影響度: minor] (2025-07-18T14:42:00.000Z → 2025-07-18T16:47:00.000Z) — AlloyDB for PostgreSQL, Apigee, Artifact Registry, Certificate Authority Service, Cloud Armor, Cloud Billing, Cloud Build, Cloud External Key Manager, Cloud Firestore, Cloud HSM, Cloud Key Management Service, Cloud Load Balancing, Cloud Memorystore, Cloud Monitoring, Cloud Run, Cloud Spanner, Cloud Storage for Firebase, Cloud Workflows, Database Migration Service, Dataproc Metastore, Dialogflow CX, Eventarc, Google App Engine, Google BigQuery, Google Cloud Bigtable, Google Cloud Console, Google Cloud Dataflow, Google Cloud Dataproc, Google Cloud Pub/Sub, Google Cloud SQL, Google Cloud Storage, Google Cloud Support, Google Cloud Tasks, Google Compute Engine, Google Kubernetes Engine, Hybrid Connectivity, Identity and Access Management, Media CDN, Memorystore for Memcached, Memorystore for Redis, Memorystore for Redis Cluster, Persistent Disk, Private Service Connect, Secret Manager, Service Directory, Vertex AI Online Prediction, Virtual Private Cloud (VPC)
+- **OpenAI** — ChatGPTでの画像生成におけるエラー増加 [影響度: minor] (2026-07-07T11:29:14.000Z → 2026-07-07T16:12:58.000Z)
+- **OpenAI** — FedRAMPワークスペースにおいて、Codex、ワークスペース分析、会話検索、カスタムGPTの検索、ChatGPTユーザー招待、Compliance Log Platformダウンロードエンドポイントが機能しない [影響度: minor] (2026-07-01T03:38:18.000Z → 継続中)
 - **OpenAI** — ChatGPT Windowsデスクトップアプリに関する問題 [影響度: minor] (2026-06-27T22:00:26.000Z → 2026-06-28T03:29:18.000Z)
-- **OpenAI** — Codexの利用制限が想定より速く消費される問題 [影響度: minor] (2026-06-26T17:04:02.000Z → 2026-06-29T17:06:33.000Z)
-- **OpenAI** — 少数のユーザーでサブスクリプションが誤ってキャンセルされる問題 [影響度: minor] (2026-06-25T16:02:50.000Z → 2026-06-26T02:18:06.000Z)
-- **OpenAI** — Codexでアクセストークンを使用する際に問題が発生する可能性 [影響度: minor] (2026-06-25T05:51:27.000Z → 2026-06-25T11:03:38.000Z)
+- **OpenAI** — Codexの利用上限が想定より速く減少する問題 [影響度: minor] (2026-06-26T17:04:02.000Z → 2026-06-29T17:06:33.000Z)
+- **OpenAI** — 一部ユーザーでサブスクリプションが誤ってキャンセルされる問題 [影響度: minor] (2026-06-25T16:02:50.000Z → 2026-06-26T02:18:06.000Z)
+- **OpenAI** — Codexでのアクセストークン使用時に問題が発生する可能性 [影響度: minor] (2026-06-25T05:51:27.000Z → 2026-06-25T11:03:38.000Z)
 - **xAI**: 蓄積履歴にインシデントの記録なし。
 
-各プロバイダーの記録は、それぞれの公開ステータスソース、取得のカットオフ時刻（`as of`）、および抽出に使用したモデルに基づいている。
+各プロバイダーの記録は、公開ステータスの取得元、取得の締切時刻（`as of`）、およびそれを抽出したモデルに紐づいている。
 
-| プロバイダー | ソース | 形式 | 取得時点 | 記録済みインシデント数 | 抽出モデル | 取得結果 |
+| プロバイダー | 取得元 | 形式 | 取得時点 | 記録済みインシデント数 | 抽出モデル | 取得結果 |
 | -------- | ------ | ------ | ----- | ------------------ | ---------------- | --------- |
 | Anthropic (Claude) | [`https://status.claude.com/api/v2/incidents.json`](https://status.claude.com/api/v2/incidents.json) | statuspage-json | 2026-07-09T03:55:03.571Z | 50 | claude-sonnet-5 | ok |
 | Google Cloud | [`https://status.cloud.google.com/incidents.json`](https://status.cloud.google.com/incidents.json) | google-json | 2026-07-09T03:55:03.571Z | 3 | claude-sonnet-5 | ok |
 | OpenAI | [`https://status.openai.com/api/v2/incidents.json`](https://status.openai.com/api/v2/incidents.json) | statuspage-json | 2026-07-09T03:55:03.571Z | 25 | claude-sonnet-5 | ok |
 | xAI | [`https://status.x.ai/`](https://status.x.ai/) | html | 2026-07-09T03:55:03.571Z | 0 | — | failed: HTTP 403 Forbidden |
 
-算出されたトレンドは[`llm-availability.data.json`](./llm-availability.data.json)にあり、蓄積されたプロバイダーごとのインシデント履歴は`docs/research-reports/availability-history/`以下にコミットされている。
+算出済みのトレンドは[`llm-availability.data.json`](./llm-availability.data.json)にあり、各プロバイダーについて蓄積されたインシデント履歴は`docs/research-reports/availability-history/`配下にコミットされている。
 
 **過去の調査 / Past surveys in this series**
 
-このトピックについての過去の日付付き調査を、新しい順に列挙する。各回は、その実行時点における完全な記事である。
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- 2026-07-09T11:08:12.753Z: [English](./history/availability/2026-07-09T11-08-12-753Z/llm-availability) · [Japanese](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja) · [data.json](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.data.json)
+- [2026-07-09T11:08:12.753Z](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja)

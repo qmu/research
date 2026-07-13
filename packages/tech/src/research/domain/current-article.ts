@@ -146,79 +146,77 @@ export const buildTrendBlock = (
   return `${TREND_LABEL}\n\nThe measured metrics across the dated surveys in this series (same-instrument runs only):\n\n${charts}`;
 };
 
-/** Links are relative to docs/research-reports/, where the current pages live. */
-const frameLink = (path: string): string =>
-  `./${path.replace(/^docs\/research-reports\//, "").replace(/\.md$/, "")}`;
+export type ArticleLanguage = "en" | "ja";
 
-const frameLine = (frame: ResearchHistoryFrame): string => {
-  const links = [
-    frame.sourcePath === undefined
-      ? undefined
-      : `[English](${frameLink(frame.sourcePath)})`,
-    frame.japanesePath === undefined
-      ? undefined
-      : `[Japanese](${frameLink(frame.japanesePath)})`,
-    frame.dataPath === undefined
-      ? undefined
-      : `[data.json](${frameLink(frame.dataPath)})`,
-  ].filter((link): link is string => link !== undefined);
-  return `- ${frame.generatedAt}: ${links.join(" · ")}`;
+/** Link a frame's article IN ONE LANGUAGE, relative to docs/research-reports/
+ * (where the current pages live). English → the `.md` frame; Japanese → the
+ * `.ja.md` frame. Undefined when that language's frame is absent. */
+const frameArticleLink = (
+  frame: ResearchHistoryFrame,
+  language: ArticleLanguage,
+): string | undefined => {
+  const path = language === "ja" ? frame.japanesePath : frame.sourcePath;
+  return path === undefined
+    ? undefined
+    : `./${path.replace(/^docs\/research-reports\//, "").replace(/\.md$/, "")}`;
 };
 
 /**
- * The 過去の調査 block: links to every earlier dated survey article,
- * newest-first. Returns "" when there are no past surveys yet (first run).
+ * The 過去の調査 block for ONE language: a single link per earlier dated
+ * survey, newest-first, to that survey's article in the SAME language as the
+ * page it is appended to. This is why it is generated per language (not
+ * translated): translation would keep the English URLs, and the English and
+ * Japanese pages must each link their own frames so the links resolve in both
+ * qmu-co-jp language sections. Returns "" when there is no earlier survey with
+ * an article in this language.
  */
 export const buildRelatedBlock = (
   frames: ReadonlyArray<ResearchHistoryFrame>,
+  language: ArticleLanguage,
 ): string => {
   const past = [...frames].sort((left, right) =>
     right.generatedAt.localeCompare(left.generatedAt),
   );
-  if (past.length === 0) return "";
-  return `**過去の調査 / Past surveys in this series**\n\nEarlier dated surveys of this topic, newest first. Each is a complete article for its run.\n\n${past
-    .map(frameLine)
-    .join("\n")}`;
+  const lines = past.flatMap((frame) => {
+    const link = frameArticleLink(frame, language);
+    return link === undefined ? [] : [`- [${frame.generatedAt}](${link})`];
+  });
+  if (lines.length === 0) return "";
+  return `**過去の調査 / Past surveys in this series**\n\nEarlier dated surveys of this topic, newest first — each a complete article for its run.\n\n${lines.join(
+    "\n",
+  )}`;
 };
 
 /**
- * Inject the two blocks into a finished 7-section article: the trend before
- * "## 5." (end of §4 Verification Results), the past-surveys block at the end
- * of §7 Verification Data (the last section). Empty blocks inject nothing, so
- * the function is a no-op for a first run. Pure and idempotent-safe only on an
- * un-composed article; the site step always composes from the freshly rendered
- * measurement article.
+ * Inject the 推移 (trend) block before "## 5." (end of §4 Verification
+ * Results). The trend is composed into the English page BEFORE translation, so
+ * its caption translates into the Japanese page. An empty block is a no-op.
+ * Pure and idempotent-safe only on a freshly rendered (un-composed) article.
  */
 export const composeCurrentArticle = (
   articleMarkdown: string,
   trendBlock: string,
-  relatedBlock: string,
 ): string => {
-  let out = articleMarkdown.replace(/\n+$/, "\n");
-  if (trendBlock.trim() !== "") {
-    const marker = "\n## 5. ";
-    const index = out.indexOf(marker);
-    if (index === -1) {
-      out = `${out.replace(/\n+$/, "\n")}\n${trendBlock.trim()}\n`;
-    } else {
-      out = `${out.slice(0, index)}\n${trendBlock.trim()}\n${out.slice(index)}`;
-    }
-  }
-  if (relatedBlock.trim() !== "") {
-    out = `${out.replace(/\n+$/, "\n")}\n${relatedBlock.trim()}\n`;
-  }
-  return out;
+  const out = articleMarkdown.replace(/\n+$/, "\n");
+  if (trendBlock.trim() === "") return out;
+  const marker = "\n## 5. ";
+  const index = out.indexOf(marker);
+  return index === -1
+    ? `${out}\n${trendBlock.trim()}\n`
+    : `${out.slice(0, index)}\n${trendBlock.trim()}\n${out.slice(index)}`;
 };
 
-/** Convenience: the two blocks for a topic given the tendency-window frames and
- * the measured points (current run + past frames) extracted by the caller. */
-export const currentArticleBlocks = (
-  topic: ResearchSiteTopic,
-  frames: ReadonlyArray<ResearchHistoryFrame>,
-  points: ReadonlyArray<SnapshotPoint>,
-): Readonly<{ trendBlock: string; relatedBlock: string }> => ({
-  trendBlock: buildTrendBlock(topic, points),
-  relatedBlock: buildRelatedBlock(frames),
-});
+/**
+ * Append the 過去の調査 (past surveys) block at the end of §7 Verification
+ * Data (the last section). Applied AFTER translation, per language, so each
+ * page links its own-language frames. An empty block is a no-op.
+ */
+export const appendRelatedBlock = (
+  articleMarkdown: string,
+  relatedBlock: string,
+): string =>
+  relatedBlock.trim() === ""
+    ? articleMarkdown
+    : `${articleMarkdown.replace(/\n+$/, "\n")}\n${relatedBlock.trim()}\n`;
 
 export { framesInTendencyWindow, snapshotPointsFor };

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  appendRelatedBlock,
   buildRelatedBlock,
   buildTrendBlock,
   composeCurrentArticle,
@@ -54,45 +55,59 @@ const topic = {
   },
 } as unknown as ResearchSiteTopic;
 
-describe("composeCurrentArticle", () => {
-  it("injects the trend before section 5 and past surveys at the end", () => {
-    const out = composeCurrentArticle(
-      article,
-      "**推移 / Trend**\n\nchart",
-      "**過去の調査 / Past**\n\n- a",
-    );
+describe("composeCurrentArticle (trend into §4)", () => {
+  it("injects the trend before section 5, leaving §7 for the appended block", () => {
+    const out = composeCurrentArticle(article, "**推移 / Trend**\n\nchart");
     const trendAt = out.indexOf("**推移 / Trend**");
     const sec5At = out.indexOf("## 5. Analysis");
-    const relatedAt = out.indexOf("**過去の調査 / Past**");
-    const sec7At = out.indexOf("## 7. Verification Data");
     expect(trendAt).toBeGreaterThan(-1);
     expect(trendAt).toBeLessThan(sec5At); // trend ends §4, before §5
-    expect(relatedAt).toBeGreaterThan(sec7At); // past surveys close §7
-    // The article's own headings survive untouched.
     expect(out).toContain("## 4. Verification Results");
     expect(out).toContain("## 7. Verification Data");
   });
 
-  it("is a no-op when both blocks are empty (first run)", () => {
-    expect(composeCurrentArticle(article, "", "")).toBe(
+  it("is a no-op when the trend block is empty (first run)", () => {
+    expect(composeCurrentArticle(article, "")).toBe(
       article.replace(/\n+$/, "\n"),
     );
   });
 });
 
-describe("buildRelatedBlock", () => {
-  it("lists past surveys newest-first with available links", () => {
-    const block = buildRelatedBlock(frames);
+describe("appendRelatedBlock (past surveys after §7)", () => {
+  it("appends the block at the end and no-ops on empty", () => {
+    const out = appendRelatedBlock(article, "**過去の調査 / Past**\n\n- a");
+    expect(out.indexOf("**過去の調査 / Past**")).toBeGreaterThan(
+      out.indexOf("## 7. Verification Data"),
+    );
+    expect(appendRelatedBlock(article, "")).toBe(article);
+  });
+});
+
+describe("buildRelatedBlock (language-matched single links)", () => {
+  it("links the English frame on the English page, newest-first", () => {
+    const block = buildRelatedBlock(frames, "en");
     const julyAt = block.indexOf("2026-07-01");
     const juneAt = block.indexOf("2026-06-01");
     expect(julyAt).toBeGreaterThan(-1);
     expect(julyAt).toBeLessThan(juneAt); // newest first
-    expect(block).toContain("[English]");
-    expect(block).toContain("[Japanese]");
+    expect(block).toContain(
+      "(./history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison)",
+    );
+    expect(block).not.toContain(".ja)");
+  });
+
+  it("links the Japanese frame on the Japanese page and skips frames without one", () => {
+    const block = buildRelatedBlock(frames, "ja");
+    // Only the 2026-06-01 frame has a japanesePath in the fixture.
+    expect(block).toContain(
+      "(./history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja)",
+    );
+    expect(block).not.toContain("2026-07-01"); // no JP frame → not listed
   });
 
   it("returns empty string when there are no past surveys", () => {
-    expect(buildRelatedBlock([])).toBe("");
+    expect(buildRelatedBlock([], "en")).toBe("");
+    expect(buildRelatedBlock([], "ja")).toBe("");
   });
 });
 

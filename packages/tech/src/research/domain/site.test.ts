@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   findInternalResearchSource,
   findPublishedResearchTopic,
+  englishFramePublishPlan,
   framePublishPlan,
   historyOverview,
   historyPathFor,
@@ -83,12 +84,31 @@ describe("research site metadata", () => {
           "history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja",
       },
     ]);
-    // The mirrored destination equals the relative link target the current
-    // article uses (./history/<topic>/<ts>/<base>.ja), so the link resolves.
+    // The Japanese frame mirrors to the Japanese section; the English frames
+    // (both have a sourcePath) mirror to the English section.
+    expect(englishFramePublishPlan(frames)).toEqual([
+      {
+        sourceSlug:
+          "research-reports/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison",
+        destinationSlug:
+          "history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison",
+      },
+      {
+        sourceSlug:
+          "research-reports/history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison",
+        destinationSlug: "history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison",
+      },
+    ]);
+    // The mirrored destinations equal the relative link targets the current
+    // articles use, so the links resolve in both language sections.
     const payload = renderQmuTicketPayload(frames);
-    expect(payload).toContain("Past-survey articles (1)");
+    expect(payload).toContain("Past-survey articles (1 Japanese)");
+    expect(payload).toContain("Past-survey articles (2 English)");
     expect(payload).toContain(
       "docs/research-reports/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja.md -> docs/llm-foundation-research/history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja.md",
+    );
+    expect(payload).toContain(
+      "docs/research-reports/history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison.md -> docs/en/llm-foundation-research/history/ocr/2026-06-02T00-00-00-000Z/ocr-comparison.md",
     );
   });
 
