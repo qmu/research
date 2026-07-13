@@ -9,7 +9,7 @@ origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
 severity: moderate
 status: resolved
-resolved_by_pr:
+resolved_by_pr: 22
 resolved_by_commit: f3cc3ac
 ---
 
