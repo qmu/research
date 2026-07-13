@@ -268,6 +268,27 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   backend is an edit to `CREDENTIAL_SPEC` / `CLIENT_FACTORY` plus one vendor
   adapter, with no change to the `CompletionClient` port.
 
+### Perplexity Sonar backend (packages/tech) — no new dependency
+
+- **Reason**: The IaaS-hosted-models mission adds Perplexity's search-grounded
+  Sonar lineup as a comparison backend. Perplexity speaks the OpenAI Chat
+  Completions protocol at `https://api.perplexity.ai`, so it is reached through the
+  existing `createOpenAiCompatibleCompletionClient(model, key, baseURL)` with only
+  the base URL swapped — the same pattern as the xAI backend. No new package is
+  added; the single Perplexity-specific fact (the base URL) lives in
+  `packages/tech/src/vendors/llm/perplexity.ts`.
+- **Assessment**:
+  - License: n/a (repository code, MIT). Uses the already-adopted `openai` SDK.
+  - Reputation / Development status / Sustainability: n/a (in-repo wrapper).
+- **Auth**: `PERPLEXITY_API_KEY`, resolved through the generalized credential
+  contract (`apiKey` spec). Absent key → the keyless fixture fallback
+  (`provenance: "fixtured"`), so CI stays green without a key.
+- **Monitoring**: n/a.
+- **Exit strategy**: Removing the backend is deleting `perplexity.ts`, its
+  `CREDENTIAL_SPEC`/`CLIENT_FACTORY` entries, the `Provider` union member, and the
+  Sonar cards in `models.ts`. Sonar's search grounding stays behind the ACL; the
+  `CompletionClient` port is unchanged.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

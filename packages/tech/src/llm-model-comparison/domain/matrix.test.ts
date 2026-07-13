@@ -13,6 +13,10 @@ const KNOWN_NO_EFFORT_MODEL_IDS = [
   "xai-grok-4-20-0309-reasoning",
   "xai-grok-4-20-0309-non-reasoning",
   "xai-grok-build-0-1",
+  // Perplexity Sonar: search-grounded, no portable reasoning-effort knob.
+  "perplexity-sonar",
+  "perplexity-sonar-pro",
+  "perplexity-sonar-reasoning-pro",
 ] as const;
 
 describe("model effort matrix", () => {

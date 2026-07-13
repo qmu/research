@@ -17,9 +17,10 @@ import type { EffortLevel } from "./effort";
 
 // Closed union of the providers compared. Widening this is a deliberate decision,
 // not an accident — the domain names a provider only as a tag, never importing an
-// SDK type. `xai` is an OpenAI-compatible endpoint reached through a base-URL
-// variant of the OpenAI adapter (the Grok lineup — general + coding models).
-export type Provider = "anthropic" | "openai" | "google" | "xai";
+// SDK type. `xai` and `perplexity` are OpenAI-compatible endpoints reached through
+// a base-URL variant of the OpenAI adapter (xAI's Grok lineup; Perplexity's
+// search-grounded Sonar lineup).
+export type Provider = "anthropic" | "openai" | "google" | "xai" | "perplexity";
 
 // The CURATED half: static, cited, human-authored catalog data. Every field is a
 // column of the comparison table except `apiModelId` (the wire id, isolated here

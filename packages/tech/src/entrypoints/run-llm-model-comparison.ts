@@ -38,6 +38,7 @@ import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
 import { createOpenAiCompletionClient } from "../vendors/llm/openai";
 import { createOpenAiResponsesCompletionClient } from "../vendors/llm/openai-responses";
 import { createXaiCompletionClient } from "../vendors/llm/xai";
+import { createPerplexityCompletionClient } from "../vendors/llm/perplexity";
 import { createGoogleCompletionClient } from "../vendors/llm/google";
 import { createOpenAiRealtimeCompletionClient } from "../vendors/llm/openai-realtime";
 import { createFixtureCompletionClient } from "../vendors/llm/fixture";
@@ -140,6 +141,7 @@ const CREDENTIAL_SPEC: Record<ModelCard["provider"], CredentialSpec> = {
   openai: { kind: "apiKey", apiKeyEnv: "OPENAI_API_KEY" },
   google: { kind: "apiKey", apiKeyEnv: "GOOGLE_API_KEY" },
   xai: { kind: "apiKey", apiKeyEnv: "XAI_API_KEY" },
+  perplexity: { kind: "apiKey", apiKeyEnv: "PERPLEXITY_API_KEY" },
 };
 
 // Build a live client from a resolved (non-null) credential. The factory contract
@@ -159,6 +161,9 @@ const CLIENT_FACTORY: Record<
     createGoogleCompletionClient(id, requireApiKey(cred, "google")),
   // xAI is OpenAI-compatible — the same Chat Completions adapter against its base URL.
   xai: (id, cred) => createXaiCompletionClient(id, requireApiKey(cred, "xai")),
+  // Perplexity is OpenAI-compatible too (search-grounded Sonar lineup).
+  perplexity: (id, cred) =>
+    createPerplexityCompletionClient(id, requireApiKey(cred, "perplexity")),
 };
 
 // Build the live client for a model, or undefined when no credential resolves (the

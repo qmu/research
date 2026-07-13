@@ -5,6 +5,7 @@ const PROVIDER_DISPLAY_NAMES = {
   openai: "OpenAI",
   google: "Google",
   xai: "xAI",
+  perplexity: "Perplexity",
 } satisfies Record<Provider, string>;
 
 export const providerDisplayName = (provider: Provider | string): string =>

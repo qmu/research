@@ -297,4 +297,50 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     effortLevels: ["n/a"],
     source: "https://docs.x.ai/developers/models",
   },
+  // ── Perplexity (Sonar) ──────────────────────────────────────────────────────
+  // OpenAI-compatible Chat Completions at https://api.perplexity.ai (see
+  // vendors/llm/perplexity.ts), KEY-GATED on PERPLEXITY_API_KEY; the keyless
+  // CI/fixture path renders these deterministically. Sonar models are
+  // search-grounded — their numbers reflect the model AS SERVED (retrieval + a
+  // token-based request/response fee), not a plain chat model, which is the point
+  // of measuring a backend as delivered. Effort is left `n/a`: the search models
+  // reason internally and do not take a portable `reasoning_effort` knob on these
+  // ids, so no unsupported effort is ever sent. Prices are curated best-known
+  // estimates per the pricing page — treat each cell as correct only as of its source.
+  {
+    id: "perplexity-sonar",
+    provider: "perplexity",
+    tier: "mid",
+    modelName: "Sonar",
+    apiModelId: "sonar",
+    released: "2025",
+    inputCostPerMTok: 1,
+    outputCostPerMTok: 1,
+    effortLevels: ["n/a"],
+    source: "https://docs.perplexity.ai/guides/pricing",
+  },
+  {
+    id: "perplexity-sonar-pro",
+    provider: "perplexity",
+    tier: "flagship",
+    modelName: "Sonar Pro",
+    apiModelId: "sonar-pro",
+    released: "2025",
+    inputCostPerMTok: 3,
+    outputCostPerMTok: 15,
+    effortLevels: ["n/a"],
+    source: "https://docs.perplexity.ai/guides/pricing",
+  },
+  {
+    id: "perplexity-sonar-reasoning-pro",
+    provider: "perplexity",
+    tier: "frontier",
+    modelName: "Sonar Reasoning Pro",
+    apiModelId: "sonar-reasoning-pro",
+    released: "2025",
+    inputCostPerMTok: 2,
+    outputCostPerMTok: 8,
+    effortLevels: ["n/a"],
+    source: "https://docs.perplexity.ai/guides/pricing",
+  },
 ];
