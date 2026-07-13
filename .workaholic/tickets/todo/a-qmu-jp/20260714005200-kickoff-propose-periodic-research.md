@@ -1,9 +1,9 @@
 ---
 created_at: 2026-07-14T00:51:55+09:00
 author: a@qmu.jp
-type: research
-layer: [Research]
-effort: 3h
+type: enhancement
+layer: [Domain]
+effort: 4h
 commit_hash:
 category: Added
 mission: periodic-research-target-trend-catchable-ai-models-grok-perplexity
@@ -45,3 +45,25 @@ Kicks off the **Trend-Catchable AI Models** periodic-research mission. Per `CLAU
 ## Considerations
 
 Reuse the existing instrument patterns; do not fork a parallel design. Keep external SDKs behind `vendors/`. Ensure keyless CI stays green via a fixture path. Honour the proposal-first gate before any real (paid) runs.
+
+## Night-run status (2026-07-14, /drive night)
+
+**Steps 1–3 and 5 done; blocked at step 4 (developer approval) — a hard external
+gate the night run cannot cross.** No spend, no scaffolding (both forbidden
+before approval by `docs/research-development-guideline.md`).
+
+- Investigated the topic set — this is a **new** topic (`trend-recency`), not an
+  extension; Perplexity is unwired and no web-search/grounding surface exists yet.
+- Drafted the full 5-element proposal:
+  [`../../../missions/active/periodic-research-target-trend-catchable-ai-models-grok-perplexity/proposal.md`](../../../missions/active/periodic-research-target-trend-catchable-ai-models-grok-perplexity/proposal.md).
+- Filled the mission Goal / Scope / Acceptance / Changelog; acceptance items name
+  the tickets below.
+- Queued post-approval follow-ups (all `blocked_on: approval`):
+  `20260714010000-scaffold-trend-recency-instrument.md`,
+  `20260714010001-trend-recency-first-validation-trial.md`,
+  `20260714010002-trend-recency-publish-topic.md`.
+
+**Morning action:** review `proposal.md` (esp. the four open questions — ground-truth
+authorship, $30 ceiling, trial-1 breadth, Perplexity key), then approve or adjust.
+On approval, `/drive` the scaffold ticket. This ticket is archived only once
+approval is recorded (step 4 met).
