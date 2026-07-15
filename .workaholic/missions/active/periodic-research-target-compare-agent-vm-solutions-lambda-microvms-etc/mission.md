@@ -163,7 +163,7 @@ pen-test of it).
 <!-- One checklist item per criterion, each naming the ticket/story expected to satisfy it.
      Ticket filenames marked (planned) are created after the proposal is approved (gate). -->
 
-- [ ] Proposal (cadence, subjects, metrics, cost/trial range, accumulated history) approved by the developer (#20260714005157-kickoff-propose-periodic-research.md)
+- [x] Proposal (cadence, subjects, metrics, cost/trial range, accumulated history) approved by the developer (a@qmu.jp, 2026-07-15)
 - [x] `agent-vm` subject registry + capability schema behind an anti-corruption `vendors/sandbox/` layer, with a keyless fixture path (#20260714005157-kickoff-propose-periodic-research.md — scaffolded 2026-07-14)
 - [x] Keyless reference-catalog renderer + result page for the nine reference metrics (#20260714005157-kickoff-propose-periodic-research.md — `docs/research-reports/agent-vm-comparison.md`)
 - [ ] Gated real cold-start / warm-reuse / fixed-task cost probe with `--estimate`, one vendor adapter per reachable provider (#20260714024001-agent-vm-real-coldstart-cost-probe.md)
@@ -180,3 +180,5 @@ pen-test of it).
 - 2026-07-14 — kickoff proposal drafted (cadence, 8 subjects, 9 reference + 5 measured metrics, $1–$8/trial range, per-provider history); Goal/Scope/Acceptance filled — 20260714005157-kickoff-propose-periodic-research.md
 - 2026-07-14 — keyless skeleton scaffolded (registry + `vendors/sandbox` port + fixture, percentile/cost domain, fixture/estimate runner, 7-section report, tests; `docs/research-reports/agent-vm-comparison.{md,data.json}`); 323 tests + lint green; 5 follow-on tickets created (real probe, publish, history, first trial, JP). Paid trial + publish held for approval — 20260714005157-kickoff-propose-periodic-research.md
 - 2026-07-14 — history projection core built (keyless): `agent-vm/domain/history.ts` (`toHistoryPoint`/`buildHistoryEntry`/`appendHistory`/`providerTrends`) + instrument version + 6 tests; 329 tests + lint green. Trend composition into the current article remains publish-coupled (rides with #024002) — 20260714024003-agent-vm-history-and-trend-composition.md
+- 2026-07-15 — proposal APPROVED by developer; both unblock levers requested (approve + provide credentials). Credentials not yet present in the environment (no .env); publish (#024002/#024005) awaits an LLM key for JP translation, real trials (#024001/#024004) await provider tokens — mission.md
+- 2026-07-15 — real-adapter framework built (keyless): `vendors/sandbox/credentials.ts` (`buildRealFactory`/`adaptersMissingCredentials`) + Fly.io Machines HTTP adapter `vendors/sandbox/fly.ts` (no SDK dep, injectable transport), wired into `--real`; 10 tests, 339 total green. `--real` with no tokens reports missing creds and records unreachable. Set `FLY_API_TOKEN`+`FLY_APP_NAME` to run the first live Fly trial — 20260714024001-agent-vm-real-coldstart-cost-probe.md

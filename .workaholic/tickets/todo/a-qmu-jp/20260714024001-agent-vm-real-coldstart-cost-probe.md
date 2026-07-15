@@ -51,3 +51,25 @@ ceiling.
 
 Teardown must be code-guaranteed even on error paths. Keep provider SDK types out
 of `domain/`. Every new dependency goes in `docs/dependency-decisions.md`.
+
+## Progress (2026-07-15)
+
+Framework + first adapter landed (keyless, unit-tested):
+
+- `vendors/sandbox/credentials.ts` — the adapter registry + `buildRealFactory(env)`
+  that returns an adapter per provider whose tokens are present, else
+  `unreachable`; `adaptersMissingCredentials(env)` reports exactly which env vars
+  to set. Wired into `run-agent-vm.ts` `--real`.
+- `vendors/sandbox/fly.ts` — **Fly.io Machines** reference adapter over the
+  Machines REST API via an **injectable HTTP transport** (no Fly SDK dep), so
+  create→poll→started timing and force-delete teardown are unit-tested without a
+  live token. 10 tests; 339 total green. `apiReachable` flipped true for
+  fly-machines.
+- Verified `--real` with no tokens: prints the missing-cred guidance and records
+  every provider `unreachable` (no spend, no crash).
+
+**Remaining:** confirm the Fly adapter against live Fly on first run (exec/metric
+shapes are documented-but-unverified); add adapters for E2B/Modal/Vercel/etc. as
+their tokens arrive (each a small entry in `SANDBOX_ADAPTERS`). To run now, set
+`FLY_API_TOKEN`, `FLY_APP_NAME` (and optionally `FLY_IMAGE`, `FLY_REGION`) in
+`packages/tech/.env`, then `npm run agent-vm:estimate` → `agent-vm:real`.

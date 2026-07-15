@@ -355,9 +355,12 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   `packages/tech/src/vendors/sandbox/` anti-corruption port
   (`bootCold`/`reuseWarm`/`runTask`/`teardown`), which currently has only a
   keyless fixture implementation.
-- **License**: No third-party sandbox SDK is added in this scaffold. Each
-  provider adapter (and its SDK dependency + license) is introduced by the gated
-  follow-up ticket that implements the real probe, recorded here at that time.
+- **License**: No third-party sandbox SDK is added. The first real adapter
+  (Fly.io Machines, `vendors/sandbox/fly.ts`) speaks the Machines REST API over
+  plain `fetch` through an injectable transport — **zero new dependencies**.
+  Future provider adapters that need an SDK add it here with its license at that
+  time; prefer the same SDK-free HTTP approach where the provider offers a REST
+  API.
 - **Exit strategy**: The registry, port, and scorers are self-contained. Adding
   or replacing a provider is a `models.ts` row plus a `vendors/sandbox` adapter;
   the domain scoring (percentiles, cost) and report do not change. A real
