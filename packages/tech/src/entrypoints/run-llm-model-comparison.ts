@@ -46,6 +46,7 @@ import { createXaiCompletionClient } from "../vendors/llm/xai";
 import { createPerplexityCompletionClient } from "../vendors/llm/perplexity";
 import { createBedrockCompletionClient } from "../vendors/llm/bedrock";
 import { createVertexCompletionClient } from "../vendors/llm/vertex";
+import { createOpenRouterCompletionClient } from "../vendors/llm/openrouter";
 import { createGoogleCompletionClient } from "../vendors/llm/google";
 import { createOpenAiRealtimeCompletionClient } from "../vendors/llm/openai-realtime";
 import { createFixtureCompletionClient } from "../vendors/llm/fixture";
@@ -164,6 +165,7 @@ const CREDENTIAL_SPEC: Record<ModelCard["provider"], CredentialSpec> = {
     projectIdEnv: "GOOGLE_CLOUD_PROJECT",
     locationEnv: "GOOGLE_CLOUD_LOCATION",
   },
+  openrouter: { kind: "apiKey", apiKeyEnv: "OPENROUTER_API_KEY" },
 };
 
 // Build a live client from a resolved (non-null) credential. The factory contract
@@ -191,6 +193,9 @@ const CLIENT_FACTORY: Record<
     createBedrockCompletionClient(id, requireAwsSigV4(cred, "bedrock")),
   vertex: (id, cred) =>
     createVertexCompletionClient(id, requireGcpAdc(cred, "vertex")),
+  // OpenRouter is an OpenAI-compatible aggregator gateway (one key, many vendors).
+  openrouter: (id, cred) =>
+    createOpenRouterCompletionClient(id, requireApiKey(cred, "openrouter")),
 };
 
 // Build the live client for a model, or undefined when no credential resolves (the

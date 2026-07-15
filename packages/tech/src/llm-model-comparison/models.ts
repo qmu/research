@@ -400,4 +400,45 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     source:
       "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai",
   },
+  // ── OpenRouter (aggregator gateway) ─────────────────────────────────────────
+  // One key routed to many vendors' models — here, models this registry ALREADY
+  // tracks first-party, so each card measures the gateway's transport rather than
+  // a new model (see docs/adr/0007-aggregator-gateway-subset.md). KEY-GATED on
+  // OPENROUTER_API_KEY; the keyless CI/fixture path renders them deterministically.
+  //
+  // `apiModelId` is OpenRouter's own id spelling (a dot, not dashes) and is passed
+  // through verbatim. Ids are pinned EXPLICITLY — never the `~vendor/model-latest`
+  // routing aliases, which would silently re-point and break the historical series.
+  // Prices are OpenRouter's published passthrough rates, verified against its
+  // public /api/v1/models endpoint (2026-07-14) and equal to each model's
+  // first-party rate, so a first-party-vs-OpenRouter comparison holds price constant.
+  //
+  // Effort is `n/a`: OpenRouter maps a reasoning knob per underlying model, and
+  // sending an effort a model does not honor is a hard 400 (a failed run, not a
+  // finding). Widening the ladder is a follow-up once a real run confirms the
+  // mapping per model.
+  {
+    id: "openrouter-claude-opus-4-8",
+    provider: "openrouter",
+    tier: "flagship",
+    modelName: "Claude Opus 4.8 (OpenRouter)",
+    apiModelId: "anthropic/claude-opus-4.8",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 25,
+    effortLevels: ["n/a"],
+    source: "https://openrouter.ai/anthropic/claude-opus-4.8",
+  },
+  {
+    id: "openrouter-gpt-5-5",
+    provider: "openrouter",
+    tier: "flagship",
+    modelName: "GPT-5.5 (OpenRouter)",
+    apiModelId: "openai/gpt-5.5",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 30,
+    effortLevels: ["n/a"],
+    source: "https://openrouter.ai/openai/gpt-5.5",
+  },
 ];

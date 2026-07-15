@@ -319,6 +319,32 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   backend removes its SDK, adapter, and registry entries. Bedrock's `anthropic.`
   wire-id prefix is applied only at that adapter's boundary.
 
+### OpenRouter aggregator backend (packages/tech) — no new dependency
+
+- **Reason**: The IaaS-hosted-models mission's third backend category is aggregator
+  gateways ("one key, one bill, failover"). A survey of the candidates
+  (OpenRouter / Groq / Together / Fireworks / DeepInfra) found that **only
+  OpenRouter serves the models this registry already tracks** — the others host
+  open-weight models the registry does not track, which the mission puts out of
+  scope. See `docs/adr/0007-aggregator-gateway-subset.md` for the survey and the
+  decision. OpenRouter speaks the OpenAI Chat Completions protocol at
+  `https://openrouter.ai/api/v1`, so it is reached through the existing
+  `createOpenAiCompatibleCompletionClient(model, key, baseURL)` — the same pattern
+  as the xAI and Perplexity backends. No new package is added; the base URL lives
+  in `packages/tech/src/vendors/llm/openrouter.ts`.
+- **Assessment**:
+  - License: n/a (repository code, MIT). Uses the already-adopted `openai` SDK.
+  - Reputation / Development status / Sustainability: n/a (in-repo wrapper).
+- **Auth**: `OPENROUTER_API_KEY`, resolved through the generalized credential
+  contract (`apiKey` spec). Absent key → the keyless fixture fallback
+  (`provenance: "fixtured"`), so CI stays green without a key.
+- **Monitoring**: n/a. The gateway's catalogue and pricing move — re-check its
+  public `/api/v1/models` endpoint before relying on the curated cards.
+- **Exit strategy**: Removing the backend is deleting `openrouter.ts`, its
+  `CREDENTIAL_SPEC`/`CLIENT_FACTORY` entries, the `Provider` union member, and its
+  model cards. Model ids are OpenRouter's own spelling, carried per card, so no
+  translation layer exists to unwind; the `CompletionClient` port is unchanged.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

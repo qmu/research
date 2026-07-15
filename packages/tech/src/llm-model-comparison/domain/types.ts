@@ -22,6 +22,8 @@ import type { EffortLevel } from "./effort";
 // search-grounded Sonar lineup). `bedrock` and `vertex` are IaaS transports for
 // Claude models — the same weights served through AWS Bedrock (SigV4) and Google
 // Vertex (GCP ADC), so a config can name "Claude on Bedrock", not just first-party.
+// `openrouter` is an aggregator gateway routing one key to many vendors' models —
+// the models we already track (see docs/adr/0007-aggregator-gateway-subset.md).
 export type Provider =
   | "anthropic"
   | "openai"
@@ -29,7 +31,8 @@ export type Provider =
   | "xai"
   | "perplexity"
   | "bedrock"
-  | "vertex";
+  | "vertex"
+  | "openrouter";
 
 // The CURATED half: static, cited, human-authored catalog data. Every field is a
 // column of the comparison table except `apiModelId` (the wire id, isolated here

@@ -17,6 +17,11 @@ const KNOWN_NO_EFFORT_MODEL_IDS = [
   "perplexity-sonar",
   "perplexity-sonar-pro",
   "perplexity-sonar-reasoning-pro",
+  // OpenRouter: effort maps per underlying model; sending an unsupported one is a
+  // hard 400, so the gateway's cards measure at their natural configuration until
+  // a real run confirms the mapping (docs/adr/0007-aggregator-gateway-subset.md).
+  "openrouter-claude-opus-4-8",
+  "openrouter-gpt-5-5",
 ] as const;
 
 describe("model effort matrix", () => {

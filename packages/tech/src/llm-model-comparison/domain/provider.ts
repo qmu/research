@@ -8,6 +8,7 @@ const PROVIDER_DISPLAY_NAMES = {
   perplexity: "Perplexity",
   bedrock: "AWS Bedrock",
   vertex: "Google Vertex AI",
+  openrouter: "OpenRouter",
 } satisfies Record<Provider, string>;
 
 export const providerDisplayName = (provider: Provider | string): string =>
