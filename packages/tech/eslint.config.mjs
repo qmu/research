@@ -46,5 +46,17 @@ export default tseslint.config(
       ],
     },
   },
-  { ignores: ["dist/", "node_modules/"] },
+  {
+    ignores: [
+      "dist/",
+      "node_modules/",
+      // The computer-use fixture site is committed BROWSER DATA, not project
+      // source: it is served to a real browser as the pinned task environment,
+      // so it targets the browser's own ES5-era globals rather than this
+      // project's TypeScript standards. Linting it as source would demand
+      // module-scoped `const`/`let` semantics it cannot have. Its correctness is
+      // guarded by `src/computer-use/domain/site-fixture.test.ts` instead.
+      "src/computer-use/domain/data/site/",
+    ],
+  },
 );

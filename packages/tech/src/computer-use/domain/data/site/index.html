@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QMU Fixture Shop — Home</title>
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>QMU Fixture Shop</h1>
+      <nav aria-label="Main">
+        <a href="./index.html">Home</a>
+        <a href="./catalog.html">Catalog</a>
+        <a href="./cart.html">Cart</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./account.html">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Search</h2>
+      <form id="search-form" role="search">
+        <label for="search-input">Search products</label>
+        <input id="search-input" name="q" type="search" autocomplete="off" />
+        <button id="search-submit" type="submit">Search</button>
+      </form>
+
+      <section aria-labelledby="results-heading">
+        <h2 id="results-heading">Results</h2>
+        <ul id="search-results"></ul>
+        <p id="no-results" hidden>No products matched that search.</p>
+      </section>
+    </main>
+
+    <script src="./products.js"></script>
+    <script>
+      // Deterministic client-side search over the committed product list. No
+      // network: results are rendered from products.js in declaration order, so
+      // "the first result" is stable across runs.
+      (function () {
+        var form = document.getElementById("search-form");
+        var input = document.getElementById("search-input");
+        var list = document.getElementById("search-results");
+        var empty = document.getElementById("no-results");
+
+        function render(query) {
+          var needle = query.trim().toLowerCase();
+          list.innerHTML = "";
+          var matches = needle
+            ? window.PRODUCTS.filter(function (product) {
+                return (
+                  product.name.toLowerCase().indexOf(needle) !== -1 ||
+                  product.category.toLowerCase().indexOf(needle) !== -1
+                );
+              })
+            : [];
+          matches.forEach(function (product) {
+            var item = document.createElement("li");
+            var link = document.createElement("a");
+            link.href = product.href;
+            link.textContent = product.name;
+            item.appendChild(link);
+            list.appendChild(item);
+          });
+          empty.hidden = !(needle && matches.length === 0);
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          render(input.value);
+        });
+      })();
+    </script>
+  </body>
+</html>

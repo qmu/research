@@ -72,9 +72,9 @@ No external resources are created. The browser session is ephemeral and screensh
 
 | Subject | Provider | Provenance | Tool | Token price in/out (USD/MTok) | Success | Steps | Latency/action | Wall-clock/task | Cost/task | Recovery | Note |
 | ------- | -------- | ---------- | ---- | ----------------------------- | ------- | ----- | -------------- | --------------- | --------- | -------- | ---- |
-| Claude Sonnet 5 (Computer Use) | anthropic | fixtured | `computer_20251124` | 3 / 15 | 100.0% ± 0.0% (n=8) | 4.6 ± 1.3 (n=8) | 74 ms ± 7 ms (n=8) | 0.3 s ± 0.1 s (n=8) | $0.034 ± $0.009 (n=8) | 0.0% ± 0.0% (n=8) |  |
-| OpenAI computer-use-preview | openai | fixtured | `computer` | 3 / 12 | 100.0% ± 0.0% (n=8) | 4.6 ± 1.3 (n=8) | 74 ms ± 7 ms (n=8) | 0.3 s ± 0.1 s (n=8) | $0.031 ± $0.009 (n=8) | 0.0% ± 0.0% (n=8) |  |
-| Gemini 2.5 Computer Use | google | fixtured | `computer_use` | 1.25 / 10 | 100.0% ± 0.0% (n=8) | 4.6 ± 1.3 (n=8) | 74 ms ± 7 ms (n=8) | 0.3 s ± 0.1 s (n=8) | $0.017 ± $0.005 (n=8) | 0.0% ± 0.0% (n=8) |  |
+| Claude Sonnet 5 (Computer Use) | anthropic | fixtured | `computer_20251124` | 3 / 15 | 100.0% ± 0.0% (n=8) | 4.9 ± 1.6 (n=8) | 72 ms ± 6 ms (n=8) | 0.4 s ± 0.1 s (n=8) | $0.035 ± $0.011 (n=8) | 0.0% ± 0.0% (n=8) |  |
+| OpenAI computer-use-preview | openai | fixtured | `computer` | 3 / 12 | 100.0% ± 0.0% (n=8) | 4.9 ± 1.6 (n=8) | 72 ms ± 6 ms (n=8) | 0.4 s ± 0.1 s (n=8) | $0.033 ± $0.010 (n=8) | 0.0% ± 0.0% (n=8) |  |
+| Gemini 2.5 Computer Use | google | fixtured | `computer_use` | 1.25 / 10 | 100.0% ± 0.0% (n=8) | 4.9 ± 1.6 (n=8) | 72 ms ± 6 ms (n=8) | 0.4 s ± 0.1 s (n=8) | $0.018 ± $0.005 (n=8) | 0.0% ± 0.0% (n=8) |  |
 
 **Task suite (version 1, site `computer-use-fixture-site@1`)**
 
@@ -85,7 +85,7 @@ No external resources are created. The browser session is ephemeral and screensh
 | add-two-items-to-cart | multi-step | 6 | element-count: #cart-items li=2 |
 | submit-contact-form | form | 5 | text-present: Thank you, your message was sent |
 | apply-discount-code | form | 3 | input-value: #applied-code=SAVE10 |
-| read-order-total | extraction | 2 | text-present: Order total: |
+| confirm-order-total | extraction | 3 | input-value: #confirm-total=63 |
 | filter-catalog-by-category | navigation | 2 | url-ends-with: /catalog.html?category=stationery |
 | update-account-nickname | form | 3 | input-value: #nickname=researcher |
 

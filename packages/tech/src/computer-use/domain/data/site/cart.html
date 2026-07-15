@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QMU Fixture Shop — Cart</title>
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Cart</h1>
+      <nav aria-label="Main">
+        <a href="./index.html">Home</a>
+        <a href="./catalog.html">Catalog</a>
+        <a href="./cart.html">Cart</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./account.html">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Items</h2>
+      <ul id="cart-items"></ul>
+      <p id="cart-empty" hidden>Your cart is empty.</p>
+
+      <h2>Discount</h2>
+      <form id="discount-form">
+        <label for="discount-code">Discount code</label>
+        <input id="discount-code" name="code" type="text" autocomplete="off" />
+        <button id="apply-discount" type="submit">Apply code</button>
+      </form>
+
+      <label for="applied-code">Applied code</label>
+      <input id="applied-code" name="applied" type="text" readonly value="" />
+
+      <p id="cart-total">Cart total: $<span id="total-value">0</span></p>
+      <p id="discount-status" class="status" hidden></p>
+    </main>
+
+    <script src="./products.js"></script>
+    <script src="./cart.js"></script>
+    <script>
+      // The cart list drives the element-count predicate; the applied-code field
+      // drives the input-value predicate. Only a known code applies, so a wrong
+      // code leaves #applied-code empty and the task fails honestly.
+      (function () {
+        var CODES = { SAVE10: 0.1 };
+
+        var ids = window.CART.items();
+        var list = document.getElementById("cart-items");
+        var items = window.PRODUCTS.filter(function (product) {
+          return ids.indexOf(product.id) !== -1;
+        });
+
+        items.forEach(function (product) {
+          var entry = document.createElement("li");
+          entry.textContent = product.name + " — $" + product.priceUsd;
+          list.appendChild(entry);
+        });
+        document.getElementById("cart-empty").hidden = items.length !== 0;
+
+        var subtotal = items.reduce(function (sum, product) {
+          return sum + product.priceUsd;
+        }, 0);
+        var totalValue = document.getElementById("total-value");
+        totalValue.textContent = String(subtotal);
+
+        document
+          .getElementById("discount-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+            var entered = document
+              .getElementById("discount-code")
+              .value.trim()
+              .toUpperCase();
+            var status = document.getElementById("discount-status");
+            var rate = Object.prototype.hasOwnProperty.call(CODES, entered)
+              ? CODES[entered]
+              : undefined;
+            if (rate === undefined) {
+              document.getElementById("applied-code").value = "";
+              totalValue.textContent = String(subtotal);
+              status.hidden = false;
+              status.textContent = "That discount code is not recognised.";
+              return;
+            }
+            document.getElementById("applied-code").value = entered;
+            totalValue.textContent = String(
+              Math.round(subtotal * (1 - rate) * 100) / 100,
+            );
+            status.hidden = false;
+            status.textContent = "Discount " + entered + " applied.";
+          });
+      })();
+    </script>
+  </body>
+</html>

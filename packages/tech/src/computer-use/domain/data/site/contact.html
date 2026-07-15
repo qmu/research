@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QMU Fixture Shop — Contact</title>
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Contact</h1>
+      <nav aria-label="Main">
+        <a href="./index.html">Home</a>
+        <a href="./catalog.html">Catalog</a>
+        <a href="./cart.html">Cart</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./account.html">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <form id="contact-form" novalidate>
+        <label for="contact-name">Name</label>
+        <input id="contact-name" name="name" type="text" autocomplete="off" />
+
+        <label for="contact-email">Email</label>
+        <input
+          id="contact-email"
+          name="email"
+          type="email"
+          autocomplete="off"
+        />
+
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="4"></textarea>
+
+        <button id="contact-submit" type="submit">Send message</button>
+      </form>
+
+      <p id="contact-status" class="status" hidden></p>
+    </main>
+
+    <script>
+      // The confirmation text is the task's success predicate, so it appears ONLY
+      // when all three fields are filled and the email is plausibly an address.
+      // A partially-filled submit shows an error instead — the agent must really
+      // complete the form.
+      (function () {
+        document
+          .getElementById("contact-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+            var name = document.getElementById("contact-name").value.trim();
+            var email = document.getElementById("contact-email").value.trim();
+            var message = document
+              .getElementById("contact-message")
+              .value.trim();
+            var status = document.getElementById("contact-status");
+            status.hidden = false;
+
+            if (!name || !email || !message) {
+              status.textContent = "Please fill in every field before sending.";
+              return;
+            }
+            if (email.indexOf("@") < 1 || email.indexOf(".") === -1) {
+              status.textContent = "Please enter a valid email address.";
+              return;
+            }
+            status.textContent =
+              "Thank you, your message was sent. We will reply to " +
+              email +
+              ".";
+          });
+      })();
+    </script>
+  </body>
+</html>

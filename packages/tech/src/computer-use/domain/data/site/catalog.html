@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QMU Fixture Shop — Catalog</title>
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Catalog</h1>
+      <nav aria-label="Main">
+        <a href="./index.html">Home</a>
+        <a href="./catalog.html">Catalog</a>
+        <a href="./cart.html">Cart</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./account.html">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <form id="filter-form">
+        <label for="category-filter">Filter by category</label>
+        <select id="category-filter" name="category">
+          <option value="">All categories</option>
+          <option value="stationery">Stationery</option>
+          <option value="hardware">Hardware</option>
+        </select>
+        <button id="filter-submit" type="submit">Apply filter</button>
+      </form>
+
+      <h2>Products</h2>
+      <ul id="product-list"></ul>
+    </main>
+
+    <script src="./products.js"></script>
+    <script src="./cart.js"></script>
+    <script>
+      // Renders the committed product list, filtered by the ?category= query so
+      // the filter task's success is decided by the URL alone. Add-to-cart writes
+      // through the shared CART set.
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var category = (params.get("category") || "").toLowerCase();
+        var list = document.getElementById("product-list");
+        var select = document.getElementById("category-filter");
+        select.value = category;
+
+        window.PRODUCTS.filter(function (product) {
+          return !category || product.category.toLowerCase() === category;
+        }).forEach(function (product) {
+          var item = document.createElement("li");
+
+          var link = document.createElement("a");
+          link.href = product.href;
+          link.textContent = product.name;
+          item.appendChild(link);
+
+          item.appendChild(
+            document.createTextNode(
+              " — " + product.category + " — $" + product.priceUsd + " ",
+            ),
+          );
+
+          var button = document.createElement("button");
+          button.type = "button";
+          button.id = "add-" + product.id;
+          button.textContent = "Add " + product.name + " to cart";
+          button.addEventListener("click", function () {
+            window.CART.add(product.id);
+            button.textContent = product.name + " added";
+          });
+          item.appendChild(button);
+
+          list.appendChild(item);
+        });
+
+        document
+          .getElementById("filter-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+            var value = select.value;
+            window.location.href = value
+              ? "./catalog.html?category=" + encodeURIComponent(value)
+              : "./catalog.html";
+          });
+      })();
+    </script>
+  </body>
+</html>

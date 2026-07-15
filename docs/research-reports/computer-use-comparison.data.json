@@ -25,23 +25,23 @@
           "n": 8
         },
         "stepsToComplete": {
-          "mean": 4.625,
-          "stdDev": 1.3024701806293193,
+          "mean": 4.875,
+          "stdDev": 1.5526475085202969,
           "n": 8
         },
         "latencyPerActionMs": {
-          "mean": 73.59821428571429,
-          "stdDev": 7.001867462269167,
+          "mean": 72.13392857142857,
+          "stdDev": 6.434740520682485,
           "n": 8
         },
         "wallClockPerTaskMs": {
-          "mean": 341.625,
-          "stdDev": 99.45700794097634,
+          "mean": 351.625,
+          "stdDev": 110.1828836850028,
           "n": 8
         },
         "costPerTaskUsd": {
-          "mean": 0.033788250000000006,
-          "stdDev": 0.009355905663574976,
+          "mean": 0.03519750000000001,
+          "stdDev": 0.010902099181874498,
           "n": 8
         },
         "recoveryRate": {
@@ -107,14 +107,14 @@
           "recovered": false
         },
         {
-          "taskId": "read-order-total",
+          "taskId": "confirm-order-total",
           "category": "extraction",
           "repetition": 0,
           "succeeded": true,
-          "steps": 5,
-          "wallClockMs": 405,
-          "latencyPerActionMs": 81,
-          "costUsd": 0.03858,
+          "steps": 7,
+          "wallClockMs": 485,
+          "latencyPerActionMs": 69.28571428571429,
+          "costUsd": 0.049854,
           "recovered": false
         },
         {
@@ -161,23 +161,23 @@
           "n": 8
         },
         "stepsToComplete": {
-          "mean": 4.625,
-          "stdDev": 1.3024701806293193,
+          "mean": 4.875,
+          "stdDev": 1.5526475085202969,
           "n": 8
         },
         "latencyPerActionMs": {
-          "mean": 73.59821428571429,
-          "stdDev": 7.001867462269167,
+          "mean": 72.13392857142857,
+          "stdDev": 6.434740520682485,
           "n": 8
         },
         "wallClockPerTaskMs": {
-          "mean": 341.625,
-          "stdDev": 99.45700794097634,
+          "mean": 351.625,
+          "stdDev": 110.1828836850028,
           "n": 8
         },
         "costPerTaskUsd": {
-          "mean": 0.031481249999999995,
-          "stdDev": 0.008724039754772851,
+          "mean": 0.032791875,
+          "stdDev": 0.010156917747279438,
           "n": 8
         },
         "recoveryRate": {
@@ -243,14 +243,14 @@
           "recovered": false
         },
         {
-          "taskId": "read-order-total",
+          "taskId": "confirm-order-total",
           "category": "extraction",
           "repetition": 0,
           "succeeded": true,
-          "steps": 5,
-          "wallClockMs": 405,
-          "latencyPerActionMs": 81,
-          "costUsd": 0.035925,
+          "steps": 7,
+          "wallClockMs": 485,
+          "latencyPerActionMs": 69.28571428571429,
+          "costUsd": 0.04641,
           "recovered": false
         },
         {
@@ -297,23 +297,23 @@
           "n": 8
         },
         "stepsToComplete": {
-          "mean": 4.625,
-          "stdDev": 1.3024701806293193,
+          "mean": 4.875,
+          "stdDev": 1.5526475085202969,
           "n": 8
         },
         "latencyPerActionMs": {
-          "mean": 73.59821428571429,
-          "stdDev": 7.001867462269167,
+          "mean": 72.13392857142857,
+          "stdDev": 6.434740520682485,
           "n": 8
         },
         "wallClockPerTaskMs": {
-          "mean": 341.625,
-          "stdDev": 99.45700794097634,
+          "mean": 351.625,
+          "stdDev": 110.1828836850028,
           "n": 8
         },
         "costPerTaskUsd": {
-          "mean": 0.0169621875,
-          "stdDev": 0.0046901316303299455,
+          "mean": 0.01767265625,
+          "stdDev": 0.005475778052897891,
           "n": 8
         },
         "recoveryRate": {
@@ -379,14 +379,14 @@
           "recovered": false
         },
         {
-          "taskId": "read-order-total",
+          "taskId": "confirm-order-total",
           "category": "extraction",
           "repetition": 0,
           "succeeded": true,
-          "steps": 5,
-          "wallClockMs": 405,
-          "latencyPerActionMs": 81,
-          "costUsd": 0.01939375,
+          "steps": 7,
+          "wallClockMs": 485,
+          "latencyPerActionMs": 69.28571428571429,
+          "costUsd": 0.0250775,
           "recovered": false
         },
         {

@@ -77,15 +77,20 @@ export const TASK_SUITE: TaskSuiteManifest = {
       optimalSteps: 3,
     },
     {
-      id: "read-order-total",
+      // An extraction task must require READING a value, not merely landing on a
+      // page. An earlier form of this task ("confirm the total is present") was
+      // satisfied by the start page itself: a do-nothing agent passed it, so it
+      // measured nothing and lifted every subject's success rate equally. The
+      // agent must now read the total off the page and enter it.
+      id: "confirm-order-total",
       category: "extraction",
-      goal: "Open the order-summary page and confirm the displayed order total is present.",
+      goal: "Read the order total from the order summary and enter it into the confirmation field (digits only, no currency symbol), then confirm.",
       startPath: "/order-summary.html",
       successPredicate: {
-        kind: "text-present",
-        detail: "Order total:",
+        kind: "input-value",
+        detail: "#confirm-total=63",
       },
-      optimalSteps: 2,
+      optimalSteps: 3,
     },
     {
       id: "filter-catalog-by-category",

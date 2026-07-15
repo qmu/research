@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QMU Fixture Shop — Order summary</title>
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Order summary</h1>
+      <nav aria-label="Main">
+        <a href="./index.html">Home</a>
+        <a href="./catalog.html">Catalog</a>
+        <a href="./cart.html">Cart</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./account.html">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <h2>Order QMU-2026-0714</h2>
+      <table>
+        <caption>
+          Items in this order
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Notebook</td>
+            <td>2</td>
+            <td>$24</td>
+          </tr>
+          <tr>
+            <td>Widget</td>
+            <td>1</td>
+            <td>$25</td>
+          </tr>
+          <tr>
+            <td>Pencil</td>
+            <td>3</td>
+            <td>$9</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p id="order-subtotal">Subtotal: $58</p>
+      <p id="order-shipping">Shipping: $5</p>
+      <p id="order-total">Order total: $63</p>
+
+      <h2>Confirm</h2>
+      <form id="confirm-form">
+        <label for="confirm-total">Confirm the order total (digits only)</label>
+        <input
+          id="confirm-total"
+          name="confirm"
+          type="text"
+          autocomplete="off"
+          value=""
+        />
+        <button id="confirm-submit" type="submit">Confirm total</button>
+      </form>
+      <p id="confirm-status" class="status" hidden></p>
+    </main>
+
+    <script>
+      // The confirmation field is what makes this an EXTRACTION task rather than
+      // a navigation one: the agent must read the total off the page and type it.
+      // The status line deliberately echoes the entered value WITHOUT saying
+      // whether it is correct — revealing correctness would let an agent brute
+      // force the answer instead of reading it.
+      (function () {
+        document
+          .getElementById("confirm-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+            var entered = document.getElementById("confirm-total").value.trim();
+            var status = document.getElementById("confirm-status");
+            status.hidden = false;
+            status.textContent = entered
+              ? "Total confirmed as $" + entered + "."
+              : "Enter the order total to confirm.";
+          });
+      })();
+    </script>
+  </body>
+</html>
