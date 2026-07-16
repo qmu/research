@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QMU Fixture Shop — Pencil</title>
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Pencil</h1>
+      <nav aria-label="Main">
+        <a href="../index.html">Home</a>
+        <a href="../catalog.html">Catalog</a>
+        <a href="../cart.html">Cart</a>
+        <a href="../contact.html">Contact</a>
+        <a href="../account.html">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <p id="product-category">Category: Stationery</p>
+      <p id="product-price">Price: $3</p>
+      <p>
+        A graphite pencil. This is fixture content for the computer-use task
+        suite; it describes nothing real. It exists so the Stationery category
+        holds more than one product and the search task has a real distractor.
+      </p>
+      <button id="add-pencil" type="button">Add Pencil to cart</button>
+      <p id="product-status" class="status" hidden></p>
+    </main>
+
+    <script src="../cart.js"></script>
+    <script>
+      (function () {
+        var button = document.getElementById("add-pencil");
+        button.addEventListener("click", function () {
+          window.CART.add("pencil");
+          var status = document.getElementById("product-status");
+          status.hidden = false;
+          status.textContent = "Pencil added to your cart.";
+        });
+      })();
+    </script>
+  </body>
+</html>

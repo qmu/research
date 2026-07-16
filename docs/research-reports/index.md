@@ -27,4 +27,6 @@ Past generated frames are listed in [History](./history).
 - [Image generation](./image-generation-comparison) — Generation latency, per-image cost, rubric-checked prompt adherence, and exact-text rendering.
 - [Speech (TTS / STT / STS)](./speech-comparison) — Text-to-speech intelligibility & latency, speech-to-text word accuracy & latency, per-unit cost, and speech-to-speech realtime capability.
 
+- [Computer use](./computer-use-comparison) — Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.
+
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

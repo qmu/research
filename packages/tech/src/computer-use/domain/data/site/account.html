@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QMU Fixture Shop — Account settings</title>
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Account settings</h1>
+      <nav aria-label="Main">
+        <a href="./index.html">Home</a>
+        <a href="./catalog.html">Catalog</a>
+        <a href="./cart.html">Cart</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./account.html">Account</a>
+      </nav>
+    </header>
+
+    <main>
+      <form id="account-form">
+        <label for="nickname">Nickname</label>
+        <input
+          id="nickname"
+          name="nickname"
+          type="text"
+          autocomplete="off"
+          value="guest"
+        />
+
+        <label for="account-email">Email</label>
+        <input
+          id="account-email"
+          name="email"
+          type="email"
+          autocomplete="off"
+          value="guest@example.com"
+        />
+
+        <button id="account-save" type="submit">Save changes</button>
+      </form>
+
+      <p id="account-status" class="status" hidden></p>
+    </main>
+
+    <script>
+      // The nickname field starts at "guest", so the input-value predicate can
+      // only pass if the agent actually changed it. Saving is confirmed in the
+      // status line; the field itself carries the value the predicate reads.
+      (function () {
+        document
+          .getElementById("account-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+            var nickname = document.getElementById("nickname").value.trim();
+            var status = document.getElementById("account-status");
+            status.hidden = false;
+            if (!nickname) {
+              status.textContent = "Nickname cannot be empty.";
+              return;
+            }
+            status.textContent =
+              "Saved. Your nickname is now " + nickname + ".";
+          });
+      })();
+    </script>
+  </body>
+</html>
