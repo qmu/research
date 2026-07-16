@@ -55,7 +55,11 @@
     "agent-vm": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts",
     "agent-vm:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts",
     "agent-vm:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts --real",
-    "agent-vm:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts --estimate"
+    "agent-vm:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts --estimate",
+    "svggen": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-svg-generation.ts",
+    "svggen:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-svg-generation.ts",
+    "svggen:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-svg-generation.ts --real",
+    "svggen:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-svg-generation.ts --estimate"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

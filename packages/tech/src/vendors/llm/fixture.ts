@@ -6,12 +6,14 @@ import type {
   ComputerUseClient,
   ComputerUseTaskInput,
   GeneratedImage,
+  GeneratedSvg,
   ImageGenerationClient,
   JsonSchema,
   LlmClient,
   StreamedCompletion,
   StructuredCompletion,
   TaskAttempt,
+  SvgGenerationClient,
   VisionCapability,
   VisionClient,
   VisionImageInput,
@@ -172,6 +174,46 @@ export const createFixtureComputerUseClient = (
       wallClockMs,
       inputTokens,
       outputTokens,
+// Canned valid SVG documents for the keyless SVG-generation path. The static
+// document carries several drawable elements and a `<path>` so the complexity
+// metric has signal; the animated one carries a SMIL `<animate>` so the
+// animation-presence metric does too. Both are well-formed with an `<svg>` root,
+// so render-validity scores 1 — the mechanical scorers run end to end without any
+// API, key, or cost, the same convention as the OCR/image fixtures.
+export const FIXTURE_STATIC_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+  '<rect x="10" y="10" width="80" height="80" rx="8" fill="#2563eb"/>' +
+  '<circle cx="50" cy="50" r="24" fill="#e11d48"/>' +
+  '<path d="M20 80 L50 30 L80 80 Z" fill="none" stroke="#111111" stroke-width="3"/>' +
+  "</svg>";
+
+export const FIXTURE_ANIMATED_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+  '<circle cx="50" cy="50" r="24" fill="#e11d48">' +
+  '<animate attributeName="r" values="24;12;24" dur="2s" repeatCount="indefinite"/>' +
+  "</circle></svg>";
+
+// Deterministic SVG-generation stub for the keyless path. A prompt asking for
+// animation ("animate"/"animation") yields the animated document; every other
+// prompt yields the static one. Latency is seeded from the prompt text so
+// per-prompt latency stats are non-degenerate yet byte-stable across runs.
+export const createFixtureSvgGenerationClient = (
+  model = "fixture-svg",
+): SvgGenerationClient => ({
+  model,
+  generateSvg: (prompt: string): Promise<GeneratedSvg> => {
+    const svg = /animat/i.test(prompt)
+      ? FIXTURE_ANIMATED_SVG
+      : FIXTURE_STATIC_SVG;
+    const seed = [...prompt].reduce(
+      (sum, char) => (sum + char.charCodeAt(0)) % 997,
+      0,
+    );
+    return Promise.resolve({
+      svg,
+      outputTokens: Math.max(1, Math.ceil(svg.length / 4)),
+      elapsedMs: 6 + (seed % 40),
+      model,
     });
   },
 });

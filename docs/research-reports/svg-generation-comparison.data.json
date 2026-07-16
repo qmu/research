@@ -1,0 +1,382 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "fixture": true,
+  "trials": 1,
+  "manifestVersion": "svg-v1",
+  "runs": [
+    {
+      "id": "claude-opus-4-8",
+      "provider": "anthropic",
+      "modelName": "Claude Opus 4.8",
+      "apiModelId": "claude-opus-4-8",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "generationLatencyMs": {
+          "mean": 24,
+          "stdDev": 9.797958971132712,
+          "n": 5
+        },
+        "renderValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
+        },
+        "pathComplexity": {
+          "mean": 4.6,
+          "stdDev": 3.286335345030997,
+          "n": 5
+        },
+        "animationPresence": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "calls": [
+        {
+          "promptId": "static-weather-icon",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 39,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-bar-chart",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 18,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-logo-monogram",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 13,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "animated-loading-spinner",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        },
+        {
+          "promptId": "animated-pulsing-heart",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        }
+      ]
+    },
+    {
+      "id": "gpt-5-5",
+      "provider": "openai",
+      "modelName": "GPT-5.5",
+      "apiModelId": "gpt-5.5",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "generationLatencyMs": {
+          "mean": 24,
+          "stdDev": 9.797958971132712,
+          "n": 5
+        },
+        "renderValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
+        },
+        "pathComplexity": {
+          "mean": 4.6,
+          "stdDev": 3.286335345030997,
+          "n": 5
+        },
+        "animationPresence": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "calls": [
+        {
+          "promptId": "static-weather-icon",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 39,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-bar-chart",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 18,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-logo-monogram",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 13,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "animated-loading-spinner",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        },
+        {
+          "promptId": "animated-pulsing-heart",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        }
+      ]
+    },
+    {
+      "id": "gemini-3-1-pro",
+      "provider": "google",
+      "modelName": "Gemini 3.1 Pro",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 12,
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "generationLatencyMs": {
+          "mean": 24,
+          "stdDev": 9.797958971132712,
+          "n": 5
+        },
+        "renderValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
+        },
+        "pathComplexity": {
+          "mean": 4.6,
+          "stdDev": 3.286335345030997,
+          "n": 5
+        },
+        "animationPresence": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "calls": [
+        {
+          "promptId": "static-weather-icon",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 39,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-bar-chart",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 18,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-logo-monogram",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 13,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "animated-loading-spinner",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        },
+        {
+          "promptId": "animated-pulsing-heart",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        }
+      ]
+    },
+    {
+      "id": "grok-4-3",
+      "provider": "xai",
+      "modelName": "Grok 4.3",
+      "apiModelId": "grok-4.3",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "source": "https://docs.x.ai/developers/models/grok-4.3",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "generationLatencyMs": {
+          "mean": 24,
+          "stdDev": 9.797958971132712,
+          "n": 5
+        },
+        "renderValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
+        },
+        "pathComplexity": {
+          "mean": 4.6,
+          "stdDev": 3.286335345030997,
+          "n": 5
+        },
+        "animationPresence": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 2
+        }
+      },
+      "calls": [
+        {
+          "promptId": "static-weather-icon",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 39,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-bar-chart",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 18,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "static-logo-monogram",
+          "kind": "static",
+          "repetition": 0,
+          "latencyMs": 13,
+          "svgByteLength": 261,
+          "outputTokens": 66,
+          "renderValid": 1,
+          "pathComplexity": 7,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "promptId": "animated-loading-spinner",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        },
+        {
+          "promptId": "animated-pulsing-heart",
+          "kind": "animated",
+          "repetition": 0,
+          "latencyMs": 25,
+          "svgByteLength": 203,
+          "outputTokens": 51,
+          "renderValid": 1,
+          "pathComplexity": 1,
+          "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
+          "animationPresence": 1
+        }
+      ]
+    }
+  ],
+  "nonSubjects": [],
+  "artifactPath": "svg-generation-comparison.data.json"
+}

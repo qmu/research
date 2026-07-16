@@ -54,3 +54,7 @@ No dated frames have been archived yet.
 ### Computer use
 
 No dated frames have been archived yet.
+
+### SVG generation
+
+No dated frames have been archived yet.
