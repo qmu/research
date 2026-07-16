@@ -32,10 +32,21 @@ import {
   type Configuration,
 } from "../llm-model-comparison/domain/matrix";
 import type { CompletionClient } from "../vendors/llm/types";
+import type { Credential, CredentialSpec } from "../vendors/llm/credentials";
+import {
+  resolveCredential,
+  requireApiKey,
+  requireAwsSigV4,
+  requireGcpAdc,
+} from "../vendors/llm/credentials";
 import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
 import { createOpenAiCompletionClient } from "../vendors/llm/openai";
 import { createOpenAiResponsesCompletionClient } from "../vendors/llm/openai-responses";
 import { createXaiCompletionClient } from "../vendors/llm/xai";
+import { createPerplexityCompletionClient } from "../vendors/llm/perplexity";
+import { createBedrockCompletionClient } from "../vendors/llm/bedrock";
+import { createVertexCompletionClient } from "../vendors/llm/vertex";
+import { createOpenRouterCompletionClient } from "../vendors/llm/openrouter";
 import { createGoogleCompletionClient } from "../vendors/llm/google";
 import { createOpenAiRealtimeCompletionClient } from "../vendors/llm/openai-realtime";
 import { createFixtureCompletionClient } from "../vendors/llm/fixture";
@@ -127,40 +138,91 @@ const ESTIMATE_SECONDS_PER_CALL = 9; // schema-heavy calls are slower than chat
 // byte-identical across runs (real runs stamp the wall clock).
 const FIXTURE_TIMESTAMP = "2026-01-01T00:00:00.000Z";
 
-const ENV_KEY: Record<ModelCard["provider"], string> = {
-  anthropic: "ANTHROPIC_API_KEY",
-  openai: "OPENAI_API_KEY",
-  google: "GOOGLE_API_KEY",
-  xai: "XAI_API_KEY",
+// How each provider's credential is resolved from the environment. Today every
+// provider uses a single API key; the spec is a discriminated union so a Bedrock
+// (awsSigV4) or Vertex (gcpAdc) entry is added here, not by widening this map's
+// value to a bag of optional fields. Resolution is pure (see
+// `vendors/llm/credentials.ts`): a missing credential yields `null`, which routes
+// the configuration to the fixture path — the keyless fallback is preserved.
+const CREDENTIAL_SPEC: Record<ModelCard["provider"], CredentialSpec> = {
+  anthropic: { kind: "apiKey", apiKeyEnv: "ANTHROPIC_API_KEY" },
+  openai: { kind: "apiKey", apiKeyEnv: "OPENAI_API_KEY" },
+  google: { kind: "apiKey", apiKeyEnv: "GOOGLE_API_KEY" },
+  xai: { kind: "apiKey", apiKeyEnv: "XAI_API_KEY" },
+  perplexity: { kind: "apiKey", apiKeyEnv: "PERPLEXITY_API_KEY" },
+  // AWS Bedrock authenticates with SigV4; a missing/partial AWS credential set
+  // resolves to null → the fixture fallback, exactly like a missing apiKey.
+  bedrock: {
+    kind: "awsSigV4",
+    regionEnv: "AWS_REGION",
+    accessKeyIdEnv: "AWS_ACCESS_KEY_ID",
+    secretAccessKeyEnv: "AWS_SECRET_ACCESS_KEY",
+    sessionTokenEnv: "AWS_SESSION_TOKEN",
+  },
+  // Google Vertex authenticates with GCP ADC; the routing facts come from env.
+  vertex: {
+    kind: "gcpAdc",
+    projectIdEnv: "GOOGLE_CLOUD_PROJECT",
+    locationEnv: "GOOGLE_CLOUD_LOCATION",
+  },
+  openrouter: { kind: "apiKey", apiKeyEnv: "OPENROUTER_API_KEY" },
 };
 
+// Build a live client from a resolved (non-null) credential. The factory contract
+// is the neutral `(apiModelId, credential) => CompletionClient` the mission calls
+// for; each single-key provider narrows the credential to its API key at the
+// boundary, so a future SigV4/ADC backend slots in as a new entry taking its own
+// credential shape without changing this signature.
 const CLIENT_FACTORY: Record<
   ModelCard["provider"],
-  (apiModelId: string, apiKey: string) => CompletionClient
+  (apiModelId: string, credential: Credential) => CompletionClient
 > = {
-  anthropic: createAnthropicCompletionClient,
-  openai: createOpenAiCompletionClient,
-  google: createGoogleCompletionClient,
+  anthropic: (id, cred) =>
+    createAnthropicCompletionClient(id, requireApiKey(cred, "anthropic")),
+  openai: (id, cred) =>
+    createOpenAiCompletionClient(id, requireApiKey(cred, "openai")),
+  google: (id, cred) =>
+    createGoogleCompletionClient(id, requireApiKey(cred, "google")),
   // xAI is OpenAI-compatible — the same Chat Completions adapter against its base URL.
-  xai: createXaiCompletionClient,
+  xai: (id, cred) => createXaiCompletionClient(id, requireApiKey(cred, "xai")),
+  // Perplexity is OpenAI-compatible too (search-grounded Sonar lineup).
+  perplexity: (id, cred) =>
+    createPerplexityCompletionClient(id, requireApiKey(cred, "perplexity")),
+  // IaaS transports for Claude: each narrows the credential to its own shape.
+  bedrock: (id, cred) =>
+    createBedrockCompletionClient(id, requireAwsSigV4(cred, "bedrock")),
+  vertex: (id, cred) =>
+    createVertexCompletionClient(id, requireGcpAdc(cred, "vertex")),
+  // OpenRouter is an OpenAI-compatible aggregator gateway (one key, many vendors).
+  openrouter: (id, cred) =>
+    createOpenRouterCompletionClient(id, requireApiKey(cred, "openrouter")),
 };
 
-// Build the live client for a model, or undefined when the key is absent (the
+// Build the live client for a model, or undefined when no credential resolves (the
 // caller then uses the fixture path and flags the configuration fixtured).
 const buildLiveClient = (card: ModelCard): CompletionClient | undefined => {
-  const key = process.env[ENV_KEY[card.provider]];
-  if (!key) {
+  const credential = resolveCredential(
+    CREDENTIAL_SPEC[card.provider],
+    process.env,
+  );
+  if (!credential) {
     return undefined;
   }
   if (card.api === "realtime") {
-    return createOpenAiRealtimeCompletionClient(card.apiModelId, key);
+    return createOpenAiRealtimeCompletionClient(
+      card.apiModelId,
+      requireApiKey(credential, card.provider),
+    );
   }
   // The `-codex` coding models are only reached through the Responses API surface
   // (dispatched on `api`, keyed by the model's provider — OpenAI's key).
   if (card.api === "responses") {
-    return createOpenAiResponsesCompletionClient(card.apiModelId, key);
+    return createOpenAiResponsesCompletionClient(
+      card.apiModelId,
+      requireApiKey(credential, card.provider),
+    );
   }
-  return CLIENT_FACTORY[card.provider](card.apiModelId, key);
+  return CLIENT_FACTORY[card.provider](card.apiModelId, credential);
 };
 
 // --- argument parsing (orchestration only) -----------------------------------
@@ -572,15 +634,19 @@ export const main = async (): Promise<void> => {
     ? FIXTURE_TIMESTAMP
     : new Date().toISOString();
 
-  // The judge: a live judge client when a real Anthropic key is present and this
-  // is not a forced-fixture run; otherwise the deterministic fixture judge.
-  const judgeKey = process.env[ENV_KEY[JUDGE.provider]];
-  const judgeLive = !args.forceFixture && Boolean(judgeKey);
+  // The judge: a live judge client when a real Anthropic credential resolves and
+  // this is not a forced-fixture run; otherwise the deterministic fixture judge.
+  const judgeCredential = args.forceFixture
+    ? null
+    : resolveCredential(CREDENTIAL_SPEC[JUDGE.provider], process.env);
+  const judgeLive = judgeCredential !== null;
   const judge: JudgeConfig = {
-    client:
-      judgeLive && judgeKey
-        ? createAnthropicCompletionClient(JUDGE.apiModelId, judgeKey)
-        : createFixtureCompletionClient(JUDGE.apiModelId),
+    client: judgeCredential
+      ? createAnthropicCompletionClient(
+          JUDGE.apiModelId,
+          requireApiKey(judgeCredential, JUDGE.provider),
+        )
+      : createFixtureCompletionClient(JUDGE.apiModelId),
     live: judgeLive,
     model: JUDGE.apiModelId,
   };

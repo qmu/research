@@ -244,6 +244,107 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   that shape, so swapping or dropping a provider is a `vendors/deep-research/`
   change with no domain impact.
 
+### LLM credential abstraction (packages/tech) — no new dependency
+
+- **Reason**: The `llm-model-comparison` entrypoint wired every provider's auth as
+  a single `Record<Provider, string>` of API-key strings. AWS Bedrock (SigV4) and
+  Google Vertex (GCP ADC) do not fit a single key, so before either adapter can be
+  added the credential contract must generalize. A discriminated-union
+  `Credential` (`apiKey | awsSigV4 | gcpAdc`) plus a declarative `CredentialSpec`
+  and a pure `resolveCredential(spec, env)` now live in
+  `packages/tech/src/vendors/llm/credentials.ts`. No new package is taken on — the
+  union is plain data (region/ids/project strings); the AWS and Google auth SDKs
+  will be added by their own adapter tickets, behind the vendors/ ACL, and are the
+  only place those SDK types may appear.
+- **Assessment**:
+  - License: n/a (repository code, MIT).
+  - Reputation / Development status / Sustainability: n/a (in-repo).
+- **Monitoring**: n/a.
+- **Exit strategy**: The credential union and resolver are self-contained and
+  unit-tested (`credentials.test.ts`). Single-key providers narrow to their API
+  key at the entrypoint via `requireApiKey`, so their adapters and tests are
+  behaviourally unchanged; a missing credential resolves to `null` and preserves
+  the keyless fixture fallback (`provenance: "fixtured"`). Adding or removing a
+  backend is an edit to `CREDENTIAL_SPEC` / `CLIENT_FACTORY` plus one vendor
+  adapter, with no change to the `CompletionClient` port.
+
+### Perplexity Sonar backend (packages/tech) — no new dependency
+
+- **Reason**: The IaaS-hosted-models mission adds Perplexity's search-grounded
+  Sonar lineup as a comparison backend. Perplexity speaks the OpenAI Chat
+  Completions protocol at `https://api.perplexity.ai`, so it is reached through the
+  existing `createOpenAiCompatibleCompletionClient(model, key, baseURL)` with only
+  the base URL swapped — the same pattern as the xAI backend. No new package is
+  added; the single Perplexity-specific fact (the base URL) lives in
+  `packages/tech/src/vendors/llm/perplexity.ts`.
+- **Assessment**:
+  - License: n/a (repository code, MIT). Uses the already-adopted `openai` SDK.
+  - Reputation / Development status / Sustainability: n/a (in-repo wrapper).
+- **Auth**: `PERPLEXITY_API_KEY`, resolved through the generalized credential
+  contract (`apiKey` spec). Absent key → the keyless fixture fallback
+  (`provenance: "fixtured"`), so CI stays green without a key.
+- **Monitoring**: n/a.
+- **Exit strategy**: Removing the backend is deleting `perplexity.ts`, its
+  `CREDENTIAL_SPEC`/`CLIENT_FACTORY` entries, the `Provider` union member, and the
+  Sonar cards in `models.ts`. Sonar's search grounding stays behind the ACL; the
+  `CompletionClient` port is unchanged.
+
+### @anthropic-ai/bedrock-sdk, @anthropic-ai/vertex-sdk (packages/tech)
+
+- **Reason**: The IaaS-hosted-models mission measures Claude AS SERVED through the
+  IaaS platforms enterprises actually consume it on — AWS Bedrock and Google
+  Vertex AI. Both serve the Anthropic Messages API but authenticate differently
+  from the first-party key (Bedrock: AWS SigV4; Vertex: GCP ADC), which is why the
+  official Anthropic Bedrock/Vertex SDKs are adopted rather than hand-signing
+  requests. Both wrap the already-adopted `@anthropic-ai/sdk` and expose the same
+  `.messages` surface, so the completion-client wiring is shared
+  (`vendors/llm/messages-completion.ts`) and only the client construction differs
+  per transport (`vendors/llm/bedrock.ts`, `vendors/llm/vertex.ts`).
+- **Assessment**:
+  - License: MIT (same as `@anthropic-ai/sdk`) — compatible with this MIT repo.
+  - Reputation: first-party Anthropic SDKs; same maintainer and release cadence as
+    the core SDK already in use.
+  - Development status / Sustainability: actively maintained alongside the core SDK.
+- **Auth**: Bedrock resolves through the `awsSigV4` credential spec (AWS_REGION /
+  AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / optional AWS_SESSION_TOKEN); Vertex
+  through the `gcpAdc` spec (GOOGLE_CLOUD_PROJECT / GOOGLE_CLOUD_LOCATION plus
+  ambient ADC). A missing/partial credential set resolves to `null` and falls back
+  to the keyless fixture path (`provenance: "fixtured"`), so CI stays green without
+  cloud credentials. The `@aws-sdk`/`google-auth-library` transitive types never
+  leave the `vendors/` ACL.
+- **Monitoring**: Dependabot / npm audit, tracked with the core SDK.
+- **Exit strategy**: Each transport is a single adapter file plus a `Provider`
+  union member, `CREDENTIAL_SPEC`/`CLIENT_FACTORY` entry, and model cards; the
+  shared Messages client and the `CompletionClient` port are unchanged. Dropping a
+  backend removes its SDK, adapter, and registry entries. Bedrock's `anthropic.`
+  wire-id prefix is applied only at that adapter's boundary.
+
+### OpenRouter aggregator backend (packages/tech) — no new dependency
+
+- **Reason**: The IaaS-hosted-models mission's third backend category is aggregator
+  gateways ("one key, one bill, failover"). A survey of the candidates
+  (OpenRouter / Groq / Together / Fireworks / DeepInfra) found that **only
+  OpenRouter serves the models this registry already tracks** — the others host
+  open-weight models the registry does not track, which the mission puts out of
+  scope. See `docs/adr/0007-aggregator-gateway-subset.md` for the survey and the
+  decision. OpenRouter speaks the OpenAI Chat Completions protocol at
+  `https://openrouter.ai/api/v1`, so it is reached through the existing
+  `createOpenAiCompatibleCompletionClient(model, key, baseURL)` — the same pattern
+  as the xAI and Perplexity backends. No new package is added; the base URL lives
+  in `packages/tech/src/vendors/llm/openrouter.ts`.
+- **Assessment**:
+  - License: n/a (repository code, MIT). Uses the already-adopted `openai` SDK.
+  - Reputation / Development status / Sustainability: n/a (in-repo wrapper).
+- **Auth**: `OPENROUTER_API_KEY`, resolved through the generalized credential
+  contract (`apiKey` spec). Absent key → the keyless fixture fallback
+  (`provenance: "fixtured"`), so CI stays green without a key.
+- **Monitoring**: n/a. The gateway's catalogue and pricing move — re-check its
+  public `/api/v1/models` endpoint before relying on the curated cards.
+- **Exit strategy**: Removing the backend is deleting `openrouter.ts`, its
+  `CREDENTIAL_SPEC`/`CLIENT_FACTORY` entries, the `Provider` union member, and its
+  model cards. Model ids are OpenRouter's own spelling, carried per card, so no
+  translation layer exists to unwind; the `CompletionClient` port is unchanged.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

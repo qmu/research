@@ -297,4 +297,148 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     effortLevels: ["n/a"],
     source: "https://docs.x.ai/developers/models",
   },
+  // ── Perplexity (Sonar) ──────────────────────────────────────────────────────
+  // OpenAI-compatible Chat Completions at https://api.perplexity.ai (see
+  // vendors/llm/perplexity.ts), KEY-GATED on PERPLEXITY_API_KEY; the keyless
+  // CI/fixture path renders these deterministically. Sonar models are
+  // search-grounded — their numbers reflect the model AS SERVED (retrieval + a
+  // token-based request/response fee), not a plain chat model, which is the point
+  // of measuring a backend as delivered. Effort is left `n/a`: the search models
+  // reason internally and do not take a portable `reasoning_effort` knob on these
+  // ids, so no unsupported effort is ever sent. Prices are curated best-known
+  // estimates per the pricing page — treat each cell as correct only as of its source.
+  {
+    id: "perplexity-sonar",
+    provider: "perplexity",
+    tier: "mid",
+    modelName: "Sonar",
+    apiModelId: "sonar",
+    released: "2025",
+    inputCostPerMTok: 1,
+    outputCostPerMTok: 1,
+    effortLevels: ["n/a"],
+    source: "https://docs.perplexity.ai/guides/pricing",
+  },
+  {
+    id: "perplexity-sonar-pro",
+    provider: "perplexity",
+    tier: "flagship",
+    modelName: "Sonar Pro",
+    apiModelId: "sonar-pro",
+    released: "2025",
+    inputCostPerMTok: 3,
+    outputCostPerMTok: 15,
+    effortLevels: ["n/a"],
+    source: "https://docs.perplexity.ai/guides/pricing",
+  },
+  {
+    id: "perplexity-sonar-reasoning-pro",
+    provider: "perplexity",
+    tier: "frontier",
+    modelName: "Sonar Reasoning Pro",
+    apiModelId: "sonar-reasoning-pro",
+    released: "2025",
+    inputCostPerMTok: 2,
+    outputCostPerMTok: 8,
+    effortLevels: ["n/a"],
+    source: "https://docs.perplexity.ai/guides/pricing",
+  },
+  // ── AWS Bedrock (Claude, IaaS transport) ────────────────────────────────────
+  // The same Claude weights served through AWS Bedrock's Messages endpoint (see
+  // vendors/llm/bedrock.ts), measured AS SERVED — latency, price, and region can
+  // differ from the first-party API. KEY-GATED on AWS SigV4 credentials
+  // (AWS_REGION / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY); the keyless
+  // CI/fixture path renders them deterministically. `apiModelId` is the
+  // first-party id — the adapter adds Bedrock's `anthropic.` wire prefix. Bedrock
+  // supports adaptive thinking/effort, so the effort ladder mirrors first-party.
+  // Prices are curated best-known Bedrock on-demand estimates — treat each cell as
+  // correct only as of its source.
+  {
+    id: "bedrock-claude-opus-4-8",
+    provider: "bedrock",
+    tier: "flagship",
+    modelName: "Claude Opus 4.8 (Bedrock)",
+    apiModelId: "claude-opus-4-8",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 25,
+    effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    source:
+      "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock",
+  },
+  {
+    id: "bedrock-claude-sonnet-5",
+    provider: "bedrock",
+    tier: "mid",
+    modelName: "Claude Sonnet 5 (Bedrock)",
+    apiModelId: "claude-sonnet-5",
+    released: "2026-06",
+    inputCostPerMTok: 3,
+    outputCostPerMTok: 15,
+    effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    source:
+      "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock",
+  },
+  // ── Google Vertex AI (Claude, IaaS transport) ───────────────────────────────
+  // The same Claude weights served through Google Vertex AI (see
+  // vendors/llm/vertex.ts), measured AS SERVED. KEY-GATED on GCP ADC routing
+  // facts (GOOGLE_CLOUD_PROJECT / GOOGLE_CLOUD_LOCATION plus ambient ADC); the
+  // keyless CI/fixture path renders them deterministically. Vertex model ids are
+  // the bare first-party ids (no prefix). Vertex supports adaptive thinking/effort,
+  // so the effort ladder mirrors first-party. Prices are curated best-known Vertex
+  // estimates — treat each cell as correct only as of its source.
+  {
+    id: "vertex-claude-opus-4-8",
+    provider: "vertex",
+    tier: "flagship",
+    modelName: "Claude Opus 4.8 (Vertex)",
+    apiModelId: "claude-opus-4-8",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 25,
+    effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    source:
+      "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai",
+  },
+  // ── OpenRouter (aggregator gateway) ─────────────────────────────────────────
+  // One key routed to many vendors' models — here, models this registry ALREADY
+  // tracks first-party, so each card measures the gateway's transport rather than
+  // a new model (see docs/adr/0007-aggregator-gateway-subset.md). KEY-GATED on
+  // OPENROUTER_API_KEY; the keyless CI/fixture path renders them deterministically.
+  //
+  // `apiModelId` is OpenRouter's own id spelling (a dot, not dashes) and is passed
+  // through verbatim. Ids are pinned EXPLICITLY — never the `~vendor/model-latest`
+  // routing aliases, which would silently re-point and break the historical series.
+  // Prices are OpenRouter's published passthrough rates, verified against its
+  // public /api/v1/models endpoint (2026-07-14) and equal to each model's
+  // first-party rate, so a first-party-vs-OpenRouter comparison holds price constant.
+  //
+  // Effort is `n/a`: OpenRouter maps a reasoning knob per underlying model, and
+  // sending an effort a model does not honor is a hard 400 (a failed run, not a
+  // finding). Widening the ladder is a follow-up once a real run confirms the
+  // mapping per model.
+  {
+    id: "openrouter-claude-opus-4-8",
+    provider: "openrouter",
+    tier: "flagship",
+    modelName: "Claude Opus 4.8 (OpenRouter)",
+    apiModelId: "anthropic/claude-opus-4.8",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 25,
+    effortLevels: ["n/a"],
+    source: "https://openrouter.ai/anthropic/claude-opus-4.8",
+  },
+  {
+    id: "openrouter-gpt-5-5",
+    provider: "openrouter",
+    tier: "flagship",
+    modelName: "GPT-5.5 (OpenRouter)",
+    apiModelId: "openai/gpt-5.5",
+    released: "2026",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 30,
+    effortLevels: ["n/a"],
+    source: "https://openrouter.ai/openai/gpt-5.5",
+  },
 ];

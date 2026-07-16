@@ -63,7 +63,9 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
+    "@anthropic-ai/bedrock-sdk": "^0.32.0",
     "@anthropic-ai/sdk": "^0.111.0",
+    "@anthropic-ai/vertex-sdk": "^0.19.0",
     "@aws-sdk/client-s3vectors": "^3.1066.0",
     "@google/genai": "^2.8.0",
     "@types/better-sqlite3": "^7.6.13",
