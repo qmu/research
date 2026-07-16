@@ -563,14 +563,14 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       text: "SVG generation",
       docsPath: "docs/research-reports/svg-generation-comparison.md",
       summary:
-        "Render validity, path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.",
+        "Render validity, prompt fidelity (rasterize + fixed vision judge), path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.",
     },
     japanese: {
       text: "SVG生成",
       docsPath:
         "docs/research-reports/svg-generation-comparison.insights.ja.md",
       summary:
-        "フロンティアLLMによるSVG生成の描画妥当性、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。",
+        "フロンティアLLMによるSVG生成の描画妥当性、プロンプト忠実度（ラスタライズ＋固定ビジョン判定）、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。",
     },
     dataPath: "docs/research-reports/svg-generation-comparison.data.json",
     qmuSlug: "svg-generation",
@@ -588,6 +588,11 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         { name: "pathComplexity", unit: "count", direction: "reference" },
         {
           name: "animationPresence",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "promptFidelity",
           unit: "ratio",
           direction: "higher-is-better",
         },
@@ -611,10 +616,10 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       costPerRun: {
         ceilingUsd: 5,
         premises:
-          "4 models × 5 prompts × 1–3 repetitions at a few hundred output tokens per SVG at catalog token prices; run `research -- svg-generation --estimate` first",
+          "4 models × 5 prompts × 1–3 repetitions at a few hundred output tokens per SVG at catalog token prices, plus one fixed-vision-judge read per generated SVG; run `research -- svg-generation --estimate` first",
       },
       accumulates:
-        "per-model HistoryPoint series for render validity, animation presence, and mean token cost, one point per dated frame; charts connect same-manifest-version points only",
+        "per-model HistoryPoint series for render validity, prompt fidelity, animation presence, and mean token cost, one point per dated frame; charts connect same-manifest-version points only",
     },
   },
 ];

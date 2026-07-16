@@ -60,7 +60,7 @@ API ネイティブなコンピュータ操作エージェントの、固定 Pla
 
 ### [SVG生成](/research-reports/svg-generation-comparison.insights.ja)
 
-フロンティアLLMによるSVG生成の描画妥当性、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。
+フロンティアLLMによるSVG生成の描画妥当性、プロンプト忠実度（ラスタライズ＋固定ビジョン判定）、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。
 英語ソースは [SVG generation](/research-reports/svg-generation-comparison)。
 
 ## provenance について

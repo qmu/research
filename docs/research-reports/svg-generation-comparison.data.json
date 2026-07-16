@@ -2,7 +2,9 @@
   "generatedAt": "2026-01-01T00:00:00.000Z",
   "fixture": true,
   "trials": 1,
-  "manifestVersion": "svg-v1",
+  "judgeModel": "fixture-judge",
+  "rasterizer": "fixture-raster",
+  "manifestVersion": "svg-v2",
   "runs": [
     {
       "id": "claude-opus-4-8",
@@ -35,6 +37,11 @@
           "mean": 1,
           "stdDev": 0,
           "n": 2
+        },
+        "promptFidelity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
         }
       },
       "calls": [
@@ -47,6 +54,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-sun",
+              "satisfied": true
+            },
+            {
+              "constraintId": "has-single-cloud",
+              "satisfied": true
+            },
+            {
+              "constraintId": "sun-behind-cloud",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -58,6 +80,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "four-bars",
+              "satisfied": true
+            },
+            {
+              "constraintId": "increasing-height",
+              "satisfied": true
+            },
+            {
+              "constraintId": "baseline-axis",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -69,6 +106,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "shows-letter-q",
+              "satisfied": true
+            },
+            {
+              "constraintId": "inside-circle",
+              "satisfied": true
+            },
+            {
+              "constraintId": "two-colors",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -80,6 +132,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-arc",
+              "satisfied": true
+            },
+            {
+              "constraintId": "spinner-like",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         },
@@ -92,6 +155,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-heart",
+              "satisfied": true
+            },
+            {
+              "constraintId": "heart-only-subject",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         }
@@ -128,6 +202,11 @@
           "mean": 1,
           "stdDev": 0,
           "n": 2
+        },
+        "promptFidelity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
         }
       },
       "calls": [
@@ -140,6 +219,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-sun",
+              "satisfied": true
+            },
+            {
+              "constraintId": "has-single-cloud",
+              "satisfied": true
+            },
+            {
+              "constraintId": "sun-behind-cloud",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -151,6 +245,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "four-bars",
+              "satisfied": true
+            },
+            {
+              "constraintId": "increasing-height",
+              "satisfied": true
+            },
+            {
+              "constraintId": "baseline-axis",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -162,6 +271,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "shows-letter-q",
+              "satisfied": true
+            },
+            {
+              "constraintId": "inside-circle",
+              "satisfied": true
+            },
+            {
+              "constraintId": "two-colors",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -173,6 +297,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-arc",
+              "satisfied": true
+            },
+            {
+              "constraintId": "spinner-like",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         },
@@ -185,6 +320,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-heart",
+              "satisfied": true
+            },
+            {
+              "constraintId": "heart-only-subject",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         }
@@ -221,6 +367,11 @@
           "mean": 1,
           "stdDev": 0,
           "n": 2
+        },
+        "promptFidelity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
         }
       },
       "calls": [
@@ -233,6 +384,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-sun",
+              "satisfied": true
+            },
+            {
+              "constraintId": "has-single-cloud",
+              "satisfied": true
+            },
+            {
+              "constraintId": "sun-behind-cloud",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -244,6 +410,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "four-bars",
+              "satisfied": true
+            },
+            {
+              "constraintId": "increasing-height",
+              "satisfied": true
+            },
+            {
+              "constraintId": "baseline-axis",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -255,6 +436,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "shows-letter-q",
+              "satisfied": true
+            },
+            {
+              "constraintId": "inside-circle",
+              "satisfied": true
+            },
+            {
+              "constraintId": "two-colors",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -266,6 +462,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-arc",
+              "satisfied": true
+            },
+            {
+              "constraintId": "spinner-like",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         },
@@ -278,6 +485,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-heart",
+              "satisfied": true
+            },
+            {
+              "constraintId": "heart-only-subject",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         }
@@ -314,6 +532,11 @@
           "mean": 1,
           "stdDev": 0,
           "n": 2
+        },
+        "promptFidelity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 5
         }
       },
       "calls": [
@@ -326,6 +549,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-sun",
+              "satisfied": true
+            },
+            {
+              "constraintId": "has-single-cloud",
+              "satisfied": true
+            },
+            {
+              "constraintId": "sun-behind-cloud",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -337,6 +575,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "four-bars",
+              "satisfied": true
+            },
+            {
+              "constraintId": "increasing-height",
+              "satisfied": true
+            },
+            {
+              "constraintId": "baseline-axis",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -348,6 +601,21 @@
           "outputTokens": 66,
           "renderValid": 1,
           "pathComplexity": 7,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "shows-letter-q",
+              "satisfied": true
+            },
+            {
+              "constraintId": "inside-circle",
+              "satisfied": true
+            },
+            {
+              "constraintId": "two-colors",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" rx=\"8\" fill=\"#2563eb\"/><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"/><path d=\"M20 80 L50 30 L80 80 Z\" fill=\"none\" stroke=\"#111111\" stroke-width=\"3\"/></svg>"
         },
         {
@@ -359,6 +627,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-arc",
+              "satisfied": true
+            },
+            {
+              "constraintId": "spinner-like",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         },
@@ -371,6 +650,17 @@
           "outputTokens": 51,
           "renderValid": 1,
           "pathComplexity": 1,
+          "promptFidelity": 1,
+          "judgeAnswers": [
+            {
+              "constraintId": "has-heart",
+              "satisfied": true
+            },
+            {
+              "constraintId": "heart-only-subject",
+              "satisfied": true
+            }
+          ],
           "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#e11d48\"><animate attributeName=\"r\" values=\"24;12;24\" dur=\"2s\" repeatCount=\"indefinite\"/></circle></svg>",
           "animationPresence": 1
         }

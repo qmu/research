@@ -45,6 +45,12 @@ const ASPECTS: ReadonlyArray<Aspect> = [
     format: pct,
   },
   {
+    title: "Prompt fidelity",
+    better: "higher",
+    value: (run) => run.stats.promptFidelity.mean,
+    format: pct,
+  },
+  {
     title: "Animation presence",
     better: "higher",
     value: (run) => run.stats.animationPresence.mean,
@@ -94,19 +100,20 @@ There are no measured values to summarize; the committed fixture page proves the
 | ------ | ------------ | ------ | ----- |
 ${rows.join("\n")}
 
-"Best"/"Worst" follow each metric's own direction (higher validity and animation presence are better, lower latency is better). Animation presence is measured over the animated prompts only. Token cost and path complexity are reference columns in the model table. The full per-model and per-prompt records are in section 7, Verification Data.`;
+"Best"/"Worst" follow each metric's own direction (higher validity, fidelity, and animation presence are better, lower latency is better). Prompt fidelity is the fixed vision judge's rubric score over the rasterized drawing; animation presence is measured over the animated prompts only. Token cost and path complexity are reference columns in the model table. The full per-model and per-prompt records are in section 7, Verification Data.`;
 };
 
 const modelTable = (result: SvgGenerationResult): string => {
   const header =
-    "| Model | Provider | Provenance | Output $/MTok | Latency (mean±sd) | Render valid (mean±sd) | Animation (mean±sd) | Path complexity (mean±sd) | Note |\n" +
-    "| ----- | -------- | ---------- | ------------- | ----------------- | ---------------------- | ------------------- | ------------------------- | ---- |";
+    "| Model | Provider | Provenance | Output $/MTok | Latency (mean±sd) | Render valid (mean±sd) | Fidelity (mean±sd) | Animation (mean±sd) | Path complexity (mean±sd) | Note |\n" +
+    "| ----- | -------- | ---------- | ------------- | ----------------- | ---------------------- | ------------------ | ------------------- | ------------------------- | ---- |";
   const rows = result.runs.map(
     (run) =>
       `| ${escapeCell(run.modelName)} | ${run.provider} | ${run.provenance} | ` +
       `$${run.outputCostPerMTok.toFixed(2)} | ` +
       `${statCell(run.stats.generationLatencyMs, (v) => v.toFixed(0))} | ` +
       `${statCell(run.stats.renderValidity, pct)} | ` +
+      `${statCell(run.stats.promptFidelity, pct)} | ` +
       `${statCell(run.stats.animationPresence, pct)} | ` +
       `${statCell(run.stats.pathComplexity, num)} | ${escapeCell(run.error ?? "")} |`,
   );
@@ -114,9 +121,11 @@ const modelTable = (result: SvgGenerationResult): string => {
 };
 
 const manifestTable = (): string => {
-  const header = "| Prompt id | Kind |\n| --------- | ---- |";
+  const header =
+    "| Prompt id | Kind | Rubric constraints |\n| --------- | ---- | ------------------ |";
   const rows = PROMPT_MANIFEST.prompts.map(
-    (prompt) => `| ${prompt.id} | ${prompt.kind} |`,
+    (prompt) =>
+      `| ${prompt.id} | ${prompt.kind} | ${prompt.constraints.length} |`,
   );
   return `${header}\n${rows.join("\n")}`;
 };
@@ -129,22 +138,22 @@ export const renderSvgGenerationReport = (
     // site.ts) — published pages carry title == sidebar label by policy.
     title: "SVG generation",
     description:
-      "A reproducible comparison of frontier LLMs generating SVG — render validity, path complexity, animation presence (SMIL/CSS), generation latency, and token cost — scored mechanically from the SVG source.",
+      "A reproducible comparison of frontier LLMs generating SVG — render validity, prompt fidelity (rasterized and judged by a fixed vision model), path complexity, animation presence (SMIL/CSS), generation latency, and token cost.",
     introduction:
-      "This report compares how faithfully frontier text models emit **valid, animatable vector graphics**. Every score is computed **mechanically from the SVG source** — well-formedness, drawable-element and path-command counts, and animation markup — so no aesthetic opinion enters the numbers.",
+      "This report compares how faithfully frontier text models emit **valid, animatable vector graphics**. Source-level scores are computed **mechanically from the SVG source** — well-formedness, drawable-element and path-command counts, and animation markup. **Prompt fidelity** rasterizes each drawing and has a fixed vision judge answer a versioned yes/no rubric; every constraint is mechanically checkable, so no aesthetic opinion enters the numbers.",
     purpose:
-      "The purpose is to record which frontier models produce SVG that actually parses, how much detail they draw, whether they can express motion (SMIL or CSS animation), how fast they return, and at what token cost — the properties that decide whether a model can drive vector-graphics generation in a product.",
+      "The purpose is to record which frontier models produce SVG that actually parses, whether the drawing matches what was asked (prompt fidelity), how much detail they draw, whether they can express motion (SMIL or CSS animation), how fast they return, and at what token cost — the properties that decide whether a model can drive vector-graphics generation in a product.",
     targetModels: `The subjects are the ${result.runs.length} text flagships in the curated registry (\`packages/tech/src/svg-generation/models.ts\`), one per provider, each with a cited source and last-verified date. SVG is emitted through each provider's ordinary completion API, so there is no separate image endpoint and no provider is a non-subject.`,
-    targetMetrics:
-      "Measured metrics are render validity (well-formed XML rooted at `<svg>` / total, higher is better), path complexity (drawable elements + path commands, descriptive), animation presence (animated prompts carrying a SMIL/CSS animation / total, higher is better), and generation latency (ms, lower is better). Token cost is derived from measured output tokens × catalog price (reference).",
-    scopeAndConstraints: `- **Mechanical, not aesthetic.** v1 scores only what the SVG source reveals; it does not judge whether the drawing looks like the prompt. A rasterize-and-vision-judge prompt-fidelity metric is a separate, instrument-versioned follow-up.
-- **Render validity is a structural parse** (well-formedness + \`<svg>\` root), dependency-free so it runs keyless in CI; a full rasterizer is the stronger check added with the fidelity metric.
-- Prompt manifest version \`${result.manifestVersion}\`: ${PROMPT_MANIFEST.prompts.length} prompts (${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "static").length} static, ${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "animated").length} animated). History connects same-manifest-version points only.
-- The fixture path is keyless and deterministic; real model numbers appear only after an owner runs the real path within the approved cost ceiling (run \`--estimate\` first).
+    targetMetrics: `Measured metrics are render validity (well-formed XML rooted at \`<svg>\` / total, higher is better), prompt fidelity (satisfied rubric constraints / total, judged by the fixed \`${result.judgeModel}\` vision judge over the \`${result.rasterizer}\`-rasterized drawing, higher is better), path complexity (drawable elements + path commands, descriptive), animation presence (animated prompts carrying a SMIL/CSS animation / total, higher is better), and generation latency (ms, lower is better). Token cost is derived from measured output tokens × catalog price (reference).`,
+    scopeAndConstraints: `- **Mechanical, not aesthetic.** Source-level scores read only what the SVG source reveals; prompt fidelity rasterizes the drawing and has the fixed vision judge answer versioned yes/no rubric constraints — a checklist, never a taste score.
+- **The fidelity instrument is fixed and versioned.** Judge model (\`${result.judgeModel}\`), rasterizer engine (\`${result.rasterizer}\`), and rubric all belong to manifest version \`${result.manifestVersion}\`; swapping any of them is a version bump, never a silent change. The judge reads a still frame, so fidelity grades what is drawn — motion stays the source-level animation-presence metric.
+- **An unrenderable SVG scores fidelity 0** (no judge read); render validity remains the dependency-free structural parse so the keyless path never needs the native rasterizer.
+- Prompt manifest version \`${result.manifestVersion}\`: ${PROMPT_MANIFEST.prompts.length} prompts (${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "static").length} static, ${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "animated").length} animated), each with a fidelity rubric. History connects same-manifest-version points only.
+- The fixture path is keyless and deterministic (fixture generator, fixture rasterizer, fixture judge); real model numbers appear only after an owner runs the real path within the approved cost ceiling (run \`--estimate\` first).
 - Point-in-time: measured behavior reflects the models and APIs at \`${result.generatedAt}\`; catalog prices are as of each row's last-verified date.`,
     verificationResults: overviewSection(result),
     analysis: result.runs.some((run) => run.provenance === "measured")
-      ? "Rows with `measured` provenance can be compared on validity, animation, latency, and cost; path complexity is descriptive context. A high validity with low animation presence localizes what a model gets wrong — it draws well but cannot express motion — versus the reverse."
+      ? "Rows with `measured` provenance can be compared on validity, fidelity, animation, latency, and cost; path complexity is descriptive context. The pair of validity and fidelity localizes failures: valid but low-fidelity means the model parses but draws the wrong thing, while high fidelity with low animation presence means it draws well but cannot express motion."
       : "This run has no measured rows; every configuration was fixtured or errored, so no cross-model claim is made. The committed fixture page exists to prove the pipeline, not to compare models.",
     reproductionSteps: `\`\`\`sh
 git clone https://github.com/qmu/research
@@ -159,7 +168,7 @@ npm run research -- svg-generation --estimate
 npm run research -- svg-generation --real
 \`\`\``,
     reproductionCost:
-      "The fixture path is keyless and costless. A real trial bills each provider for the generation tokens only (a few hundred output tokens per SVG); the agreed ceiling is $5 per trial and `--estimate` must run first. The prompt-fidelity follow-up adds one vision-judge read per generated SVG.",
+      "The fixture path is keyless and costless. A real trial bills each provider for the generation tokens (a few hundred output tokens per SVG) plus one fixed-vision-judge read per generated SVG (rasterization itself is local and free); the agreed ceiling is $5 per trial and `--estimate` must run first.",
     cleanup:
       "No external resources are created. SVG is generated in memory and scored; the run writes only the local Markdown/JSON artifacts — review them before committing.",
     verificationData: `**Per-model results**
@@ -170,7 +179,9 @@ ${modelTable(result)}
 
 ${manifestTable()}
 
-The complete run record is committed as [\`${escapeCell(result.artifactPath)}\`](./${escapeCell(result.artifactPath)}): per-call prompts, latencies, SVG byte lengths, output-token counts, the generated SVG source, and every mechanical score.
+Fidelity instrument: judge model \`${escapeCell(result.judgeModel)}\`, rasterizer \`${escapeCell(result.rasterizer)}\`.
+
+The complete run record is committed as [\`${escapeCell(result.artifactPath)}\`](./${escapeCell(result.artifactPath)}): per-call prompts, latencies, SVG byte lengths, output-token counts, the generated SVG source, the judge's per-constraint verdicts, and every score.
 
 Generated: ${result.generatedAt}`,
   });
