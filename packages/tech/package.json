@@ -43,7 +43,11 @@
     "imagegen": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts",
     "imagegen:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts",
     "imagegen:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts --real",
-    "imagegen:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts --estimate"
+    "imagegen:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-image-generation.ts --estimate",
+    "deep-research": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-deep-research.ts",
+    "deep-research:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-deep-research.ts",
+    "deep-research:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-deep-research.ts --real",
+    "deep-research:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-deep-research.ts --estimate"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

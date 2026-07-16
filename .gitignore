@@ -3,6 +3,9 @@ dist/
 outputs/*
 !outputs/.gitkeep
 
+# Local git worktrees (one per in-flight mission; registered in .git/worktrees/)
+.worktrees/
+
 # VitePress
 docs/.vitepress/cache/
 docs/.vitepress/dist/

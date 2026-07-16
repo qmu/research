@@ -196,6 +196,26 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   OCR set is a manifest + fetch-loader change; the vision provider ACL and
   CER/WER/field scorers do not change.
 
+### Deep-research provider endpoints — ACL defined, no SDK adopted yet
+
+- **Reason**: The `deep-research` topic compares autonomous deep-research
+  endpoints (OpenAI `o3-deep-research`, Perplexity `sonar-deep-research`, Gemini
+  Deep Research, Grok DeepSearch, and an Anthropic build-your-own baseline). The
+  keyless skeleton defines the anti-corruption port
+  (`src/vendors/deep-research/types.ts`) and a deterministic fixture client only;
+  **no new provider SDK is adopted in this ticket** — the fixture path uses no
+  network and no external package.
+- **Assessment**: Deferred. The real per-provider adapters (OpenAI Responses,
+  Perplexity's OpenAI-compatible endpoint, Gemini's background Interactions API,
+  Grok DeepSearch tool calls, the Anthropic `web_search` loop) and their SDK
+  choices are introduced by the follow-on ticket
+  `#deep-research-subject-vendors.md`, gated on proposal approval; each SDK gets
+  its own decision entry here at that point, per the rule below.
+- **Exit strategy**: All provider access is isolated behind the
+  `DeepResearchClient` port; the domain (`src/deep-research/`) depends only on
+  that shape, so swapping or dropping a provider is a `vendors/deep-research/`
+  change with no domain impact.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
