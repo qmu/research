@@ -1,12 +1,12 @@
-import type { Stat } from "./types";
+import type { Stat, SvgJudgeAnswer, SvgRubricConstraint } from "./types";
 import { isWellFormedXml, rootElementName } from "./xml";
 
 /**
- * Pure, mechanical scoring for the SVG-generation benchmark. Every score is
- * computed from the SVG source itself — no rasterizer, no aesthetic judgement.
- * The prompt-fidelity metric (does the drawing match the request) needs a vision
- * judge over a rendered raster and arrives with a later ticket; these three
- * metrics are what the keyless path can measure honestly today.
+ * Pure scoring for the SVG-generation benchmark. The source-level scores are
+ * computed from the SVG text itself — no rasterizer, no aesthetic judgement.
+ * The prompt-fidelity score is equally mechanical over the *judge's* rubric
+ * answers (satisfied yes/no constraints over total); rasterizing and asking the
+ * judge happen outside the domain, behind the vendors ports.
  */
 
 /** Render validity: 1 when the source is well-formed XML whose root element is
@@ -62,6 +62,24 @@ export const hasAnimation = (svg: string): boolean => {
 /** Animation presence for an `animated` prompt: 1 if the SVG animates, else 0. */
 export const scoreAnimationPresence = (svg: string): number =>
   hasAnimation(svg) ? 1 : 0;
+
+/** Prompt fidelity: satisfied rubric constraints over total. Answers for
+ * unknown constraint ids are ignored; a constraint the judge did not answer
+ * counts as unsatisfied, so a partial judge response can only lower the score,
+ * never inflate it — the same rule as the image topic's prompt adherence. An
+ * empty rubric scores 0 (manifest v2 gives every prompt at least one). */
+export const scorePromptFidelity = (
+  constraints: ReadonlyArray<SvgRubricConstraint>,
+  answers: ReadonlyArray<SvgJudgeAnswer>,
+): number => {
+  if (constraints.length === 0) return 0;
+  const satisfied = constraints.filter((constraint) =>
+    answers.some(
+      (answer) => answer.constraintId === constraint.id && answer.satisfied,
+    ),
+  ).length;
+  return satisfied / constraints.length;
+};
 
 /** Mean, sample standard deviation, and count. n=0 yields all-zero; n=1 yields
  * stdDev 0 — mirroring the other topics' aggregation conventions. */

@@ -276,6 +276,12 @@ const snapshotPointExtractors: Readonly<
     "wallClockPerTaskMs",
     "costPerTaskUsd",
   ]),
+  "svg-generation": statsRunsSnapshotPoints([
+    "generationLatencyMs",
+    "renderValidity",
+    "promptFidelity",
+    "animationPresence",
+  ]),
   rag: ragSnapshotPoints,
 };
 
