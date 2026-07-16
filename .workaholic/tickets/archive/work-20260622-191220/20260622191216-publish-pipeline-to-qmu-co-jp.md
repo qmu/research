@@ -28,8 +28,8 @@ Covers request item 4.
 ## Key Files
 
 - `scripts/publish-research.sh` - Verb-named repository-wide script (directory-structure: `scripts/` holds `[verb]-****.sh`) that copies selected `docs/research-reports/<slug>.md` into `../qmu-co-jp/docs/research/<slug>.md`. Idempotent; validates frontmatter before copying.
-- `/home/ec2-user/projects/qmu-co-jp/packages/astro/src/content.config.ts` - The Astro `docs` collection (`glob` base `../../docs`, schema `{title?, description?, layout?}`) — the contract the emitted markdown must satisfy. Reference only; do not modify from this repo.
-- `/home/ec2-user/projects/qmu-co-jp/docs/development/foundational-research.md` - Template for the house article shape (frontmatter = `description:` line; body = H1 + sections). Reference for the expected page structure.
+- `../qmu-co-jp/packages/astro/src/content.config.ts` - The Astro `docs` collection (`glob` base `../../docs`, schema `{title?, description?, layout?}`) — the contract the emitted markdown must satisfy. Reference only; do not modify from this repo.
+- `../qmu-co-jp/docs/development/foundational-research.md` - Template for the house article shape (frontmatter = `description:` line; body = H1 + sections). Reference for the expected page structure.
 - `Makefile` - Wire the reserved `publish` target to `scripts/publish-research.sh`.
 - `docs/adr/0003-vitepress-preview-astro-publish-boundary.md` - Record the copy-boundary decision and the `/research` section choice (created/extended here).
 - `.github/workflows/` - Run the publish step as an automated, reproducible CI stage.
