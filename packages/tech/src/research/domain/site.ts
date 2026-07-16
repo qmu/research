@@ -430,6 +430,68 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-model HistoryPoint series for latency, adherence, and text accuracy, one point per dated frame; charts connect same-manifest-version points only",
     },
   },
+  {
+    id: "speech",
+    artifactBase: "speech-comparison",
+    npmScript: "npm run research -- speech --real",
+    source: {
+      text: "Speech (TTS / STT / STS)",
+      docsPath: "docs/research-reports/speech-comparison.md",
+      summary:
+        "Text-to-speech intelligibility & latency, speech-to-text word accuracy & latency, per-unit cost, and speech-to-speech realtime capability.",
+    },
+    japanese: {
+      text: "音声 (TTS/STT/STS)",
+      docsPath: "docs/research-reports/speech-comparison.insights.ja.md",
+      summary:
+        "音声合成の明瞭度とレイテンシ、音声認識の単語精度とレイテンシ、単価、リアルタイム音声対話の対応状況の比較。",
+    },
+    dataPath: "docs/research-reports/speech-comparison.data.json",
+    qmuSlug: "speech-comparison",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger:
+        "a TTS/STT model release or price change at a covered provider",
+      subjects:
+        "API-accessible speech models in the curated speech registry (OpenAI, ElevenLabs, Google, Amazon, Deepgram, AssemblyAI for TTS/STT; OpenAI, Google, AWS, xAI cataloged for STS; Anthropic exposes no speech API and is recorded as not applicable)",
+      metrics: [
+        { name: "latencyMs", unit: "ms", direction: "lower-is-better" },
+        {
+          name: "ttsIntelligibility",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "sttWordAccuracy",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "ttsPricePer1MCharsUsd",
+          unit: "USD/1M chars",
+          direction: "reference",
+        },
+        {
+          name: "sttPricePerMinuteUsd",
+          unit: "USD/audio-minute",
+          direction: "reference",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 10,
+        premises:
+          "TTS billed per character plus one STT-judge read of each synthesized clip; STT billed per audio minute; the 3-utterance manifest estimates ~$0.04/trial; run `research -- speech --estimate` first",
+      },
+      accumulates:
+        "per-subject HistoryPoint series for latency, TTS intelligibility, and STT word accuracy, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
 ];
 
 /**

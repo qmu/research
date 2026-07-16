@@ -133,6 +133,20 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     stages: ["benchmark"],
   },
   {
+    id: "speech",
+    title:
+      "Speech comparison: TTS intelligibility & latency, STT word accuracy & latency, per-unit cost, and STS realtime capability",
+    artifactBase: "speech-comparison",
+    modes: ["fixture", "estimate", "real"],
+    // Like OCR and image-generation, the entrypoint defaults to its keyless
+    // fixture and switches to a real run with --real.
+    modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    // Published: a real run composes the current article and its Japanese
+    // translation, like the other published benchmark topics. The keyless
+    // fixture path still runs only the benchmark stage (CI-exercised).
+    stages: ["benchmark", "insights", "translation"],
+  },
+  {
     id: "availability",
     title:
       "LLM provider availability: status-page incident history with 30/90-day derived-uptime trends",
