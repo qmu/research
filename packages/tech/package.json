@@ -51,7 +51,11 @@
     "computeruse": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-computer-use.ts",
     "computeruse:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-computer-use.ts",
     "computeruse:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-computer-use.ts --real",
-    "computeruse:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-computer-use.ts --estimate"
+    "computeruse:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-computer-use.ts --estimate",
+    "agent-vm": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts",
+    "agent-vm:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts",
+    "agent-vm:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts --real",
+    "agent-vm:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-agent-vm.ts --estimate"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

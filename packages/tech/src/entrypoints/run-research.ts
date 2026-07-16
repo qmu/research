@@ -47,6 +47,7 @@ const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   speech: () => import("./run-speech-comparison"),
   "computer-use": () => import("./run-computer-use"),
   availability: () => import("./run-llm-availability"),
+  "agent-vm": () => import("./run-agent-vm"),
 };
 
 /** Exported so a test can hold the benchmark-runner map and the benchmark-kind

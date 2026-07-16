@@ -345,6 +345,28 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   model cards. Model ids are OpenRouter's own spelling, carried per card, so no
   translation layer exists to unwind; the `CompletionClient` port is unchanged.
 
+### Agent VM / sandbox providers — `vendors/sandbox` port, no SDK yet
+
+- **Reason**: The `agent-vm` topic compares sandbox / microVM platforms (E2B,
+  Modal, Fly Machines, Daytona, Cloudflare, Vercel, Northflank, AWS Lambda
+  microVMs). Their reference metrics (isolation, published price, capability)
+  are curated catalog data in `packages/tech/src/agent-vm/models.ts` and need no
+  SDK. The measured cold-start / cost probe reaches providers through the
+  `packages/tech/src/vendors/sandbox/` anti-corruption port
+  (`bootCold`/`reuseWarm`/`runTask`/`teardown`), which currently has only a
+  keyless fixture implementation.
+- **License**: No third-party sandbox SDK is added. The first real adapter
+  (Fly.io Machines, `vendors/sandbox/fly.ts`) speaks the Machines REST API over
+  plain `fetch` through an injectable transport — **zero new dependencies**.
+  Future provider adapters that need an SDK add it here with its license at that
+  time; prefer the same SDK-free HTTP approach where the provider offers a REST
+  API.
+- **Exit strategy**: The registry, port, and scorers are self-contained. Adding
+  or replacing a provider is a `models.ts` row plus a `vendors/sandbox` adapter;
+  the domain scoring (percentiles, cost) and report do not change. A real
+  adapter MUST tear down every sandbox it boots (zero orphaned resources, like
+  the RAG teardown guarantee).
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
