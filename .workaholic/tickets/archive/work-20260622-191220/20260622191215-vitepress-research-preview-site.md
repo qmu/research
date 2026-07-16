@@ -26,8 +26,8 @@ Covers request item 3.
 
 ## Key Files
 
-- `docs/.vitepress/config.ts` - Site config: title, nav/sidebar IA, `vite.server.allowedHosts` for the Cloudflare tunnel host (`research.qmu.dev` or similar), and an env-driven base path (ref `/home/ec2-user/projects/plgg/packages/guide/.vitepress/config.ts` — the only VitePress site in the org).
-- `docs/package.json` - VitePress scripts `dev`=`vitepress dev`, `build`=`vitepress build`, `preview`=`vitepress preview`; own lockfile, `private: true`, `type: module` (ref `/home/ec2-user/projects/plgg/packages/guide/package.json`).
+- `docs/.vitepress/config.ts` - Site config: title, nav/sidebar IA, `vite.server.allowedHosts` for the Cloudflare tunnel host (`research.qmu.dev` or similar), and an env-driven base path (following the shape of the org's existing VitePress site).
+- `docs/package.json` - VitePress scripts `dev`=`vitepress dev`, `build`=`vitepress build`, `preview`=`vitepress preview`; own lockfile, `private: true`, `type: module` (house VitePress package shape).
 - `docs/index.md` - Site landing page describing how to browse research results.
 - `docs/research-reports/` - Where finished research result markdown lives and is rendered (consumed later by the publish pipeline).
 - `Makefile` - Wire the reserved `docs` target to `vitepress dev`/`build` (created in `20260622191214`).

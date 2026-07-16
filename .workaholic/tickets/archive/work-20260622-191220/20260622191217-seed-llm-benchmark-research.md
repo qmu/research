@@ -30,7 +30,7 @@ Covers request item 2 (a worked research topic) and item 5 (reproducibility).
 - `packages/tech/src/llm-benchmark/*.test.ts` - Vitest tests for the pure scoring/aggregation against boundary cases (test.md: real-thing where possible, regression tests in CI).
 - `docs/research-reports/llm-benchmark.md` - The generated result page (frontmatter `description`/`title`; body H1 + sections) that previews in the VitePress site and is the publish-pipeline input.
 - `docs/dependency-decisions.md` - Add the LLM SDK dependency entry (License/Reputation/Sustainability/Exit) introduced by this benchmark.
-- `.github/workflows/` - Per-package, path-filtered workflow for `packages/tech/**` (ref `/home/ec2-user/projects/data-platform/.github/workflows/build-realestate-mcp.yml`: setup-node 22, `npm ci --include=dev`, per-package lockfile path).
+- `.github/workflows/` - Per-package, path-filtered workflow for `packages/tech/**` (house CI shape: setup-node 22, `npm ci --include=dev`, per-package lockfile path).
 
 ## Implementation Steps
 

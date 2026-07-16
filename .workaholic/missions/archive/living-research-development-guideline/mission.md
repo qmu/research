@@ -2,7 +2,7 @@
 type: Mission
 title: Living research development guideline
 slug: living-research-development-guideline
-status: active
+status: achieved
 created_at: 2026-07-12T02:07:02+09:00
 author: a@qmu.jp
 tickets: []
@@ -135,3 +135,4 @@ Out of scope:
 - 2026-07-13 — concern deferred (stuck) — 15-jp-pages-are-overwritten-by-the.md
 - 2026-07-13 — concern deferred (stuck) — 15-only-llm-speed-is-migrated-to.md
 - 2026-07-13 — concern deferred (stuck) — 15-real-run-cloud-backend-credentials-and.md
+- 2026-07-16 — mission achieved — mission.md

@@ -39,10 +39,10 @@ Files to create (no existing code in the repo — reference precedents in parent
 - `README.md` - Self-explaining entry point: what the repo is, how to install/build/test/preview, and the list of runner commands (command-scripts: "the project README lists the available commands").
 - `CLAUDE.md` - Repo guide for agents, including a `## Deploy` section the ship workflow reads.
 - `.gitignore` - Ignore `node_modules/`, `dist/`, and `outputs/` (runtime output is gitignored per directory-structure).
-- `.nvmrc` - Pin Node `22` (house standard; ref `/home/ec2-user/projects/data-platform/.github/workflows/*` setup-node `node-version: '22'`).
-- `.prettierrc` - House formatting (ref `/home/ec2-user/projects/data-platform/.prettierrc`: printWidth 80, double quotes, semi, tabWidth 2, trailingComma all, arrowParens always, endOfLine lf).
+- `.nvmrc` - Pin Node `22` (house standard).
+- `.prettierrc` - House formatting: printWidth 80, double quotes, semi, tabWidth 2, trailingComma all, arrowParens always, endOfLine lf.
 - `Makefile` - The single canonical runner (command-scripts policy): `install`, `build`, `test`, `lint`, `format`, plus `docs` and `publish` targets wired in later tickets. CI invokes these, never inline logic.
-- `packages/tech/package.json` + `tsconfig.json` - Single npm project for technical research (ref house tsconfig `/home/ec2-user/projects/data-platform/packages/realestate-mcp/tsconfig.json`: ES2022/ESNext/bundler/strict/noUnusedLocals+Parameters/declaration/outDir dist/rootDir src/types [node]; scripts `dev`=tsx, `build`=tsc, `tsc`=tsc --noEmit, `test`=tsc --noEmit && vitest --run).
+- `packages/tech/package.json` + `tsconfig.json` - Single npm project for technical research (house tsconfig: ES2022/ESNext/bundler/strict/noUnusedLocals+Parameters/declaration/outDir dist/rootDir src/types [node]; scripts `dev`=tsx, `build`=tsc, `tsc`=tsc --noEmit, `test`=tsc --noEmit && vitest --run).
 - `packages/industry/package.json` + `tsconfig.json` - Single npm project for industry research, same shape.
 - `packages/tech/src/`, `packages/industry/src/` - Tri-layout skeleton per coding-standards: `domain/` (pure logic), `entrypoints/` (CLI runners), `vendors/` (anti-corruption layers for LLM/DB SDKs). Include one documented placeholder topic folder + a topic template README so the structure is self-explaining.
 - `workloads/docker/docker-compose.yml` + `Dockerfile`(s) - Pinned multi-stage, non-root images for reproducible local setup (containerization policy).
@@ -67,7 +67,7 @@ Files to create (no existing code in the repo — reference precedents in parent
 ## Considerations
 
 - Top-level names and roles must match the `directory-structure` policy verbatim; do not invent sibling dirs or place code outside `packages/` (`docs/adr/0001-no-workspaces-independent-npm-projects.md`).
-- No root `package.json` / no workspaces is a deliberate house convention (avoids editing many manifests); each package owns its lockfile (ref `/home/ec2-user/projects/data-platform/packages/realestate-mcp/package.json`).
+- No root `package.json` / no workspaces is a deliberate house convention (avoids editing many manifests); each package owns its lockfile.
 - CI must invoke the runner, never re-implement logic inline, so checks are locally reproducible (`.github/workflows/ci.yml`, `Makefile`).
 - Public repo: every dependency needs a license/sustainability entry and the repo a clear OSS LICENSE; this interlocks with the dependency-decision log (`docs/dependency-decisions.md`, `LICENSE`).
 - Container images must be pinned and non-root; no `latest` tags (`workloads/docker/`).

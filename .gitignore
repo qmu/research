@@ -10,6 +10,9 @@ outputs/*
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 
+# Local release-scan denylist (per-machine backstop; terms must not be published)
+.workaholic/leak-denylist
+
 # Logs and local env
 *.log
 .env

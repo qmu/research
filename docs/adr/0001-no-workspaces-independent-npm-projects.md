@@ -4,10 +4,10 @@
 
 The repository hosts multiple research packages. A monorepo can either use a
 workspace tool (npm/pnpm/yarn workspaces with a root manifest) or keep each
-package as an independent npm project. Every sibling repository at qmu
-(`data-platform`, `plgg`, `coop-csnet`, `qmu-co-jp`) uses independent packages:
-no root `package.json`, each package with its own `package-lock.json` and
-`tsconfig.json`, CI workflows path-filtered per package.
+package as an independent npm project. The house convention across qmu's
+repositories is independent packages: no root `package.json`, each package
+with its own `package-lock.json` and `tsconfig.json`, CI workflows
+path-filtered per package.
 
 ## Decision
 
