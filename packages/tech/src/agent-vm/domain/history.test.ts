@@ -50,6 +50,7 @@ const result = (
   generatedAt,
   fixture: true,
   repetitions: 3,
+  instrumentVersion: 1,
   task: { id: "t", description: "d" },
   runs,
   artifactPath: "agent-vm-comparison.data.json",
