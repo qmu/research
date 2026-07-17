@@ -19,6 +19,10 @@ The topic order matches [LLMs Research](./) and
 - 2026-07-09T11:54:54.587Z: [English](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
 - 2026-07-09T11:02:05.370Z: [English](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)
 
+### Agent SDK comparison
+
+No dated frames have been archived yet.
+
 ### LLM response speed
 
 - 2026-07-12T05:47:26.268Z: [English](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.data.json)
@@ -56,5 +60,9 @@ No dated frames have been archived yet.
 No dated frames have been archived yet.
 
 ### SVG generation
+
+No dated frames have been archived yet.
+
+### Agent VM / sandbox comparison
 
 No dated frames have been archived yet.

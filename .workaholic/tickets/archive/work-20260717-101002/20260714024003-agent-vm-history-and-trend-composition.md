@@ -52,3 +52,26 @@ with `AGENT_VM_INSTRUMENT_VERSION` in `models.ts` and 6 tests in
 #20260714024002): feed `providerTrends` into the shared current-article composer
 (`research/domain/current-article.ts`) so the 推移 block renders, and archive
 real frames to accumulate the series.
+
+## Progress (2026-07-17)
+
+Done — the publish-coupled remainder landed with #024002's site registration:
+
+- `research/domain/snapshot.ts`: `agentVmSnapshotPoints` extractor registered
+  for `agent-vm`, emitting exactly the two agreed trend metrics — measured
+  `coldStartMsP50` (provenance `measured` rows only, ADR 0004) and the
+  reference `publishedVcpuHourUsd` (every provider row). The shared
+  current-article composer (`composeTopicCurrentArticle` on a real run) now
+  renders the agent-vm 推移 block from archived frames through
+  `snapshotPointsFor`; the 過去の調査 block comes from the generic frame
+  machinery, no topic code needed.
+- `AgentVmResult` now writes `instrumentVersion` (numeric mirror of
+  `AGENT_VM_INSTRUMENT_VERSION`) into `agent-vm-comparison.data.json`, so
+  `instrumentVersionOf` gates chart continuity when the fixed task or metric
+  set changes; the fixture EN page stayed byte-stable.
+- Unit tests: extractor over a mixed-provenance artifact, a two-frame
+  (two-date) projection, registration + malformed-artifact tolerance
+  (`snapshot.test.ts`); 477 tests + lint green (raw exit codes 0).
+- Real frames still accumulate only after real trials (#024004, gated on
+  credentials + spend); until ≥2 same-instrument dated surveys exist the block
+  renders the first-survey note by design.

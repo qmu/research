@@ -19,6 +19,10 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 - 2026-07-09T11:54:54.587Z: [English](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
 - 2026-07-09T11:02:05.370Z: [English](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)
 
+### Agent SDKの比較
+
+まだ日付別フレームは保存されていない。
+
 ### 応答速度
 
 - 2026-07-12T05:47:26.268Z: [English](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison) · [Japanese](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja) · [data.json](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.data.json)
@@ -56,5 +60,9 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 まだ日付別フレームは保存されていない。
 
 ### SVG生成
+
+まだ日付別フレームは保存されていない。
+
+### エージェントVM/サンドボックス
 
 まだ日付別フレームは保存されていない。

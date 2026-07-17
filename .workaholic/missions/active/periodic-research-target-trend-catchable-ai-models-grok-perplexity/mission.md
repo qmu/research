@@ -58,7 +58,7 @@ or scaffolding occurs before the proposal is approved.
 - [x] Proposal-first design (cadence, subjects, metrics, cost/trial range,
   accumulated history) drafted and approved by the developer
   (#20260714005200-kickoff-propose-periodic-research.md)
-- [ ] `trend-recency` instrument scaffolded behind `domain/ entrypoints/ vendors/`
+- [x] `trend-recency` instrument scaffolded behind `domain/ entrypoints/ vendors/`
   with a Perplexity ACL, a config registry, a ground-truth DB shape, and a
   CI-green keyless fixture path
   (#20260714010000-scaffold-trend-recency-instrument.md)
@@ -87,3 +87,21 @@ or scaffolding occurs before the proposal is approved.
   grounded-answer port + fixture client, run/estimate; 23 new tests, full suite
   328 green, tsc + prettier + eslint clean —
   packages/tech/src/trend-recency/, packages/tech/src/vendors/llm/perplexity.ts
+- 2026-07-17 — kickoff ticket archived: the approval gate (step 4) was met
+  2026-07-14 (owner approval recorded above) and every other step had landed via
+  PR #41 — 20260714005200-kickoff-propose-periodic-research.md
+- 2026-07-17 — scaffold completed and archived (acceptance item 2 ticked):
+  grounded search-tool wiring for all four chat providers (xAI Live Search,
+  Google Search grounding, OpenAI Responses web_search, Anthropic web_search)
+  with pure unit-tested citation parsers; entrypoint + npm scripts + unified-CLI
+  topic/runner registration; standard 7-section report renderer; committed
+  byte-stable keyless fixture page + data artifact; ground-truth history DB
+  schema README. make install/build/test/lint all exit 0 (487 tests).
+  No paid call was made — 20260714010000-scaffold-trend-recency-instrument.md,
+  packages/tech/src/trend-recency/, docs/research-reports/trend-recency-history/
+- 2026-07-17 — remaining tickets stay gated, not driveable by an agent alone:
+  the first validation trial (20260714010001) makes paid provider calls (spend
+  approval + provider keys — grounded tool params get their live verification
+  here), and the publish ticket (20260714010002) depends on that trial passing
+  design review. Next action is an owner-triggered
+  `npm run research -- trend-recency --estimate` then `--real`.

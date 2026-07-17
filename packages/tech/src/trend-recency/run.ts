@@ -2,12 +2,22 @@ import type {
   CompletionClient,
   GroundedAnswerClient,
 } from "../vendors/llm/types";
-import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
+import {
+  createAnthropicCompletionClient,
+  createAnthropicGroundedClient,
+} from "../vendors/llm/anthropic";
 import { createFixtureGroundedAnswerClient } from "../vendors/llm/fixture";
-import { createGoogleCompletionClient } from "../vendors/llm/google";
+import {
+  createGoogleCompletionClient,
+  createGoogleGroundedClient,
+} from "../vendors/llm/google";
 import { createOpenAiCompletionClient } from "../vendors/llm/openai";
+import { createOpenAiWebSearchGroundedClient } from "../vendors/llm/openai-responses";
 import { createPerplexityGroundedClient } from "../vendors/llm/perplexity";
-import { createXaiCompletionClient } from "../vendors/llm/xai";
+import {
+  createXaiCompletionClient,
+  createXaiGroundedClient,
+} from "../vendors/llm/xai";
 import { extractUrls } from "./domain/extract";
 import { PROBE_MANIFEST } from "./domain/manifest";
 import {
@@ -108,16 +118,21 @@ const groundedClientFor = (
   if (card.grounding === "ungrounded") {
     return groundedFromCompletion(completionClientFor(card, key));
   }
-  // Grounded search-tool wiring for the chat providers (xAI Live Search, Google
-  // Search grounding, OpenAI/Anthropic web-search tools) needs per-provider tool
-  // parameters verified against the live APIs — that is the scaffold ticket's
-  // remaining real work. Until then a real grounded run for these providers fails
-  // loudly rather than silently measuring an ungrounded answer.
-  throw new Error(
-    `Real grounded runs for ${card.provider} are not wired yet (search-tool params pending); ` +
-      `use --fixture, or the Perplexity subjects, until ticket ` +
-      `20260714010000-scaffold-trend-recency-instrument.md completes the wiring.`,
-  );
+  // Grounded search-tool wiring for the chat providers. Each adapter enables
+  // that provider's own search surface (xAI Live Search `search_parameters`,
+  // Gemini `googleSearch` tool, OpenAI Responses `web_search` tool, Anthropic
+  // `web_search` server tool) per its current documentation; the first real
+  // trial (ticket 20260714010001) is the live verification of these params.
+  if (card.provider === "xai") {
+    return createXaiGroundedClient(card.apiModelId, key);
+  }
+  if (card.provider === "google") {
+    return createGoogleGroundedClient(card.apiModelId, key);
+  }
+  if (card.provider === "openai") {
+    return createOpenAiWebSearchGroundedClient(card.apiModelId, key);
+  }
+  return createAnthropicGroundedClient(card.apiModelId, key);
 };
 
 const runProbeOnce = async (

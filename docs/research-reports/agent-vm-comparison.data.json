@@ -2,6 +2,7 @@
   "generatedAt": "2026-01-01T00:00:00.000Z",
   "fixture": true,
   "repetitions": 5,
+  "instrumentVersion": 1,
   "task": {
     "id": "cpu-bound-loop-v1",
     "description": "A bounded CPU loop (fixed iteration count) run inside a warm sandbox; wall-clock isolates platform compute, not I/O."
@@ -74,7 +75,7 @@
         "filesystemPersistence": "persistent",
         "networkEgress": "open",
         "gpuAvailable": true,
-        "apiReachable": false,
+        "apiReachable": true,
         "lastVerified": "2026-07-14",
         "source": "https://fly.io/docs/about/pricing/"
       },

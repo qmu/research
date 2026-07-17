@@ -65,25 +65,54 @@ Ollama); rewriting the comparison methodology; and touching the corporate-copy /
 <!-- Progress is checked/total, computed from this list. Tickets are "(ticket TBD)"
      until written via /ticket with `mission: support-iaas-hosted-models-vertex-ai-aws-bedrock`. -->
 
-- [ ] Entrypoint credential contract generalized so a provider can carry
+- [x] Entrypoint credential contract generalized so a provider can carry
       non-`apiKey` auth (AWS SigV4 / GCP ADC) without breaking the keyless fixture
-      fallback (`provenance: "fixtured"`) (ticket TBD)
-- [ ] **Perplexity** (Sonar) integrated as an OpenAI-compatible backend via the
-      `xai.ts` base-URL pattern, with model cards in `models.ts` (ticket TBD)
-- [ ] Candidate aggregator gateways surveyed (OpenRouter / Fireworks / Together /
+      fallback (`provenance: "fixtured"`)
+      (#20260714005155-kickoff-generalize-credential-contract.md)
+- [x] **Perplexity** (Sonar) integrated as an OpenAI-compatible backend via the
+      `xai.ts` base-URL pattern, with model cards in `models.ts`
+      (#20260714013000-perplexity-sonar-backend.md)
+- [x] Candidate aggregator gateways surveyed (OpenRouter / Fireworks / Together /
       Groq / DeepInfra …) and a supported subset chosen in an approved proposal
-      (ticket TBD)
-- [ ] **AWS Bedrock** backend added behind the `CompletionClient` port (Claude-on-
-      Bedrock via the Anthropic SDK Bedrock transport as the first target) (ticket TBD)
-- [ ] **Google Vertex AI** backend added behind the `CompletionClient` port, GCP
-      ADC auth (ticket TBD)
-- [ ] Each new backend + its auth/base-URL decision recorded in
-      `docs/dependency-decisions.md` (ticket TBD)
+      (#20260715053000-aggregator-gateway-survey-openrouter.md)
+- [x] **AWS Bedrock** backend added behind the `CompletionClient` port (Claude-on-
+      Bedrock via the Anthropic SDK Bedrock transport as the first target)
+      (#20260714015500-iaas-bedrock-vertex-backends.md)
+- [x] **Google Vertex AI** backend added behind the `CompletionClient` port, GCP
+      ADC auth (#20260714015500-iaas-bedrock-vertex-backends.md)
+- [x] Each new backend + its auth/base-URL decision recorded in
+      `docs/dependency-decisions.md`
+      (#20260714015500-iaas-bedrock-vertex-backends.md)
 - [ ] The comparison sweep completes a **real run** targeting at least one
-      IaaS-hosted config, archived to `docs/research-reports/history/…` (ticket TBD)
-- [ ] Keyless CI stays green — every new backend falls back to the fixture path
-      when its credentials are absent (ticket TBD)
+      IaaS-hosted config, archived to `docs/research-reports/history/…`
+      (#20260715054500-close-out-iaas-hosted-models-mission.md — blocked on AWS/GCP
+      credentials and owner spend approval)
+- [x] Keyless CI stays green — every new backend falls back to the fixture path
+      when its credentials are absent
+      (#20260715054500-close-out-iaas-hosted-models-mission.md)
 
 ## Changelog
 
 - 2026-07-14 — mission created and drafted (Goal / Scope / Acceptance) — mission.md
+- 2026-07-16 — all backend work merged to main via PR #37 (merge 84e01eb): c1d14a1
+  generalized credential contract (`CREDENTIAL_SPEC`, non-`apiKey` auth, keyless
+  fixture fallback intact), 83ef1ae Perplexity Sonar backend
+  (`vendors/llm/perplexity.ts`), 9a5e112 AWS Bedrock + Google Vertex AI backends
+  (`vendors/llm/{bedrock,vertex}.ts` via `@anthropic-ai/{bedrock,vertex}-sdk`,
+  `awsSigV4`/`gcpAdc` credential specs), 3ad6ec9 aggregator gateway survey with
+  ADR 0007 choosing OpenRouter only; auth/base-URL decisions recorded in
+  `docs/dependency-decisions.md`; four acceptance tickets archived under
+  work-20260714-005155; checklist not updated at the time — noted retroactively
+  during the 2026-07-17 reconciliation
+- 2026-07-17 — reconciliation against main (ticket
+  20260715054500-close-out-iaas-hosted-models-mission.md): items 1–6 and 8 checked
+  with the commit-level evidence above; keyless CI green on main
+  (build-research-tech at PR #37 merge and on subsequent main pushes) — 7/8 checked
+- 2026-07-17 — item 7 left unchecked: no AWS (`AWS_ACCESS_KEY_ID`) or GCP
+  (`GOOGLE_CLOUD_PROJECT` + ADC) credentials exist in the environment, the
+  Bedrock/Vertex live paths have never executed, and a real sweep incurs spend
+  requiring owner approval (proposal-first); no IaaS-config frame exists under
+  `docs/research-reports/history/`. The run recipe, credential names, and carried
+  concerns (Bedrock `anthropic.`-prefixed wire ids, `awsSecretAccessKey` option
+  name, OpenRouter `n/a` effort ladder) are preserved in the archived close-out
+  ticket

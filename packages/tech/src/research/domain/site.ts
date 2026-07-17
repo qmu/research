@@ -144,6 +144,55 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     },
   },
   {
+    // Reference topic (design comparison, not measured): both pages are
+    // hand-authored — the Japanese article is the canonical original at its
+    // long-served URL, the English page its hand-written counterpart. No LLM
+    // stage runs for this topic; provenance labels (design comparison /
+    // 未測定 / 要確認) are carried in the articles themselves.
+    id: "agent-sdk",
+    artifactBase: "agent-sdk-comparison",
+    npmScript: "npm run research -- agent-sdk --fixture",
+    source: {
+      text: "Agent SDK comparison",
+      docsPath: "docs/research-reports/agent-sdk-comparison.md",
+      summary:
+        "A design comparison of agent frameworks/runtimes (OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph) from public documentation — not measured.",
+    },
+    japanese: {
+      text: "Agent SDKの比較",
+      docsPath: "docs/llm-foundation/agent-sdk-comparison.md",
+      summary:
+        "公開ドキュメントに基づく agent framework / runtime の設計比較。設計比較 / 未測定 / 要確認 の provenance を各セルに明記する。",
+    },
+    qmuSlug: "agent-sdk-comparison",
+    design: {
+      cadence: "quarterly",
+      offCadenceTrigger:
+        "a major agent SDK release or a breaking design change at a covered SDK",
+      subjects:
+        "OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph — public documentation only",
+      metrics: [
+        {
+          name: "designComparison",
+          unit: "provenance-labelled cells",
+          direction: "reference",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 0,
+        maximum: 0,
+        premises:
+          "hand-authored design comparison over public documentation; no measurement calls",
+      },
+      costPerRun: {
+        ceilingUsd: 0,
+        premises: "keyless and costless; reads public documentation only",
+      },
+      accumulates:
+        "dated revisions of the design comparison, one frame per archive",
+    },
+  },
+  {
     id: "speed",
     artifactBase: "llm-speed-comparison",
     npmScript: "npm run research -- speed --real",
@@ -563,14 +612,14 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       text: "SVG generation",
       docsPath: "docs/research-reports/svg-generation-comparison.md",
       summary:
-        "Render validity, path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.",
+        "Render validity, prompt fidelity (rasterize + fixed vision judge), path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.",
     },
     japanese: {
       text: "SVG生成",
       docsPath:
         "docs/research-reports/svg-generation-comparison.insights.ja.md",
       summary:
-        "フロンティアLLMによるSVG生成の描画妥当性、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。",
+        "フロンティアLLMによるSVG生成の描画妥当性、プロンプト忠実度（ラスタライズ＋固定ビジョン判定）、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。",
     },
     dataPath: "docs/research-reports/svg-generation-comparison.data.json",
     qmuSlug: "svg-generation",
@@ -588,6 +637,11 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         { name: "pathComplexity", unit: "count", direction: "reference" },
         {
           name: "animationPresence",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "promptFidelity",
           unit: "ratio",
           direction: "higher-is-better",
         },
@@ -611,10 +665,89 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       costPerRun: {
         ceilingUsd: 5,
         premises:
-          "4 models × 5 prompts × 1–3 repetitions at a few hundred output tokens per SVG at catalog token prices; run `research -- svg-generation --estimate` first",
+          "4 models × 5 prompts × 1–3 repetitions at a few hundred output tokens per SVG at catalog token prices, plus one fixed-vision-judge read per generated SVG; run `research -- svg-generation --estimate` first",
       },
       accumulates:
-        "per-model HistoryPoint series for render validity, animation presence, and mean token cost, one point per dated frame; charts connect same-manifest-version points only",
+        "per-model HistoryPoint series for render validity, prompt fidelity, animation presence, and mean token cost, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
+  {
+    id: "agent-vm",
+    artifactBase: "agent-vm-comparison",
+    npmScript: "npm run research -- agent-vm --real",
+    source: {
+      text: "Agent VM / sandbox comparison",
+      docsPath: "docs/research-reports/agent-vm-comparison.md",
+      summary:
+        "Isolation model, published price, capability envelope, and probed cold-start latency and fixed-task cost of the sandbox / microVM platforms agents run untrusted code in.",
+    },
+    japanese: {
+      text: "エージェントVM/サンドボックス",
+      docsPath: "docs/research-reports/agent-vm-comparison.insights.ja.md",
+      summary:
+        "エージェントが untrusted コードを実行するサンドボックス／microVM 基盤の分離モデル、公表価格、機能エンベロープ、実測コールドスタートと固定タスクコストの比較。",
+    },
+    dataPath: "docs/research-reports/agent-vm-comparison.data.json",
+    qmuSlug: "agent-vm-comparison",
+    design: {
+      cadence: "quarterly (first two validation trials monthly)",
+      offCadenceTrigger:
+        "a new provider entering the compared set, a published pricing change at a covered provider, or a new isolation primitive at a covered provider",
+      subjects:
+        "the eight sandbox/microVM providers in the curated agent-vm registry (AWS Lambda microVMs, Fly.io Machines, E2B, Modal, Daytona, Cloudflare Containers/Sandbox SDK, Vercel Sandbox, Northflank Sandboxes); a provider without a probe adapter or credential stays catalog-only for that trial",
+      metrics: [
+        { name: "isolationModel", unit: "category", direction: "reference" },
+        {
+          name: "publishedVcpuHourUsd",
+          unit: "USD/vCPU-hr",
+          direction: "lower-is-better",
+        },
+        {
+          name: "publishedGbHourUsd",
+          unit: "USD/GB-hr",
+          direction: "lower-is-better",
+        },
+        {
+          name: "billingGranularity",
+          unit: "category",
+          direction: "reference",
+        },
+        {
+          name: "maxRuntimeSeconds",
+          unit: "seconds",
+          direction: "higher-is-better",
+        },
+        { name: "snapshotResume", unit: "capability", direction: "reference" },
+        {
+          name: "filesystemPersistence",
+          unit: "category",
+          direction: "reference",
+        },
+        { name: "networkEgress", unit: "category", direction: "reference" },
+        { name: "gpuAvailable", unit: "capability", direction: "reference" },
+        { name: "coldStartMsP50", unit: "ms", direction: "lower-is-better" },
+        { name: "coldStartMsP95", unit: "ms", direction: "lower-is-better" },
+        { name: "warmReuseMs", unit: "ms", direction: "lower-is-better" },
+        {
+          name: "fixedTaskWallClockMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        { name: "measuredCostUsd", unit: "USD", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 5,
+        maximum: 20,
+        premises:
+          "8 providers × 5–20 cold-start repetitions + 1 warm reuse + 1 fixed CPU task each; more repetitions narrow the cold-start p50/p95 variance (reported as stdDev) but multiply the boot count and any per-boot minimum charge",
+      },
+      costPerRun: {
+        ceilingUsd: 8,
+        premises:
+          "compute-seconds over short tasks at each provider's published rate — $1–$8 per trial depending on repetitions and per-boot minimums; run `research -- agent-vm --estimate` before every real run",
+      },
+      accumulates:
+        "per-provider HistoryPoint series for coldStartMsP50 and publishedVcpuHourUsd, one point per dated trial; charts connect same-instrument-version points only",
     },
   },
 ];

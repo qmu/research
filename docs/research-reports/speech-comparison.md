@@ -41,6 +41,10 @@ This run has **0 measured** of 10 subject rows (non-measured rows are `fixtured`
 
 **Speech-to-speech** — 4 of 4 cataloged providers expose a realtime duplex API; round-trip latency is measured by a later trial. The full capability table is in section 7. "Best"/"Worst" follow each metric's direction (lower latency, higher intelligibility and word accuracy are better).
 
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+
 ## 5. Analysis
 
 This run has no measured rows; every subject was fixtured or errored, so no cross-model claim is made. The committed fixture page exists to prove the pipeline, not to compare providers.

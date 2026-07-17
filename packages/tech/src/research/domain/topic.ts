@@ -48,6 +48,17 @@ export type TopicSpec = Readonly<{
   /** Stages this topic's pipeline runs, in `STAGE_ORDER` order. */
   stages: ReadonlyArray<TopicStage>;
   /**
+   * True when the benchmark stage's keyless run rewrites the topic's committed
+   * CURRENT page (`docs/research-reports/<artifactBase>.md`) in place. Such a
+   * rewrite erases the composed survey-series blocks (推移 / 過去の調査), so
+   * the dispatcher must re-compose them right after the benchmark stage on the
+   * keyless paths to keep regeneration byte-stable against the committed page.
+   * Topics that write their fixture output to a separate `*.fixture.md` side
+   * file (speed, accuracy, llm-model-comparison) and the hand-authored article
+   * kind never clobber the current page, so they leave this unset.
+   */
+  fixtureRewritesCurrentPage?: boolean;
+  /**
    * What the "benchmark" stage does. `benchmark` (default) runs a live probe
    * sweep; `catalog` generates a reference table from a source of truth (no
    * measurement); `article` points at a hand-written reference article. The
@@ -98,6 +109,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "ocr",
@@ -108,6 +120,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // real run with --real (the reverse of the other topics).
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "image-generation",
@@ -119,6 +132,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // a real run with --real.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "deep-research",
@@ -131,6 +145,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // benchmark stage; insights/translation are added when the topic publishes.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
     stages: ["benchmark"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "speech",
@@ -145,6 +160,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // translation, like the other published benchmark topics. The keyless
     // fixture path still runs only the benchmark stage (CI-exercised).
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "computer-use",
@@ -156,6 +172,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // fixture and switches to a real run with --real.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "svg-generation",
@@ -167,6 +184,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // fixture and switches to a real run with --real.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "availability",
@@ -179,6 +197,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // fixture renders 30/90-day trends from the committed history (keyless).
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "foundation-models",
@@ -192,6 +211,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: [], estimate: [], real: [] },
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
     kind: "catalog",
   },
   {
@@ -203,7 +223,24 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // The entrypoint defaults to its keyless fixture and switches to a real
     // (credential-gated) probe with --real, like OCR and image-generation.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    // Published: a real run composes the current article and its Japanese
+    // translation, like the other published benchmark topics. The keyless
+    // fixture path still runs only the benchmark stage (CI-exercised).
+    stages: ["benchmark", "insights", "translation"],
+  },
+  {
+    id: "trend-recency",
+    title:
+      "Trend recency: web-grounded knowledge recency of search-augmented systems vs. ungrounded controls — recency accuracy, citation validity/freshness, latency, search cost",
+    artifactBase: "trend-recency-comparison",
+    modes: ["fixture", "estimate", "real"],
+    // The entrypoint defaults to its keyless fixture and switches to a real
+    // (key-gated, search-billed) run with --real, like OCR and image-generation.
+    modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
+    // The skeleton runs only the benchmark stage; insights/translation are added
+    // when the topic publishes (the publish ticket registers it in site.ts).
     stages: ["benchmark"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "agent-sdk",

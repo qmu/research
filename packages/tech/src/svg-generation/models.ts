@@ -52,6 +52,12 @@ export const SVG_MODELS: ReadonlyArray<SvgModelCard> = [
   },
 ];
 
+/** The fixed vision judge behind the prompt-fidelity metric — the same fixed
+ * instrument the image-generation topic uses, so both rubric metrics share one
+ * judge. Swapping the judge model is an instrument change (manifest-version
+ * bump), never a silent edit. */
+export const JUDGE_MODEL_ID = "claude-sonnet-5";
+
 /** Providers in this repository's stack with no distinct SVG capability to note.
  * All four subjects emit SVG through their text API, so — unlike the image topic,
  * where Anthropic exposes no image API — there is no not-applicable row here. Kept

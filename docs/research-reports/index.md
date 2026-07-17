@@ -19,6 +19,7 @@ Past generated frames are listed in [History](./history).
 **Topics**
 
 - [Foundation model catalog](./foundation-models) — A reference catalog of the compared models: provider, tier, price, effort, and API surface.
+- [Agent SDK comparison](./agent-sdk-comparison) — A design comparison of agent frameworks/runtimes (OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph) from public documentation — not measured.
 - [LLM response speed](./llm-speed-comparison) — Sustained throughput, time-to-first-token, and total latency.
 - [LLM output accuracy](./llm-accuracy-comparison) — JSON-schema limits, length-instruction following, and information accuracy.
 - [LLM API availability](./llm-availability) — Status-page incident history and derived 30/90-day availability trends.
@@ -27,6 +28,7 @@ Past generated frames are listed in [History](./history).
 - [Image generation](./image-generation-comparison) — Generation latency, per-image cost, rubric-checked prompt adherence, and exact-text rendering.
 - [Speech (TTS / STT / STS)](./speech-comparison) — Text-to-speech intelligibility & latency, speech-to-text word accuracy & latency, per-unit cost, and speech-to-speech realtime capability.
 - [Computer use](./computer-use-comparison) — Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.
-- [SVG generation](./svg-generation-comparison) — Render validity, path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.
+- [SVG generation](./svg-generation-comparison) — Render validity, prompt fidelity (rasterize + fixed vision judge), path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.
+- [Agent VM / sandbox comparison](./agent-vm-comparison) — Isolation model, published price, capability envelope, and probed cold-start latency and fixed-task cost of the sandbox / microVM platforms agents run untrusted code in.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

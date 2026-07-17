@@ -3,6 +3,7 @@ import {
   hasAnimation,
   scoreAnimationPresence,
   scorePathComplexity,
+  scorePromptFidelity,
   scoreRenderValidity,
   summarizeStat,
 } from "./score";
@@ -55,6 +56,44 @@ describe("animation detection", () => {
 
   it("returns 0 for a static svg", () => {
     expect(scoreAnimationPresence("<svg><rect/></svg>")).toBe(0);
+  });
+});
+
+describe("scorePromptFidelity", () => {
+  const constraints = [
+    { id: "a", question: "A?" },
+    { id: "b", question: "B?" },
+  ];
+
+  it("scores the satisfied ratio", () => {
+    expect(
+      scorePromptFidelity(constraints, [
+        { constraintId: "a", satisfied: true },
+        { constraintId: "b", satisfied: false },
+      ]),
+    ).toBe(0.5);
+  });
+
+  it("counts an unanswered constraint as unsatisfied", () => {
+    expect(
+      scorePromptFidelity(constraints, [
+        { constraintId: "a", satisfied: true },
+      ]),
+    ).toBe(0.5);
+  });
+
+  it("ignores answers for unknown constraint ids", () => {
+    expect(
+      scorePromptFidelity(constraints, [
+        { constraintId: "unknown", satisfied: true },
+      ]),
+    ).toBe(0);
+  });
+
+  it("scores an empty rubric 0", () => {
+    expect(
+      scorePromptFidelity([], [{ constraintId: "a", satisfied: true }]),
+    ).toBe(0);
   });
 });
 

@@ -1,0 +1,926 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "fixture": true,
+  "trials": 1,
+  "manifestVersion": "trend-recency-v1-seed",
+  "windowDays": 30,
+  "runs": [
+    {
+      "id": "grok-4-3-grounded",
+      "provider": "xai",
+      "grounding": "grounded",
+      "modelName": "Grok 4.3 + Live Search",
+      "apiModelId": "grok-4.3",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "searchCostPerKRequestsUsd": 25,
+      "source": "https://docs.x.ai/developers/models/grok-4.3",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/103",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/517",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/295",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        }
+      ]
+    },
+    {
+      "id": "sonar-grounded",
+      "provider": "perplexity",
+      "grounding": "grounded",
+      "modelName": "Perplexity Sonar",
+      "apiModelId": "sonar",
+      "inputCostPerMTok": 1,
+      "outputCostPerMTok": 1,
+      "searchCostPerKRequestsUsd": 5,
+      "source": "https://docs.perplexity.ai/guides/pricing",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/103",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/517",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/295",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        }
+      ]
+    },
+    {
+      "id": "sonar-pro-grounded",
+      "provider": "perplexity",
+      "grounding": "grounded",
+      "modelName": "Perplexity Sonar Pro",
+      "apiModelId": "sonar-pro",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "searchCostPerKRequestsUsd": 8,
+      "source": "https://docs.perplexity.ai/guides/pricing",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/103",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/517",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/295",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        }
+      ]
+    },
+    {
+      "id": "gemini-3-1-pro-grounded",
+      "provider": "google",
+      "grounding": "grounded",
+      "modelName": "Gemini 3.1 Pro + Google Search grounding",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 12,
+      "searchCostPerKRequestsUsd": 35,
+      "source": "https://ai.google.dev/gemini-api/docs/grounding",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/103",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/517",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/295",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        }
+      ]
+    },
+    {
+      "id": "gpt-5-5-grounded",
+      "provider": "openai",
+      "grounding": "grounded",
+      "modelName": "GPT-5.5 + web search",
+      "apiModelId": "gpt-5.5",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "searchCostPerKRequestsUsd": 10,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/103",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/517",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/295",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        }
+      ]
+    },
+    {
+      "id": "claude-opus-4-8-grounded",
+      "provider": "anthropic",
+      "grounding": "grounded",
+      "modelName": "Claude Opus 4.8 + web search",
+      "apiModelId": "claude-opus-4-8",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "searchCostPerKRequestsUsd": 10,
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/103",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/517",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 20,
+          "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
+          "citations": [
+            {
+              "url": "https://news.example.com/article/295",
+              "publishedDateIso": "2026-01-02",
+              "title": "Fixture source"
+            }
+          ],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1,
+          "citationFreshnessDays": 1
+        }
+      ]
+    },
+    {
+      "id": "grok-4-3-ungrounded",
+      "provider": "xai",
+      "grounding": "ungrounded",
+      "modelName": "Grok 4.3 (no search)",
+      "apiModelId": "grok-4.3",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://docs.x.ai/developers/models/grok-4.3",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    },
+    {
+      "id": "gemini-3-1-pro-ungrounded",
+      "provider": "google",
+      "grounding": "ungrounded",
+      "modelName": "Gemini 3.1 Pro (no grounding)",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 12,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    },
+    {
+      "id": "gpt-5-5-ungrounded",
+      "provider": "openai",
+      "grounding": "ungrounded",
+      "modelName": "GPT-5.5 (no search)",
+      "apiModelId": "gpt-5.5",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    },
+    {
+      "id": "claude-opus-4-8-ungrounded",
+      "provider": "anthropic",
+      "grounding": "ungrounded",
+      "modelName": "Claude Opus 4.8 (no search)",
+      "apiModelId": "claude-opus-4-8",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 33,
+          "stdDev": 11.135528725660043,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "seed-opus-release",
+          "repetition": 0,
+          "latencyMs": 31,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-grok-maker",
+          "repetition": 0,
+          "latencyMs": 45,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "seed-sonar-maker",
+          "repetition": 0,
+          "latencyMs": 23,
+          "outputTokens": 22,
+          "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    }
+  ],
+  "artifactPath": "trend-recency-comparison.data.json"
+}

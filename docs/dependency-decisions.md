@@ -385,6 +385,36 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   provider-neutral `GroundedAnswerClient` port; dropping or swapping the provider
   is a registry + adapter change with no domain impact.
 
+### @resvg/resvg-js (packages/tech)
+
+- **Reason**: The `svg-generation` topic's prompt-fidelity metric rasterizes
+  each generated SVG to a PNG the fixed vision judge reads. Writing an SVG
+  renderer ourselves is out of scope, and nothing already present rasterizes
+  SVG (the repo's Playwright harness is a computer-use test tool, not a build
+  dependency, and a headless browser is a far heavier exit). resvg's N-API
+  binding renders headless and hermetically — pure native code, no browser, no
+  network — so it also runs keylessly in CI. Isolated behind the
+  `SvgRasterizer` port at `packages/tech/src/vendors/raster/`; the keyless
+  benchmark fixture path uses a pure stub (`fixture.ts`) and never loads the
+  engine (the real engine is dynamically imported by real runs only).
+- **Assessment**:
+  - License: MPL-2.0 (binding and the underlying resvg crate) — file-level
+    copyleft, compatible with this MIT repo as an unmodified npm dependency.
+  - Reputation: The de-facto Node binding of resvg (the reference Rust SVG
+    renderer used by many toolchains); broad adoption, prebuilt binaries per
+    platform (including linux-arm64), no known security incidents.
+  - Development status: Maintained; releases track the upstream resvg crate.
+  - Sustainability: Single primary maintainer over a healthy upstream
+    (linebender/resvg); the port keeps the exit cheap if either stalls.
+- **Monitoring**: Dependabot (`.github/dependabot.yml`), `npm audit` in CI, and
+  the hermetic `vendors/raster/resvg.test.ts` proving headless rasterization on
+  every CI run.
+- **Exit strategy**: Reached only through the `SvgRasterizer` port
+  (`vendors/raster/types.ts`). The engine name is recorded in every run
+  artifact as instrument provenance, so swapping to another renderer (or a
+  headless-browser render) is a one-adapter change plus a manifest-version
+  bump — never a silent re-scoring.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

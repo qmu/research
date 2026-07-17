@@ -307,6 +307,130 @@
         "n/a"
       ],
       "source": "https://docs.x.ai/developers/models"
+    },
+    {
+      "provider": "Perplexity",
+      "modelName": "Sonar",
+      "apiModelId": "sonar",
+      "tier": "mid",
+      "apiSurface": "chat",
+      "released": "2025",
+      "inputCostPerMTok": 1,
+      "outputCostPerMTok": 1,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://docs.perplexity.ai/guides/pricing"
+    },
+    {
+      "provider": "Perplexity",
+      "modelName": "Sonar Pro",
+      "apiModelId": "sonar-pro",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2025",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://docs.perplexity.ai/guides/pricing"
+    },
+    {
+      "provider": "Perplexity",
+      "modelName": "Sonar Reasoning Pro",
+      "apiModelId": "sonar-reasoning-pro",
+      "tier": "frontier",
+      "apiSurface": "chat",
+      "released": "2025",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 8,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://docs.perplexity.ai/guides/pricing"
+    },
+    {
+      "provider": "AWS Bedrock",
+      "modelName": "Claude Opus 4.8 (Bedrock)",
+      "apiModelId": "claude-opus-4-8",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock"
+    },
+    {
+      "provider": "AWS Bedrock",
+      "modelName": "Claude Sonnet 5 (Bedrock)",
+      "apiModelId": "claude-sonnet-5",
+      "tier": "mid",
+      "apiSurface": "chat",
+      "released": "2026-06",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock"
+    },
+    {
+      "provider": "Google Vertex AI",
+      "modelName": "Claude Opus 4.8 (Vertex)",
+      "apiModelId": "claude-opus-4-8",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai"
+    },
+    {
+      "provider": "OpenRouter",
+      "modelName": "Claude Opus 4.8 (OpenRouter)",
+      "apiModelId": "anthropic/claude-opus-4.8",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://openrouter.ai/anthropic/claude-opus-4.8"
+    },
+    {
+      "provider": "OpenRouter",
+      "modelName": "GPT-5.5 (OpenRouter)",
+      "apiModelId": "openai/gpt-5.5",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "effortLevels": [
+        "n/a"
+      ],
+      "source": "https://openrouter.ai/openai/gpt-5.5"
     }
   ]
 }
