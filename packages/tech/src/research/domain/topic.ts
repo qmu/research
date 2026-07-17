@@ -227,6 +227,9 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // translation, like the other published benchmark topics. The keyless
     // fixture path still runs only the benchmark stage (CI-exercised).
     stages: ["benchmark", "insights", "translation"],
+    // The keyless run rewrites docs/research-reports/agent-vm-comparison.md in
+    // place (like OCR / image-generation), so the fixture path must re-compose
+    // the survey-series blocks to stay byte-stable against the committed page.
     fixtureRewritesCurrentPage: true,
   },
   {

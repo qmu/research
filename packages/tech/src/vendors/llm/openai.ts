@@ -138,10 +138,48 @@ export const createOpenAiCompatibleCompletionClient = (
 // Parameterized by base URL for OpenAI-compatible image endpoints (xAI's Grok
 // Imagine speaks the same protocol); the default reaches api.openai.com. The
 // image models used here return base64 PNG bytes.
+//
+// Dialect differences between compatible endpoints stay HERE (the ACL), never
+// in domain code: xAI rejects the `size` argument (400 "Argument not
+// supported: size", observed 2026-07-17) and returns a URL unless
+// `response_format: "b64_json"` is requested, while OpenAI's gpt-image models
+// accept `size` and always return base64.
+export type OpenAiCompatibleImageDialect = Readonly<{
+  /** Send `size: "1024x1024"` (OpenAI accepts it; xAI rejects it). */
+  includeSize: boolean;
+  /** Request `response_format: "b64_json"` (xAI defaults to URL). */
+  requestB64Json: boolean;
+}>;
+
+const OPENAI_IMAGE_DIALECT: OpenAiCompatibleImageDialect = {
+  includeSize: true,
+  requestB64Json: false,
+};
+
+// Compatible endpoints do not agree on the returned image format (OpenAI's
+// gpt-image models return PNG; xAI's Grok Imagine returns JPEG), so the MIME
+// type is sniffed from the decoded magic bytes instead of being assumed —
+// a mislabeled type is rejected by the vision judge downstream.
+const sniffImageMimeType = (
+  base64: string,
+): "image/png" | "image/jpeg" | "image/webp" | "image/gif" => {
+  const head = Buffer.from(base64.slice(0, 24), "base64");
+  if (head.length >= 8 && head.readUInt32BE(0) === 0x89504e47)
+    return "image/png";
+  if (head.length >= 3 && head[0] === 0xff && head[1] === 0xd8)
+    return "image/jpeg";
+  if (head.length >= 12 && head.toString("latin1", 8, 12) === "WEBP")
+    return "image/webp";
+  if (head.length >= 4 && head.toString("latin1", 0, 4) === "GIF8")
+    return "image/gif";
+  return "image/png";
+};
+
 export const createOpenAiCompatibleImageGenerationClient = (
   apiModelId: string,
   apiKey: string,
   baseURL?: string,
+  dialect: OpenAiCompatibleImageDialect = OPENAI_IMAGE_DIALECT,
 ): ImageGenerationClient => {
   const client = new OpenAI({ apiKey, baseURL });
   return {
@@ -152,7 +190,8 @@ export const createOpenAiCompatibleImageGenerationClient = (
         model: apiModelId,
         prompt,
         n: 1,
-        size: "1024x1024",
+        ...(dialect.includeSize ? { size: "1024x1024" } : {}),
+        ...(dialect.requestB64Json ? { response_format: "b64_json" } : {}),
       } as unknown as OpenAI.Images.ImageGenerateParamsNonStreaming);
       const base64 = response.data?.[0]?.b64_json;
       if (base64 === undefined || base64 === "") {
@@ -160,7 +199,7 @@ export const createOpenAiCompatibleImageGenerationClient = (
       }
       return {
         base64,
-        mimeType: "image/png",
+        mimeType: sniffImageMimeType(base64),
         elapsedMs: Date.now() - startedAt,
         model: apiModelId,
       };
