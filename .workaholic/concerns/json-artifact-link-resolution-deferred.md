@@ -7,18 +7,21 @@ origin_pr_url: https://github.com/qmu/research/pull/15
 origin_branch: work-20260622-191220
 origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
-severity: low
+last_seen: 2026-07-13T09:48:58+09:00
+first_seen: 2026-07-13T09:48:58+09:00
+concern_id: json-artifact-link-resolution-deferred
+severity: moderate
 status: active
-resolved_by_pr:
-resolved_by_commit:
+resolved_by_pr: 
+resolved_by_commit: 
 ---
 
-# Real-run cloud backend credentials and quotas are account-dependent
+# JSON artifact link resolution deferred
 
 ## Description
 
-S3 Vectors is region-limited, Cloudflare AutoRAG needs a dashboard-provisioned R2 binding, and xAI needs pre-funded credits; all render honest error/fixtured states rather than fake numbers (see [956c066](https://github.com/qmu/research/commit/956c066), [8d205c1](https://github.com/qmu/research/commit/8d205c1))
+Reports link to raw JSON run-artifacts by relative path, but the corporate copy only transfers Markdown, so the transparency links will not resolve on the Astro site until artifacts join the copy set or switch to stable GitHub URLs (see [0597161](https://github.com/qmu/research/commit/0597161) in docs/research-reports/)
 
 ## How to Fix
 
-Keep the honest-error rendering and document the account prerequisites beside each backend's reproduction steps
+Extend scripts/publish-research.sh to copy .data.json alongside .md, or point artifact references at stable raw.githubusercontent.com URLs

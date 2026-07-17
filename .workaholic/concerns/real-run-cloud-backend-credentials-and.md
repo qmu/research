@@ -7,18 +7,21 @@ origin_pr_url: https://github.com/qmu/research/pull/15
 origin_branch: work-20260622-191220
 origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
-severity: moderate
+last_seen: 2026-07-13T09:48:58+09:00
+first_seen: 2026-07-13T09:48:58+09:00
+concern_id: real-run-cloud-backend-credentials-and
+severity: low
 status: active
-resolved_by_pr:
-resolved_by_commit:
+resolved_by_pr: 
+resolved_by_commit: 
 ---
 
-# Fixture determinism depends on careful seeding
+# Real-run cloud backend credentials and quotas are account-dependent
 
 ## Description
 
-Byte-stable fixture reports require the pinned timestamp plus per-trial-index seeding; a future probe redesign could silently break byte-stability if the seeding strategy is not carried forward (see [679dcfe](https://github.com/qmu/research/commit/679dcfe) in packages/tech/src/vendors/llm/fixture.ts; instrument v2 preserved it in [c79751f](https://github.com/qmu/research/commit/c79751f))
+S3 Vectors is region-limited, Cloudflare AutoRAG needs a dashboard-provisioned R2 binding, and xAI needs pre-funded credits; all render honest error/fixtured states rather than fake numbers (see [956c066](https://github.com/qmu/research/commit/956c066), [8d205c1](https://github.com/qmu/research/commit/8d205c1))
 
 ## How to Fix
 
-Document the determinism precondition beside the fixture client and include a two-consecutive-runs byte-stability check in the quality gate of any ticket touching the fixture shape
+Keep the honest-error rendering and document the account prerequisites beside each backend's reproduction steps
