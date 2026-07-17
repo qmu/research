@@ -424,7 +424,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       costPerRun: {
         ceilingUsd: 20,
         premises:
-          "3 models × 8 prompts × 1–3 repetitions at $0.02–$0.04 catalog per image plus one vision-judge read per image; run `research -- image-generation --estimate` first",
+          "3 models × 8 prompts × 1–3 repetitions at $0.02–$0.039 catalog per image plus one vision-judge read per image; run `research -- image-generation --estimate` first",
       },
       accumulates:
         "per-model HistoryPoint series for latency, adherence, and text accuracy, one point per dated frame; charts connect same-manifest-version points only",

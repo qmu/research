@@ -5,6 +5,7 @@ slug: image-generation-benchmark
 status: active
 created_at: 2026-07-13T11:58:23+09:00
 author: a@qmu.jp
+assignee: a@qmu.jp
 tickets: []
 stories: []
 concerns: []
@@ -44,7 +45,7 @@ keyless and deterministic).
 - [x] Research design (cadence, subjects, metrics, cost/trial range, history) proposed and owner-approved before scaffolding (#20260713120500-image-generation-benchmark-topic.md)
 - [x] Topic runnable via `npm run research -- image-generation` with fixture/estimate/real modes; keyless fixture byte-stable and CI-suitable (#20260713120500-image-generation-benchmark-topic.md)
 - [x] Published EN + JP pages in `publishedResearchTopics` passing the title==sidebar-label, no-mermaid, section-4 budget, and 7-section outline guards (#20260713120500-image-generation-benchmark-topic.md)
-- [ ] First real trial run within the approved cost ceiling, committed as a dated history frame with the design-validation review (step 3 of the guideline)
+- [x] First real trial run within the approved cost ceiling, committed as a dated history frame with the design-validation review (step 3 of the guideline) (#20260717000605-image-generation-first-real-trial.md)
 - [ ] qmu-co-jp receives the new article through the publish ticket flow on the next `/ship`
 
 ## Changelog
@@ -52,3 +53,4 @@ keyless and deterministic).
 - 2026-07-13 — mission created; design proposal drafted for owner approval — 20260713120500-image-generation-benchmark-topic.md
 - 2026-07-13 — design approved (fixture-only for this drive); topic built end to end: registry (ids/prices web-verified), rubric manifest v1, scoring, §4-policy report, ImageGenerationClient port + openai/google/xai/fixture adapters, unified-CLI wiring, published EN/JP pages, all guards green; estimate ~$0.95/trial (ceiling $20) — 20260713120500-image-generation-benchmark-topic.md
 - 2026-07-13 — remaining: owner-triggered first real trial (guideline step 3) and the qmu-co-jp reflection on the next /ship
+- 2026-07-17 — first real trial executed (owner-approved, ~$0.90 estimate / ≈$1.10 actual incl. insights+JP translations, ceiling $20): 3/3 rows measured; dated frame 2026-07-17T00-53-39-901Z committed with design-validation review; registry price drift fixed (gpt-image-1.5 $0.04→$0.034) and xAI Images dialect fixed in the ACL (no `size` arg, b64_json, MIME sniffing); latency discriminated (Grok 4976ms < Gemini 6526ms < GPT Image 11689ms) while adherence/text-accuracy saturated at 100% → manifest v2 flagged; monthly cadence confirmed — 20260717000605-image-generation-first-real-trial.md
