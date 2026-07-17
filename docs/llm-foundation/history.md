@@ -66,3 +66,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 ### エージェントVM/サンドボックス
 
 まだ日付別フレームは保存されていない。
+
+### トークン計測
+
+- 2026-07-17T03:02:34.699Z: [English](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison) · [Japanese](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja) · [data.json](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.data.json)

@@ -30,5 +30,6 @@ Past generated frames are listed in [History](./history).
 - [Computer use](./computer-use-comparison) — Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.
 - [SVG generation](./svg-generation-comparison) — Render validity, prompt fidelity (rasterize + fixed vision judge), path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.
 - [Agent VM / sandbox comparison](./agent-vm-comparison) — Isolation model, published price, capability envelope, and probed cold-start latency and fixed-task cost of the sandbox / microVM platforms agents run untrusted code in.
+- [Token counting and metering](./token-metering-comparison) — Library-independent input-token counting — exact self-implemented BPE where the vocabulary is published, calibrated estimation where it is not — validated against API-reported counts on a pinned English/Japanese/code sample set.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

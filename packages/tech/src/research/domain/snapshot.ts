@@ -308,6 +308,48 @@ export const agentVmSnapshotPoints = (
   return points;
 };
 
+/**
+ * Points from the token-metering artifact: `{ generatedAt, families: [{ card:
+ * { id, familyName }, provenance, holdoutMeanAbsErrorPct,
+ * holdoutMaxAbsErrorPct }] }`. One series per provider family; only
+ * `provenance: "measured"` rows chart (fixtured/unreachable/error rows never
+ * render as live measurements, ADR 0004).
+ */
+export const tokenMeteringSnapshotPoints = (
+  artifact: unknown,
+): ReadonlyArray<SnapshotPoint> => {
+  const root = asRecord(artifact);
+  if (root === undefined) return [];
+  const generatedAt =
+    typeof root.generatedAt === "string" ? root.generatedAt : "";
+  const families = Array.isArray(root.families) ? root.families : [];
+  const points: SnapshotPoint[] = [];
+  for (const family of families) {
+    const f = asRecord(family);
+    if (f?.provenance !== "measured") continue;
+    const card = asRecord(f.card);
+    const id = typeof card?.id === "string" ? card.id : undefined;
+    if (id === undefined) continue;
+    const label = typeof card?.familyName === "string" ? card.familyName : id;
+    for (const metric of [
+      "holdoutMeanAbsErrorPct",
+      "holdoutMaxAbsErrorPct",
+    ] as const) {
+      const value = f[metric];
+      if (typeof value === "number" && Number.isFinite(value)) {
+        points.push({
+          seriesId: id,
+          seriesLabel: label,
+          metric,
+          measuredAt: generatedAt,
+          value,
+        });
+      }
+    }
+  }
+  return points;
+};
+
 const snapshotPointExtractors: Readonly<
   Record<string, (artifact: unknown) => ReadonlyArray<SnapshotPoint>>
 > = {
@@ -336,6 +378,7 @@ const snapshotPointExtractors: Readonly<
   ]),
   rag: ragSnapshotPoints,
   "agent-vm": agentVmSnapshotPoints,
+  "token-metering": tokenMeteringSnapshotPoints,
 };
 
 /** Points for one topic's artifact; topics without an extractor chart nothing. */

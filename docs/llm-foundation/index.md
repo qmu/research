@@ -73,6 +73,11 @@ API ネイティブなコンピュータ操作エージェントの、固定 Pla
 エージェントが untrusted コードを実行するサンドボックス／microVM 基盤の分離モデル、公表価格、機能エンベロープ、実測コールドスタートと固定タスクコストの比較。
 英語ソースは [Agent VM / sandbox comparison](/research-reports/agent-vm-comparison)。
 
+### [トークン計測](/research-reports/token-metering-comparison.insights.ja)
+
+トークナイザライブラリに依存しない入力トークンの自前カウント（語彙公開系は自前BPE、非公開系は較正付き推定）を、日英・コードの固定サンプルで API 実測値と照合する。
+英語ソースは [Token counting and metering](/research-reports/token-metering-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`
