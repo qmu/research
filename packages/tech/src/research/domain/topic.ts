@@ -203,7 +203,10 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // The entrypoint defaults to its keyless fixture and switches to a real
     // (credential-gated) probe with --real, like OCR and image-generation.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
-    stages: ["benchmark"],
+    // Published: a real run composes the current article and its Japanese
+    // translation, like the other published benchmark topics. The keyless
+    // fixture path still runs only the benchmark stage (CI-exercised).
+    stages: ["benchmark", "insights", "translation"],
   },
   {
     id: "agent-sdk",

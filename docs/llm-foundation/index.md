@@ -63,6 +63,11 @@ API ネイティブなコンピュータ操作エージェントの、固定 Pla
 フロンティアLLMによるSVG生成の描画妥当性、プロンプト忠実度（ラスタライズ＋固定ビジョン判定）、パス複雑度、SMIL/CSSアニメーションの有無、生成レイテンシ、トークンコストの比較。
 英語ソースは [SVG generation](/research-reports/svg-generation-comparison)。
 
+### [エージェントVM/サンドボックス](/research-reports/agent-vm-comparison.insights.ja)
+
+エージェントが untrusted コードを実行するサンドボックス／microVM 基盤の分離モデル、公表価格、機能エンベロープ、実測コールドスタートと固定タスクコストの比較。
+英語ソースは [Agent VM / sandbox comparison](/research-reports/agent-vm-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`

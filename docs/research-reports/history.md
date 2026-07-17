@@ -58,3 +58,7 @@ No dated frames have been archived yet.
 ### SVG generation
 
 No dated frames have been archived yet.
+
+### Agent VM / sandbox comparison
+
+No dated frames have been archived yet.

@@ -28,5 +28,6 @@ Past generated frames are listed in [History](./history).
 - [Speech (TTS / STT / STS)](./speech-comparison) — Text-to-speech intelligibility & latency, speech-to-text word accuracy & latency, per-unit cost, and speech-to-speech realtime capability.
 - [Computer use](./computer-use-comparison) — Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.
 - [SVG generation](./svg-generation-comparison) — Render validity, prompt fidelity (rasterize + fixed vision judge), path complexity, SMIL/CSS animation presence, generation latency, and token cost of frontier LLMs generating SVG.
+- [Agent VM / sandbox comparison](./agent-vm-comparison) — Isolation model, published price, capability envelope, and probed cold-start latency and fixed-task cost of the sandbox / microVM platforms agents run untrusted code in.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

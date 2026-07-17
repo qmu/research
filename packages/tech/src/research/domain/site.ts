@@ -622,6 +622,85 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-model HistoryPoint series for render validity, prompt fidelity, animation presence, and mean token cost, one point per dated frame; charts connect same-manifest-version points only",
     },
   },
+  {
+    id: "agent-vm",
+    artifactBase: "agent-vm-comparison",
+    npmScript: "npm run research -- agent-vm --real",
+    source: {
+      text: "Agent VM / sandbox comparison",
+      docsPath: "docs/research-reports/agent-vm-comparison.md",
+      summary:
+        "Isolation model, published price, capability envelope, and probed cold-start latency and fixed-task cost of the sandbox / microVM platforms agents run untrusted code in.",
+    },
+    japanese: {
+      text: "エージェントVM/サンドボックス",
+      docsPath: "docs/research-reports/agent-vm-comparison.insights.ja.md",
+      summary:
+        "エージェントが untrusted コードを実行するサンドボックス／microVM 基盤の分離モデル、公表価格、機能エンベロープ、実測コールドスタートと固定タスクコストの比較。",
+    },
+    dataPath: "docs/research-reports/agent-vm-comparison.data.json",
+    qmuSlug: "agent-vm-comparison",
+    design: {
+      cadence: "quarterly (first two validation trials monthly)",
+      offCadenceTrigger:
+        "a new provider entering the compared set, a published pricing change at a covered provider, or a new isolation primitive at a covered provider",
+      subjects:
+        "the eight sandbox/microVM providers in the curated agent-vm registry (AWS Lambda microVMs, Fly.io Machines, E2B, Modal, Daytona, Cloudflare Containers/Sandbox SDK, Vercel Sandbox, Northflank Sandboxes); a provider without a probe adapter or credential stays catalog-only for that trial",
+      metrics: [
+        { name: "isolationModel", unit: "category", direction: "reference" },
+        {
+          name: "publishedVcpuHourUsd",
+          unit: "USD/vCPU-hr",
+          direction: "lower-is-better",
+        },
+        {
+          name: "publishedGbHourUsd",
+          unit: "USD/GB-hr",
+          direction: "lower-is-better",
+        },
+        {
+          name: "billingGranularity",
+          unit: "category",
+          direction: "reference",
+        },
+        {
+          name: "maxRuntimeSeconds",
+          unit: "seconds",
+          direction: "higher-is-better",
+        },
+        { name: "snapshotResume", unit: "capability", direction: "reference" },
+        {
+          name: "filesystemPersistence",
+          unit: "category",
+          direction: "reference",
+        },
+        { name: "networkEgress", unit: "category", direction: "reference" },
+        { name: "gpuAvailable", unit: "capability", direction: "reference" },
+        { name: "coldStartMsP50", unit: "ms", direction: "lower-is-better" },
+        { name: "coldStartMsP95", unit: "ms", direction: "lower-is-better" },
+        { name: "warmReuseMs", unit: "ms", direction: "lower-is-better" },
+        {
+          name: "fixedTaskWallClockMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        { name: "measuredCostUsd", unit: "USD", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 5,
+        maximum: 20,
+        premises:
+          "8 providers × 5–20 cold-start repetitions + 1 warm reuse + 1 fixed CPU task each; more repetitions narrow the cold-start p50/p95 variance (reported as stdDev) but multiply the boot count and any per-boot minimum charge",
+      },
+      costPerRun: {
+        ceilingUsd: 8,
+        premises:
+          "compute-seconds over short tasks at each provider's published rate — $1–$8 per trial depending on repetitions and per-boot minimums; run `research -- agent-vm --estimate` before every real run",
+      },
+      accumulates:
+        "per-provider HistoryPoint series for coldStartMsP50 and publishedVcpuHourUsd, one point per dated trial; charts connect same-instrument-version points only",
+    },
+  },
 ];
 
 /**
