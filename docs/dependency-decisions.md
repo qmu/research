@@ -415,6 +415,53 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   headless-browser render) is a one-adapter change plus a manifest-version
   bump — never a silent re-scoring.
 
+### Tokenizer libraries — evaluated and NOT adopted (token-metering topic)
+
+- **Reason**: The `token-metering` topic (and the plgg library it feeds) needs
+  input-token counts. Candidates evaluated: `tiktoken` (OpenAI encodings), the
+  archived `@anthropic-ai/tokenizer` (legacy Claude 2 only — cannot count for
+  current models), and Hugging Face `tokenizers`/transformers (OSS models).
+  Per the vendor-neutrality policy's implement-by-default principle the
+  self-implementation was chosen: the BPE inference loop is small
+  (`packages/tech/src/token-metering/domain/bpe.ts`), runs against *published
+  data* (see the next entry), and one implementation covers every provider
+  that publishes its vocabulary, where each library covers one provider and
+  none covers Anthropic's current models.
+- **Assessment**: All candidates are reputable and permissively licensed
+  (MIT/Apache-2.0); the deciding factors were coverage (none spans providers;
+  none covers Anthropic) and the per-consumer dependency cost (native/WASM
+  artifacts in every consumer).
+- **Monitoring**: The topic's recurring trial re-validates the self-count
+  against the live APIs each run (holdout error vs. `usage.prompt_tokens` /
+  count endpoints), so a provider-side tokenizer change surfaces as an error
+  regression — the same signal a library adopter waits for in a release note.
+- **Exit strategy**: The counting sits behind the topic's domain interface;
+  if a provider ships an encoding the self-count cannot reproduce within the
+  stated band, the reference library can be adopted for that provider only,
+  behind the same interface, recorded here.
+
+### Published tokenizer vocabularies (data downloads, token-metering topic)
+
+- **Reason**: The exact self-BPE counts replay each provider's *published*
+  vocabulary: `o200k_base.tiktoken` (OpenAI's public encodings bucket) and
+  `tokenizer.json` of `Qwen/Qwen2.5-Coder-32B-Instruct` (Hugging Face). These
+  are data files, not libraries: fetched by real runs into
+  `packages/tech/.cache/token-metering/` (gitignored), never committed, never
+  a runtime dependency of consumers.
+- **Assessment**:
+  - License: o200k_base is published under OpenAI's tiktoken (MIT); the Qwen2.5
+    tokenizer ships under Apache-2.0. Both permit this use.
+  - Reputation / status: both are the authoritative artifacts their model
+    families load; URLs are recorded per family in
+    `packages/tech/src/token-metering/models.ts` with last-verified dates.
+- **Monitoring**: The recurring trial fails loudly if a fetch breaks or a
+  vocabulary drifts from the API-reported counts (0.00% holdout error is the
+  trial's baseline for the exact families).
+- **Exit strategy**: The files are addressed through
+  `packages/tech/src/vendors/token-count/vocabularies.ts`; a moved or
+  re-licensed source is a one-file URL change, and a withdrawn vocabulary
+  degrades that family to the calibrated-estimator method with a stated band.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

@@ -66,3 +66,7 @@ No dated frames have been archived yet.
 ### Agent VM / sandbox comparison
 
 No dated frames have been archived yet.
+
+### Token counting and metering
+
+- 2026-07-17T03:02:34.699Z: [English](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison) · [Japanese](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja) · [data.json](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.data.json)

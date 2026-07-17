@@ -750,6 +750,58 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-provider HistoryPoint series for coldStartMsP50 and publishedVcpuHourUsd, one point per dated trial; charts connect same-instrument-version points only",
     },
   },
+  {
+    id: "token-metering",
+    artifactBase: "token-metering-comparison",
+    npmScript: "npm run research -- token-metering --real",
+    source: {
+      text: "Token counting and metering",
+      docsPath: "docs/research-reports/token-metering-comparison.md",
+      summary:
+        "Library-independent input-token counting — exact self-implemented BPE where the vocabulary is published, calibrated estimation where it is not — validated against API-reported counts on a pinned English/Japanese/code sample set.",
+    },
+    japanese: {
+      text: "トークン計測",
+      docsPath:
+        "docs/research-reports/token-metering-comparison.insights.ja.md",
+      summary:
+        "トークナイザライブラリに依存しない入力トークンの自前カウント（語彙公開系は自前BPE、非公開系は較正付き推定）を、日英・コードの固定サンプルで API 実測値と照合する。",
+    },
+    dataPath: "docs/research-reports/token-metering-comparison.data.json",
+    qmuSlug: "token-metering",
+    design: {
+      cadence: "quarterly (first validation trial on approval)",
+      offCadenceTrigger:
+        "a new model family / tokenizer generation at a covered provider, or a published pricing-structure change (cache multipliers, image conversion)",
+      subjects:
+        "four provider families, one representative model each: Anthropic Claude (claude-sonnet-5, calibrated estimator vs. unbilled count_tokens), OpenAI (gpt-5.5, exact self-BPE from the published o200k_base vocabulary vs. billed usage.prompt_tokens), Google Gemini (gemini-3.1-pro-preview, calibrated estimator vs. unbilled countTokens), OSS/local (Qwen2.5-Coder on Workers AI, exact self-BPE from tokenizer.json vs. usage.prompt_tokens)",
+      metrics: [
+        {
+          name: "holdoutMeanAbsErrorPct",
+          unit: "%",
+          direction: "lower-is-better",
+        },
+        {
+          name: "holdoutMaxAbsErrorPct",
+          unit: "%",
+          direction: "lower-is-better",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 1,
+        premises:
+          "token counting is deterministic per provider tokenizer version, so one pass over the 30-sample manifest per family suffices; repetition adds cost without narrowing variance",
+      },
+      costPerRun: {
+        ceilingUsd: 5,
+        premises:
+          "two families read unbilled count endpoints ($0); two families bill 30 minimal completions each (~cents at catalog input rates); insights + JP translation add the usual per-topic LLM cost; run `research -- token-metering --estimate` first. $5 is the mission's approved total measurement ceiling (2026-07-17)",
+      },
+      accumulates:
+        "per-family HistoryPoint series for holdout mean/max absolute error, one point per dated trial; charts connect same-instrument-version (same sample manifest) points only",
+    },
+  },
 ];
 
 /**

@@ -1,0 +1,1648 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "fixture": true,
+  "instrumentVersion": 1,
+  "samplesVersion": "tm-v1",
+  "accuracyTargetPct": 5,
+  "families": [
+    {
+      "card": {
+        "id": "anthropic-claude",
+        "familyName": "Anthropic Claude",
+        "apiModelId": "claude-sonnet-5",
+        "countingMethod": "calibrated-estimator",
+        "groundTruth": "count-tokens-endpoint",
+        "inputCostPerMTok": 0,
+        "vocabularyNote": "Tokenizer unpublished for current models (the archived @anthropic-ai/tokenizer covers legacy Claude 2 only), so no exact self-count exists; the self-count is a calibrated estimator against the unbilled count_tokens endpoint.",
+        "source": "https://platform.claude.com/docs/en/build-with-claude/token-counting",
+        "lastVerified": "2026-07-17"
+      },
+      "provenance": "fixtured",
+      "rows": [
+        {
+          "sampleId": "en-01",
+          "class": "english",
+          "role": "calibration",
+          "chars": 167,
+          "utf8Bytes": 167,
+          "apiTokens": 49,
+          "provenance": "fixtured",
+          "predictedTokens": 47,
+          "errorPct": -4.08
+        },
+        {
+          "sampleId": "en-02",
+          "class": "english",
+          "role": "holdout",
+          "chars": 236,
+          "utf8Bytes": 236,
+          "apiTokens": 66,
+          "provenance": "fixtured",
+          "predictedTokens": 65,
+          "errorPct": -1.52
+        },
+        {
+          "sampleId": "en-03",
+          "class": "english",
+          "role": "calibration",
+          "chars": 271,
+          "utf8Bytes": 271,
+          "apiTokens": 75,
+          "provenance": "fixtured",
+          "predictedTokens": 75,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-04",
+          "class": "english",
+          "role": "holdout",
+          "chars": 363,
+          "utf8Bytes": 365,
+          "apiTokens": 98,
+          "provenance": "fixtured",
+          "predictedTokens": 99,
+          "errorPct": 1.02
+        },
+        {
+          "sampleId": "en-05",
+          "class": "english",
+          "role": "calibration",
+          "chars": 259,
+          "utf8Bytes": 259,
+          "apiTokens": 72,
+          "provenance": "fixtured",
+          "predictedTokens": 72,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-06",
+          "class": "english",
+          "role": "holdout",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "apiTokens": 84,
+          "provenance": "fixtured",
+          "predictedTokens": 85,
+          "errorPct": 1.19
+        },
+        {
+          "sampleId": "en-07",
+          "class": "english",
+          "role": "calibration",
+          "chars": 300,
+          "utf8Bytes": 302,
+          "apiTokens": 82,
+          "provenance": "fixtured",
+          "predictedTokens": 82,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-08",
+          "class": "english",
+          "role": "holdout",
+          "chars": 235,
+          "utf8Bytes": 237,
+          "apiTokens": 66,
+          "provenance": "fixtured",
+          "predictedTokens": 65,
+          "errorPct": -1.52
+        },
+        {
+          "sampleId": "en-09",
+          "class": "english",
+          "role": "calibration",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "apiTokens": 84,
+          "provenance": "fixtured",
+          "predictedTokens": 85,
+          "errorPct": 1.19
+        },
+        {
+          "sampleId": "en-10",
+          "class": "english",
+          "role": "holdout",
+          "chars": 320,
+          "utf8Bytes": 320,
+          "apiTokens": 87,
+          "provenance": "fixtured",
+          "predictedTokens": 88,
+          "errorPct": 1.15
+        },
+        {
+          "sampleId": "ja-01",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 78,
+          "utf8Bytes": 228,
+          "apiTokens": 85,
+          "provenance": "fixtured",
+          "predictedTokens": 84,
+          "errorPct": -1.18
+        },
+        {
+          "sampleId": "ja-02",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 83,
+          "utf8Bytes": 249,
+          "apiTokens": 90,
+          "provenance": "fixtured",
+          "predictedTokens": 89,
+          "errorPct": -1.11
+        },
+        {
+          "sampleId": "ja-03",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 85,
+          "utf8Bytes": 255,
+          "apiTokens": 92,
+          "provenance": "fixtured",
+          "predictedTokens": 91,
+          "errorPct": -1.09
+        },
+        {
+          "sampleId": "ja-04",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 148,
+          "utf8Bytes": 440,
+          "apiTokens": 155,
+          "provenance": "fixtured",
+          "predictedTokens": 157,
+          "errorPct": 1.29
+        },
+        {
+          "sampleId": "ja-05",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 108,
+          "utf8Bytes": 324,
+          "apiTokens": 115,
+          "provenance": "fixtured",
+          "predictedTokens": 115,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-06",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 86,
+          "utf8Bytes": 254,
+          "apiTokens": 93,
+          "provenance": "fixtured",
+          "predictedTokens": 92,
+          "errorPct": -1.08
+        },
+        {
+          "sampleId": "ja-07",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 120,
+          "utf8Bytes": 358,
+          "apiTokens": 127,
+          "provenance": "fixtured",
+          "predictedTokens": 128,
+          "errorPct": 0.79
+        },
+        {
+          "sampleId": "ja-08",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 94,
+          "utf8Bytes": 282,
+          "apiTokens": 101,
+          "provenance": "fixtured",
+          "predictedTokens": 101,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-09",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 90,
+          "utf8Bytes": 270,
+          "apiTokens": 97,
+          "provenance": "fixtured",
+          "predictedTokens": 97,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-10",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 136,
+          "utf8Bytes": 384,
+          "apiTokens": 143,
+          "provenance": "fixtured",
+          "predictedTokens": 144,
+          "errorPct": 0.7
+        },
+        {
+          "sampleId": "code-01",
+          "class": "code",
+          "role": "calibration",
+          "chars": 204,
+          "utf8Bytes": 204,
+          "apiTokens": 72,
+          "provenance": "fixtured",
+          "predictedTokens": 72,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-02",
+          "class": "code",
+          "role": "holdout",
+          "chars": 477,
+          "utf8Bytes": 477,
+          "apiTokens": 160,
+          "provenance": "fixtured",
+          "predictedTokens": 164,
+          "errorPct": 2.5
+        },
+        {
+          "sampleId": "code-03",
+          "class": "code",
+          "role": "calibration",
+          "chars": 151,
+          "utf8Bytes": 151,
+          "apiTokens": 55,
+          "provenance": "fixtured",
+          "predictedTokens": 54,
+          "errorPct": -1.82
+        },
+        {
+          "sampleId": "code-04",
+          "class": "code",
+          "role": "holdout",
+          "chars": 268,
+          "utf8Bytes": 268,
+          "apiTokens": 93,
+          "provenance": "fixtured",
+          "predictedTokens": 94,
+          "errorPct": 1.08
+        },
+        {
+          "sampleId": "code-05",
+          "class": "code",
+          "role": "calibration",
+          "chars": 182,
+          "utf8Bytes": 182,
+          "apiTokens": 65,
+          "provenance": "fixtured",
+          "predictedTokens": 64,
+          "errorPct": -1.54
+        },
+        {
+          "sampleId": "code-06",
+          "class": "code",
+          "role": "holdout",
+          "chars": 310,
+          "utf8Bytes": 310,
+          "apiTokens": 106,
+          "provenance": "fixtured",
+          "predictedTokens": 108,
+          "errorPct": 1.89
+        },
+        {
+          "sampleId": "code-07",
+          "class": "code",
+          "role": "calibration",
+          "chars": 251,
+          "utf8Bytes": 251,
+          "apiTokens": 87,
+          "provenance": "fixtured",
+          "predictedTokens": 88,
+          "errorPct": 1.15
+        },
+        {
+          "sampleId": "code-08",
+          "class": "code",
+          "role": "holdout",
+          "chars": 297,
+          "utf8Bytes": 297,
+          "apiTokens": 102,
+          "provenance": "fixtured",
+          "predictedTokens": 103,
+          "errorPct": 0.98
+        },
+        {
+          "sampleId": "code-09",
+          "class": "code",
+          "role": "calibration",
+          "chars": 227,
+          "utf8Bytes": 227,
+          "apiTokens": 80,
+          "provenance": "fixtured",
+          "predictedTokens": 80,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-10",
+          "class": "code",
+          "role": "holdout",
+          "chars": 354,
+          "utf8Bytes": 354,
+          "apiTokens": 120,
+          "provenance": "fixtured",
+          "predictedTokens": 123,
+          "errorPct": 2.5
+        }
+      ],
+      "calibration": {
+        "overheadTokens": 3,
+        "tokensPerChar": {
+          "english": 0.2646003389755915,
+          "japanese": 1.0393331123483258,
+          "code": 0.3378833964154745
+        }
+      },
+      "perClass": [
+        {
+          "class": "english",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 1.28,
+          "maxAbsErrorPct": 1.52,
+          "errorBandPct": [
+            -1.52,
+            1.19
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "japanese",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0.84,
+          "maxAbsErrorPct": 1.29,
+          "errorBandPct": [
+            -1.11,
+            1.29
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "code",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 1.79,
+          "maxAbsErrorPct": 2.5,
+          "errorBandPct": [
+            0.98,
+            2.5
+          ],
+          "withinTarget": true
+        }
+      ],
+      "holdoutMeanAbsErrorPct": 1.3,
+      "holdoutMaxAbsErrorPct": 2.5,
+      "withinTarget": true,
+      "spendUsd": 0
+    },
+    {
+      "card": {
+        "id": "openai-gpt",
+        "familyName": "OpenAI GPT",
+        "apiModelId": "gpt-5.5",
+        "countingMethod": "exact-bpe",
+        "groundTruth": "usage-field-probe",
+        "inputCostPerMTok": 5,
+        "vocabularyNote": "OpenAI publishes its encodings' vocabulary as ranked byte sequences (o200k_base, ~200k entries) plus the pre-tokenization pattern; there is no count-tokens endpoint, so the ground truth is usage.prompt_tokens from a minimal billed completion.",
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "lastVerified": "2026-07-17"
+      },
+      "provenance": "fixtured",
+      "rows": [
+        {
+          "sampleId": "en-01",
+          "class": "english",
+          "role": "calibration",
+          "chars": 167,
+          "utf8Bytes": 167,
+          "selfContentTokens": 167,
+          "apiTokens": 174,
+          "provenance": "fixtured",
+          "predictedTokens": 174,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-02",
+          "class": "english",
+          "role": "holdout",
+          "chars": 236,
+          "utf8Bytes": 236,
+          "selfContentTokens": 236,
+          "apiTokens": 243,
+          "provenance": "fixtured",
+          "predictedTokens": 243,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-03",
+          "class": "english",
+          "role": "calibration",
+          "chars": 271,
+          "utf8Bytes": 271,
+          "selfContentTokens": 271,
+          "apiTokens": 278,
+          "provenance": "fixtured",
+          "predictedTokens": 278,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-04",
+          "class": "english",
+          "role": "holdout",
+          "chars": 363,
+          "utf8Bytes": 365,
+          "selfContentTokens": 365,
+          "apiTokens": 372,
+          "provenance": "fixtured",
+          "predictedTokens": 372,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-05",
+          "class": "english",
+          "role": "calibration",
+          "chars": 259,
+          "utf8Bytes": 259,
+          "selfContentTokens": 259,
+          "apiTokens": 266,
+          "provenance": "fixtured",
+          "predictedTokens": 266,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-06",
+          "class": "english",
+          "role": "holdout",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "selfContentTokens": 309,
+          "apiTokens": 316,
+          "provenance": "fixtured",
+          "predictedTokens": 316,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-07",
+          "class": "english",
+          "role": "calibration",
+          "chars": 300,
+          "utf8Bytes": 302,
+          "selfContentTokens": 302,
+          "apiTokens": 309,
+          "provenance": "fixtured",
+          "predictedTokens": 309,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-08",
+          "class": "english",
+          "role": "holdout",
+          "chars": 235,
+          "utf8Bytes": 237,
+          "selfContentTokens": 237,
+          "apiTokens": 244,
+          "provenance": "fixtured",
+          "predictedTokens": 244,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-09",
+          "class": "english",
+          "role": "calibration",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "selfContentTokens": 309,
+          "apiTokens": 316,
+          "provenance": "fixtured",
+          "predictedTokens": 316,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-10",
+          "class": "english",
+          "role": "holdout",
+          "chars": 320,
+          "utf8Bytes": 320,
+          "selfContentTokens": 320,
+          "apiTokens": 327,
+          "provenance": "fixtured",
+          "predictedTokens": 327,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-01",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 78,
+          "utf8Bytes": 228,
+          "selfContentTokens": 228,
+          "apiTokens": 235,
+          "provenance": "fixtured",
+          "predictedTokens": 235,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-02",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 83,
+          "utf8Bytes": 249,
+          "selfContentTokens": 249,
+          "apiTokens": 256,
+          "provenance": "fixtured",
+          "predictedTokens": 256,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-03",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 85,
+          "utf8Bytes": 255,
+          "selfContentTokens": 255,
+          "apiTokens": 262,
+          "provenance": "fixtured",
+          "predictedTokens": 262,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-04",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 148,
+          "utf8Bytes": 440,
+          "selfContentTokens": 440,
+          "apiTokens": 447,
+          "provenance": "fixtured",
+          "predictedTokens": 447,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-05",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 108,
+          "utf8Bytes": 324,
+          "selfContentTokens": 324,
+          "apiTokens": 331,
+          "provenance": "fixtured",
+          "predictedTokens": 331,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-06",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 86,
+          "utf8Bytes": 254,
+          "selfContentTokens": 254,
+          "apiTokens": 261,
+          "provenance": "fixtured",
+          "predictedTokens": 261,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-07",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 120,
+          "utf8Bytes": 358,
+          "selfContentTokens": 358,
+          "apiTokens": 365,
+          "provenance": "fixtured",
+          "predictedTokens": 365,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-08",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 94,
+          "utf8Bytes": 282,
+          "selfContentTokens": 282,
+          "apiTokens": 289,
+          "provenance": "fixtured",
+          "predictedTokens": 289,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-09",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 90,
+          "utf8Bytes": 270,
+          "selfContentTokens": 270,
+          "apiTokens": 277,
+          "provenance": "fixtured",
+          "predictedTokens": 277,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-10",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 136,
+          "utf8Bytes": 384,
+          "selfContentTokens": 384,
+          "apiTokens": 391,
+          "provenance": "fixtured",
+          "predictedTokens": 391,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-01",
+          "class": "code",
+          "role": "calibration",
+          "chars": 204,
+          "utf8Bytes": 204,
+          "selfContentTokens": 204,
+          "apiTokens": 211,
+          "provenance": "fixtured",
+          "predictedTokens": 211,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-02",
+          "class": "code",
+          "role": "holdout",
+          "chars": 477,
+          "utf8Bytes": 477,
+          "selfContentTokens": 477,
+          "apiTokens": 484,
+          "provenance": "fixtured",
+          "predictedTokens": 484,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-03",
+          "class": "code",
+          "role": "calibration",
+          "chars": 151,
+          "utf8Bytes": 151,
+          "selfContentTokens": 151,
+          "apiTokens": 158,
+          "provenance": "fixtured",
+          "predictedTokens": 158,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-04",
+          "class": "code",
+          "role": "holdout",
+          "chars": 268,
+          "utf8Bytes": 268,
+          "selfContentTokens": 268,
+          "apiTokens": 275,
+          "provenance": "fixtured",
+          "predictedTokens": 275,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-05",
+          "class": "code",
+          "role": "calibration",
+          "chars": 182,
+          "utf8Bytes": 182,
+          "selfContentTokens": 182,
+          "apiTokens": 189,
+          "provenance": "fixtured",
+          "predictedTokens": 189,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-06",
+          "class": "code",
+          "role": "holdout",
+          "chars": 310,
+          "utf8Bytes": 310,
+          "selfContentTokens": 310,
+          "apiTokens": 317,
+          "provenance": "fixtured",
+          "predictedTokens": 317,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-07",
+          "class": "code",
+          "role": "calibration",
+          "chars": 251,
+          "utf8Bytes": 251,
+          "selfContentTokens": 251,
+          "apiTokens": 258,
+          "provenance": "fixtured",
+          "predictedTokens": 258,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-08",
+          "class": "code",
+          "role": "holdout",
+          "chars": 297,
+          "utf8Bytes": 297,
+          "selfContentTokens": 297,
+          "apiTokens": 304,
+          "provenance": "fixtured",
+          "predictedTokens": 304,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-09",
+          "class": "code",
+          "role": "calibration",
+          "chars": 227,
+          "utf8Bytes": 227,
+          "selfContentTokens": 227,
+          "apiTokens": 234,
+          "provenance": "fixtured",
+          "predictedTokens": 234,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-10",
+          "class": "code",
+          "role": "holdout",
+          "chars": 354,
+          "utf8Bytes": 354,
+          "selfContentTokens": 354,
+          "apiTokens": 361,
+          "provenance": "fixtured",
+          "predictedTokens": 361,
+          "errorPct": 0
+        }
+      ],
+      "calibration": {
+        "overheadTokens": 7,
+        "tokensPerChar": {
+          "english": 1,
+          "japanese": 3,
+          "code": 1
+        }
+      },
+      "perClass": [
+        {
+          "class": "english",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0,
+          "maxAbsErrorPct": 0,
+          "errorBandPct": [
+            0,
+            0
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "japanese",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0,
+          "maxAbsErrorPct": 0,
+          "errorBandPct": [
+            0,
+            0
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "code",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0,
+          "maxAbsErrorPct": 0,
+          "errorBandPct": [
+            0,
+            0
+          ],
+          "withinTarget": true
+        }
+      ],
+      "holdoutMeanAbsErrorPct": 0,
+      "holdoutMaxAbsErrorPct": 0,
+      "withinTarget": true,
+      "spendUsd": 0
+    },
+    {
+      "card": {
+        "id": "google-gemini",
+        "familyName": "Google Gemini",
+        "apiModelId": "gemini-3.1-pro-preview",
+        "countingMethod": "calibrated-estimator",
+        "groundTruth": "count-tokens-endpoint",
+        "inputCostPerMTok": 0,
+        "vocabularyNote": "SentencePiece lineage; Google publishes the Gemma tokenizer model but not the current Gemini API tokenizer, so the self-count is a calibrated estimator against the unbilled countTokens endpoint.",
+        "source": "https://ai.google.dev/gemini-api/docs/tokens",
+        "lastVerified": "2026-07-17"
+      },
+      "provenance": "fixtured",
+      "rows": [
+        {
+          "sampleId": "en-01",
+          "class": "english",
+          "role": "calibration",
+          "chars": 167,
+          "utf8Bytes": 167,
+          "apiTokens": 49,
+          "provenance": "fixtured",
+          "predictedTokens": 47,
+          "errorPct": -4.08
+        },
+        {
+          "sampleId": "en-02",
+          "class": "english",
+          "role": "holdout",
+          "chars": 236,
+          "utf8Bytes": 236,
+          "apiTokens": 66,
+          "provenance": "fixtured",
+          "predictedTokens": 65,
+          "errorPct": -1.52
+        },
+        {
+          "sampleId": "en-03",
+          "class": "english",
+          "role": "calibration",
+          "chars": 271,
+          "utf8Bytes": 271,
+          "apiTokens": 75,
+          "provenance": "fixtured",
+          "predictedTokens": 75,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-04",
+          "class": "english",
+          "role": "holdout",
+          "chars": 363,
+          "utf8Bytes": 365,
+          "apiTokens": 98,
+          "provenance": "fixtured",
+          "predictedTokens": 99,
+          "errorPct": 1.02
+        },
+        {
+          "sampleId": "en-05",
+          "class": "english",
+          "role": "calibration",
+          "chars": 259,
+          "utf8Bytes": 259,
+          "apiTokens": 72,
+          "provenance": "fixtured",
+          "predictedTokens": 72,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-06",
+          "class": "english",
+          "role": "holdout",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "apiTokens": 84,
+          "provenance": "fixtured",
+          "predictedTokens": 85,
+          "errorPct": 1.19
+        },
+        {
+          "sampleId": "en-07",
+          "class": "english",
+          "role": "calibration",
+          "chars": 300,
+          "utf8Bytes": 302,
+          "apiTokens": 82,
+          "provenance": "fixtured",
+          "predictedTokens": 82,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-08",
+          "class": "english",
+          "role": "holdout",
+          "chars": 235,
+          "utf8Bytes": 237,
+          "apiTokens": 66,
+          "provenance": "fixtured",
+          "predictedTokens": 65,
+          "errorPct": -1.52
+        },
+        {
+          "sampleId": "en-09",
+          "class": "english",
+          "role": "calibration",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "apiTokens": 84,
+          "provenance": "fixtured",
+          "predictedTokens": 85,
+          "errorPct": 1.19
+        },
+        {
+          "sampleId": "en-10",
+          "class": "english",
+          "role": "holdout",
+          "chars": 320,
+          "utf8Bytes": 320,
+          "apiTokens": 87,
+          "provenance": "fixtured",
+          "predictedTokens": 88,
+          "errorPct": 1.15
+        },
+        {
+          "sampleId": "ja-01",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 78,
+          "utf8Bytes": 228,
+          "apiTokens": 85,
+          "provenance": "fixtured",
+          "predictedTokens": 84,
+          "errorPct": -1.18
+        },
+        {
+          "sampleId": "ja-02",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 83,
+          "utf8Bytes": 249,
+          "apiTokens": 90,
+          "provenance": "fixtured",
+          "predictedTokens": 89,
+          "errorPct": -1.11
+        },
+        {
+          "sampleId": "ja-03",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 85,
+          "utf8Bytes": 255,
+          "apiTokens": 92,
+          "provenance": "fixtured",
+          "predictedTokens": 91,
+          "errorPct": -1.09
+        },
+        {
+          "sampleId": "ja-04",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 148,
+          "utf8Bytes": 440,
+          "apiTokens": 155,
+          "provenance": "fixtured",
+          "predictedTokens": 157,
+          "errorPct": 1.29
+        },
+        {
+          "sampleId": "ja-05",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 108,
+          "utf8Bytes": 324,
+          "apiTokens": 115,
+          "provenance": "fixtured",
+          "predictedTokens": 115,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-06",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 86,
+          "utf8Bytes": 254,
+          "apiTokens": 93,
+          "provenance": "fixtured",
+          "predictedTokens": 92,
+          "errorPct": -1.08
+        },
+        {
+          "sampleId": "ja-07",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 120,
+          "utf8Bytes": 358,
+          "apiTokens": 127,
+          "provenance": "fixtured",
+          "predictedTokens": 128,
+          "errorPct": 0.79
+        },
+        {
+          "sampleId": "ja-08",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 94,
+          "utf8Bytes": 282,
+          "apiTokens": 101,
+          "provenance": "fixtured",
+          "predictedTokens": 101,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-09",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 90,
+          "utf8Bytes": 270,
+          "apiTokens": 97,
+          "provenance": "fixtured",
+          "predictedTokens": 97,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-10",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 136,
+          "utf8Bytes": 384,
+          "apiTokens": 143,
+          "provenance": "fixtured",
+          "predictedTokens": 144,
+          "errorPct": 0.7
+        },
+        {
+          "sampleId": "code-01",
+          "class": "code",
+          "role": "calibration",
+          "chars": 204,
+          "utf8Bytes": 204,
+          "apiTokens": 72,
+          "provenance": "fixtured",
+          "predictedTokens": 72,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-02",
+          "class": "code",
+          "role": "holdout",
+          "chars": 477,
+          "utf8Bytes": 477,
+          "apiTokens": 160,
+          "provenance": "fixtured",
+          "predictedTokens": 164,
+          "errorPct": 2.5
+        },
+        {
+          "sampleId": "code-03",
+          "class": "code",
+          "role": "calibration",
+          "chars": 151,
+          "utf8Bytes": 151,
+          "apiTokens": 55,
+          "provenance": "fixtured",
+          "predictedTokens": 54,
+          "errorPct": -1.82
+        },
+        {
+          "sampleId": "code-04",
+          "class": "code",
+          "role": "holdout",
+          "chars": 268,
+          "utf8Bytes": 268,
+          "apiTokens": 93,
+          "provenance": "fixtured",
+          "predictedTokens": 94,
+          "errorPct": 1.08
+        },
+        {
+          "sampleId": "code-05",
+          "class": "code",
+          "role": "calibration",
+          "chars": 182,
+          "utf8Bytes": 182,
+          "apiTokens": 65,
+          "provenance": "fixtured",
+          "predictedTokens": 64,
+          "errorPct": -1.54
+        },
+        {
+          "sampleId": "code-06",
+          "class": "code",
+          "role": "holdout",
+          "chars": 310,
+          "utf8Bytes": 310,
+          "apiTokens": 106,
+          "provenance": "fixtured",
+          "predictedTokens": 108,
+          "errorPct": 1.89
+        },
+        {
+          "sampleId": "code-07",
+          "class": "code",
+          "role": "calibration",
+          "chars": 251,
+          "utf8Bytes": 251,
+          "apiTokens": 87,
+          "provenance": "fixtured",
+          "predictedTokens": 88,
+          "errorPct": 1.15
+        },
+        {
+          "sampleId": "code-08",
+          "class": "code",
+          "role": "holdout",
+          "chars": 297,
+          "utf8Bytes": 297,
+          "apiTokens": 102,
+          "provenance": "fixtured",
+          "predictedTokens": 103,
+          "errorPct": 0.98
+        },
+        {
+          "sampleId": "code-09",
+          "class": "code",
+          "role": "calibration",
+          "chars": 227,
+          "utf8Bytes": 227,
+          "apiTokens": 80,
+          "provenance": "fixtured",
+          "predictedTokens": 80,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-10",
+          "class": "code",
+          "role": "holdout",
+          "chars": 354,
+          "utf8Bytes": 354,
+          "apiTokens": 120,
+          "provenance": "fixtured",
+          "predictedTokens": 123,
+          "errorPct": 2.5
+        }
+      ],
+      "calibration": {
+        "overheadTokens": 3,
+        "tokensPerChar": {
+          "english": 0.2646003389755915,
+          "japanese": 1.0393331123483258,
+          "code": 0.3378833964154745
+        }
+      },
+      "perClass": [
+        {
+          "class": "english",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 1.28,
+          "maxAbsErrorPct": 1.52,
+          "errorBandPct": [
+            -1.52,
+            1.19
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "japanese",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0.84,
+          "maxAbsErrorPct": 1.29,
+          "errorBandPct": [
+            -1.11,
+            1.29
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "code",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 1.79,
+          "maxAbsErrorPct": 2.5,
+          "errorBandPct": [
+            0.98,
+            2.5
+          ],
+          "withinTarget": true
+        }
+      ],
+      "holdoutMeanAbsErrorPct": 1.3,
+      "holdoutMaxAbsErrorPct": 2.5,
+      "withinTarget": true,
+      "spendUsd": 0
+    },
+    {
+      "card": {
+        "id": "oss-qwen",
+        "familyName": "OSS / local (Qwen2.5)",
+        "apiModelId": "@cf/qwen/qwen2.5-coder-32b-instruct",
+        "countingMethod": "exact-bpe",
+        "groundTruth": "usage-field-probe",
+        "inputCostPerMTok": 0.66,
+        "vocabularyNote": "Open-weight models ship tokenizer.json (vocabulary + ordered merge list + pre-tokenizer pattern, Apache-2.0 for Qwen2.5), so an exact self-count exists; the ground truth is usage.prompt_tokens reported by a hosted serving stack (Cloudflare Workers AI).",
+        "source": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
+        "lastVerified": "2026-07-17"
+      },
+      "provenance": "fixtured",
+      "rows": [
+        {
+          "sampleId": "en-01",
+          "class": "english",
+          "role": "calibration",
+          "chars": 167,
+          "utf8Bytes": 167,
+          "selfContentTokens": 167,
+          "apiTokens": 174,
+          "provenance": "fixtured",
+          "predictedTokens": 174,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-02",
+          "class": "english",
+          "role": "holdout",
+          "chars": 236,
+          "utf8Bytes": 236,
+          "selfContentTokens": 236,
+          "apiTokens": 243,
+          "provenance": "fixtured",
+          "predictedTokens": 243,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-03",
+          "class": "english",
+          "role": "calibration",
+          "chars": 271,
+          "utf8Bytes": 271,
+          "selfContentTokens": 271,
+          "apiTokens": 278,
+          "provenance": "fixtured",
+          "predictedTokens": 278,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-04",
+          "class": "english",
+          "role": "holdout",
+          "chars": 363,
+          "utf8Bytes": 365,
+          "selfContentTokens": 365,
+          "apiTokens": 372,
+          "provenance": "fixtured",
+          "predictedTokens": 372,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-05",
+          "class": "english",
+          "role": "calibration",
+          "chars": 259,
+          "utf8Bytes": 259,
+          "selfContentTokens": 259,
+          "apiTokens": 266,
+          "provenance": "fixtured",
+          "predictedTokens": 266,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-06",
+          "class": "english",
+          "role": "holdout",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "selfContentTokens": 309,
+          "apiTokens": 316,
+          "provenance": "fixtured",
+          "predictedTokens": 316,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-07",
+          "class": "english",
+          "role": "calibration",
+          "chars": 300,
+          "utf8Bytes": 302,
+          "selfContentTokens": 302,
+          "apiTokens": 309,
+          "provenance": "fixtured",
+          "predictedTokens": 309,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-08",
+          "class": "english",
+          "role": "holdout",
+          "chars": 235,
+          "utf8Bytes": 237,
+          "selfContentTokens": 237,
+          "apiTokens": 244,
+          "provenance": "fixtured",
+          "predictedTokens": 244,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-09",
+          "class": "english",
+          "role": "calibration",
+          "chars": 309,
+          "utf8Bytes": 309,
+          "selfContentTokens": 309,
+          "apiTokens": 316,
+          "provenance": "fixtured",
+          "predictedTokens": 316,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "en-10",
+          "class": "english",
+          "role": "holdout",
+          "chars": 320,
+          "utf8Bytes": 320,
+          "selfContentTokens": 320,
+          "apiTokens": 327,
+          "provenance": "fixtured",
+          "predictedTokens": 327,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-01",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 78,
+          "utf8Bytes": 228,
+          "selfContentTokens": 228,
+          "apiTokens": 235,
+          "provenance": "fixtured",
+          "predictedTokens": 235,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-02",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 83,
+          "utf8Bytes": 249,
+          "selfContentTokens": 249,
+          "apiTokens": 256,
+          "provenance": "fixtured",
+          "predictedTokens": 256,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-03",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 85,
+          "utf8Bytes": 255,
+          "selfContentTokens": 255,
+          "apiTokens": 262,
+          "provenance": "fixtured",
+          "predictedTokens": 262,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-04",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 148,
+          "utf8Bytes": 440,
+          "selfContentTokens": 440,
+          "apiTokens": 447,
+          "provenance": "fixtured",
+          "predictedTokens": 447,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-05",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 108,
+          "utf8Bytes": 324,
+          "selfContentTokens": 324,
+          "apiTokens": 331,
+          "provenance": "fixtured",
+          "predictedTokens": 331,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-06",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 86,
+          "utf8Bytes": 254,
+          "selfContentTokens": 254,
+          "apiTokens": 261,
+          "provenance": "fixtured",
+          "predictedTokens": 261,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-07",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 120,
+          "utf8Bytes": 358,
+          "selfContentTokens": 358,
+          "apiTokens": 365,
+          "provenance": "fixtured",
+          "predictedTokens": 365,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-08",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 94,
+          "utf8Bytes": 282,
+          "selfContentTokens": 282,
+          "apiTokens": 289,
+          "provenance": "fixtured",
+          "predictedTokens": 289,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-09",
+          "class": "japanese",
+          "role": "calibration",
+          "chars": 90,
+          "utf8Bytes": 270,
+          "selfContentTokens": 270,
+          "apiTokens": 277,
+          "provenance": "fixtured",
+          "predictedTokens": 277,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "ja-10",
+          "class": "japanese",
+          "role": "holdout",
+          "chars": 136,
+          "utf8Bytes": 384,
+          "selfContentTokens": 384,
+          "apiTokens": 391,
+          "provenance": "fixtured",
+          "predictedTokens": 391,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-01",
+          "class": "code",
+          "role": "calibration",
+          "chars": 204,
+          "utf8Bytes": 204,
+          "selfContentTokens": 204,
+          "apiTokens": 211,
+          "provenance": "fixtured",
+          "predictedTokens": 211,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-02",
+          "class": "code",
+          "role": "holdout",
+          "chars": 477,
+          "utf8Bytes": 477,
+          "selfContentTokens": 477,
+          "apiTokens": 484,
+          "provenance": "fixtured",
+          "predictedTokens": 484,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-03",
+          "class": "code",
+          "role": "calibration",
+          "chars": 151,
+          "utf8Bytes": 151,
+          "selfContentTokens": 151,
+          "apiTokens": 158,
+          "provenance": "fixtured",
+          "predictedTokens": 158,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-04",
+          "class": "code",
+          "role": "holdout",
+          "chars": 268,
+          "utf8Bytes": 268,
+          "selfContentTokens": 268,
+          "apiTokens": 275,
+          "provenance": "fixtured",
+          "predictedTokens": 275,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-05",
+          "class": "code",
+          "role": "calibration",
+          "chars": 182,
+          "utf8Bytes": 182,
+          "selfContentTokens": 182,
+          "apiTokens": 189,
+          "provenance": "fixtured",
+          "predictedTokens": 189,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-06",
+          "class": "code",
+          "role": "holdout",
+          "chars": 310,
+          "utf8Bytes": 310,
+          "selfContentTokens": 310,
+          "apiTokens": 317,
+          "provenance": "fixtured",
+          "predictedTokens": 317,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-07",
+          "class": "code",
+          "role": "calibration",
+          "chars": 251,
+          "utf8Bytes": 251,
+          "selfContentTokens": 251,
+          "apiTokens": 258,
+          "provenance": "fixtured",
+          "predictedTokens": 258,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-08",
+          "class": "code",
+          "role": "holdout",
+          "chars": 297,
+          "utf8Bytes": 297,
+          "selfContentTokens": 297,
+          "apiTokens": 304,
+          "provenance": "fixtured",
+          "predictedTokens": 304,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-09",
+          "class": "code",
+          "role": "calibration",
+          "chars": 227,
+          "utf8Bytes": 227,
+          "selfContentTokens": 227,
+          "apiTokens": 234,
+          "provenance": "fixtured",
+          "predictedTokens": 234,
+          "errorPct": 0
+        },
+        {
+          "sampleId": "code-10",
+          "class": "code",
+          "role": "holdout",
+          "chars": 354,
+          "utf8Bytes": 354,
+          "selfContentTokens": 354,
+          "apiTokens": 361,
+          "provenance": "fixtured",
+          "predictedTokens": 361,
+          "errorPct": 0
+        }
+      ],
+      "calibration": {
+        "overheadTokens": 7,
+        "tokensPerChar": {
+          "english": 1,
+          "japanese": 3,
+          "code": 1
+        }
+      },
+      "perClass": [
+        {
+          "class": "english",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0,
+          "maxAbsErrorPct": 0,
+          "errorBandPct": [
+            0,
+            0
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "japanese",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0,
+          "maxAbsErrorPct": 0,
+          "errorBandPct": [
+            0,
+            0
+          ],
+          "withinTarget": true
+        },
+        {
+          "class": "code",
+          "holdoutCount": 5,
+          "meanAbsErrorPct": 0,
+          "maxAbsErrorPct": 0,
+          "errorBandPct": [
+            0,
+            0
+          ],
+          "withinTarget": true
+        }
+      ],
+      "holdoutMeanAbsErrorPct": 0,
+      "holdoutMaxAbsErrorPct": 0,
+      "withinTarget": true,
+      "spendUsd": 0
+    }
+  ],
+  "edgeProbes": {
+    "notes": [
+      "edge probes run only on the real path (they read live count endpoints)"
+    ]
+  },
+  "spendUsd": 0,
+  "artifactPath": "token-metering-comparison.data.json"
+}
