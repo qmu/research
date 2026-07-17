@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain]
 effort: 4h
-commit_hash:
+commit_hash: d68ca5a
 category: Added
 mission: periodic-research-target-trend-catchable-ai-models-grok-perplexity
 depends_on:
@@ -67,3 +67,12 @@ before approval by `docs/research-development-guideline.md`).
 authorship, $30 ceiling, trial-1 breadth, Perplexity key), then approve or adjust.
 On approval, `/drive` the scaffold ticket. This ticket is archived only once
 approval is recorded (step 4 met).
+
+## Completion (2026-07-17)
+
+Step 4 was met on 2026-07-14: the owner approved the proposal in-session and the
+approval is recorded in the mission changelog ("proposal approved by owner
+(in-session); scaffolding authorized"). Step 6's skeleton also landed on main via
+PR #41. All six steps are therefore done and the archive condition stated above
+holds; archiving now on the trend desk. The remaining instrument wiring is the
+scaffold ticket (20260714010000), driven in this same batch.

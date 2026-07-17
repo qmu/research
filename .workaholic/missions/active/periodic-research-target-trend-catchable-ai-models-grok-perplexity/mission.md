@@ -87,3 +87,6 @@ or scaffolding occurs before the proposal is approved.
   grounded-answer port + fixture client, run/estimate; 23 new tests, full suite
   328 green, tsc + prettier + eslint clean —
   packages/tech/src/trend-recency/, packages/tech/src/vendors/llm/perplexity.ts
+- 2026-07-17 — kickoff ticket archived: the approval gate (step 4) was met
+  2026-07-14 (owner approval recorded above) and every other step had landed via
+  PR #41 — 20260714005200-kickoff-propose-periodic-research.md
