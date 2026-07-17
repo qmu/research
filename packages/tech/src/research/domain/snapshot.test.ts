@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { ResearchHistoryFrame, ResearchSiteTopic } from "./site";
 import { findPublishedResearchTopic, historyPathFor } from "./site";
 import {
+  agentVmSnapshotPoints,
   comparisonSnapshotPoints,
   framesInTendencyWindow,
   instrumentVersionOf,
@@ -383,5 +384,120 @@ describe("ragSnapshotPoints", () => {
       "recallAtK",
     ]);
     expect(points.every((p) => p.seriesId === "sqlite-vec")).toBe(true);
+  });
+});
+
+describe("agentVmSnapshotPoints", () => {
+  const artifact = (
+    generatedAt: string,
+    runs: ReadonlyArray<{
+      id: string;
+      provenance: string;
+      coldStartMsP50: number;
+      publishedVcpuHourUsd: number;
+    }>,
+  ): unknown => ({
+    generatedAt,
+    instrumentVersion: 1,
+    runs: runs.map((run) => ({
+      card: {
+        id: run.id,
+        providerName: run.id.toUpperCase(),
+        publishedVcpuHourUsd: run.publishedVcpuHourUsd,
+      },
+      measurement: {
+        provenance: run.provenance,
+        coldStartMsP50: run.coldStartMsP50,
+      },
+    })),
+  });
+
+  it("charts cold start for measured rows only, but price for every row", () => {
+    const points = agentVmSnapshotPoints(
+      artifact("2026-07-01T00:00:00.000Z", [
+        {
+          id: "e2b",
+          provenance: "measured",
+          coldStartMsP50: 90,
+          publishedVcpuHourUsd: 0.1,
+        },
+        {
+          id: "fly",
+          provenance: "unreachable",
+          coldStartMsP50: 0,
+          publishedVcpuHourUsd: 0.02,
+        },
+        {
+          id: "modal",
+          provenance: "fixtured",
+          coldStartMsP50: 400,
+          publishedVcpuHourUsd: 0.135,
+        },
+      ]),
+    );
+    // The reference price contributes for all three providers; the measured
+    // cold start only for the probed (measured) row — fixtured and unreachable
+    // rows never chart as live measurements.
+    expect(
+      points.filter((p) => p.metric === "publishedVcpuHourUsd").length,
+    ).toBe(3);
+    expect(points.filter((p) => p.metric === "coldStartMsP50")).toEqual([
+      {
+        seriesId: "e2b",
+        seriesLabel: "E2B",
+        metric: "coldStartMsP50",
+        measuredAt: "2026-07-01T00:00:00.000Z",
+        value: 90,
+      },
+    ]);
+  });
+
+  it("projects a two-frame series with one point per trial per provider", () => {
+    const frames = [
+      artifact("2026-06-01T00:00:00.000Z", [
+        {
+          id: "e2b",
+          provenance: "measured",
+          coldStartMsP50: 90,
+          publishedVcpuHourUsd: 0.1,
+        },
+      ]),
+      artifact("2026-07-01T00:00:00.000Z", [
+        {
+          id: "e2b",
+          provenance: "measured",
+          coldStartMsP50: 95,
+          publishedVcpuHourUsd: 0.11,
+        },
+      ]),
+    ];
+    const points = frames.flatMap((frame) => agentVmSnapshotPoints(frame));
+    const coldStart = points.filter((p) => p.metric === "coldStartMsP50");
+    expect(coldStart.map((p) => p.measuredAt)).toEqual([
+      "2026-06-01T00:00:00.000Z",
+      "2026-07-01T00:00:00.000Z",
+    ]);
+    expect(coldStart.map((p) => p.value)).toEqual([90, 95]);
+    expect(
+      points
+        .filter((p) => p.metric === "publishedVcpuHourUsd")
+        .map((p) => p.value),
+    ).toEqual([0.1, 0.11]);
+  });
+
+  it("is registered for the agent-vm topic and tolerates malformed artifacts", () => {
+    const sample = artifact("2026-07-01T00:00:00.000Z", [
+      {
+        id: "e2b",
+        provenance: "measured",
+        coldStartMsP50: 90,
+        publishedVcpuHourUsd: 0.1,
+      },
+    ]);
+    expect(snapshotPointsFor("agent-vm", sample)).toEqual(
+      agentVmSnapshotPoints(sample),
+    );
+    expect(agentVmSnapshotPoints(undefined)).toEqual([]);
+    expect(agentVmSnapshotPoints({ runs: [{ card: {} }] })).toEqual([]);
   });
 });

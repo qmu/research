@@ -36,6 +36,18 @@ ceiling.
   `undefined` (unreachable); wire real adapters in here.
 - `packages/tech/src/agent-vm/models.ts` — `apiReachable` flags + `FIXTURE_*`.
 
+## Policies
+
+- **proposal-first / owner-gated real run** — 課金を伴う実行はオーナーの明示
+  承認後にのみ行う。`--estimate` が合意レンジ（$1–$8）内であることを事前確認。
+- **keyless fixture 不可侵** — CI が依存する fixture 経路はバイト安定・キー
+  レスのまま保つ。プローブ失敗は `error` 行として正直に記録し、数値を捏造しない。
+- **workaholic:implementation** — ベンダー型は `vendors/sandbox` の
+  anti-corruption 境界に留め、`domain/` に漏らさない。新規依存は
+  `docs/dependency-decisions.md` に記録する。
+- **teardown 保証** — 起動したサンドボックスはエラー経路でも必ず破棄する
+  （孤児リソースゼロ、RAG と同じ保証）。
+
 ## Implementation Steps
 
 1. Pick the first 2–3 providers with the simplest credential story (e.g. E2B,
@@ -46,6 +58,16 @@ ceiling.
 4. Refine `estimateAgentVm` to include per-boot minimums; keep `--estimate`
    truthful against the ceiling.
 5. Keep the keyless fixture path byte-stable and CI green.
+
+## Quality Gate
+
+- 到達可能プロバイダーごとに `vendors/sandbox/<provider>.ts` アダプターが実装
+  され、`apiReachable` が実態と一致している。
+- `--real` 実行が boot/reuse/task/teardown を正直に記録し、失敗は `error` 行と
+  して現れる（数値の捏造ゼロ）。実行後に孤児サンドボックスが残らない。
+- `--estimate` が per-boot 最低課金を含めて合意レンジ（$1–$8）と照合できる。
+- 全テスト・lint が緑のまま、keyless fixture 経路がバイト安定。
+- 新規依存があれば `docs/dependency-decisions.md` に記録されている。
 
 ## Considerations
 
@@ -73,3 +95,19 @@ shapes are documented-but-unverified); add adapters for E2B/Modal/Vercel/etc. as
 their tokens arrive (each a small entry in `SANDBOX_ADAPTERS`). To run now, set
 `FLY_API_TOKEN`, `FLY_APP_NAME` (and optionally `FLY_IMAGE`, `FLY_REGION`) in
 `packages/tech/.env`, then `npm run agent-vm:estimate` → `agent-vm:real`.
+
+## Blocked (2026-07-17 drive)
+
+Skipped this drive — externally blocked, not faked complete:
+
+- **No provider credentials in the environment**: `packages/tech/.env` does not
+  exist and no `FLY_*`/`E2B_*`/`MODAL_*`/`VERCEL_*` variables are set, so the
+  live confirmation of the Fly adapter cannot run.
+- **No monetary spend authorized for this run**: live boots bill the provider
+  account (and several providers require a funded account), which is outside
+  this drive's approval. The developer's 2026-07-15 unblock (provide
+  credentials) has not yet materialized in the environment.
+
+The keyless framework is already merged (`42bb286`); the publish wiring landed
+this drive (#024002), so once tokens appear the path is
+`npm run agent-vm:estimate` (must be ≤ $8) → owner-approved `agent-vm:real`.

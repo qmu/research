@@ -111,6 +111,11 @@ export type AgentVmResult = Readonly<{
   generatedAt: string;
   fixture: boolean;
   repetitions: number;
+  /** Numeric mirror of `AGENT_VM_INSTRUMENT_VERSION`, written into the
+   * artifact so the shared trend composition (`instrumentVersionOf`) connects
+   * only same-instrument runs — a metric measured under a different fixed task
+   * is not comparable. Bumped with the fixed task or the tracked metric set. */
+  instrumentVersion: number;
   task: FixedTask;
   runs: ReadonlyArray<SandboxRun>;
   artifactPath: string;

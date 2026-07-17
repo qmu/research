@@ -256,6 +256,58 @@ export const ragSnapshotPoints = (
   return points;
 };
 
+/**
+ * Points from the agent-vm artifact: `{ generatedAt, runs: [{ card: { id,
+ * providerName, publishedVcpuHourUsd }, measurement: { provenance,
+ * coldStartMsP50 } }] }`. Exactly the two trend metrics the agreed design
+ * accumulates (see `agent-vm/domain/history.ts`): the measured cold-start p50
+ * charts only for `provenance: "measured"` rows (fixtured/unreachable/error
+ * rows never render as live measurements, ADR 0004), while the published
+ * vCPU-hour rate is curated reference data and contributes for every provider
+ * row regardless of probe reachability.
+ */
+export const agentVmSnapshotPoints = (
+  artifact: unknown,
+): ReadonlyArray<SnapshotPoint> => {
+  const root = asRecord(artifact);
+  if (root === undefined) return [];
+  const generatedAt =
+    typeof root.generatedAt === "string" ? root.generatedAt : "";
+  const runs = Array.isArray(root.runs) ? root.runs : [];
+  const points: SnapshotPoint[] = [];
+  for (const run of runs) {
+    const r = asRecord(run);
+    const card = asRecord(r?.card);
+    const id = typeof card?.id === "string" ? card.id : undefined;
+    if (id === undefined) continue;
+    const label =
+      typeof card?.providerName === "string" ? card.providerName : id;
+    const price = card?.publishedVcpuHourUsd;
+    if (typeof price === "number" && Number.isFinite(price)) {
+      points.push({
+        seriesId: id,
+        seriesLabel: label,
+        metric: "publishedVcpuHourUsd",
+        measuredAt: generatedAt,
+        value: price,
+      });
+    }
+    const measurement = asRecord(r?.measurement);
+    if (measurement?.provenance !== "measured") continue;
+    const coldStart = measurement.coldStartMsP50;
+    if (typeof coldStart === "number" && Number.isFinite(coldStart)) {
+      points.push({
+        seriesId: id,
+        seriesLabel: label,
+        metric: "coldStartMsP50",
+        measuredAt: generatedAt,
+        value: coldStart,
+      });
+    }
+  }
+  return points;
+};
+
 const snapshotPointExtractors: Readonly<
   Record<string, (artifact: unknown) => ReadonlyArray<SnapshotPoint>>
 > = {
@@ -283,6 +335,7 @@ const snapshotPointExtractors: Readonly<
     "animationPresence",
   ]),
   rag: ragSnapshotPoints,
+  "agent-vm": agentVmSnapshotPoints,
 };
 
 /** Points for one topic's artifact; topics without an extractor chart nothing. */

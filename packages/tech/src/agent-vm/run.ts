@@ -12,6 +12,7 @@ import type {
   SandboxRun,
 } from "./domain/types";
 import {
+  AGENT_VM_INSTRUMENT_VERSION,
   FIXED_TASK,
   FIXTURE_COLD_START_BASE_MS,
   SANDBOX_PROVIDERS,
@@ -122,6 +123,7 @@ export const runAgentVm = async (
     generatedAt: fixture ? FIXTURE_TIMESTAMP : new Date().toISOString(),
     fixture,
     repetitions,
+    instrumentVersion: Number(AGENT_VM_INSTRUMENT_VERSION),
     task: FIXED_TASK,
     runs,
     artifactPath: "agent-vm-comparison.data.json",
