@@ -47,6 +47,36 @@ describe("topic registry", () => {
     expect(findTopic("nope")).toBeUndefined();
   });
 
+  it("marks exactly the topics whose keyless run rewrites the current page in place", () => {
+    // These rewrite docs/research-reports/<artifactBase>.md on the keyless
+    // path, so the dispatcher re-composes the survey-series blocks after the
+    // benchmark stage to keep the committed page byte-stable.
+    for (const id of [
+      "rag",
+      "ocr",
+      "availability",
+      "foundation-models",
+      "image-generation",
+      "speech",
+      "computer-use",
+      "svg-generation",
+      "deep-research",
+      "agent-vm",
+    ]) {
+      expect(requireTopic(id).fixtureRewritesCurrentPage).toBe(true);
+    }
+    // speed/accuracy/llm-model-comparison write *.fixture.md side files and
+    // agent-sdk is a hand-authored article; none clobber the current page.
+    for (const id of [
+      "speed",
+      "accuracy",
+      "llm-model-comparison",
+      "agent-sdk",
+    ]) {
+      expect(requireTopic(id).fixtureRewritesCurrentPage).toBeUndefined();
+    }
+  });
+
   it("every topic supports fixture/estimate/real with matching argv", () => {
     for (const topic of TOPICS) {
       for (const mode of ["fixture", "estimate", "real"] as const) {

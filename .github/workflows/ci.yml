@@ -32,6 +32,12 @@ jobs:
       - name: Accessibility check (WCAG 2.2 AA)
         run: make a11y
 
+      # Byte-stability of the keyless fixture path is the pipeline mission's
+      # load-bearing constraint: regenerating every topic's fixture must
+      # byte-match the committed pages/artifacts.
+      - name: Keyless fixture drift
+        run: make drift
+
       - name: Audit dependencies
         run: |
           for p in packages/tech packages/industry; do

@@ -3,7 +3,7 @@
 
 PACKAGES := packages/tech packages/industry
 
-.PHONY: help install build test lint format docs a11y publish
+.PHONY: help install build test lint format docs a11y drift publish
 
 help: ## List available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -31,6 +31,9 @@ docs: ## Run the local research preview site (VitePress)
 
 a11y: ## Check the built preview site against WCAG 2.2 AA (needs `make build`)
 	@cd docs && npm run a11y
+
+drift: ## Regenerate every keyless fixture and fail on drift from committed artifacts
+	@bash scripts/check-fixture-drift.sh
 
 publish: ## Copy finished research Markdown to the corporate site
 	@bash scripts/publish-research.sh --all
