@@ -4,6 +4,7 @@ import {
   buildRelatedBlock,
   buildTrendBlock,
   composeCurrentArticle,
+  latestCompleteFrame,
 } from "./current-article";
 import type { ResearchHistoryFrame, ResearchSiteTopic } from "./site";
 import type { SnapshotPoint } from "./snapshot";
@@ -71,6 +72,20 @@ describe("composeCurrentArticle (trend into §4)", () => {
       article.replace(/\n+$/, "\n"),
     );
   });
+
+  it("is idempotent: an already-composed article is returned unchanged", () => {
+    const trendBlock =
+      "**推移 / Trend across surveys**\n\nfirst-survey placeholder";
+    const once = composeCurrentArticle(article, trendBlock);
+    expect(composeCurrentArticle(once, trendBlock)).toBe(once);
+    // Even a DIFFERENT trend block never stacks onto a composed article.
+    expect(
+      composeCurrentArticle(
+        once,
+        "**推移 / Trend across surveys**\n\nnewer chart",
+      ),
+    ).toBe(once);
+  });
 });
 
 describe("appendRelatedBlock (past surveys after §7)", () => {
@@ -80,6 +95,50 @@ describe("appendRelatedBlock (past surveys after §7)", () => {
       out.indexOf("## 7. Verification Data"),
     );
     expect(appendRelatedBlock(article, "")).toBe(article);
+  });
+
+  it("is idempotent: an article with a past-surveys block is unchanged", () => {
+    const relatedBlock = buildRelatedBlock(frames, "en");
+    const once = appendRelatedBlock(article, relatedBlock);
+    expect(appendRelatedBlock(once, relatedBlock)).toBe(once);
+    expect(appendRelatedBlock(once, buildRelatedBlock(frames, "ja"))).toBe(
+      once,
+    );
+  });
+});
+
+describe("latestCompleteFrame", () => {
+  it("picks the newest frame that has both the article and the artifact", () => {
+    // The 2026-07-01 fixture frame has no dataPath, so the older complete
+    // frame wins — a half-written archive never becomes the restore source.
+    expect(latestCompleteFrame(frames)?.generatedAt).toBe(
+      "2026-06-01T00:00:00.000Z",
+    );
+  });
+
+  it("returns undefined when no frame is complete", () => {
+    expect(latestCompleteFrame([])).toBeUndefined();
+    expect(
+      latestCompleteFrame([
+        { topicId: "speed", generatedAt: "2026-07-01T00:00:00.000Z" },
+      ]),
+    ).toBeUndefined();
+  });
+
+  it("prefers the newest of several complete frames", () => {
+    const complete = (generatedAt: string) => ({
+      topicId: "speed",
+      generatedAt,
+      sourcePath: `docs/research-reports/history/speed/x/llm-speed-comparison.md`,
+      dataPath: `docs/research-reports/history/speed/x/llm-speed-comparison.data.json`,
+    });
+    expect(
+      latestCompleteFrame([
+        complete("2026-06-01T00:00:00.000Z"),
+        complete("2026-07-12T00:00:00.000Z"),
+        complete("2026-07-01T00:00:00.000Z"),
+      ])?.generatedAt,
+    ).toBe("2026-07-12T00:00:00.000Z");
   });
 });
 

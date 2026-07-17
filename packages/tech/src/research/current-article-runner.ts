@@ -1,5 +1,12 @@
 import { constants, type Dirent } from "node:fs";
-import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import {
+  access,
+  mkdir,
+  readdir,
+  readFile,
+  rename,
+  writeFile,
+} from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
   findPublishedResearchTopic,
@@ -12,6 +19,7 @@ import {
   buildRelatedBlock,
   buildTrendBlock,
   composeCurrentArticle,
+  latestCompleteFrame,
   type ArticleLanguage,
 } from "./domain/current-article";
 import {
@@ -141,6 +149,149 @@ const trendPointsFor = async (
     points.push(...snapshotPointsFor(topic.id, entry.artifact));
   }
   return points;
+};
+
+/**
+ * The newest complete dated frame (English article + data artifact) whose
+ * artifact yields at least one MEASURED snapshot point — i.e. the frame of a
+ * real, owner-approved trial. Fixture/curated frames yield zero points (the
+ * extractors chart `provenance: "measured"` rows only) and never qualify, so a
+ * topic that has only harness-proof frames keeps its keyless fixture rendering.
+ */
+export const latestMeasuredFrame = async (
+  topicId: string,
+): Promise<ResearchHistoryFrame | undefined> => {
+  const topic = findPublishedResearchTopic(topicId);
+  if (topic === undefined) return undefined;
+  if (findTopic(topicId)?.kind === "article") return undefined;
+  const frame = latestCompleteFrame(await readHistoryFrames(topicId));
+  if (frame?.dataPath === undefined) return undefined;
+  const artifact: unknown = JSON.parse(
+    await readFile(resolve(repoRoot(), frame.dataPath), "utf8"),
+  );
+  return snapshotPointsFor(topicId, artifact).length > 0 ? frame : undefined;
+};
+
+/** Trend points from the dated frames only (no current artifact): under the
+ * measured-frame composition the current data artifact IS a copy of the latest
+ * frame, so including it would double the newest survey's points. Anchored on
+ * the newest frame's instrument version, like `trendPointsFor`. */
+const trendPointsFromFrames = async (
+  topic: ResearchSiteTopic,
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): Promise<ReadonlyArray<SnapshotPoint>> => {
+  const root = repoRoot();
+  const artifacts: { artifact: unknown; version: number }[] = [];
+  for (const frame of frames) {
+    if (frame.dataPath === undefined) continue;
+    const artifact: unknown = JSON.parse(
+      await readFile(resolve(root, frame.dataPath), "utf8"),
+    );
+    artifacts.push({ artifact, version: instrumentVersionOf(artifact) });
+  }
+  const latestVersion = artifacts[0]?.version;
+  const points: SnapshotPoint[] = [];
+  for (const entry of artifacts) {
+    if (entry.version !== latestVersion) continue;
+    points.push(...snapshotPointsFor(topic.id, entry.artifact));
+  }
+  return points;
+};
+
+export type ComposeFromFrameOptions = Readonly<{
+  /**
+   * Preserve the keyless fixture render that the benchmark stage just wrote
+   * over the current pages by moving it to the gitignored
+   * `<artifactBase>.fixture.md` / `<artifactBase>.fixture.data.json` side
+   * files (the llm-model-comparison convention) before the restore. The
+   * fixture pipeline stays fully exercised and inspectable without ever being
+   * presented as the current survey.
+   */
+  fixtureRenderAside?: boolean;
+}>;
+
+/**
+ * Render one topic's CURRENT pages from its latest MEASURED dated frame — the
+ * committed real-data source of truth — instead of the keyless fixture render:
+ *
+ *   - English current page  ← frame's survey article + 推移 block + 過去の調査
+ *   - current data artifact ← frame's data artifact (verbatim copy)
+ *   - Japanese current page ← frame's Japanese survey article (when the frame
+ *     has one) + the same blocks; left untouched otherwise, matching the
+ *     keyless path's hands-off treatment of the translated page.
+ *
+ * Everything read here is committed, so the composition is keyless and
+ * deterministic — `make drift` regenerates it byte-stably. Returns false (and
+ * writes nothing) when the topic has no measured frame; the caller then falls
+ * back to the fixture composition.
+ */
+export const composeCurrentPagesFromLatestMeasuredFrame = async (
+  topicId: string,
+  options: ComposeFromFrameOptions = {},
+): Promise<boolean> => {
+  const topic = findPublishedResearchTopic(topicId);
+  if (topic === undefined) return false;
+  const frame = await latestMeasuredFrame(topicId);
+  if (frame?.sourcePath === undefined || frame.dataPath === undefined) {
+    return false;
+  }
+  const root = repoRoot();
+  const currentPath = resolve(root, topic.source.docsPath);
+  const currentDataPath =
+    topic.dataPath === undefined ? undefined : resolve(root, topic.dataPath);
+
+  if (options.fixtureRenderAside === true) {
+    const asideOf = (path: string): string =>
+      path
+        .replace(/\.data\.json$/, ".fixture.data.json")
+        .replace(/\.md$/, ".fixture.md");
+    for (const path of [currentPath, currentDataPath]) {
+      if (path !== undefined && (await exists(path))) {
+        await rename(path, asideOf(path));
+      }
+    }
+  }
+
+  const frames = framesInTendencyWindow(await readHistoryFrames(topicId));
+  const trendBlock = buildTrendBlock(
+    topic,
+    await trendPointsFromFrames(topic, frames),
+  );
+
+  const frameArticle = await readFile(resolve(root, frame.sourcePath), "utf8");
+  await mkdir(dirname(currentPath), { recursive: true });
+  await writeFile(
+    currentPath,
+    appendRelatedBlock(
+      composeCurrentArticle(frameArticle, trendBlock),
+      buildRelatedBlock(frames, "en"),
+    ),
+    "utf8",
+  );
+  if (currentDataPath !== undefined) {
+    await writeFile(
+      currentDataPath,
+      await readFile(resolve(root, frame.dataPath), "utf8"),
+      "utf8",
+    );
+  }
+  if (frame.japanesePath !== undefined) {
+    const japanesePath = resolve(root, topic.japanese.docsPath);
+    const frameJapanese = await readFile(
+      resolve(root, frame.japanesePath),
+      "utf8",
+    );
+    await mkdir(dirname(japanesePath), { recursive: true });
+    await writeFile(
+      japanesePath,
+      appendRelatedBlock(
+        composeCurrentArticle(frameJapanese, trendBlock),
+        buildRelatedBlock(frames, "ja"),
+      ),
+      "utf8",
+    );
+  }
+  return true;
 };
 
 /**

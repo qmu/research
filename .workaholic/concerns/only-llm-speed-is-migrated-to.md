@@ -7,6 +7,9 @@ origin_pr_url: https://github.com/qmu/research/pull/15
 origin_branch: work-20260622-191220
 origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
+last_seen: 2026-07-13T09:48:58+09:00
+first_seen: 2026-07-13T09:48:58+09:00
+concern_id: only-llm-speed-is-migrated-to
 severity: low
 status: resolved
 resolved_by_pr: 22
