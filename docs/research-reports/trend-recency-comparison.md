@@ -15,18 +15,18 @@ The purpose is to record which AI systems actually know what is happening right 
 
 ### Target Models
 
-The subjects are the 10 configurations in the curated registry (`packages/tech/src/trend-recency/models.ts`): one search-augmented surface per provider (Grok Live Search, Perplexity Sonar and Sonar Pro, Gemini with Google Search grounding, GPT with the web-search tool, Claude with the web-search tool), each — where the base model exists ungrounded — paired with a no-search control of the same model. Every row carries a cited source and last-verified date.
+The subjects are the 10 configurations in the curated registry (`packages/tech/src/trend-recency/models.ts`): one search-augmented surface per provider (Grok with the Agent Tools web-search tool, Perplexity Sonar and Sonar Pro, Gemini with Google Search grounding, GPT with the web-search tool, Claude with the web-search tool), each — where the base model exists ungrounded — paired with a no-search control of the same model. Every row carries a cited source and last-verified date.
 
 ### Target Metrics
 
-Measured metrics are recency accuracy (fraction of trailing-window event probes answered with every expected keyword — the mechanical proxy for the semantic judge, higher is better), abstention rate (honest declines, descriptive), citation validity (fraction of returned citations with a well-formed http(s) URL — live resolution is a later instrument version, higher is better), citation freshness (median age in days of dated citations relative to the event, lower is better), and answer latency (ms, lower is better). Search billing per 1000 requests is a curated reference column, refined by real trials.
+Measured metrics are recency accuracy (fraction of trailing-window event probes answered with every expected keyword — the mechanical proxy for the semantic judge, higher is better), abstention rate (honest declines, descriptive), citation validity (fraction of returned citations with a well-formed http(s) URL — live resolution is a later instrument version, higher is better), citation freshness (median age in days of dated citations relative to the event, lower is better; a citation counts as dated when the provider returns a date or the cited URL embeds one, and rows whose citations carry neither are reported as not measured rather than as age zero), and answer latency (ms, lower is better). Search billing per 1000 requests is a curated reference column, refined by real trials.
 
 ## 3. Scope and Constraints
 
 - **Mechanical, not semantic (yet).** Scores read only the answer text and its citations; the LLM-judge recency grade and the hallucination-rate metric are a later instrument version, exactly as the SVG topic deferred its vision-judge metric.
 - **Probe manifest version `trend-recency-v2-20260717`** (3 probes, 30-day window). Each real trial draws a fresh probe set from events in the trailing window before it and commits that set — with its ground truth and the dated sources backing it — under `docs/research-reports/trend-recency-history/`, so the metric stays "events from the last 30 days relative to this trial" by construction and every trial is auditable. History/trend series connect same-instrument-version points only.
 - **Paired controls.** Every grounded chat subject has an ungrounded control of the same base model; Perplexity Sonar is search-native and has no ungrounded twin.
-- **Grounded tool wiring follows current provider documentation** (xAI Live Search, Gemini `googleSearch`, OpenAI Responses `web_search`, Anthropic `web_search`); the first real trial is the live verification of those parameters.
+- **Grounded tool wiring follows current provider documentation** (xAI Agent Tools `web_search`, Gemini `googleSearch`, OpenAI Responses `web_search`, Anthropic `web_search`). The 2026-07-17 first real trial verified the Gemini, OpenAI, and Anthropic wiring live and retired the xAI one — Live Search answered `410 "Live search is deprecated"`, so that adapter was migrated to Agent Tools and its live verification is still owed; until it runs, the Grok grounded row stays an error row rather than an assumed-working one.
 - The fixture path is keyless and deterministic; real numbers appear only after an owner runs the real path within the approved ceiling ($30/trial — run `--estimate` first; search surcharges dominate).
 - Point-in-time: measured behavior reflects the models, search products, and the web itself at `2026-01-01T00:00:00.000Z`.
 
@@ -71,7 +71,7 @@ No persistent provider resources are created. Answers and citations are scored i
 
 | Subject | Provider | Grounding | Provenance | Recency (mean±sd) | Abstention (mean±sd) | Citation validity (mean±sd) | Citation age (mean±sd) | Latency (mean±sd) | Search $/1k req | Note |
 | ------- | -------- | --------- | ---------- | ----------------- | -------------------- | --------------------------- | ---------------------- | ----------------- | --------------- | ---- |
-| Grok 4.3 + Live Search | xai | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $25.00 |  |
+| Grok 4.3 + Agent Tools web search | xai | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $5.00 |  |
 | Perplexity Sonar | perplexity | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $5.00 |  |
 | Perplexity Sonar Pro | perplexity | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $8.00 |  |
 | Gemini 3.1 Pro + Google Search grounding | google | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $35.00 |  |
