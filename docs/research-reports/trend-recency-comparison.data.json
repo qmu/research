@@ -2,7 +2,7 @@
   "generatedAt": "2026-01-01T00:00:00.000Z",
   "fixture": true,
   "trials": 1,
-  "manifestVersion": "trend-recency-v1-seed",
+  "manifestVersion": "trend-recency-v2-20260717",
   "windowDays": 30,
   "runs": [
     {
@@ -35,26 +35,26 @@
           "n": 3
         },
         "citationFreshnessDays": {
-          "mean": 1,
-          "stdDev": 0,
+          "mean": 191,
+          "stdDev": 3,
           "n": 3
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/103",
+              "url": "https://news.example.com/article/172",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -63,17 +63,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 191
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/517",
+              "url": "https://news.example.com/article/91",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -82,17 +82,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 194
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/295",
+              "url": "https://news.example.com/article/341",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -101,7 +101,7 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 188
         }
       ]
     },
@@ -135,26 +135,26 @@
           "n": 3
         },
         "citationFreshnessDays": {
-          "mean": 1,
-          "stdDev": 0,
+          "mean": 191,
+          "stdDev": 3,
           "n": 3
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/103",
+              "url": "https://news.example.com/article/172",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -163,17 +163,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 191
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/517",
+              "url": "https://news.example.com/article/91",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -182,17 +182,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 194
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/295",
+              "url": "https://news.example.com/article/341",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -201,7 +201,7 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 188
         }
       ]
     },
@@ -235,26 +235,26 @@
           "n": 3
         },
         "citationFreshnessDays": {
-          "mean": 1,
-          "stdDev": 0,
+          "mean": 191,
+          "stdDev": 3,
           "n": 3
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/103",
+              "url": "https://news.example.com/article/172",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -263,17 +263,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 191
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/517",
+              "url": "https://news.example.com/article/91",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -282,17 +282,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 194
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/295",
+              "url": "https://news.example.com/article/341",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -301,7 +301,7 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 188
         }
       ]
     },
@@ -335,26 +335,26 @@
           "n": 3
         },
         "citationFreshnessDays": {
-          "mean": 1,
-          "stdDev": 0,
+          "mean": 191,
+          "stdDev": 3,
           "n": 3
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/103",
+              "url": "https://news.example.com/article/172",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -363,17 +363,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 191
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/517",
+              "url": "https://news.example.com/article/91",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -382,17 +382,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 194
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/295",
+              "url": "https://news.example.com/article/341",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -401,7 +401,7 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 188
         }
       ]
     },
@@ -435,26 +435,26 @@
           "n": 3
         },
         "citationFreshnessDays": {
-          "mean": 1,
-          "stdDev": 0,
+          "mean": 191,
+          "stdDev": 3,
           "n": 3
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/103",
+              "url": "https://news.example.com/article/172",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -463,17 +463,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 191
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/517",
+              "url": "https://news.example.com/article/91",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -482,17 +482,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 194
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/295",
+              "url": "https://news.example.com/article/341",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -501,7 +501,7 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 188
         }
       ]
     },
@@ -535,26 +535,26 @@
           "n": 3
         },
         "citationFreshnessDays": {
-          "mean": 1,
-          "stdDev": 0,
+          "mean": 191,
+          "stdDev": 3,
           "n": 3
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/103",
+              "url": "https://news.example.com/article/172",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -563,17 +563,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 191
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/517",
+              "url": "https://news.example.com/article/91",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -582,17 +582,17 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 194
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 20,
           "answer": "Based on recent reporting, here is what the sources say about the question. [1]",
           "citations": [
             {
-              "url": "https://news.example.com/article/295",
+              "url": "https://news.example.com/article/341",
               "publishedDateIso": "2026-01-02",
               "title": "Fixture source"
             }
@@ -601,7 +601,7 @@
           "abstained": 0,
           "citationValidity": 1,
           "citationCount": 1,
-          "citationFreshnessDays": 1
+          "citationFreshnessDays": 188
         }
       ]
     },
@@ -640,16 +640,16 @@
           "n": 0
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -659,9 +659,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -671,9 +671,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -719,16 +719,16 @@
           "n": 0
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -738,9 +738,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -750,9 +750,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -798,16 +798,16 @@
           "n": 0
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -817,9 +817,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -829,9 +829,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -877,16 +877,16 @@
           "n": 0
         },
         "latencyMs": {
-          "mean": 33,
-          "stdDev": 11.135528725660043,
+          "mean": 22.666666666666668,
+          "stdDev": 5.507570547286102,
           "n": 3
         }
       },
       "calls": [
         {
-          "probeId": "seed-opus-release",
+          "probeId": "20260712-wimbledon-mens-champion",
           "repetition": 0,
-          "latencyMs": 31,
+          "latencyMs": 20,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -896,9 +896,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-grok-maker",
+          "probeId": "20260715-world-cup-finalists",
           "repetition": 0,
-          "latencyMs": 45,
+          "latencyMs": 19,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
@@ -908,9 +908,9 @@
           "citationCount": 0
         },
         {
-          "probeId": "seed-sonar-maker",
+          "probeId": "20260709-gpt-5-6-variants",
           "repetition": 0,
-          "latencyMs": 23,
+          "latencyMs": 29,
           "outputTokens": 22,
           "answer": "I don't have reliable information about very recent events beyond my training cutoff.",
           "citations": [],
