@@ -49,6 +49,7 @@ const RUNNERS: Readonly<Record<string, () => Promise<TopicModule>>> = {
   "svg-generation": () => import("./run-svg-generation"),
   availability: () => import("./run-llm-availability"),
   "agent-vm": () => import("./run-agent-vm"),
+  "trend-recency": () => import("./run-trend-recency"),
 };
 
 /** Exported so a test can hold the benchmark-runner map and the benchmark-kind

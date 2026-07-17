@@ -3,6 +3,9 @@ import type {
   Completion,
   CompletionClient,
   CompletionOptions,
+  GroundedAnswer,
+  GroundedAnswerClient,
+  GroundedCitation,
   JsonSchema,
   LlmClient,
   StreamedCompletion,
@@ -218,6 +221,119 @@ export const createAnthropicCompletionClient = (
       );
       return {
         raw: textOf(response.content),
+        outputTokens: anthropicOutputTokens(response.usage),
+        elapsedMs: Date.now() - startedAt,
+        model: apiModelId,
+      };
+    },
+  };
+};
+
+// ── Web search (grounded answers for the trend-recency topic) ─────────────────
+
+const CITED_ANSWER_SYSTEM_PROMPT =
+  "Answer the question concisely and factually, and cite the sources you used.";
+
+// `page_age` is a human-readable published date ("April 30, 2025") or a
+// relative phrase the platform could not date; keep only what parses to a
+// calendar date, normalized to ISO so the freshness metric reads it.
+const toIsoDate = (value: string | undefined): string | undefined => {
+  if (value === undefined) return undefined;
+  const time = Date.parse(value);
+  if (Number.isNaN(time)) return undefined;
+  // A date-only string parses as LOCAL midnight; format the local calendar
+  // date (not toISOString, which can shift it across a UTC date boundary).
+  const date = new Date(time);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+};
+
+// A web-search Messages response interleaves `web_search_tool_result` blocks
+// (everything the search returned, each result carrying `url`/`title`/
+// `page_age`) with `text` blocks whose `citations` mark the sources the answer
+// ACTUALLY cites (`web_search_result_location`). Prefer the cited set — that is
+// what the citation-validity metric means — enriched with the matching search
+// result's published date; fall back to the raw search results only when the
+// answer carries no citation locations at all. Pure and exported so it is
+// unit-tested without a network call.
+export const extractAnthropicWebSearchCitations = (
+  content: unknown,
+): GroundedCitation[] => {
+  if (!Array.isArray(content)) return [];
+  const cited = new Map<string, GroundedCitation>();
+  const searched = new Map<string, GroundedCitation>();
+  for (const block of content) {
+    if (block === null || typeof block !== "object") continue;
+    const record = block as Record<string, unknown>;
+    if (record.type === "text" && Array.isArray(record.citations)) {
+      for (const citation of record.citations) {
+        if (citation === null || typeof citation !== "object") continue;
+        const loc = citation as Record<string, unknown>;
+        if (loc.type !== "web_search_result_location") continue;
+        const url = typeof loc.url === "string" ? loc.url : undefined;
+        if (url === undefined) continue;
+        const title = typeof loc.title === "string" ? loc.title : undefined;
+        cited.set(url, { url, ...(title === undefined ? {} : { title }) });
+      }
+    }
+    if (
+      record.type === "web_search_tool_result" &&
+      Array.isArray(record.content)
+    ) {
+      for (const result of record.content) {
+        if (result === null || typeof result !== "object") continue;
+        const item = result as Record<string, unknown>;
+        if (item.type !== "web_search_result") continue;
+        const url = typeof item.url === "string" ? item.url : undefined;
+        if (url === undefined) continue;
+        const title = typeof item.title === "string" ? item.title : undefined;
+        const publishedDateIso = toIsoDate(
+          typeof item.page_age === "string" ? item.page_age : undefined,
+        );
+        searched.set(url, {
+          url,
+          ...(title === undefined ? {} : { title }),
+          ...(publishedDateIso === undefined ? {} : { publishedDateIso }),
+        });
+      }
+    }
+  }
+  if (cited.size === 0) return [...searched.values()];
+  return [...cited.values()].map((citation) => {
+    const dated = searched.get(citation.url);
+    return dated?.publishedDateIso === undefined
+      ? citation
+      : { ...citation, publishedDateIso: dated.publishedDateIso };
+  });
+};
+
+// Grounded-answer client for the trend-recency topic: one question in, one
+// cited answer out, with the server-side web-search tool enabled. `max_uses`
+// bounds the per-answer search surcharge. Tool parameters follow the current
+// Anthropic web-search documentation; the topic's first real trial is the live
+// verification of this wiring.
+export const createAnthropicGroundedClient = (
+  apiModelId: string,
+  apiKey: string,
+): GroundedAnswerClient => {
+  const client = new Anthropic({ apiKey });
+  return {
+    model: apiModelId,
+    answer: async (question: string): Promise<GroundedAnswer> => {
+      const startedAt = Date.now();
+      const response = await client.messages.create({
+        model: apiModelId,
+        max_tokens: 2048,
+        system: CITED_ANSWER_SYSTEM_PROMPT,
+        messages: [{ role: "user", content: question }],
+        tools: [
+          { type: "web_search_20250305", name: "web_search", max_uses: 3 },
+        ],
+      } as unknown as Anthropic.Messages.MessageCreateParamsNonStreaming);
+      return {
+        answer: textOf(response.content),
+        citations: extractAnthropicWebSearchCitations(response.content),
         outputTokens: anthropicOutputTokens(response.usage),
         elapsedMs: Date.now() - startedAt,
         model: apiModelId,
