@@ -227,6 +227,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // translation, like the other published benchmark topics. The keyless
     // fixture path still runs only the benchmark stage (CI-exercised).
     stages: ["benchmark", "insights", "translation"],
+    fixtureRewritesCurrentPage: true,
   },
   {
     id: "trend-recency",

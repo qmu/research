@@ -1,0 +1,62 @@
+{
+  "version": "trend-recency-v2-20260717",
+  "windowDays": 30,
+  "generatedAt": "2026-07-17T01:30:00.000Z",
+  "probes": [
+    {
+      "id": "20260712-wimbledon-mens-champion",
+      "topic": "sports",
+      "question": "Who won the men's singles title at the 2026 Wimbledon Championships?",
+      "eventDateIso": "2026-07-12",
+      "expectedAnswer": "Jannik Sinner",
+      "expectedKeywords": ["sinner"],
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Wimbledon_Championships_%E2%80%93_Men's_singles",
+          "publishedDateIso": "2026-07-12",
+          "title": "2026 Wimbledon Championships – Men's singles (final: Sinner d. Zverev 6–7(7–9), 7–6(7–2), 6–3, 6–4 on 2026-07-12)"
+        },
+        {
+          "url": "https://www.olympics.com/en/news/wimbledon-2026-jannik-sinner-alexander-zverev-mens-singles-final-resuls",
+          "publishedDateIso": "2026-07-12",
+          "title": "Wimbledon 2026: Sensational Jannik Sinner sees off Alexander Zverev to retain SW19 title"
+        }
+      ]
+    },
+    {
+      "id": "20260715-world-cup-finalists",
+      "topic": "sports",
+      "question": "Which two national teams reached the final of the 2026 FIFA World Cup?",
+      "eventDateIso": "2026-07-15",
+      "expectedAnswer": "Argentina and Spain",
+      "expectedKeywords": ["argentina", "spain"],
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/sports/2026/7/15/argentina-stun-england-in-2-1-comeback-win-to-reach-2026-world-cup-final",
+          "publishedDateIso": "2026-07-15",
+          "title": "Argentina stun England in 2-1 comeback win to reach 2026 World Cup final (Spain beat France 2-0 on 2026-07-14)"
+        },
+        {
+          "url": "https://www.npr.org/2026/07/15/nx-s1-5893895/2026-world-cup-fifa-argentina-england-semifinal",
+          "publishedDateIso": "2026-07-15",
+          "title": "Argentina is back in the World Cup final after a thrilling semifinal win over England"
+        }
+      ]
+    },
+    {
+      "id": "20260709-gpt-5-6-variants",
+      "topic": "ai-models",
+      "question": "What are the names of the three model variants in OpenAI's GPT-5.6 family, released in July 2026?",
+      "eventDateIso": "2026-07-09",
+      "expectedAnswer": "Sol, Terra, and Luna",
+      "expectedKeywords": ["terra", "luna"],
+      "sources": [
+        {
+          "url": "https://techcrunch.com/2026/07/09/openai-launches-its-new-family-of-models-with-gpt-5-6/",
+          "publishedDateIso": "2026-07-09",
+          "title": "OpenAI launches its new family of models with GPT-5.6 (variants: Sol — workhorse, Terra — intermediate, Luna — budget)"
+        }
+      ]
+    }
+  ]
+}

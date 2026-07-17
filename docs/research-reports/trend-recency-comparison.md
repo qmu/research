@@ -24,7 +24,7 @@ Measured metrics are recency accuracy (fraction of trailing-window event probes 
 ## 3. Scope and Constraints
 
 - **Mechanical, not semantic (yet).** Scores read only the answer text and its citations; the LLM-judge recency grade and the hallucination-rate metric are a later instrument version, exactly as the SVG topic deferred its vision-judge metric.
-- **Probe manifest version `trend-recency-v1-seed`** (3 probes, 30-day window). The committed v1 seed probes are ILLUSTRATIVE stable facts that fix the schema and prove the pipeline; each real trial draws a fresh probe set from events in the trailing window and commits it — with its ground truth — under `docs/research-reports/trend-recency-history/`, so the metric stays "events from the last 30 days relative to this trial" by construction.
+- **Probe manifest version `trend-recency-v2-20260717`** (3 probes, 30-day window). Each real trial draws a fresh probe set from events in the trailing window before it and commits that set — with its ground truth and the dated sources backing it — under `docs/research-reports/trend-recency-history/`, so the metric stays "events from the last 30 days relative to this trial" by construction and every trial is auditable. History/trend series connect same-instrument-version points only.
 - **Paired controls.** Every grounded chat subject has an ungrounded control of the same base model; Perplexity Sonar is search-native and has no ungrounded twin.
 - **Grounded tool wiring follows current provider documentation** (xAI Live Search, Gemini `googleSearch`, OpenAI Responses `web_search`, Anthropic `web_search`); the first real trial is the live verification of those parameters.
 - The fixture path is keyless and deterministic; real numbers appear only after an owner runs the real path within the approved ceiling ($30/trial — run `--estimate` first; search surcharges dominate).
@@ -71,24 +71,24 @@ No persistent provider resources are created. Answers and citations are scored i
 
 | Subject | Provider | Grounding | Provenance | Recency (mean±sd) | Abstention (mean±sd) | Citation validity (mean±sd) | Citation age (mean±sd) | Latency (mean±sd) | Search $/1k req | Note |
 | ------- | -------- | --------- | ---------- | ----------------- | -------------------- | --------------------------- | ---------------------- | ----------------- | --------------- | ---- |
-| Grok 4.3 + Live Search | xai | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 1.0 d ± 0.0 d (n=3) | 33 ± 11 (n=3) | $25.00 |  |
-| Perplexity Sonar | perplexity | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 1.0 d ± 0.0 d (n=3) | 33 ± 11 (n=3) | $5.00 |  |
-| Perplexity Sonar Pro | perplexity | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 1.0 d ± 0.0 d (n=3) | 33 ± 11 (n=3) | $8.00 |  |
-| Gemini 3.1 Pro + Google Search grounding | google | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 1.0 d ± 0.0 d (n=3) | 33 ± 11 (n=3) | $35.00 |  |
-| GPT-5.5 + web search | openai | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 1.0 d ± 0.0 d (n=3) | 33 ± 11 (n=3) | $10.00 |  |
-| Claude Opus 4.8 + web search | anthropic | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 1.0 d ± 0.0 d (n=3) | 33 ± 11 (n=3) | $10.00 |  |
-| Grok 4.3 (no search) | xai | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 33 ± 11 (n=3) | $0.00 |  |
-| Gemini 3.1 Pro (no grounding) | google | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 33 ± 11 (n=3) | $0.00 |  |
-| GPT-5.5 (no search) | openai | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 33 ± 11 (n=3) | $0.00 |  |
-| Claude Opus 4.8 (no search) | anthropic | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 33 ± 11 (n=3) | $0.00 |  |
+| Grok 4.3 + Live Search | xai | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $25.00 |  |
+| Perplexity Sonar | perplexity | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $5.00 |  |
+| Perplexity Sonar Pro | perplexity | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $8.00 |  |
+| Gemini 3.1 Pro + Google Search grounding | google | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $35.00 |  |
+| GPT-5.5 + web search | openai | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $10.00 |  |
+| Claude Opus 4.8 + web search | anthropic | grounded | fixtured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 191.0 d ± 3.0 d (n=3) | 23 ± 6 (n=3) | $10.00 |  |
+| Grok 4.3 (no search) | xai | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 23 ± 6 (n=3) | $0.00 |  |
+| Gemini 3.1 Pro (no grounding) | google | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 23 ± 6 (n=3) | $0.00 |  |
+| GPT-5.5 (no search) | openai | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 23 ± 6 (n=3) | $0.00 |  |
+| Claude Opus 4.8 (no search) | anthropic | ungrounded | fixtured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | not measured | 23 ± 6 (n=3) | $0.00 |  |
 
-**Probe manifest (version trend-recency-v1-seed, 30-day window)**
+**Probe manifest (version trend-recency-v2-20260717, 30-day window)**
 
 | Probe id | Topic | Event date | Expected keywords |
 | -------- | ----- | ---------- | ----------------- |
-| seed-opus-release | ai-models | 2026-01-01 | 1 |
-| seed-grok-maker | ai-models | 2026-01-01 | 1 |
-| seed-sonar-maker | ai-models | 2026-01-01 | 1 |
+| 20260712-wimbledon-mens-champion | sports | 2026-07-12 | 1 |
+| 20260715-world-cup-finalists | sports | 2026-07-15 | 2 |
+| 20260709-gpt-5-6-variants | ai-models | 2026-07-09 | 2 |
 
 The complete run record is committed as [`trend-recency-comparison.data.json`](./trend-recency-comparison.data.json): per-call questions, answers, citations, latencies, output-token counts, and every score.
 

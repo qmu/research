@@ -1,0 +1,769 @@
+{
+  "generatedAt": "2026-07-17T01:34:36.857Z",
+  "fixture": false,
+  "trials": 1,
+  "manifestVersion": "trend-recency-v2-20260717",
+  "windowDays": 30,
+  "runs": [
+    {
+      "id": "grok-4-3-grounded",
+      "provider": "xai",
+      "grounding": "grounded",
+      "modelName": "Grok 4.3 + Live Search",
+      "apiModelId": "grok-4.3",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "searchCostPerKRequestsUsd": 25,
+      "source": "https://docs.x.ai/developers/models/grok-4.3",
+      "provenance": "error",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "calls": [],
+      "error": "Error: 410 \"Live search is deprecated. Please switch to the Agent Tools API: https://docs.x.ai/docs/guides/tools/overview\""
+    },
+    {
+      "id": "sonar-grounded",
+      "provider": "perplexity",
+      "grounding": "grounded",
+      "modelName": "Perplexity Sonar",
+      "apiModelId": "sonar",
+      "inputCostPerMTok": 1,
+      "outputCostPerMTok": 1,
+      "searchCostPerKRequestsUsd": 5,
+      "source": "https://docs.perplexity.ai/guides/pricing",
+      "provenance": "error",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "calls": [],
+      "error": "Error: PERPLEXITY_API_KEY is required for a real perplexity run."
+    },
+    {
+      "id": "sonar-pro-grounded",
+      "provider": "perplexity",
+      "grounding": "grounded",
+      "modelName": "Perplexity Sonar Pro",
+      "apiModelId": "sonar-pro",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "searchCostPerKRequestsUsd": 8,
+      "source": "https://docs.perplexity.ai/guides/pricing",
+      "provenance": "error",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "calls": [],
+      "error": "Error: PERPLEXITY_API_KEY is required for a real perplexity run."
+    },
+    {
+      "id": "gemini-3-1-pro-grounded",
+      "provider": "google",
+      "grounding": "grounded",
+      "modelName": "Gemini 3.1 Pro + Google Search grounding",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 12,
+      "searchCostPerKRequestsUsd": 35,
+      "source": "https://ai.google.dev/gemini-api/docs/grounding",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 9753.333333333334,
+          "stdDev": 3607.514148736403,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "20260712-wimbledon-mens-champion",
+          "repetition": 0,
+          "latencyMs": 6140,
+          "outputTokens": 49,
+          "answer": "Jannik Sinner won the men's singles title at the 2026 Wimbledon Championships, defeating Alexander Zverev in the final to successfully defend his title.",
+          "citations": [
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGcV-k4QWijO9dXdo3uuHbyfddQt3RZR7Hv9IKaWJBxe6FytcVjRsN2TlkbtfG9vuz7EgfccoJ4HMk15GRWgWrU9apPizTStCTq6iN3tURzgjpI_E4TOEiAqEDcf8LWgeloMno8N6PU6d56pOdLdv4ANjWE1V-RRR_jjZmaisH3Kcaq4eGhFu7JTY4=",
+              "title": "wikipedia.org"
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQErxgWZbjPqazBtp-Da3VVEcWdoYw_lW4GvYHafl7HoF6gtb38wXLuuJB8jUNksyHD2OI4YloX7gzWMm8xsuL7Q1a_-aCp1u3YykJt9w7YkU2dIKrhN3TAlHzhHLhw_qStrqueyq1q1LHK5edJA6rtxi78Up9cUZIG0AvHy2nrTC_8LooLpe8AS3sx8Gx8GMFzDqiowyPVxNRwOOpjDGA==",
+              "title": "olympics.com"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 2
+        },
+        {
+          "probeId": "20260715-world-cup-finalists",
+          "repetition": 0,
+          "latencyMs": 13355,
+          "outputTokens": 41,
+          "answer": "**Spain** and **Argentina** reached the final of the 2026 FIFA World Cup.",
+          "citations": [
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGTGwqNWddzlYTNwxg3dxEL5qR9VL9dUNgZ4hpO6IYebqrl96Fby9Ng9Z-d0T_r9MwTdCyNun6vQHaWSwgp2ICgy7ZPffp2gYd6GLlTtPR6pcty3LgvGEQRcRkHSli8BKI464U13Q1b6nDODMSx",
+              "title": "wikipedia.org"
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEkTbAvPW_IuYncuLy5K9frjGGNFlXcp8ubLC7PnPUsAh15tDckBDJIT6HQt5VlWz_yU6cHw1l1yzEOnlibFevYlnRYbMQndkzl6tUIDWQhNPpoDS62a31OmwXno_dHi53dU-LZgCxjRxeAGZpbc8gtFXj-ABnB2h5xI30QyStaTEnt0PrBq2V6ZzbRp5JYf4XIYJ9XcTO1ac8NbVSAP8NeFluTsd8U7R06V9ECnn1TQb8bfu052TeYEs-QnyLTtHneBi5aRPVkmM1t4Xp2e1wsyN9p5HT8myAnJLiuMxIe_7Yq6ZcIrhYb8JEHLGu48t0XLdfOSQy6WbltdmBC608jtukF-1JpZ30NKFOK_eZDKFvTvVMP-XcdrcE86Ix7B_2HzgED6lggT8t_pEyK_ILnZT7T",
+              "title": "foxsports.com.au"
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGJZYlH0Qng3YVKi8IUYQQ2XakWKwUYXzuzLMufaPCFi90USODkENfK6mhc06ObJjW_OKRs9z7wOcmFAPF3uVOaMLVyuhl1_jsOBAeuLTKNFUxilu7jmDKFnaqP7nWUSHo-Fr9QCyqvKsse5yKnD3nRJFV_SLnWzQLahGjxQJFzMAClAt1O342Ct0g86M3yyYPuQK4kkVRWpPzFQvVSxzPsGLH6X7n7_v-nzSH5NhsV8OsCBKaJMaTBj6PCKYZ5uCJg01xqVRkcuLOB",
+              "title": "beinsports.com"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 3
+        },
+        {
+          "probeId": "20260709-gpt-5-6-variants",
+          "repetition": 0,
+          "latencyMs": 9765,
+          "outputTokens": 72,
+          "answer": "The three model variants in OpenAI's GPT-5.6 family are:\n\n*   **Sol:** The flagship, most powerful model. \n*   **Terra:** The lower-cost option.\n*   **Luna:** The fastest and lowest-cost tier. \n\n",
+          "citations": [
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEwFAjcU4y1MgtIq9dPkibWJKGi1N-UTX9KAWOtThAa2u4-CkYBfp9IpPv0b--thZ7fikmPjmVlZB8d1zQCHlLbU2l7aezuY1zxIBBDnYJTdc1rRZ7ajcK8zDU1F6cTrA0=",
+              "title": "youtube.com"
+            },
+            {
+              "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFHEdcNbLjdjSnhyngozLsjHcEUV1-9LIhr2lsuebnI-6Ch7SrHuDEQsTWIEVl-gtGBGE2-BXHX0OXRgQq6A4QTnP0a8YIHzxyqh0MAiJoTjYmFSSg2vlpgO6DVrfgmE3fwTliHx84ljlEadWq2PSMY_baW",
+              "title": "coderabbit.ai"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 2
+        }
+      ]
+    },
+    {
+      "id": "gpt-5-5-grounded",
+      "provider": "openai",
+      "grounding": "grounded",
+      "modelName": "GPT-5.5 + web search",
+      "apiModelId": "gpt-5.5",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "searchCostPerKRequestsUsd": 10,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 4467,
+          "stdDev": 789.564436889099,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "20260712-wimbledon-mens-champion",
+          "repetition": 0,
+          "latencyMs": 5163,
+          "outputTokens": 129,
+          "answer": "**Jannik Sinner** won the men’s singles title at the **2026 Wimbledon Championships**, defeating **Alexander Zverev** in the final, **6–7(7), 7–6(2), 6–3, 6–4**. ([nittoatpfinals.com](https://www.nittoatpfinals.com/en/news/sinner-zverev-wimbledon-2026-final-sunday?utm_source=openai))",
+          "citations": [
+            {
+              "url": "https://www.nittoatpfinals.com/en/news/sinner-zverev-wimbledon-2026-final-sunday?utm_source=openai",
+              "title": "Sinner Zverev Wimbledon 2026 Final Sunday | Nitto ATP Finals | Tennis"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1
+        },
+        {
+          "probeId": "20260715-world-cup-finalists",
+          "repetition": 0,
+          "latencyMs": 4629,
+          "outputTokens": 139,
+          "answer": "**Spain and Argentina** reached the final of the **2026 FIFA World Cup**. AP reported that the final will be “between Spain and Argentina,” and FIFA noted Spain reached the final after beating France 2–0 in the semifinal. ([apnews.com](https://apnews.com/article/8d2b495c985acc59598c77c1451504d5?utm_source=openai))",
+          "citations": [
+            {
+              "url": "https://apnews.com/article/8d2b495c985acc59598c77c1451504d5?utm_source=openai",
+              "title": "Argentine President Milei won't attend the World Cup final, citing superstition"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1
+        },
+        {
+          "probeId": "20260709-gpt-5-6-variants",
+          "repetition": 0,
+          "latencyMs": 3609,
+          "outputTokens": 142,
+          "answer": "The three GPT-5.6 model variants are **Sol**, **Terra**, and **Luna**. OpenAI describes Sol as the flagship, Terra as the balanced/lower-cost option, and Luna as the fastest/most cost-efficient model. ([openai.com](https://openai.com/index/gpt-5-6/?utm_source=openai))",
+          "citations": [
+            {
+              "url": "https://openai.com/index/gpt-5-6/?utm_source=openai",
+              "title": "GPT-5.6: Frontier intelligence that scales with your ambition | OpenAI"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 1
+        }
+      ]
+    },
+    {
+      "id": "claude-opus-4-8-grounded",
+      "provider": "anthropic",
+      "grounding": "grounded",
+      "modelName": "Claude Opus 4.8 + web search",
+      "apiModelId": "claude-opus-4-8",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "searchCostPerKRequestsUsd": 10,
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0.3333333333333333,
+          "stdDev": 0.5773502691896258,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 6895,
+          "stdDev": 611.8847930779127,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "20260712-wimbledon-mens-champion",
+          "repetition": 0,
+          "latencyMs": 6194,
+          "outputTokens": 216,
+          "answer": "Jannik Sinner won the men's singles title at the 2026 Wimbledon Championships, defeating Alexander Zverev in the final 6–7(7–9), 7–6(7–2), 6–3, 6–4. It was his second Wimbledon title and fifth major title overall. This gave him his second-straight Wimbledon crown.",
+          "citations": [
+            {
+              "url": "https://en.wikipedia.org/wiki/2026_Wimbledon_Championships_%E2%80%93_Men's_singles",
+              "title": "2026 Wimbledon Championships – Men's singles - Wikipedia"
+            },
+            {
+              "url": "https://www.espn.com/tennis/story/_/id/49342484/wimbledon-2026-men-final-live-tennis-latest-updates-jannik-sinner-alexander-zverev-news-results-schedule-weather",
+              "title": "Wimbledon 2026 men's final live: Latest updates as Jannik Sinner downs Alexander Zverev to win back-to-back titles - as it happened - ESPN"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 2
+        },
+        {
+          "probeId": "20260715-world-cup-finalists",
+          "repetition": 0,
+          "latencyMs": 7322,
+          "outputTokens": 440,
+          "answer": "The 2026 FIFA World Cup hasn't been played yet, so no teams have reached the final. Let me check the latest details for you.The two national teams that reached the final of the 2026 FIFA World Cup are **Spain** and **Argentina**. The match is scheduled to be played on July 19, 2026, and contested by European champions Spain, and South American and defending world champions Argentina.\n\nTheir paths to the final:\n- Superb Spain beat France to reach World Cup final.\n- Argentina defeated England 2-1 in the 2026 FIFA Men's World Cup semifinal at Mercedes-Benz Stadium in Atlanta, sending Argentina to Sunday's World Cup final.\n\nThe final will be held at MetLife Stadium in East Rutherford, New Jersey. Notably, the fixture will be the first time that two reigning continental champions will meet in the final of the World Cup.",
+          "citations": [
+            {
+              "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final",
+              "title": "2026 FIFA World Cup final - Wikipedia"
+            },
+            {
+              "url": "https://www.cbsnews.com/atlanta/news/argentina-advances-to-2026-fifa-world-cup-final-after-defeating-england-in-atlanta-its-in-our-veins/",
+              "title": "Argentina advances to 2026 FIFA World Cup final after defeating England in Atlanta: \"It's in our veins\" - CBS Atlanta"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 0,
+          "citationValidity": 1,
+          "citationCount": 2
+        },
+        {
+          "probeId": "20260709-gpt-5-6-variants",
+          "repetition": 0,
+          "latencyMs": 7169,
+          "outputTokens": 422,
+          "answer": "I don't have any information about a \"GPT-5.6\" family from OpenAI. Let me search to check whether this exists.The three model variants in OpenAI's GPT-5.6 family, released on July 9, 2026, are **Sol**, **Terra**, and **Luna**.\n\nOpenAI launched the GPT‑5.6 family with its new flagship, Sol, alongside Terra, a balanced model for everyday work, and Luna, its most cost-efficient model. Sol is for the hardest work, Terra for balanced everyday work, and Luna for fast, cost-sensitive workloads.\n\nRanked from most to least capable: Sol (flagship) → Terra (mid-range) → Luna (budget). In this new naming system introduced with GPT‑5.6, the number identifies a model's generation, while Sol, Terra, and Luna identify durable capability tiers that can advance on their own cadence.",
+          "citations": [
+            {
+              "url": "https://openai.com/index/gpt-5-6/",
+              "title": "GPT-5.6: Frontier intelligence that scales with your ambition | OpenAI"
+            },
+            {
+              "url": "https://coursiv.io/blog/chatgpt-5-6",
+              "title": "ChatGPT 5.6 Is Out: Models, Price & How to Access | Coursiv Blog"
+            },
+            {
+              "url": "https://openai.com/index/previewing-gpt-5-6-sol/",
+              "title": "Previewing GPT-5.6 Sol: a next-generation model | OpenAI"
+            }
+          ],
+          "answerMatch": 1,
+          "abstained": 1,
+          "citationValidity": 1,
+          "citationCount": 3
+        }
+      ]
+    },
+    {
+      "id": "grok-4-3-ungrounded",
+      "provider": "xai",
+      "grounding": "ungrounded",
+      "modelName": "Grok 4.3 (no search)",
+      "apiModelId": "grok-4.3",
+      "inputCostPerMTok": 1.25,
+      "outputCostPerMTok": 2.5,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://docs.x.ai/developers/models/grok-4.3",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 4911.333333333333,
+          "stdDev": 1803.2906957374714,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "20260712-wimbledon-mens-champion",
+          "repetition": 0,
+          "latencyMs": 3556,
+          "outputTokens": 11,
+          "answer": "The 2026 Wimbledon Championships have not yet occurred.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260715-world-cup-finalists",
+          "repetition": 0,
+          "latencyMs": 4220,
+          "outputTokens": 12,
+          "answer": "The 2026 FIFA World Cup has not occurred yet.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260709-gpt-5-6-variants",
+          "repetition": 0,
+          "latencyMs": 6958,
+          "outputTokens": 5,
+          "answer": "No such models exist.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    },
+    {
+      "id": "gemini-3-1-pro-ungrounded",
+      "provider": "google",
+      "grounding": "ungrounded",
+      "modelName": "Gemini 3.1 Pro (no grounding)",
+      "apiModelId": "gemini-3.1-pro-preview",
+      "inputCostPerMTok": 2,
+      "outputCostPerMTok": 12,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 5897.333333333333,
+          "stdDev": 2838.5747010310183,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "20260712-wimbledon-mens-champion",
+          "repetition": 0,
+          "latencyMs": 4245,
+          "outputTokens": 14,
+          "answer": "The 2026 Wimbledon Championships have not yet taken place.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260715-world-cup-finalists",
+          "repetition": 0,
+          "latencyMs": 4272,
+          "outputTokens": 15,
+          "answer": "The 2026 FIFA World Cup has not yet taken place.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260709-gpt-5-6-variants",
+          "repetition": 0,
+          "latencyMs": 9175,
+          "outputTokens": 9,
+          "answer": "GPT-5.6 does not exist.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    },
+    {
+      "id": "gpt-5-5-ungrounded",
+      "provider": "openai",
+      "grounding": "ungrounded",
+      "modelName": "GPT-5.5 (no search)",
+      "apiModelId": "gpt-5.5",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 30,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 6564.666666666667,
+          "stdDev": 2795.7632827786642,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "20260712-wimbledon-mens-champion",
+          "repetition": 0,
+          "latencyMs": 9655,
+          "outputTokens": 538,
+          "answer": "I don’t have reliable information on the 2026 Wimbledon men’s singles winner.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260715-world-cup-finalists",
+          "repetition": 0,
+          "latencyMs": 5828,
+          "outputTokens": 315,
+          "answer": "I don’t have access to live 2026 World Cup results, so I can’t determine the finalists.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260709-gpt-5-6-variants",
+          "repetition": 0,
+          "latencyMs": 4211,
+          "outputTokens": 166,
+          "answer": "I can’t verify any OpenAI GPT-5.6 family release or variant names.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 0,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    },
+    {
+      "id": "claude-opus-4-8-ungrounded",
+      "provider": "anthropic",
+      "grounding": "ungrounded",
+      "modelName": "Claude Opus 4.8 (no search)",
+      "apiModelId": "claude-opus-4-8",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "searchCostPerKRequestsUsd": 0,
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:34:36.857Z",
+      "trialsRequested": 1,
+      "stats": {
+        "recencyAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "abstentionRate": {
+          "mean": 1,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationValidity": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 3
+        },
+        "citationFreshnessDays": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "latencyMs": {
+          "mean": 3211,
+          "stdDev": 602.6848264225672,
+          "n": 3
+        }
+      },
+      "calls": [
+        {
+          "probeId": "20260712-wimbledon-mens-champion",
+          "repetition": 0,
+          "latencyMs": 2708,
+          "outputTokens": 97,
+          "answer": "I don't have information about the 2026 Wimbledon Championships, as they take place in the future (typically in late June to early July 2026). The results won't be available until the tournament concludes.\n\nTo find out who won, I'd recommend checking sports news sources or the official Wimbledon website after the tournament takes place.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260715-world-cup-finalists",
+          "repetition": 0,
+          "latencyMs": 3046,
+          "outputTokens": 143,
+          "answer": "I don't have information about the results of the 2026 FIFA World Cup. This tournament is scheduled to be held in June and July 2026, hosted jointly by the United States, Canada, and Mexico. Since it hasn't taken place yet (or my information doesn't extend to its conclusion), I can't tell you which teams reached the final.\n\nIf you're looking for this information, I'd recommend checking a current sports news source once the tournament has concluded.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        },
+        {
+          "probeId": "20260709-gpt-5-6-variants",
+          "repetition": 0,
+          "latencyMs": 3879,
+          "outputTokens": 173,
+          "answer": "I don't have any information about a \"GPT-5.6\" family or an OpenAI release in July 2026. This model doesn't exist in my knowledge, and I can't verify details about it.\n\nA few possibilities:\n- You may be thinking of a different model or version number.\n- This could be a hypothetical or future release beyond my knowledge.\n- The details in your question may be inaccurate.\n\nI'd rather tell you I don't know than invent model names, which I have no basis to do. If you have a source describing this release, I'd be happy to help you interpret it.",
+          "citations": [],
+          "answerMatch": 0,
+          "abstained": 1,
+          "citationValidity": 0,
+          "citationCount": 0
+        }
+      ]
+    }
+  ],
+  "artifactPath": "trend-recency-comparison.real.data.json"
+}

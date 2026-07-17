@@ -43,6 +43,12 @@ version>.json`:
 field. Changing a committed probe set is an instrument-version bump, never a
 silent edit; history/trend series connect same-instrument-version points only.
 
-The first real validation trial
-(ticket `20260714010001-trend-recency-first-validation-trial.md`) commits the
-first dated probe set.
+Alongside each probe set, the trial's full run record (the otherwise-gitignored
+`*.real.data.json` artifact — every answer, citation, latency, and score) is
+committed as `<generated-at date>-<manifest version>.result.json`, so a trial
+can be re-scored by a later instrument version without re-running the paid
+calls.
+
+First frame: `2026-07-17-trend-recency-v2-20260717.json` (probe set + ground
+truth + sources) and `…result.json` (run record), from the first validation
+trial (ticket `20260714010001-trend-recency-first-validation-trial.md`).

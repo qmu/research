@@ -62,6 +62,7 @@ describe("topic registry", () => {
       "svg-generation",
       "deep-research",
       "agent-vm",
+      "trend-recency",
     ]) {
       expect(requireTopic(id).fixtureRewritesCurrentPage).toBe(true);
     }
