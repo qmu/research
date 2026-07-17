@@ -34,17 +34,17 @@ The primary metrics are the holdout mean and max absolute error (%) of the self-
 - **The sample manifest is pinned** (tm-v1: 30 samples, 10 per class, half calibration / half holdout). Accuracy claims hold for these classes and lengths; other content classes (e.g. base64 blobs, dense Unicode art) are unvalidated.
 - **Wrapper overhead is fitted, not documented.** Providers do not publish their chat-template token cost; the affine model absorbs it as a fitted constant, which assumes the single-user-message request shape used here.
 - The keyless fixture path is deterministic and clearly synthetic (byte-count vocabulary, fixed rates); real error numbers appear only from an owner-triggered real run within the approved cost ceiling (run `--estimate` first).
-- Point-in-time: measured behavior reflects the providers' tokenizers and count endpoints at `2026-01-01T00:00:00.000Z`; vocabularies and prices are as of each row's source and verification date.
+- Point-in-time: measured behavior reflects the providers' tokenizers and count endpoints at `2026-07-17T03:02:34.699Z`; vocabularies and prices are as of each row's source and verification date.
 
 ## 4. Verification Results
 
-This run has **4 fixtured** of 4 family rows (the rest are `unreachable` — missing credential or vocabulary — or `error`, never faked counts). Accuracy is judged on the tm-v1 holdout half (15 samples: 5 English, 5 Japanese, 5 code) against each provider's API-reported count.
+This run has **4 measured** of 4 family rows (the rest are `unreachable` — missing credential or vocabulary — or `error`, never faked counts). Accuracy is judged on the tm-v1 holdout half (15 samples: 5 English, 5 Japanese, 5 code) against each provider's API-reported count.
 
 | Family | Self-count method | Holdout mean abs error | Holdout max abs error | ±5% target |
 | ------ | ----------------- | ---------------------- | --------------------- | ------- |
-| Anthropic Claude | calibrated estimator | 1.30% | 2.50% | within ±5% |
+| Anthropic Claude | calibrated estimator | 8.54% | 16.24% | NOT within ±5% (band stated per class) |
 | OpenAI GPT | exact self-BPE | 0.00% | 0.00% | within ±5% |
-| Google Gemini | calibrated estimator | 1.30% | 2.50% | within ±5% |
+| Google Gemini | calibrated estimator | 6.60% | 15.73% | NOT within ±5% (band stated per class) |
 | OSS / local (Qwen2.5) | exact self-BPE | 0.00% | 0.00% | within ±5% |
 
 Errors compare the self-count's prediction of the provider-reported total (content tokens + fitted wrapper overhead) against that reported total. Per-class error bands, calibration parameters, and per-sample rows are in section 7, Verification Data.
@@ -55,7 +55,7 @@ This is the first comparable survey in the series, so there is no multi-survey t
 
 ## 5. Analysis
 
-This run is the keyless fixture: counts prove the harness (synthetic vocabulary, fixed rates), so no cross-family accuracy claim is made here. The dated survey frames carry the measured comparison.
+Families with `measured` provenance can be compared on holdout error: the exact-BPE families test whether the published vocabulary plus the published pre-tokenization pattern reproduce the billed count, and the estimator families test how far a per-class characters-per-token model can be trusted. A max error inside the target band means pre-call cost projection and per-principal attribution can run on the self-count alone; a class outside the band must be metered post-hoc from the response usage field, with the band stating the projection risk.
 
 #### Edge case 1 — Japanese text
 
@@ -123,50 +123,50 @@ A real run provisions nothing (stateless API reads and minimal completions); the
 
 **Anthropic Claude** (`claude-sonnet-5`, calibrated estimator, ground truth: count-tokens-endpoint, probe spend $0.0000)
 
-Calibration: wrapper overhead 3 tokens; tokens/char english 0.2646, japanese 1.0393, code 0.3379 (estimator families predict with these; exact families report them as descriptive statistics).
+Calibration: wrapper overhead 4 tokens; tokens/char english 0.3239, japanese 0.9790, code 0.4712 (estimator families predict with these; exact families report them as descriptive statistics).
 
 | Class | Holdout n | Mean abs error | Max abs error | Signed band | Within target |
 | ----- | --------- | -------------- | ------------- | ----------- | ------------- |
-| english | 5 | 1.28% | 1.52% | [-1.52%, 1.19%] | yes |
-| japanese | 5 | 0.84% | 1.29% | [-1.11%, 1.29%] | yes |
-| code | 5 | 1.79% | 2.50% | [0.98%, 2.50%] | yes |
+| english | 5 | 8.98% | 15.56% | [-10.74%, 15.56%] | no |
+| japanese | 5 | 8.15% | 12.88% | [-11.11%, 12.88%] | no |
+| code | 5 | 8.50% | 16.24% | [-7.80%, 16.24%] | no |
 
 | Sample | Class | Role | Chars | UTF-8 bytes | Self content | API total | Predicted | Error | Provenance |
 | ------ | ----- | ---- | ----- | ----------- | ------------ | --------- | --------- | ----- | ---------- |
-| en-01 | english | calibration | 167 | 167 | — | 49 | 47 | -4.08% | fixtured |
-| en-02 | english | holdout | 236 | 236 | — | 66 | 65 | -1.52% | fixtured |
-| en-03 | english | calibration | 271 | 271 | — | 75 | 75 | 0.00% | fixtured |
-| en-04 | english | holdout | 363 | 365 | — | 98 | 99 | 1.02% | fixtured |
-| en-05 | english | calibration | 259 | 259 | — | 72 | 72 | 0.00% | fixtured |
-| en-06 | english | holdout | 309 | 309 | — | 84 | 85 | 1.19% | fixtured |
-| en-07 | english | calibration | 300 | 302 | — | 82 | 82 | 0.00% | fixtured |
-| en-08 | english | holdout | 235 | 237 | — | 66 | 65 | -1.52% | fixtured |
-| en-09 | english | calibration | 309 | 309 | — | 84 | 85 | 1.19% | fixtured |
-| en-10 | english | holdout | 320 | 320 | — | 87 | 88 | 1.15% | fixtured |
-| ja-01 | japanese | calibration | 78 | 228 | — | 85 | 84 | -1.18% | fixtured |
-| ja-02 | japanese | holdout | 83 | 249 | — | 90 | 89 | -1.11% | fixtured |
-| ja-03 | japanese | calibration | 85 | 255 | — | 92 | 91 | -1.09% | fixtured |
-| ja-04 | japanese | holdout | 148 | 440 | — | 155 | 157 | 1.29% | fixtured |
-| ja-05 | japanese | calibration | 108 | 324 | — | 115 | 115 | 0.00% | fixtured |
-| ja-06 | japanese | holdout | 86 | 254 | — | 93 | 92 | -1.08% | fixtured |
-| ja-07 | japanese | calibration | 120 | 358 | — | 127 | 128 | 0.79% | fixtured |
-| ja-08 | japanese | holdout | 94 | 282 | — | 101 | 101 | 0.00% | fixtured |
-| ja-09 | japanese | calibration | 90 | 270 | — | 97 | 97 | 0.00% | fixtured |
-| ja-10 | japanese | holdout | 136 | 384 | — | 143 | 144 | 0.70% | fixtured |
-| code-01 | code | calibration | 204 | 204 | — | 72 | 72 | 0.00% | fixtured |
-| code-02 | code | holdout | 477 | 477 | — | 160 | 164 | 2.50% | fixtured |
-| code-03 | code | calibration | 151 | 151 | — | 55 | 54 | -1.82% | fixtured |
-| code-04 | code | holdout | 268 | 268 | — | 93 | 94 | 1.08% | fixtured |
-| code-05 | code | calibration | 182 | 182 | — | 65 | 64 | -1.54% | fixtured |
-| code-06 | code | holdout | 310 | 310 | — | 106 | 108 | 1.89% | fixtured |
-| code-07 | code | calibration | 251 | 251 | — | 87 | 88 | 1.15% | fixtured |
-| code-08 | code | holdout | 297 | 297 | — | 102 | 103 | 0.98% | fixtured |
-| code-09 | code | calibration | 227 | 227 | — | 80 | 80 | 0.00% | fixtured |
-| code-10 | code | holdout | 354 | 354 | — | 120 | 123 | 2.50% | fixtured |
+| en-01 | english | calibration | 167 | 167 | — | 54 | 58 | 7.41% | measured |
+| en-02 | english | holdout | 236 | 236 | — | 71 | 80 | 12.68% | measured |
+| en-03 | english | calibration | 271 | 271 | — | 89 | 92 | 3.37% | measured |
+| en-04 | english | holdout | 363 | 365 | — | 128 | 122 | -4.69% | measured |
+| en-05 | english | calibration | 259 | 259 | — | 113 | 88 | -22.12% | measured |
+| en-06 | english | holdout | 309 | 309 | — | 90 | 104 | 15.56% | measured |
+| en-07 | english | calibration | 300 | 302 | — | 98 | 101 | 3.06% | measured |
+| en-08 | english | holdout | 235 | 237 | — | 81 | 80 | -1.23% | measured |
+| en-09 | english | calibration | 309 | 309 | — | 92 | 104 | 13.04% | measured |
+| en-10 | english | holdout | 320 | 320 | — | 121 | 108 | -10.74% | measured |
+| ja-01 | japanese | calibration | 78 | 228 | — | 76 | 80 | 5.26% | measured |
+| ja-02 | japanese | holdout | 83 | 249 | — | 89 | 85 | -4.49% | measured |
+| ja-03 | japanese | calibration | 85 | 255 | — | 102 | 87 | -14.71% | measured |
+| ja-04 | japanese | holdout | 148 | 440 | — | 132 | 149 | 12.88% | measured |
+| ja-05 | japanese | calibration | 108 | 324 | — | 104 | 110 | 5.77% | measured |
+| ja-06 | japanese | holdout | 86 | 254 | — | 85 | 88 | 3.53% | measured |
+| ja-07 | japanese | calibration | 120 | 358 | — | 118 | 121 | 2.54% | measured |
+| ja-08 | japanese | holdout | 94 | 282 | — | 108 | 96 | -11.11% | measured |
+| ja-09 | japanese | calibration | 90 | 270 | — | 95 | 92 | -3.16% | measured |
+| ja-10 | japanese | holdout | 136 | 384 | — | 126 | 137 | 8.73% | measured |
+| code-01 | code | calibration | 204 | 204 | — | 86 | 100 | 16.28% | measured |
+| code-02 | code | holdout | 477 | 477 | — | 197 | 229 | 16.24% | measured |
+| code-03 | code | calibration | 151 | 151 | — | 80 | 75 | -6.25% | measured |
+| code-04 | code | holdout | 268 | 268 | — | 141 | 130 | -7.80% | measured |
+| code-05 | code | calibration | 182 | 182 | — | 92 | 90 | -2.17% | measured |
+| code-06 | code | holdout | 310 | 310 | — | 143 | 150 | 4.90% | measured |
+| code-07 | code | calibration | 251 | 251 | — | 143 | 122 | -14.69% | measured |
+| code-08 | code | holdout | 297 | 297 | — | 135 | 144 | 6.67% | measured |
+| code-09 | code | calibration | 227 | 227 | — | 97 | 111 | 14.43% | measured |
+| code-10 | code | holdout | 354 | 354 | — | 160 | 171 | 6.88% | measured |
 
-**OpenAI GPT** (`gpt-5.5`, exact self-BPE, ground truth: usage-field-probe, probe spend $0.0000)
+**OpenAI GPT** (`gpt-5.5`, exact self-BPE, ground truth: usage-field-probe, probe spend $0.0260)
 
-Calibration: wrapper overhead 7 tokens; tokens/char english 1.0000, japanese 3.0000, code 1.0000 (estimator families predict with these; exact families report them as descriptive statistics).
+Calibration: wrapper overhead 6 tokens; tokens/char english 0.1916, japanese 0.8333, code 0.2749 (estimator families predict with these; exact families report them as descriptive statistics).
 
 | Class | Holdout n | Mean abs error | Max abs error | Signed band | Within target |
 | ----- | --------- | -------------- | ------------- | ----------- | ------------- |
@@ -176,83 +176,83 @@ Calibration: wrapper overhead 7 tokens; tokens/char english 1.0000, japanese 3.0
 
 | Sample | Class | Role | Chars | UTF-8 bytes | Self content | API total | Predicted | Error | Provenance |
 | ------ | ----- | ---- | ----- | ----------- | ------------ | --------- | --------- | ----- | ---------- |
-| en-01 | english | calibration | 167 | 167 | 167 | 174 | 174 | 0.00% | fixtured |
-| en-02 | english | holdout | 236 | 236 | 236 | 243 | 243 | 0.00% | fixtured |
-| en-03 | english | calibration | 271 | 271 | 271 | 278 | 278 | 0.00% | fixtured |
-| en-04 | english | holdout | 363 | 365 | 365 | 372 | 372 | 0.00% | fixtured |
-| en-05 | english | calibration | 259 | 259 | 259 | 266 | 266 | 0.00% | fixtured |
-| en-06 | english | holdout | 309 | 309 | 309 | 316 | 316 | 0.00% | fixtured |
-| en-07 | english | calibration | 300 | 302 | 302 | 309 | 309 | 0.00% | fixtured |
-| en-08 | english | holdout | 235 | 237 | 237 | 244 | 244 | 0.00% | fixtured |
-| en-09 | english | calibration | 309 | 309 | 309 | 316 | 316 | 0.00% | fixtured |
-| en-10 | english | holdout | 320 | 320 | 320 | 327 | 327 | 0.00% | fixtured |
-| ja-01 | japanese | calibration | 78 | 228 | 228 | 235 | 235 | 0.00% | fixtured |
-| ja-02 | japanese | holdout | 83 | 249 | 249 | 256 | 256 | 0.00% | fixtured |
-| ja-03 | japanese | calibration | 85 | 255 | 255 | 262 | 262 | 0.00% | fixtured |
-| ja-04 | japanese | holdout | 148 | 440 | 440 | 447 | 447 | 0.00% | fixtured |
-| ja-05 | japanese | calibration | 108 | 324 | 324 | 331 | 331 | 0.00% | fixtured |
-| ja-06 | japanese | holdout | 86 | 254 | 254 | 261 | 261 | 0.00% | fixtured |
-| ja-07 | japanese | calibration | 120 | 358 | 358 | 365 | 365 | 0.00% | fixtured |
-| ja-08 | japanese | holdout | 94 | 282 | 282 | 289 | 289 | 0.00% | fixtured |
-| ja-09 | japanese | calibration | 90 | 270 | 270 | 277 | 277 | 0.00% | fixtured |
-| ja-10 | japanese | holdout | 136 | 384 | 384 | 391 | 391 | 0.00% | fixtured |
-| code-01 | code | calibration | 204 | 204 | 204 | 211 | 211 | 0.00% | fixtured |
-| code-02 | code | holdout | 477 | 477 | 477 | 484 | 484 | 0.00% | fixtured |
-| code-03 | code | calibration | 151 | 151 | 151 | 158 | 158 | 0.00% | fixtured |
-| code-04 | code | holdout | 268 | 268 | 268 | 275 | 275 | 0.00% | fixtured |
-| code-05 | code | calibration | 182 | 182 | 182 | 189 | 189 | 0.00% | fixtured |
-| code-06 | code | holdout | 310 | 310 | 310 | 317 | 317 | 0.00% | fixtured |
-| code-07 | code | calibration | 251 | 251 | 251 | 258 | 258 | 0.00% | fixtured |
-| code-08 | code | holdout | 297 | 297 | 297 | 304 | 304 | 0.00% | fixtured |
-| code-09 | code | calibration | 227 | 227 | 227 | 234 | 234 | 0.00% | fixtured |
-| code-10 | code | holdout | 354 | 354 | 354 | 361 | 361 | 0.00% | fixtured |
+| en-01 | english | calibration | 167 | 167 | 32 | 38 | 38 | 0.00% | measured |
+| en-02 | english | holdout | 236 | 236 | 44 | 50 | 50 | 0.00% | measured |
+| en-03 | english | calibration | 271 | 271 | 53 | 59 | 59 | 0.00% | measured |
+| en-04 | english | holdout | 363 | 365 | 74 | 80 | 80 | 0.00% | measured |
+| en-05 | english | calibration | 259 | 259 | 66 | 72 | 72 | 0.00% | measured |
+| en-06 | english | holdout | 309 | 309 | 58 | 64 | 64 | 0.00% | measured |
+| en-07 | english | calibration | 300 | 302 | 56 | 62 | 62 | 0.00% | measured |
+| en-08 | english | holdout | 235 | 237 | 48 | 54 | 54 | 0.00% | measured |
+| en-09 | english | calibration | 309 | 309 | 51 | 57 | 57 | 0.00% | measured |
+| en-10 | english | holdout | 320 | 320 | 69 | 75 | 75 | 0.00% | measured |
+| ja-01 | japanese | calibration | 78 | 228 | 65 | 71 | 71 | 0.00% | measured |
+| ja-02 | japanese | holdout | 83 | 249 | 70 | 76 | 76 | 0.00% | measured |
+| ja-03 | japanese | calibration | 85 | 255 | 78 | 84 | 84 | 0.00% | measured |
+| ja-04 | japanese | holdout | 148 | 440 | 100 | 106 | 106 | 0.00% | measured |
+| ja-05 | japanese | calibration | 108 | 324 | 72 | 78 | 78 | 0.00% | measured |
+| ja-06 | japanese | holdout | 86 | 254 | 72 | 78 | 78 | 0.00% | measured |
+| ja-07 | japanese | calibration | 120 | 358 | 96 | 102 | 102 | 0.00% | measured |
+| ja-08 | japanese | holdout | 94 | 282 | 90 | 96 | 96 | 0.00% | measured |
+| ja-09 | japanese | calibration | 90 | 270 | 76 | 82 | 82 | 0.00% | measured |
+| ja-10 | japanese | holdout | 136 | 384 | 94 | 100 | 100 | 0.00% | measured |
+| code-01 | code | calibration | 204 | 204 | 50 | 56 | 56 | 0.00% | measured |
+| code-02 | code | holdout | 477 | 477 | 137 | 143 | 143 | 0.00% | measured |
+| code-03 | code | calibration | 151 | 151 | 54 | 60 | 60 | 0.00% | measured |
+| code-04 | code | holdout | 268 | 268 | 67 | 73 | 73 | 0.00% | measured |
+| code-05 | code | calibration | 182 | 182 | 55 | 61 | 61 | 0.00% | measured |
+| code-06 | code | holdout | 310 | 310 | 86 | 92 | 92 | 0.00% | measured |
+| code-07 | code | calibration | 251 | 251 | 69 | 75 | 75 | 0.00% | measured |
+| code-08 | code | holdout | 297 | 297 | 97 | 103 | 103 | 0.00% | measured |
+| code-09 | code | calibration | 227 | 227 | 60 | 66 | 66 | 0.00% | measured |
+| code-10 | code | holdout | 354 | 354 | 96 | 102 | 102 | 0.00% | measured |
 
 **Google Gemini** (`gemini-3.1-pro-preview`, calibrated estimator, ground truth: count-tokens-endpoint, probe spend $0.0000)
 
-Calibration: wrapper overhead 3 tokens; tokens/char english 0.2646, japanese 1.0393, code 0.3379 (estimator families predict with these; exact families report them as descriptive statistics).
+Calibration: wrapper overhead 7 tokens; tokens/char english 0.1782, japanese 0.5019, code 0.3100 (estimator families predict with these; exact families report them as descriptive statistics).
 
 | Class | Holdout n | Mean abs error | Max abs error | Signed band | Within target |
 | ----- | --------- | -------------- | ------------- | ----------- | ------------- |
-| english | 5 | 1.28% | 1.52% | [-1.52%, 1.19%] | yes |
-| japanese | 5 | 0.84% | 1.29% | [-1.11%, 1.29%] | yes |
-| code | 5 | 1.79% | 2.50% | [0.98%, 2.50%] | yes |
+| english | 5 | 5.96% | 11.11% | [-11.11%, 8.89%] | no |
+| japanese | 5 | 9.37% | 15.73% | [-15.73%, 10.96%] | no |
+| code | 5 | 4.48% | 8.33% | [-8.33%, 5.88%] | no |
 
 | Sample | Class | Role | Chars | UTF-8 bytes | Self content | API total | Predicted | Error | Provenance |
 | ------ | ----- | ---- | ----- | ----------- | ------------ | --------- | --------- | ----- | ---------- |
-| en-01 | english | calibration | 167 | 167 | — | 49 | 47 | -4.08% | fixtured |
-| en-02 | english | holdout | 236 | 236 | — | 66 | 65 | -1.52% | fixtured |
-| en-03 | english | calibration | 271 | 271 | — | 75 | 75 | 0.00% | fixtured |
-| en-04 | english | holdout | 363 | 365 | — | 98 | 99 | 1.02% | fixtured |
-| en-05 | english | calibration | 259 | 259 | — | 72 | 72 | 0.00% | fixtured |
-| en-06 | english | holdout | 309 | 309 | — | 84 | 85 | 1.19% | fixtured |
-| en-07 | english | calibration | 300 | 302 | — | 82 | 82 | 0.00% | fixtured |
-| en-08 | english | holdout | 235 | 237 | — | 66 | 65 | -1.52% | fixtured |
-| en-09 | english | calibration | 309 | 309 | — | 84 | 85 | 1.19% | fixtured |
-| en-10 | english | holdout | 320 | 320 | — | 87 | 88 | 1.15% | fixtured |
-| ja-01 | japanese | calibration | 78 | 228 | — | 85 | 84 | -1.18% | fixtured |
-| ja-02 | japanese | holdout | 83 | 249 | — | 90 | 89 | -1.11% | fixtured |
-| ja-03 | japanese | calibration | 85 | 255 | — | 92 | 91 | -1.09% | fixtured |
-| ja-04 | japanese | holdout | 148 | 440 | — | 155 | 157 | 1.29% | fixtured |
-| ja-05 | japanese | calibration | 108 | 324 | — | 115 | 115 | 0.00% | fixtured |
-| ja-06 | japanese | holdout | 86 | 254 | — | 93 | 92 | -1.08% | fixtured |
-| ja-07 | japanese | calibration | 120 | 358 | — | 127 | 128 | 0.79% | fixtured |
-| ja-08 | japanese | holdout | 94 | 282 | — | 101 | 101 | 0.00% | fixtured |
-| ja-09 | japanese | calibration | 90 | 270 | — | 97 | 97 | 0.00% | fixtured |
-| ja-10 | japanese | holdout | 136 | 384 | — | 143 | 144 | 0.70% | fixtured |
-| code-01 | code | calibration | 204 | 204 | — | 72 | 72 | 0.00% | fixtured |
-| code-02 | code | holdout | 477 | 477 | — | 160 | 164 | 2.50% | fixtured |
-| code-03 | code | calibration | 151 | 151 | — | 55 | 54 | -1.82% | fixtured |
-| code-04 | code | holdout | 268 | 268 | — | 93 | 94 | 1.08% | fixtured |
-| code-05 | code | calibration | 182 | 182 | — | 65 | 64 | -1.54% | fixtured |
-| code-06 | code | holdout | 310 | 310 | — | 106 | 108 | 1.89% | fixtured |
-| code-07 | code | calibration | 251 | 251 | — | 87 | 88 | 1.15% | fixtured |
-| code-08 | code | holdout | 297 | 297 | — | 102 | 103 | 0.98% | fixtured |
-| code-09 | code | calibration | 227 | 227 | — | 80 | 80 | 0.00% | fixtured |
-| code-10 | code | holdout | 354 | 354 | — | 120 | 123 | 2.50% | fixtured |
+| en-01 | english | calibration | 167 | 167 | — | 32 | 37 | 15.63% | measured |
+| en-02 | english | holdout | 236 | 236 | — | 45 | 49 | 8.89% | measured |
+| en-03 | english | calibration | 271 | 271 | — | 55 | 55 | 0.00% | measured |
+| en-04 | english | holdout | 363 | 365 | — | 74 | 72 | -2.70% | measured |
+| en-05 | english | calibration | 259 | 259 | — | 72 | 53 | -26.39% | measured |
+| en-06 | english | holdout | 309 | 309 | — | 59 | 62 | 5.08% | measured |
+| en-07 | english | calibration | 300 | 302 | — | 57 | 60 | 5.26% | measured |
+| en-08 | english | holdout | 235 | 237 | — | 50 | 49 | -2.00% | measured |
+| en-09 | english | calibration | 309 | 309 | — | 52 | 62 | 19.23% | measured |
+| en-10 | english | holdout | 320 | 320 | — | 72 | 64 | -11.11% | measured |
+| ja-01 | japanese | calibration | 78 | 228 | — | 44 | 46 | 4.55% | measured |
+| ja-02 | japanese | holdout | 83 | 249 | — | 50 | 49 | -2.00% | measured |
+| ja-03 | japanese | calibration | 85 | 255 | — | 58 | 50 | -13.79% | measured |
+| ja-04 | japanese | holdout | 148 | 440 | — | 73 | 81 | 10.96% | measured |
+| ja-05 | japanese | calibration | 108 | 324 | — | 53 | 61 | 15.09% | measured |
+| ja-06 | japanese | holdout | 86 | 254 | — | 52 | 50 | -3.85% | measured |
+| ja-07 | japanese | calibration | 120 | 358 | — | 66 | 67 | 1.52% | measured |
+| ja-08 | japanese | holdout | 94 | 282 | — | 63 | 54 | -14.29% | measured |
+| ja-09 | japanese | calibration | 90 | 270 | — | 57 | 52 | -8.77% | measured |
+| ja-10 | japanese | holdout | 136 | 384 | — | 89 | 75 | -15.73% | measured |
+| code-01 | code | calibration | 204 | 204 | — | 60 | 70 | 16.67% | measured |
+| code-02 | code | holdout | 477 | 477 | — | 162 | 155 | -4.32% | measured |
+| code-03 | code | calibration | 151 | 151 | — | 63 | 54 | -14.29% | measured |
+| code-04 | code | holdout | 268 | 268 | — | 85 | 90 | 5.88% | measured |
+| code-05 | code | calibration | 182 | 182 | — | 62 | 63 | 1.61% | measured |
+| code-06 | code | holdout | 310 | 310 | — | 100 | 103 | 3.00% | measured |
+| code-07 | code | calibration | 251 | 251 | — | 93 | 85 | -8.60% | measured |
+| code-08 | code | holdout | 297 | 297 | — | 108 | 99 | -8.33% | measured |
+| code-09 | code | calibration | 227 | 227 | — | 72 | 77 | 6.94% | measured |
+| code-10 | code | holdout | 354 | 354 | — | 118 | 117 | -0.85% | measured |
 
-**OSS / local (Qwen2.5)** (`@cf/qwen/qwen2.5-coder-32b-instruct`, exact self-BPE, ground truth: usage-field-probe, probe spend $0.0000)
+**OSS / local (Qwen2.5)** (`@cf/qwen/qwen2.5-coder-32b-instruct`, exact self-BPE, ground truth: usage-field-probe, probe spend $0.0020)
 
-Calibration: wrapper overhead 7 tokens; tokens/char english 1.0000, japanese 3.0000, code 1.0000 (estimator families predict with these; exact families report them as descriptive statistics).
+Calibration: wrapper overhead 29 tokens; tokens/char english 0.1916, japanese 0.7000, code 0.2775 (estimator families predict with these; exact families report them as descriptive statistics).
 
 | Class | Holdout n | Mean abs error | Max abs error | Signed band | Within target |
 | ----- | --------- | -------------- | ------------- | ----------- | ------------- |
@@ -262,49 +262,48 @@ Calibration: wrapper overhead 7 tokens; tokens/char english 1.0000, japanese 3.0
 
 | Sample | Class | Role | Chars | UTF-8 bytes | Self content | API total | Predicted | Error | Provenance |
 | ------ | ----- | ---- | ----- | ----------- | ------------ | --------- | --------- | ----- | ---------- |
-| en-01 | english | calibration | 167 | 167 | 167 | 174 | 174 | 0.00% | fixtured |
-| en-02 | english | holdout | 236 | 236 | 236 | 243 | 243 | 0.00% | fixtured |
-| en-03 | english | calibration | 271 | 271 | 271 | 278 | 278 | 0.00% | fixtured |
-| en-04 | english | holdout | 363 | 365 | 365 | 372 | 372 | 0.00% | fixtured |
-| en-05 | english | calibration | 259 | 259 | 259 | 266 | 266 | 0.00% | fixtured |
-| en-06 | english | holdout | 309 | 309 | 309 | 316 | 316 | 0.00% | fixtured |
-| en-07 | english | calibration | 300 | 302 | 302 | 309 | 309 | 0.00% | fixtured |
-| en-08 | english | holdout | 235 | 237 | 237 | 244 | 244 | 0.00% | fixtured |
-| en-09 | english | calibration | 309 | 309 | 309 | 316 | 316 | 0.00% | fixtured |
-| en-10 | english | holdout | 320 | 320 | 320 | 327 | 327 | 0.00% | fixtured |
-| ja-01 | japanese | calibration | 78 | 228 | 228 | 235 | 235 | 0.00% | fixtured |
-| ja-02 | japanese | holdout | 83 | 249 | 249 | 256 | 256 | 0.00% | fixtured |
-| ja-03 | japanese | calibration | 85 | 255 | 255 | 262 | 262 | 0.00% | fixtured |
-| ja-04 | japanese | holdout | 148 | 440 | 440 | 447 | 447 | 0.00% | fixtured |
-| ja-05 | japanese | calibration | 108 | 324 | 324 | 331 | 331 | 0.00% | fixtured |
-| ja-06 | japanese | holdout | 86 | 254 | 254 | 261 | 261 | 0.00% | fixtured |
-| ja-07 | japanese | calibration | 120 | 358 | 358 | 365 | 365 | 0.00% | fixtured |
-| ja-08 | japanese | holdout | 94 | 282 | 282 | 289 | 289 | 0.00% | fixtured |
-| ja-09 | japanese | calibration | 90 | 270 | 270 | 277 | 277 | 0.00% | fixtured |
-| ja-10 | japanese | holdout | 136 | 384 | 384 | 391 | 391 | 0.00% | fixtured |
-| code-01 | code | calibration | 204 | 204 | 204 | 211 | 211 | 0.00% | fixtured |
-| code-02 | code | holdout | 477 | 477 | 477 | 484 | 484 | 0.00% | fixtured |
-| code-03 | code | calibration | 151 | 151 | 151 | 158 | 158 | 0.00% | fixtured |
-| code-04 | code | holdout | 268 | 268 | 268 | 275 | 275 | 0.00% | fixtured |
-| code-05 | code | calibration | 182 | 182 | 182 | 189 | 189 | 0.00% | fixtured |
-| code-06 | code | holdout | 310 | 310 | 310 | 317 | 317 | 0.00% | fixtured |
-| code-07 | code | calibration | 251 | 251 | 251 | 258 | 258 | 0.00% | fixtured |
-| code-08 | code | holdout | 297 | 297 | 297 | 304 | 304 | 0.00% | fixtured |
-| code-09 | code | calibration | 227 | 227 | 227 | 234 | 234 | 0.00% | fixtured |
-| code-10 | code | holdout | 354 | 354 | 354 | 361 | 361 | 0.00% | fixtured |
+| en-01 | english | calibration | 167 | 167 | 32 | 61 | 61 | 0.00% | measured |
+| en-02 | english | holdout | 236 | 236 | 44 | 73 | 73 | 0.00% | measured |
+| en-03 | english | calibration | 271 | 271 | 55 | 84 | 84 | 0.00% | measured |
+| en-04 | english | holdout | 363 | 365 | 75 | 104 | 104 | 0.00% | measured |
+| en-05 | english | calibration | 259 | 259 | 72 | 101 | 101 | 0.00% | measured |
+| en-06 | english | holdout | 309 | 309 | 59 | 88 | 88 | 0.00% | measured |
+| en-07 | english | calibration | 300 | 302 | 56 | 85 | 85 | 0.00% | measured |
+| en-08 | english | holdout | 235 | 237 | 50 | 79 | 79 | 0.00% | measured |
+| en-09 | english | calibration | 309 | 309 | 51 | 80 | 80 | 0.00% | measured |
+| en-10 | english | holdout | 320 | 320 | 70 | 99 | 99 | 0.00% | measured |
+| ja-01 | japanese | calibration | 78 | 228 | 50 | 79 | 79 | 0.00% | measured |
+| ja-02 | japanese | holdout | 83 | 249 | 70 | 99 | 99 | 0.00% | measured |
+| ja-03 | japanese | calibration | 85 | 255 | 70 | 99 | 99 | 0.00% | measured |
+| ja-04 | japanese | holdout | 148 | 440 | 97 | 126 | 126 | 0.00% | measured |
+| ja-05 | japanese | calibration | 108 | 324 | 67 | 96 | 96 | 0.00% | measured |
+| ja-06 | japanese | holdout | 86 | 254 | 69 | 98 | 98 | 0.00% | measured |
+| ja-07 | japanese | calibration | 120 | 358 | 84 | 113 | 113 | 0.00% | measured |
+| ja-08 | japanese | holdout | 94 | 282 | 82 | 111 | 111 | 0.00% | measured |
+| ja-09 | japanese | calibration | 90 | 270 | 77 | 106 | 106 | 0.00% | measured |
+| ja-10 | japanese | holdout | 136 | 384 | 103 | 132 | 132 | 0.00% | measured |
+| code-01 | code | calibration | 204 | 204 | 50 | 79 | 79 | 0.00% | measured |
+| code-02 | code | holdout | 477 | 477 | 137 | 166 | 166 | 0.00% | measured |
+| code-03 | code | calibration | 151 | 151 | 55 | 84 | 84 | 0.00% | measured |
+| code-04 | code | holdout | 268 | 268 | 68 | 97 | 97 | 0.00% | measured |
+| code-05 | code | calibration | 182 | 182 | 54 | 83 | 83 | 0.00% | measured |
+| code-06 | code | holdout | 310 | 310 | 87 | 116 | 116 | 0.00% | measured |
+| code-07 | code | calibration | 251 | 251 | 69 | 98 | 98 | 0.00% | measured |
+| code-08 | code | holdout | 297 | 297 | 99 | 128 | 128 | 0.00% | measured |
+| code-09 | code | calibration | 227 | 227 | 63 | 92 | 92 | 0.00% | measured |
+| code-10 | code | holdout | 354 | 354 | 104 | 133 | 133 | 0.00% | measured |
 
 **Edge-case probes**
 
-- Anthropic tool-definition overhead (count_tokens with vs. without one tool): not measured on this path
-- Anthropic image tokens for a —×— PNG (published formula width×height/750): not measured on this path
-- Gemini image tokens for the same PNG (documented 258 per image up to 384px): not measured on this path
-- edge probes run only on the real path (they read live count endpoints)
+- Anthropic tool-definition overhead (count_tokens with vs. without one tool): 483 tokens
+- Anthropic image tokens for a 300×300 PNG (published formula width×height/750): 124 tokens
+- Gemini image tokens for the same PNG (documented 258 per image up to 384px): 1089 tokens
 
-Probe spend of this benchmark stage: $0.0000 (count endpoints are unbilled; the usage probes bill minimal completions).
+Probe spend of this benchmark stage: $0.0280 (count endpoints are unbilled; the usage probes bill minimal completions).
 
-The complete run record is committed as [`token-metering-comparison.data.json`](./token-metering-comparison.data.json): per-sample counts, fitted calibrations, per-class bands, edge-probe readings, and spend.
+The complete run record is committed as [`token-metering-comparison.real.data.json`](./token-metering-comparison.real.data.json): per-sample counts, fitted calibrations, per-class bands, edge-probe readings, and spend.
 
-Generated: 2026-01-01T00:00:00.000Z
+Generated: 2026-07-17T03:02:34.699Z
 
 **過去の調査 / Past surveys in this series**
 

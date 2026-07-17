@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-01-01T00:00:00.000Z",
-  "fixture": true,
+  "generatedAt": "2026-07-17T03:02:34.699Z",
+  "fixture": false,
   "instrumentVersion": 1,
   "samplesVersion": "tm-v1",
   "accuracyTargetPct": 5,
@@ -17,7 +17,7 @@
         "source": "https://platform.claude.com/docs/en/build-with-claude/token-counting",
         "lastVerified": "2026-07-17"
       },
-      "provenance": "fixtured",
+      "provenance": "measured",
       "rows": [
         {
           "sampleId": "en-01",
@@ -25,10 +25,10 @@
           "role": "calibration",
           "chars": 167,
           "utf8Bytes": 167,
-          "apiTokens": 49,
-          "provenance": "fixtured",
-          "predictedTokens": 47,
-          "errorPct": -4.08
+          "apiTokens": 54,
+          "provenance": "measured",
+          "predictedTokens": 58,
+          "errorPct": 7.41
         },
         {
           "sampleId": "en-02",
@@ -36,10 +36,10 @@
           "role": "holdout",
           "chars": 236,
           "utf8Bytes": 236,
-          "apiTokens": 66,
-          "provenance": "fixtured",
-          "predictedTokens": 65,
-          "errorPct": -1.52
+          "apiTokens": 71,
+          "provenance": "measured",
+          "predictedTokens": 80,
+          "errorPct": 12.68
         },
         {
           "sampleId": "en-03",
@@ -47,10 +47,10 @@
           "role": "calibration",
           "chars": 271,
           "utf8Bytes": 271,
-          "apiTokens": 75,
-          "provenance": "fixtured",
-          "predictedTokens": 75,
-          "errorPct": 0
+          "apiTokens": 89,
+          "provenance": "measured",
+          "predictedTokens": 92,
+          "errorPct": 3.37
         },
         {
           "sampleId": "en-04",
@@ -58,10 +58,10 @@
           "role": "holdout",
           "chars": 363,
           "utf8Bytes": 365,
-          "apiTokens": 98,
-          "provenance": "fixtured",
-          "predictedTokens": 99,
-          "errorPct": 1.02
+          "apiTokens": 128,
+          "provenance": "measured",
+          "predictedTokens": 122,
+          "errorPct": -4.69
         },
         {
           "sampleId": "en-05",
@@ -69,10 +69,10 @@
           "role": "calibration",
           "chars": 259,
           "utf8Bytes": 259,
-          "apiTokens": 72,
-          "provenance": "fixtured",
-          "predictedTokens": 72,
-          "errorPct": 0
+          "apiTokens": 113,
+          "provenance": "measured",
+          "predictedTokens": 88,
+          "errorPct": -22.12
         },
         {
           "sampleId": "en-06",
@@ -80,10 +80,10 @@
           "role": "holdout",
           "chars": 309,
           "utf8Bytes": 309,
-          "apiTokens": 84,
-          "provenance": "fixtured",
-          "predictedTokens": 85,
-          "errorPct": 1.19
+          "apiTokens": 90,
+          "provenance": "measured",
+          "predictedTokens": 104,
+          "errorPct": 15.56
         },
         {
           "sampleId": "en-07",
@@ -91,10 +91,10 @@
           "role": "calibration",
           "chars": 300,
           "utf8Bytes": 302,
-          "apiTokens": 82,
-          "provenance": "fixtured",
-          "predictedTokens": 82,
-          "errorPct": 0
+          "apiTokens": 98,
+          "provenance": "measured",
+          "predictedTokens": 101,
+          "errorPct": 3.06
         },
         {
           "sampleId": "en-08",
@@ -102,10 +102,10 @@
           "role": "holdout",
           "chars": 235,
           "utf8Bytes": 237,
-          "apiTokens": 66,
-          "provenance": "fixtured",
-          "predictedTokens": 65,
-          "errorPct": -1.52
+          "apiTokens": 81,
+          "provenance": "measured",
+          "predictedTokens": 80,
+          "errorPct": -1.23
         },
         {
           "sampleId": "en-09",
@@ -113,10 +113,10 @@
           "role": "calibration",
           "chars": 309,
           "utf8Bytes": 309,
-          "apiTokens": 84,
-          "provenance": "fixtured",
-          "predictedTokens": 85,
-          "errorPct": 1.19
+          "apiTokens": 92,
+          "provenance": "measured",
+          "predictedTokens": 104,
+          "errorPct": 13.04
         },
         {
           "sampleId": "en-10",
@@ -124,10 +124,10 @@
           "role": "holdout",
           "chars": 320,
           "utf8Bytes": 320,
-          "apiTokens": 87,
-          "provenance": "fixtured",
-          "predictedTokens": 88,
-          "errorPct": 1.15
+          "apiTokens": 121,
+          "provenance": "measured",
+          "predictedTokens": 108,
+          "errorPct": -10.74
         },
         {
           "sampleId": "ja-01",
@@ -135,10 +135,10 @@
           "role": "calibration",
           "chars": 78,
           "utf8Bytes": 228,
-          "apiTokens": 85,
-          "provenance": "fixtured",
-          "predictedTokens": 84,
-          "errorPct": -1.18
+          "apiTokens": 76,
+          "provenance": "measured",
+          "predictedTokens": 80,
+          "errorPct": 5.26
         },
         {
           "sampleId": "ja-02",
@@ -146,10 +146,10 @@
           "role": "holdout",
           "chars": 83,
           "utf8Bytes": 249,
-          "apiTokens": 90,
-          "provenance": "fixtured",
-          "predictedTokens": 89,
-          "errorPct": -1.11
+          "apiTokens": 89,
+          "provenance": "measured",
+          "predictedTokens": 85,
+          "errorPct": -4.49
         },
         {
           "sampleId": "ja-03",
@@ -157,10 +157,10 @@
           "role": "calibration",
           "chars": 85,
           "utf8Bytes": 255,
-          "apiTokens": 92,
-          "provenance": "fixtured",
-          "predictedTokens": 91,
-          "errorPct": -1.09
+          "apiTokens": 102,
+          "provenance": "measured",
+          "predictedTokens": 87,
+          "errorPct": -14.71
         },
         {
           "sampleId": "ja-04",
@@ -168,10 +168,10 @@
           "role": "holdout",
           "chars": 148,
           "utf8Bytes": 440,
-          "apiTokens": 155,
-          "provenance": "fixtured",
-          "predictedTokens": 157,
-          "errorPct": 1.29
+          "apiTokens": 132,
+          "provenance": "measured",
+          "predictedTokens": 149,
+          "errorPct": 12.88
         },
         {
           "sampleId": "ja-05",
@@ -179,10 +179,10 @@
           "role": "calibration",
           "chars": 108,
           "utf8Bytes": 324,
-          "apiTokens": 115,
-          "provenance": "fixtured",
-          "predictedTokens": 115,
-          "errorPct": 0
+          "apiTokens": 104,
+          "provenance": "measured",
+          "predictedTokens": 110,
+          "errorPct": 5.77
         },
         {
           "sampleId": "ja-06",
@@ -190,10 +190,10 @@
           "role": "holdout",
           "chars": 86,
           "utf8Bytes": 254,
-          "apiTokens": 93,
-          "provenance": "fixtured",
-          "predictedTokens": 92,
-          "errorPct": -1.08
+          "apiTokens": 85,
+          "provenance": "measured",
+          "predictedTokens": 88,
+          "errorPct": 3.53
         },
         {
           "sampleId": "ja-07",
@@ -201,10 +201,10 @@
           "role": "calibration",
           "chars": 120,
           "utf8Bytes": 358,
-          "apiTokens": 127,
-          "provenance": "fixtured",
-          "predictedTokens": 128,
-          "errorPct": 0.79
+          "apiTokens": 118,
+          "provenance": "measured",
+          "predictedTokens": 121,
+          "errorPct": 2.54
         },
         {
           "sampleId": "ja-08",
@@ -212,10 +212,10 @@
           "role": "holdout",
           "chars": 94,
           "utf8Bytes": 282,
-          "apiTokens": 101,
-          "provenance": "fixtured",
-          "predictedTokens": 101,
-          "errorPct": 0
+          "apiTokens": 108,
+          "provenance": "measured",
+          "predictedTokens": 96,
+          "errorPct": -11.11
         },
         {
           "sampleId": "ja-09",
@@ -223,10 +223,10 @@
           "role": "calibration",
           "chars": 90,
           "utf8Bytes": 270,
-          "apiTokens": 97,
-          "provenance": "fixtured",
-          "predictedTokens": 97,
-          "errorPct": 0
+          "apiTokens": 95,
+          "provenance": "measured",
+          "predictedTokens": 92,
+          "errorPct": -3.16
         },
         {
           "sampleId": "ja-10",
@@ -234,10 +234,10 @@
           "role": "holdout",
           "chars": 136,
           "utf8Bytes": 384,
-          "apiTokens": 143,
-          "provenance": "fixtured",
-          "predictedTokens": 144,
-          "errorPct": 0.7
+          "apiTokens": 126,
+          "provenance": "measured",
+          "predictedTokens": 137,
+          "errorPct": 8.73
         },
         {
           "sampleId": "code-01",
@@ -245,10 +245,10 @@
           "role": "calibration",
           "chars": 204,
           "utf8Bytes": 204,
-          "apiTokens": 72,
-          "provenance": "fixtured",
-          "predictedTokens": 72,
-          "errorPct": 0
+          "apiTokens": 86,
+          "provenance": "measured",
+          "predictedTokens": 100,
+          "errorPct": 16.28
         },
         {
           "sampleId": "code-02",
@@ -256,10 +256,10 @@
           "role": "holdout",
           "chars": 477,
           "utf8Bytes": 477,
-          "apiTokens": 160,
-          "provenance": "fixtured",
-          "predictedTokens": 164,
-          "errorPct": 2.5
+          "apiTokens": 197,
+          "provenance": "measured",
+          "predictedTokens": 229,
+          "errorPct": 16.24
         },
         {
           "sampleId": "code-03",
@@ -267,10 +267,10 @@
           "role": "calibration",
           "chars": 151,
           "utf8Bytes": 151,
-          "apiTokens": 55,
-          "provenance": "fixtured",
-          "predictedTokens": 54,
-          "errorPct": -1.82
+          "apiTokens": 80,
+          "provenance": "measured",
+          "predictedTokens": 75,
+          "errorPct": -6.25
         },
         {
           "sampleId": "code-04",
@@ -278,10 +278,10 @@
           "role": "holdout",
           "chars": 268,
           "utf8Bytes": 268,
-          "apiTokens": 93,
-          "provenance": "fixtured",
-          "predictedTokens": 94,
-          "errorPct": 1.08
+          "apiTokens": 141,
+          "provenance": "measured",
+          "predictedTokens": 130,
+          "errorPct": -7.8
         },
         {
           "sampleId": "code-05",
@@ -289,10 +289,10 @@
           "role": "calibration",
           "chars": 182,
           "utf8Bytes": 182,
-          "apiTokens": 65,
-          "provenance": "fixtured",
-          "predictedTokens": 64,
-          "errorPct": -1.54
+          "apiTokens": 92,
+          "provenance": "measured",
+          "predictedTokens": 90,
+          "errorPct": -2.17
         },
         {
           "sampleId": "code-06",
@@ -300,10 +300,10 @@
           "role": "holdout",
           "chars": 310,
           "utf8Bytes": 310,
-          "apiTokens": 106,
-          "provenance": "fixtured",
-          "predictedTokens": 108,
-          "errorPct": 1.89
+          "apiTokens": 143,
+          "provenance": "measured",
+          "predictedTokens": 150,
+          "errorPct": 4.9
         },
         {
           "sampleId": "code-07",
@@ -311,10 +311,10 @@
           "role": "calibration",
           "chars": 251,
           "utf8Bytes": 251,
-          "apiTokens": 87,
-          "provenance": "fixtured",
-          "predictedTokens": 88,
-          "errorPct": 1.15
+          "apiTokens": 143,
+          "provenance": "measured",
+          "predictedTokens": 122,
+          "errorPct": -14.69
         },
         {
           "sampleId": "code-08",
@@ -322,10 +322,10 @@
           "role": "holdout",
           "chars": 297,
           "utf8Bytes": 297,
-          "apiTokens": 102,
-          "provenance": "fixtured",
-          "predictedTokens": 103,
-          "errorPct": 0.98
+          "apiTokens": 135,
+          "provenance": "measured",
+          "predictedTokens": 144,
+          "errorPct": 6.67
         },
         {
           "sampleId": "code-09",
@@ -333,10 +333,10 @@
           "role": "calibration",
           "chars": 227,
           "utf8Bytes": 227,
-          "apiTokens": 80,
-          "provenance": "fixtured",
-          "predictedTokens": 80,
-          "errorPct": 0
+          "apiTokens": 97,
+          "provenance": "measured",
+          "predictedTokens": 111,
+          "errorPct": 14.43
         },
         {
           "sampleId": "code-10",
@@ -344,58 +344,58 @@
           "role": "holdout",
           "chars": 354,
           "utf8Bytes": 354,
-          "apiTokens": 120,
-          "provenance": "fixtured",
-          "predictedTokens": 123,
-          "errorPct": 2.5
+          "apiTokens": 160,
+          "provenance": "measured",
+          "predictedTokens": 171,
+          "errorPct": 6.88
         }
       ],
       "calibration": {
-        "overheadTokens": 3,
+        "overheadTokens": 4,
         "tokensPerChar": {
-          "english": 0.2646003389755915,
-          "japanese": 1.0393331123483258,
-          "code": 0.3378833964154745
+          "english": 0.32392085226522954,
+          "japanese": 0.9790383333261218,
+          "code": 0.4712033012593608
         }
       },
       "perClass": [
         {
           "class": "english",
           "holdoutCount": 5,
-          "meanAbsErrorPct": 1.28,
-          "maxAbsErrorPct": 1.52,
+          "meanAbsErrorPct": 8.98,
+          "maxAbsErrorPct": 15.56,
           "errorBandPct": [
-            -1.52,
-            1.19
+            -10.74,
+            15.56
           ],
-          "withinTarget": true
+          "withinTarget": false
         },
         {
           "class": "japanese",
           "holdoutCount": 5,
-          "meanAbsErrorPct": 0.84,
-          "maxAbsErrorPct": 1.29,
+          "meanAbsErrorPct": 8.15,
+          "maxAbsErrorPct": 12.88,
           "errorBandPct": [
-            -1.11,
-            1.29
+            -11.11,
+            12.88
           ],
-          "withinTarget": true
+          "withinTarget": false
         },
         {
           "class": "code",
           "holdoutCount": 5,
-          "meanAbsErrorPct": 1.79,
-          "maxAbsErrorPct": 2.5,
+          "meanAbsErrorPct": 8.5,
+          "maxAbsErrorPct": 16.24,
           "errorBandPct": [
-            0.98,
-            2.5
+            -7.8,
+            16.24
           ],
-          "withinTarget": true
+          "withinTarget": false
         }
       ],
-      "holdoutMeanAbsErrorPct": 1.3,
-      "holdoutMaxAbsErrorPct": 2.5,
-      "withinTarget": true,
+      "holdoutMeanAbsErrorPct": 8.54,
+      "holdoutMaxAbsErrorPct": 16.24,
+      "withinTarget": false,
       "spendUsd": 0
     },
     {
@@ -410,7 +410,7 @@
         "source": "https://developers.openai.com/api/docs/pricing",
         "lastVerified": "2026-07-17"
       },
-      "provenance": "fixtured",
+      "provenance": "measured",
       "rows": [
         {
           "sampleId": "en-01",
@@ -418,10 +418,10 @@
           "role": "calibration",
           "chars": 167,
           "utf8Bytes": 167,
-          "selfContentTokens": 167,
-          "apiTokens": 174,
-          "provenance": "fixtured",
-          "predictedTokens": 174,
+          "selfContentTokens": 32,
+          "apiTokens": 38,
+          "provenance": "measured",
+          "predictedTokens": 38,
           "errorPct": 0
         },
         {
@@ -430,10 +430,10 @@
           "role": "holdout",
           "chars": 236,
           "utf8Bytes": 236,
-          "selfContentTokens": 236,
-          "apiTokens": 243,
-          "provenance": "fixtured",
-          "predictedTokens": 243,
+          "selfContentTokens": 44,
+          "apiTokens": 50,
+          "provenance": "measured",
+          "predictedTokens": 50,
           "errorPct": 0
         },
         {
@@ -442,10 +442,10 @@
           "role": "calibration",
           "chars": 271,
           "utf8Bytes": 271,
-          "selfContentTokens": 271,
-          "apiTokens": 278,
-          "provenance": "fixtured",
-          "predictedTokens": 278,
+          "selfContentTokens": 53,
+          "apiTokens": 59,
+          "provenance": "measured",
+          "predictedTokens": 59,
           "errorPct": 0
         },
         {
@@ -454,10 +454,10 @@
           "role": "holdout",
           "chars": 363,
           "utf8Bytes": 365,
-          "selfContentTokens": 365,
-          "apiTokens": 372,
-          "provenance": "fixtured",
-          "predictedTokens": 372,
+          "selfContentTokens": 74,
+          "apiTokens": 80,
+          "provenance": "measured",
+          "predictedTokens": 80,
           "errorPct": 0
         },
         {
@@ -466,10 +466,10 @@
           "role": "calibration",
           "chars": 259,
           "utf8Bytes": 259,
-          "selfContentTokens": 259,
-          "apiTokens": 266,
-          "provenance": "fixtured",
-          "predictedTokens": 266,
+          "selfContentTokens": 66,
+          "apiTokens": 72,
+          "provenance": "measured",
+          "predictedTokens": 72,
           "errorPct": 0
         },
         {
@@ -478,10 +478,10 @@
           "role": "holdout",
           "chars": 309,
           "utf8Bytes": 309,
-          "selfContentTokens": 309,
-          "apiTokens": 316,
-          "provenance": "fixtured",
-          "predictedTokens": 316,
+          "selfContentTokens": 58,
+          "apiTokens": 64,
+          "provenance": "measured",
+          "predictedTokens": 64,
           "errorPct": 0
         },
         {
@@ -490,10 +490,10 @@
           "role": "calibration",
           "chars": 300,
           "utf8Bytes": 302,
-          "selfContentTokens": 302,
-          "apiTokens": 309,
-          "provenance": "fixtured",
-          "predictedTokens": 309,
+          "selfContentTokens": 56,
+          "apiTokens": 62,
+          "provenance": "measured",
+          "predictedTokens": 62,
           "errorPct": 0
         },
         {
@@ -502,10 +502,10 @@
           "role": "holdout",
           "chars": 235,
           "utf8Bytes": 237,
-          "selfContentTokens": 237,
-          "apiTokens": 244,
-          "provenance": "fixtured",
-          "predictedTokens": 244,
+          "selfContentTokens": 48,
+          "apiTokens": 54,
+          "provenance": "measured",
+          "predictedTokens": 54,
           "errorPct": 0
         },
         {
@@ -514,10 +514,10 @@
           "role": "calibration",
           "chars": 309,
           "utf8Bytes": 309,
-          "selfContentTokens": 309,
-          "apiTokens": 316,
-          "provenance": "fixtured",
-          "predictedTokens": 316,
+          "selfContentTokens": 51,
+          "apiTokens": 57,
+          "provenance": "measured",
+          "predictedTokens": 57,
           "errorPct": 0
         },
         {
@@ -526,10 +526,10 @@
           "role": "holdout",
           "chars": 320,
           "utf8Bytes": 320,
-          "selfContentTokens": 320,
-          "apiTokens": 327,
-          "provenance": "fixtured",
-          "predictedTokens": 327,
+          "selfContentTokens": 69,
+          "apiTokens": 75,
+          "provenance": "measured",
+          "predictedTokens": 75,
           "errorPct": 0
         },
         {
@@ -538,10 +538,10 @@
           "role": "calibration",
           "chars": 78,
           "utf8Bytes": 228,
-          "selfContentTokens": 228,
-          "apiTokens": 235,
-          "provenance": "fixtured",
-          "predictedTokens": 235,
+          "selfContentTokens": 65,
+          "apiTokens": 71,
+          "provenance": "measured",
+          "predictedTokens": 71,
           "errorPct": 0
         },
         {
@@ -550,10 +550,10 @@
           "role": "holdout",
           "chars": 83,
           "utf8Bytes": 249,
-          "selfContentTokens": 249,
-          "apiTokens": 256,
-          "provenance": "fixtured",
-          "predictedTokens": 256,
+          "selfContentTokens": 70,
+          "apiTokens": 76,
+          "provenance": "measured",
+          "predictedTokens": 76,
           "errorPct": 0
         },
         {
@@ -562,10 +562,10 @@
           "role": "calibration",
           "chars": 85,
           "utf8Bytes": 255,
-          "selfContentTokens": 255,
-          "apiTokens": 262,
-          "provenance": "fixtured",
-          "predictedTokens": 262,
+          "selfContentTokens": 78,
+          "apiTokens": 84,
+          "provenance": "measured",
+          "predictedTokens": 84,
           "errorPct": 0
         },
         {
@@ -574,10 +574,10 @@
           "role": "holdout",
           "chars": 148,
           "utf8Bytes": 440,
-          "selfContentTokens": 440,
-          "apiTokens": 447,
-          "provenance": "fixtured",
-          "predictedTokens": 447,
+          "selfContentTokens": 100,
+          "apiTokens": 106,
+          "provenance": "measured",
+          "predictedTokens": 106,
           "errorPct": 0
         },
         {
@@ -586,10 +586,10 @@
           "role": "calibration",
           "chars": 108,
           "utf8Bytes": 324,
-          "selfContentTokens": 324,
-          "apiTokens": 331,
-          "provenance": "fixtured",
-          "predictedTokens": 331,
+          "selfContentTokens": 72,
+          "apiTokens": 78,
+          "provenance": "measured",
+          "predictedTokens": 78,
           "errorPct": 0
         },
         {
@@ -598,10 +598,10 @@
           "role": "holdout",
           "chars": 86,
           "utf8Bytes": 254,
-          "selfContentTokens": 254,
-          "apiTokens": 261,
-          "provenance": "fixtured",
-          "predictedTokens": 261,
+          "selfContentTokens": 72,
+          "apiTokens": 78,
+          "provenance": "measured",
+          "predictedTokens": 78,
           "errorPct": 0
         },
         {
@@ -610,10 +610,10 @@
           "role": "calibration",
           "chars": 120,
           "utf8Bytes": 358,
-          "selfContentTokens": 358,
-          "apiTokens": 365,
-          "provenance": "fixtured",
-          "predictedTokens": 365,
+          "selfContentTokens": 96,
+          "apiTokens": 102,
+          "provenance": "measured",
+          "predictedTokens": 102,
           "errorPct": 0
         },
         {
@@ -622,10 +622,10 @@
           "role": "holdout",
           "chars": 94,
           "utf8Bytes": 282,
-          "selfContentTokens": 282,
-          "apiTokens": 289,
-          "provenance": "fixtured",
-          "predictedTokens": 289,
+          "selfContentTokens": 90,
+          "apiTokens": 96,
+          "provenance": "measured",
+          "predictedTokens": 96,
           "errorPct": 0
         },
         {
@@ -634,10 +634,10 @@
           "role": "calibration",
           "chars": 90,
           "utf8Bytes": 270,
-          "selfContentTokens": 270,
-          "apiTokens": 277,
-          "provenance": "fixtured",
-          "predictedTokens": 277,
+          "selfContentTokens": 76,
+          "apiTokens": 82,
+          "provenance": "measured",
+          "predictedTokens": 82,
           "errorPct": 0
         },
         {
@@ -646,10 +646,10 @@
           "role": "holdout",
           "chars": 136,
           "utf8Bytes": 384,
-          "selfContentTokens": 384,
-          "apiTokens": 391,
-          "provenance": "fixtured",
-          "predictedTokens": 391,
+          "selfContentTokens": 94,
+          "apiTokens": 100,
+          "provenance": "measured",
+          "predictedTokens": 100,
           "errorPct": 0
         },
         {
@@ -658,10 +658,10 @@
           "role": "calibration",
           "chars": 204,
           "utf8Bytes": 204,
-          "selfContentTokens": 204,
-          "apiTokens": 211,
-          "provenance": "fixtured",
-          "predictedTokens": 211,
+          "selfContentTokens": 50,
+          "apiTokens": 56,
+          "provenance": "measured",
+          "predictedTokens": 56,
           "errorPct": 0
         },
         {
@@ -670,10 +670,10 @@
           "role": "holdout",
           "chars": 477,
           "utf8Bytes": 477,
-          "selfContentTokens": 477,
-          "apiTokens": 484,
-          "provenance": "fixtured",
-          "predictedTokens": 484,
+          "selfContentTokens": 137,
+          "apiTokens": 143,
+          "provenance": "measured",
+          "predictedTokens": 143,
           "errorPct": 0
         },
         {
@@ -682,10 +682,10 @@
           "role": "calibration",
           "chars": 151,
           "utf8Bytes": 151,
-          "selfContentTokens": 151,
-          "apiTokens": 158,
-          "provenance": "fixtured",
-          "predictedTokens": 158,
+          "selfContentTokens": 54,
+          "apiTokens": 60,
+          "provenance": "measured",
+          "predictedTokens": 60,
           "errorPct": 0
         },
         {
@@ -694,10 +694,10 @@
           "role": "holdout",
           "chars": 268,
           "utf8Bytes": 268,
-          "selfContentTokens": 268,
-          "apiTokens": 275,
-          "provenance": "fixtured",
-          "predictedTokens": 275,
+          "selfContentTokens": 67,
+          "apiTokens": 73,
+          "provenance": "measured",
+          "predictedTokens": 73,
           "errorPct": 0
         },
         {
@@ -706,10 +706,10 @@
           "role": "calibration",
           "chars": 182,
           "utf8Bytes": 182,
-          "selfContentTokens": 182,
-          "apiTokens": 189,
-          "provenance": "fixtured",
-          "predictedTokens": 189,
+          "selfContentTokens": 55,
+          "apiTokens": 61,
+          "provenance": "measured",
+          "predictedTokens": 61,
           "errorPct": 0
         },
         {
@@ -718,10 +718,10 @@
           "role": "holdout",
           "chars": 310,
           "utf8Bytes": 310,
-          "selfContentTokens": 310,
-          "apiTokens": 317,
-          "provenance": "fixtured",
-          "predictedTokens": 317,
+          "selfContentTokens": 86,
+          "apiTokens": 92,
+          "provenance": "measured",
+          "predictedTokens": 92,
           "errorPct": 0
         },
         {
@@ -730,10 +730,10 @@
           "role": "calibration",
           "chars": 251,
           "utf8Bytes": 251,
-          "selfContentTokens": 251,
-          "apiTokens": 258,
-          "provenance": "fixtured",
-          "predictedTokens": 258,
+          "selfContentTokens": 69,
+          "apiTokens": 75,
+          "provenance": "measured",
+          "predictedTokens": 75,
           "errorPct": 0
         },
         {
@@ -742,10 +742,10 @@
           "role": "holdout",
           "chars": 297,
           "utf8Bytes": 297,
-          "selfContentTokens": 297,
-          "apiTokens": 304,
-          "provenance": "fixtured",
-          "predictedTokens": 304,
+          "selfContentTokens": 97,
+          "apiTokens": 103,
+          "provenance": "measured",
+          "predictedTokens": 103,
           "errorPct": 0
         },
         {
@@ -754,10 +754,10 @@
           "role": "calibration",
           "chars": 227,
           "utf8Bytes": 227,
-          "selfContentTokens": 227,
-          "apiTokens": 234,
-          "provenance": "fixtured",
-          "predictedTokens": 234,
+          "selfContentTokens": 60,
+          "apiTokens": 66,
+          "provenance": "measured",
+          "predictedTokens": 66,
           "errorPct": 0
         },
         {
@@ -766,19 +766,19 @@
           "role": "holdout",
           "chars": 354,
           "utf8Bytes": 354,
-          "selfContentTokens": 354,
-          "apiTokens": 361,
-          "provenance": "fixtured",
-          "predictedTokens": 361,
+          "selfContentTokens": 96,
+          "apiTokens": 102,
+          "provenance": "measured",
+          "predictedTokens": 102,
           "errorPct": 0
         }
       ],
       "calibration": {
-        "overheadTokens": 7,
+        "overheadTokens": 6,
         "tokensPerChar": {
-          "english": 1,
-          "japanese": 3,
-          "code": 1
+          "english": 0.19161676646706588,
+          "japanese": 0.8333333333333334,
+          "code": 0.2749003984063745
         }
       },
       "perClass": [
@@ -819,7 +819,7 @@
       "holdoutMeanAbsErrorPct": 0,
       "holdoutMaxAbsErrorPct": 0,
       "withinTarget": true,
-      "spendUsd": 0
+      "spendUsd": 0.026
     },
     {
       "card": {
@@ -833,7 +833,7 @@
         "source": "https://ai.google.dev/gemini-api/docs/tokens",
         "lastVerified": "2026-07-17"
       },
-      "provenance": "fixtured",
+      "provenance": "measured",
       "rows": [
         {
           "sampleId": "en-01",
@@ -841,10 +841,10 @@
           "role": "calibration",
           "chars": 167,
           "utf8Bytes": 167,
-          "apiTokens": 49,
-          "provenance": "fixtured",
-          "predictedTokens": 47,
-          "errorPct": -4.08
+          "apiTokens": 32,
+          "provenance": "measured",
+          "predictedTokens": 37,
+          "errorPct": 15.63
         },
         {
           "sampleId": "en-02",
@@ -852,10 +852,10 @@
           "role": "holdout",
           "chars": 236,
           "utf8Bytes": 236,
-          "apiTokens": 66,
-          "provenance": "fixtured",
-          "predictedTokens": 65,
-          "errorPct": -1.52
+          "apiTokens": 45,
+          "provenance": "measured",
+          "predictedTokens": 49,
+          "errorPct": 8.89
         },
         {
           "sampleId": "en-03",
@@ -863,9 +863,9 @@
           "role": "calibration",
           "chars": 271,
           "utf8Bytes": 271,
-          "apiTokens": 75,
-          "provenance": "fixtured",
-          "predictedTokens": 75,
+          "apiTokens": 55,
+          "provenance": "measured",
+          "predictedTokens": 55,
           "errorPct": 0
         },
         {
@@ -874,10 +874,10 @@
           "role": "holdout",
           "chars": 363,
           "utf8Bytes": 365,
-          "apiTokens": 98,
-          "provenance": "fixtured",
-          "predictedTokens": 99,
-          "errorPct": 1.02
+          "apiTokens": 74,
+          "provenance": "measured",
+          "predictedTokens": 72,
+          "errorPct": -2.7
         },
         {
           "sampleId": "en-05",
@@ -886,9 +886,9 @@
           "chars": 259,
           "utf8Bytes": 259,
           "apiTokens": 72,
-          "provenance": "fixtured",
-          "predictedTokens": 72,
-          "errorPct": 0
+          "provenance": "measured",
+          "predictedTokens": 53,
+          "errorPct": -26.39
         },
         {
           "sampleId": "en-06",
@@ -896,10 +896,10 @@
           "role": "holdout",
           "chars": 309,
           "utf8Bytes": 309,
-          "apiTokens": 84,
-          "provenance": "fixtured",
-          "predictedTokens": 85,
-          "errorPct": 1.19
+          "apiTokens": 59,
+          "provenance": "measured",
+          "predictedTokens": 62,
+          "errorPct": 5.08
         },
         {
           "sampleId": "en-07",
@@ -907,10 +907,10 @@
           "role": "calibration",
           "chars": 300,
           "utf8Bytes": 302,
-          "apiTokens": 82,
-          "provenance": "fixtured",
-          "predictedTokens": 82,
-          "errorPct": 0
+          "apiTokens": 57,
+          "provenance": "measured",
+          "predictedTokens": 60,
+          "errorPct": 5.26
         },
         {
           "sampleId": "en-08",
@@ -918,10 +918,10 @@
           "role": "holdout",
           "chars": 235,
           "utf8Bytes": 237,
-          "apiTokens": 66,
-          "provenance": "fixtured",
-          "predictedTokens": 65,
-          "errorPct": -1.52
+          "apiTokens": 50,
+          "provenance": "measured",
+          "predictedTokens": 49,
+          "errorPct": -2
         },
         {
           "sampleId": "en-09",
@@ -929,10 +929,10 @@
           "role": "calibration",
           "chars": 309,
           "utf8Bytes": 309,
-          "apiTokens": 84,
-          "provenance": "fixtured",
-          "predictedTokens": 85,
-          "errorPct": 1.19
+          "apiTokens": 52,
+          "provenance": "measured",
+          "predictedTokens": 62,
+          "errorPct": 19.23
         },
         {
           "sampleId": "en-10",
@@ -940,10 +940,10 @@
           "role": "holdout",
           "chars": 320,
           "utf8Bytes": 320,
-          "apiTokens": 87,
-          "provenance": "fixtured",
-          "predictedTokens": 88,
-          "errorPct": 1.15
+          "apiTokens": 72,
+          "provenance": "measured",
+          "predictedTokens": 64,
+          "errorPct": -11.11
         },
         {
           "sampleId": "ja-01",
@@ -951,10 +951,10 @@
           "role": "calibration",
           "chars": 78,
           "utf8Bytes": 228,
-          "apiTokens": 85,
-          "provenance": "fixtured",
-          "predictedTokens": 84,
-          "errorPct": -1.18
+          "apiTokens": 44,
+          "provenance": "measured",
+          "predictedTokens": 46,
+          "errorPct": 4.55
         },
         {
           "sampleId": "ja-02",
@@ -962,10 +962,10 @@
           "role": "holdout",
           "chars": 83,
           "utf8Bytes": 249,
-          "apiTokens": 90,
-          "provenance": "fixtured",
-          "predictedTokens": 89,
-          "errorPct": -1.11
+          "apiTokens": 50,
+          "provenance": "measured",
+          "predictedTokens": 49,
+          "errorPct": -2
         },
         {
           "sampleId": "ja-03",
@@ -973,10 +973,10 @@
           "role": "calibration",
           "chars": 85,
           "utf8Bytes": 255,
-          "apiTokens": 92,
-          "provenance": "fixtured",
-          "predictedTokens": 91,
-          "errorPct": -1.09
+          "apiTokens": 58,
+          "provenance": "measured",
+          "predictedTokens": 50,
+          "errorPct": -13.79
         },
         {
           "sampleId": "ja-04",
@@ -984,10 +984,10 @@
           "role": "holdout",
           "chars": 148,
           "utf8Bytes": 440,
-          "apiTokens": 155,
-          "provenance": "fixtured",
-          "predictedTokens": 157,
-          "errorPct": 1.29
+          "apiTokens": 73,
+          "provenance": "measured",
+          "predictedTokens": 81,
+          "errorPct": 10.96
         },
         {
           "sampleId": "ja-05",
@@ -995,10 +995,10 @@
           "role": "calibration",
           "chars": 108,
           "utf8Bytes": 324,
-          "apiTokens": 115,
-          "provenance": "fixtured",
-          "predictedTokens": 115,
-          "errorPct": 0
+          "apiTokens": 53,
+          "provenance": "measured",
+          "predictedTokens": 61,
+          "errorPct": 15.09
         },
         {
           "sampleId": "ja-06",
@@ -1006,10 +1006,10 @@
           "role": "holdout",
           "chars": 86,
           "utf8Bytes": 254,
-          "apiTokens": 93,
-          "provenance": "fixtured",
-          "predictedTokens": 92,
-          "errorPct": -1.08
+          "apiTokens": 52,
+          "provenance": "measured",
+          "predictedTokens": 50,
+          "errorPct": -3.85
         },
         {
           "sampleId": "ja-07",
@@ -1017,10 +1017,10 @@
           "role": "calibration",
           "chars": 120,
           "utf8Bytes": 358,
-          "apiTokens": 127,
-          "provenance": "fixtured",
-          "predictedTokens": 128,
-          "errorPct": 0.79
+          "apiTokens": 66,
+          "provenance": "measured",
+          "predictedTokens": 67,
+          "errorPct": 1.52
         },
         {
           "sampleId": "ja-08",
@@ -1028,10 +1028,10 @@
           "role": "holdout",
           "chars": 94,
           "utf8Bytes": 282,
-          "apiTokens": 101,
-          "provenance": "fixtured",
-          "predictedTokens": 101,
-          "errorPct": 0
+          "apiTokens": 63,
+          "provenance": "measured",
+          "predictedTokens": 54,
+          "errorPct": -14.29
         },
         {
           "sampleId": "ja-09",
@@ -1039,10 +1039,10 @@
           "role": "calibration",
           "chars": 90,
           "utf8Bytes": 270,
-          "apiTokens": 97,
-          "provenance": "fixtured",
-          "predictedTokens": 97,
-          "errorPct": 0
+          "apiTokens": 57,
+          "provenance": "measured",
+          "predictedTokens": 52,
+          "errorPct": -8.77
         },
         {
           "sampleId": "ja-10",
@@ -1050,10 +1050,10 @@
           "role": "holdout",
           "chars": 136,
           "utf8Bytes": 384,
-          "apiTokens": 143,
-          "provenance": "fixtured",
-          "predictedTokens": 144,
-          "errorPct": 0.7
+          "apiTokens": 89,
+          "provenance": "measured",
+          "predictedTokens": 75,
+          "errorPct": -15.73
         },
         {
           "sampleId": "code-01",
@@ -1061,10 +1061,10 @@
           "role": "calibration",
           "chars": 204,
           "utf8Bytes": 204,
-          "apiTokens": 72,
-          "provenance": "fixtured",
-          "predictedTokens": 72,
-          "errorPct": 0
+          "apiTokens": 60,
+          "provenance": "measured",
+          "predictedTokens": 70,
+          "errorPct": 16.67
         },
         {
           "sampleId": "code-02",
@@ -1072,10 +1072,10 @@
           "role": "holdout",
           "chars": 477,
           "utf8Bytes": 477,
-          "apiTokens": 160,
-          "provenance": "fixtured",
-          "predictedTokens": 164,
-          "errorPct": 2.5
+          "apiTokens": 162,
+          "provenance": "measured",
+          "predictedTokens": 155,
+          "errorPct": -4.32
         },
         {
           "sampleId": "code-03",
@@ -1083,10 +1083,10 @@
           "role": "calibration",
           "chars": 151,
           "utf8Bytes": 151,
-          "apiTokens": 55,
-          "provenance": "fixtured",
+          "apiTokens": 63,
+          "provenance": "measured",
           "predictedTokens": 54,
-          "errorPct": -1.82
+          "errorPct": -14.29
         },
         {
           "sampleId": "code-04",
@@ -1094,10 +1094,10 @@
           "role": "holdout",
           "chars": 268,
           "utf8Bytes": 268,
-          "apiTokens": 93,
-          "provenance": "fixtured",
-          "predictedTokens": 94,
-          "errorPct": 1.08
+          "apiTokens": 85,
+          "provenance": "measured",
+          "predictedTokens": 90,
+          "errorPct": 5.88
         },
         {
           "sampleId": "code-05",
@@ -1105,10 +1105,10 @@
           "role": "calibration",
           "chars": 182,
           "utf8Bytes": 182,
-          "apiTokens": 65,
-          "provenance": "fixtured",
-          "predictedTokens": 64,
-          "errorPct": -1.54
+          "apiTokens": 62,
+          "provenance": "measured",
+          "predictedTokens": 63,
+          "errorPct": 1.61
         },
         {
           "sampleId": "code-06",
@@ -1116,10 +1116,10 @@
           "role": "holdout",
           "chars": 310,
           "utf8Bytes": 310,
-          "apiTokens": 106,
-          "provenance": "fixtured",
-          "predictedTokens": 108,
-          "errorPct": 1.89
+          "apiTokens": 100,
+          "provenance": "measured",
+          "predictedTokens": 103,
+          "errorPct": 3
         },
         {
           "sampleId": "code-07",
@@ -1127,10 +1127,10 @@
           "role": "calibration",
           "chars": 251,
           "utf8Bytes": 251,
-          "apiTokens": 87,
-          "provenance": "fixtured",
-          "predictedTokens": 88,
-          "errorPct": 1.15
+          "apiTokens": 93,
+          "provenance": "measured",
+          "predictedTokens": 85,
+          "errorPct": -8.6
         },
         {
           "sampleId": "code-08",
@@ -1138,10 +1138,10 @@
           "role": "holdout",
           "chars": 297,
           "utf8Bytes": 297,
-          "apiTokens": 102,
-          "provenance": "fixtured",
-          "predictedTokens": 103,
-          "errorPct": 0.98
+          "apiTokens": 108,
+          "provenance": "measured",
+          "predictedTokens": 99,
+          "errorPct": -8.33
         },
         {
           "sampleId": "code-09",
@@ -1149,10 +1149,10 @@
           "role": "calibration",
           "chars": 227,
           "utf8Bytes": 227,
-          "apiTokens": 80,
-          "provenance": "fixtured",
-          "predictedTokens": 80,
-          "errorPct": 0
+          "apiTokens": 72,
+          "provenance": "measured",
+          "predictedTokens": 77,
+          "errorPct": 6.94
         },
         {
           "sampleId": "code-10",
@@ -1160,58 +1160,58 @@
           "role": "holdout",
           "chars": 354,
           "utf8Bytes": 354,
-          "apiTokens": 120,
-          "provenance": "fixtured",
-          "predictedTokens": 123,
-          "errorPct": 2.5
+          "apiTokens": 118,
+          "provenance": "measured",
+          "predictedTokens": 117,
+          "errorPct": -0.85
         }
       ],
       "calibration": {
-        "overheadTokens": 3,
+        "overheadTokens": 7,
         "tokensPerChar": {
-          "english": 0.2646003389755915,
-          "japanese": 1.0393331123483258,
-          "code": 0.3378833964154745
+          "english": 0.1782479475172736,
+          "japanese": 0.5019066756568975,
+          "code": 0.3099972358300412
         }
       },
       "perClass": [
         {
           "class": "english",
           "holdoutCount": 5,
-          "meanAbsErrorPct": 1.28,
-          "maxAbsErrorPct": 1.52,
+          "meanAbsErrorPct": 5.96,
+          "maxAbsErrorPct": 11.11,
           "errorBandPct": [
-            -1.52,
-            1.19
+            -11.11,
+            8.89
           ],
-          "withinTarget": true
+          "withinTarget": false
         },
         {
           "class": "japanese",
           "holdoutCount": 5,
-          "meanAbsErrorPct": 0.84,
-          "maxAbsErrorPct": 1.29,
+          "meanAbsErrorPct": 9.37,
+          "maxAbsErrorPct": 15.73,
           "errorBandPct": [
-            -1.11,
-            1.29
+            -15.73,
+            10.96
           ],
-          "withinTarget": true
+          "withinTarget": false
         },
         {
           "class": "code",
           "holdoutCount": 5,
-          "meanAbsErrorPct": 1.79,
-          "maxAbsErrorPct": 2.5,
+          "meanAbsErrorPct": 4.48,
+          "maxAbsErrorPct": 8.33,
           "errorBandPct": [
-            0.98,
-            2.5
+            -8.33,
+            5.88
           ],
-          "withinTarget": true
+          "withinTarget": false
         }
       ],
-      "holdoutMeanAbsErrorPct": 1.3,
-      "holdoutMaxAbsErrorPct": 2.5,
-      "withinTarget": true,
+      "holdoutMeanAbsErrorPct": 6.6,
+      "holdoutMaxAbsErrorPct": 15.73,
+      "withinTarget": false,
       "spendUsd": 0
     },
     {
@@ -1226,7 +1226,7 @@
         "source": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
         "lastVerified": "2026-07-17"
       },
-      "provenance": "fixtured",
+      "provenance": "measured",
       "rows": [
         {
           "sampleId": "en-01",
@@ -1234,10 +1234,10 @@
           "role": "calibration",
           "chars": 167,
           "utf8Bytes": 167,
-          "selfContentTokens": 167,
-          "apiTokens": 174,
-          "provenance": "fixtured",
-          "predictedTokens": 174,
+          "selfContentTokens": 32,
+          "apiTokens": 61,
+          "provenance": "measured",
+          "predictedTokens": 61,
           "errorPct": 0
         },
         {
@@ -1246,10 +1246,10 @@
           "role": "holdout",
           "chars": 236,
           "utf8Bytes": 236,
-          "selfContentTokens": 236,
-          "apiTokens": 243,
-          "provenance": "fixtured",
-          "predictedTokens": 243,
+          "selfContentTokens": 44,
+          "apiTokens": 73,
+          "provenance": "measured",
+          "predictedTokens": 73,
           "errorPct": 0
         },
         {
@@ -1258,10 +1258,10 @@
           "role": "calibration",
           "chars": 271,
           "utf8Bytes": 271,
-          "selfContentTokens": 271,
-          "apiTokens": 278,
-          "provenance": "fixtured",
-          "predictedTokens": 278,
+          "selfContentTokens": 55,
+          "apiTokens": 84,
+          "provenance": "measured",
+          "predictedTokens": 84,
           "errorPct": 0
         },
         {
@@ -1270,10 +1270,10 @@
           "role": "holdout",
           "chars": 363,
           "utf8Bytes": 365,
-          "selfContentTokens": 365,
-          "apiTokens": 372,
-          "provenance": "fixtured",
-          "predictedTokens": 372,
+          "selfContentTokens": 75,
+          "apiTokens": 104,
+          "provenance": "measured",
+          "predictedTokens": 104,
           "errorPct": 0
         },
         {
@@ -1282,10 +1282,10 @@
           "role": "calibration",
           "chars": 259,
           "utf8Bytes": 259,
-          "selfContentTokens": 259,
-          "apiTokens": 266,
-          "provenance": "fixtured",
-          "predictedTokens": 266,
+          "selfContentTokens": 72,
+          "apiTokens": 101,
+          "provenance": "measured",
+          "predictedTokens": 101,
           "errorPct": 0
         },
         {
@@ -1294,10 +1294,10 @@
           "role": "holdout",
           "chars": 309,
           "utf8Bytes": 309,
-          "selfContentTokens": 309,
-          "apiTokens": 316,
-          "provenance": "fixtured",
-          "predictedTokens": 316,
+          "selfContentTokens": 59,
+          "apiTokens": 88,
+          "provenance": "measured",
+          "predictedTokens": 88,
           "errorPct": 0
         },
         {
@@ -1306,10 +1306,10 @@
           "role": "calibration",
           "chars": 300,
           "utf8Bytes": 302,
-          "selfContentTokens": 302,
-          "apiTokens": 309,
-          "provenance": "fixtured",
-          "predictedTokens": 309,
+          "selfContentTokens": 56,
+          "apiTokens": 85,
+          "provenance": "measured",
+          "predictedTokens": 85,
           "errorPct": 0
         },
         {
@@ -1318,10 +1318,10 @@
           "role": "holdout",
           "chars": 235,
           "utf8Bytes": 237,
-          "selfContentTokens": 237,
-          "apiTokens": 244,
-          "provenance": "fixtured",
-          "predictedTokens": 244,
+          "selfContentTokens": 50,
+          "apiTokens": 79,
+          "provenance": "measured",
+          "predictedTokens": 79,
           "errorPct": 0
         },
         {
@@ -1330,10 +1330,10 @@
           "role": "calibration",
           "chars": 309,
           "utf8Bytes": 309,
-          "selfContentTokens": 309,
-          "apiTokens": 316,
-          "provenance": "fixtured",
-          "predictedTokens": 316,
+          "selfContentTokens": 51,
+          "apiTokens": 80,
+          "provenance": "measured",
+          "predictedTokens": 80,
           "errorPct": 0
         },
         {
@@ -1342,10 +1342,10 @@
           "role": "holdout",
           "chars": 320,
           "utf8Bytes": 320,
-          "selfContentTokens": 320,
-          "apiTokens": 327,
-          "provenance": "fixtured",
-          "predictedTokens": 327,
+          "selfContentTokens": 70,
+          "apiTokens": 99,
+          "provenance": "measured",
+          "predictedTokens": 99,
           "errorPct": 0
         },
         {
@@ -1354,10 +1354,10 @@
           "role": "calibration",
           "chars": 78,
           "utf8Bytes": 228,
-          "selfContentTokens": 228,
-          "apiTokens": 235,
-          "provenance": "fixtured",
-          "predictedTokens": 235,
+          "selfContentTokens": 50,
+          "apiTokens": 79,
+          "provenance": "measured",
+          "predictedTokens": 79,
           "errorPct": 0
         },
         {
@@ -1366,10 +1366,10 @@
           "role": "holdout",
           "chars": 83,
           "utf8Bytes": 249,
-          "selfContentTokens": 249,
-          "apiTokens": 256,
-          "provenance": "fixtured",
-          "predictedTokens": 256,
+          "selfContentTokens": 70,
+          "apiTokens": 99,
+          "provenance": "measured",
+          "predictedTokens": 99,
           "errorPct": 0
         },
         {
@@ -1378,10 +1378,10 @@
           "role": "calibration",
           "chars": 85,
           "utf8Bytes": 255,
-          "selfContentTokens": 255,
-          "apiTokens": 262,
-          "provenance": "fixtured",
-          "predictedTokens": 262,
+          "selfContentTokens": 70,
+          "apiTokens": 99,
+          "provenance": "measured",
+          "predictedTokens": 99,
           "errorPct": 0
         },
         {
@@ -1390,10 +1390,10 @@
           "role": "holdout",
           "chars": 148,
           "utf8Bytes": 440,
-          "selfContentTokens": 440,
-          "apiTokens": 447,
-          "provenance": "fixtured",
-          "predictedTokens": 447,
+          "selfContentTokens": 97,
+          "apiTokens": 126,
+          "provenance": "measured",
+          "predictedTokens": 126,
           "errorPct": 0
         },
         {
@@ -1402,10 +1402,10 @@
           "role": "calibration",
           "chars": 108,
           "utf8Bytes": 324,
-          "selfContentTokens": 324,
-          "apiTokens": 331,
-          "provenance": "fixtured",
-          "predictedTokens": 331,
+          "selfContentTokens": 67,
+          "apiTokens": 96,
+          "provenance": "measured",
+          "predictedTokens": 96,
           "errorPct": 0
         },
         {
@@ -1414,10 +1414,10 @@
           "role": "holdout",
           "chars": 86,
           "utf8Bytes": 254,
-          "selfContentTokens": 254,
-          "apiTokens": 261,
-          "provenance": "fixtured",
-          "predictedTokens": 261,
+          "selfContentTokens": 69,
+          "apiTokens": 98,
+          "provenance": "measured",
+          "predictedTokens": 98,
           "errorPct": 0
         },
         {
@@ -1426,10 +1426,10 @@
           "role": "calibration",
           "chars": 120,
           "utf8Bytes": 358,
-          "selfContentTokens": 358,
-          "apiTokens": 365,
-          "provenance": "fixtured",
-          "predictedTokens": 365,
+          "selfContentTokens": 84,
+          "apiTokens": 113,
+          "provenance": "measured",
+          "predictedTokens": 113,
           "errorPct": 0
         },
         {
@@ -1438,10 +1438,10 @@
           "role": "holdout",
           "chars": 94,
           "utf8Bytes": 282,
-          "selfContentTokens": 282,
-          "apiTokens": 289,
-          "provenance": "fixtured",
-          "predictedTokens": 289,
+          "selfContentTokens": 82,
+          "apiTokens": 111,
+          "provenance": "measured",
+          "predictedTokens": 111,
           "errorPct": 0
         },
         {
@@ -1450,10 +1450,10 @@
           "role": "calibration",
           "chars": 90,
           "utf8Bytes": 270,
-          "selfContentTokens": 270,
-          "apiTokens": 277,
-          "provenance": "fixtured",
-          "predictedTokens": 277,
+          "selfContentTokens": 77,
+          "apiTokens": 106,
+          "provenance": "measured",
+          "predictedTokens": 106,
           "errorPct": 0
         },
         {
@@ -1462,10 +1462,10 @@
           "role": "holdout",
           "chars": 136,
           "utf8Bytes": 384,
-          "selfContentTokens": 384,
-          "apiTokens": 391,
-          "provenance": "fixtured",
-          "predictedTokens": 391,
+          "selfContentTokens": 103,
+          "apiTokens": 132,
+          "provenance": "measured",
+          "predictedTokens": 132,
           "errorPct": 0
         },
         {
@@ -1474,10 +1474,10 @@
           "role": "calibration",
           "chars": 204,
           "utf8Bytes": 204,
-          "selfContentTokens": 204,
-          "apiTokens": 211,
-          "provenance": "fixtured",
-          "predictedTokens": 211,
+          "selfContentTokens": 50,
+          "apiTokens": 79,
+          "provenance": "measured",
+          "predictedTokens": 79,
           "errorPct": 0
         },
         {
@@ -1486,10 +1486,10 @@
           "role": "holdout",
           "chars": 477,
           "utf8Bytes": 477,
-          "selfContentTokens": 477,
-          "apiTokens": 484,
-          "provenance": "fixtured",
-          "predictedTokens": 484,
+          "selfContentTokens": 137,
+          "apiTokens": 166,
+          "provenance": "measured",
+          "predictedTokens": 166,
           "errorPct": 0
         },
         {
@@ -1498,10 +1498,10 @@
           "role": "calibration",
           "chars": 151,
           "utf8Bytes": 151,
-          "selfContentTokens": 151,
-          "apiTokens": 158,
-          "provenance": "fixtured",
-          "predictedTokens": 158,
+          "selfContentTokens": 55,
+          "apiTokens": 84,
+          "provenance": "measured",
+          "predictedTokens": 84,
           "errorPct": 0
         },
         {
@@ -1510,10 +1510,10 @@
           "role": "holdout",
           "chars": 268,
           "utf8Bytes": 268,
-          "selfContentTokens": 268,
-          "apiTokens": 275,
-          "provenance": "fixtured",
-          "predictedTokens": 275,
+          "selfContentTokens": 68,
+          "apiTokens": 97,
+          "provenance": "measured",
+          "predictedTokens": 97,
           "errorPct": 0
         },
         {
@@ -1522,10 +1522,10 @@
           "role": "calibration",
           "chars": 182,
           "utf8Bytes": 182,
-          "selfContentTokens": 182,
-          "apiTokens": 189,
-          "provenance": "fixtured",
-          "predictedTokens": 189,
+          "selfContentTokens": 54,
+          "apiTokens": 83,
+          "provenance": "measured",
+          "predictedTokens": 83,
           "errorPct": 0
         },
         {
@@ -1534,10 +1534,10 @@
           "role": "holdout",
           "chars": 310,
           "utf8Bytes": 310,
-          "selfContentTokens": 310,
-          "apiTokens": 317,
-          "provenance": "fixtured",
-          "predictedTokens": 317,
+          "selfContentTokens": 87,
+          "apiTokens": 116,
+          "provenance": "measured",
+          "predictedTokens": 116,
           "errorPct": 0
         },
         {
@@ -1546,10 +1546,10 @@
           "role": "calibration",
           "chars": 251,
           "utf8Bytes": 251,
-          "selfContentTokens": 251,
-          "apiTokens": 258,
-          "provenance": "fixtured",
-          "predictedTokens": 258,
+          "selfContentTokens": 69,
+          "apiTokens": 98,
+          "provenance": "measured",
+          "predictedTokens": 98,
           "errorPct": 0
         },
         {
@@ -1558,10 +1558,10 @@
           "role": "holdout",
           "chars": 297,
           "utf8Bytes": 297,
-          "selfContentTokens": 297,
-          "apiTokens": 304,
-          "provenance": "fixtured",
-          "predictedTokens": 304,
+          "selfContentTokens": 99,
+          "apiTokens": 128,
+          "provenance": "measured",
+          "predictedTokens": 128,
           "errorPct": 0
         },
         {
@@ -1570,10 +1570,10 @@
           "role": "calibration",
           "chars": 227,
           "utf8Bytes": 227,
-          "selfContentTokens": 227,
-          "apiTokens": 234,
-          "provenance": "fixtured",
-          "predictedTokens": 234,
+          "selfContentTokens": 63,
+          "apiTokens": 92,
+          "provenance": "measured",
+          "predictedTokens": 92,
           "errorPct": 0
         },
         {
@@ -1582,19 +1582,19 @@
           "role": "holdout",
           "chars": 354,
           "utf8Bytes": 354,
-          "selfContentTokens": 354,
-          "apiTokens": 361,
-          "provenance": "fixtured",
-          "predictedTokens": 361,
+          "selfContentTokens": 104,
+          "apiTokens": 133,
+          "provenance": "measured",
+          "predictedTokens": 133,
           "errorPct": 0
         }
       ],
       "calibration": {
-        "overheadTokens": 7,
+        "overheadTokens": 29,
         "tokensPerChar": {
-          "english": 1,
-          "japanese": 3,
-          "code": 1
+          "english": 0.19161676646706588,
+          "japanese": 0.7,
+          "code": 0.2775330396475771
         }
       },
       "perClass": [
@@ -1635,14 +1635,16 @@
       "holdoutMeanAbsErrorPct": 0,
       "holdoutMaxAbsErrorPct": 0,
       "withinTarget": true,
-      "spendUsd": 0
+      "spendUsd": 0.002
     }
   ],
   "edgeProbes": {
-    "notes": [
-      "edge probes run only on the real path (they read live count endpoints)"
-    ]
+    "anthropicToolOverheadTokens": 483,
+    "anthropicImageTokens": 124,
+    "googleImageTokens": 1089,
+    "imageWidth": 300,
+    "imageHeight": 300
   },
-  "spendUsd": 0,
-  "artifactPath": "token-metering-comparison.data.json"
+  "spendUsd": 0.028,
+  "artifactPath": "token-metering-comparison.real.data.json"
 }
