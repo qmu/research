@@ -33,9 +33,26 @@ describe("splitPretokens", () => {
     expect(pieces).toEqual(["one", " two"]);
   });
 
-  it("supports the o200k inline-modifier contraction group", () => {
-    const pieces = splitPretokens("it's", O200K_PRETOKEN_PATTERN);
-    expect(pieces).toEqual(["it's"]);
+  it("attaches the o200k contraction group in either case", () => {
+    expect(splitPretokens("it's", O200K_PRETOKEN_PATTERN)).toEqual(["it's"]);
+    expect(splitPretokens("IT'S", O200K_PRETOKEN_PATTERN)).toEqual(["IT'S"]);
+    expect(splitPretokens("we'RE", O200K_PRETOKEN_PATTERN)).toEqual(["we'RE"]);
+  });
+
+  // The published pattern spells this group with a `(?i:...)` inline modifier,
+  // which needs Node >=23; it is expanded explicitly so the counter runs on Node
+  // 22 LTS. `(?i:)` under `u` applies Unicode simple case folding, so `'s` also
+  // matches `'ſ` (U+017F, which folds to `s`) — an upper/lower-only expansion
+  // would silently split this differently and break the exact-BPE claim.
+  it("folds the contraction group as Unicode does, not just ASCII case", () => {
+    expect(splitPretokens("it'ſ", O200K_PRETOKEN_PATTERN)).toEqual(["it'ſ"]);
+  });
+
+  it("does not attach a non-contraction apostrophe suffix", () => {
+    expect(splitPretokens("it'x", O200K_PRETOKEN_PATTERN)).toEqual([
+      "it",
+      "'x",
+    ]);
   });
 
   it("preserves characters a foreign pattern leaves unmatched", () => {
