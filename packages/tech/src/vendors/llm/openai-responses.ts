@@ -2,6 +2,9 @@ import OpenAI from "openai";
 import type {
   CompletionClient,
   CompletionOptions,
+  GroundedAnswer,
+  GroundedAnswerClient,
+  GroundedCitation,
   JsonSchema,
   StreamedCompletion,
   StructuredCompletion,
@@ -58,6 +61,79 @@ type StreamEventLike = {
   type: string;
   delta?: string;
   response?: ResponseLike;
+};
+
+// ── Web search (grounded answers for the trend-recency topic) ─────────────────
+
+const CITED_ANSWER_SYSTEM_PROMPT =
+  "Answer the question concisely and factually, and cite the sources you used.";
+
+// A web-search Responses result carries its sources as `url_citation`
+// annotations on the output message's `output_text` content parts
+// (`{ type, url, title, start_index, end_index }`). Walk the output array
+// defensively — item and part shapes vary by tool use — and de-duplicate by
+// URL. Pure and exported so it is unit-tested without a network call.
+export const extractOpenAiUrlCitations = (
+  output: unknown,
+): GroundedCitation[] => {
+  if (!Array.isArray(output)) return [];
+  const byUrl = new Map<string, GroundedCitation>();
+  for (const item of output) {
+    const content = (item as { content?: unknown } | null)?.content;
+    if (!Array.isArray(content)) continue;
+    for (const part of content) {
+      const annotations = (part as { annotations?: unknown } | null)
+        ?.annotations;
+      if (!Array.isArray(annotations)) continue;
+      for (const annotation of annotations) {
+        if (annotation === null || typeof annotation !== "object") continue;
+        const record = annotation as Record<string, unknown>;
+        if (record.type !== "url_citation") continue;
+        const url = typeof record.url === "string" ? record.url : undefined;
+        if (url === undefined) continue;
+        const title =
+          typeof record.title === "string" ? record.title : undefined;
+        byUrl.set(url, { url, ...(title === undefined ? {} : { title }) });
+      }
+    }
+  }
+  return [...byUrl.values()];
+};
+
+// Grounded-answer client for the trend-recency topic: one question in, one
+// cited answer out, with the hosted `web_search` tool enabled. The generous
+// output cap leaves room for the reasoning tokens these models spend before
+// answering. Tool parameters follow the current Responses web-search
+// documentation; the topic's first real trial is the live verification of this
+// wiring.
+export const createOpenAiWebSearchGroundedClient = (
+  apiModelId: string,
+  apiKey: string,
+): GroundedAnswerClient => {
+  const client = new OpenAI({ apiKey });
+  type CreateParams = Parameters<typeof client.responses.create>[0];
+  return {
+    model: apiModelId,
+    answer: async (question: string): Promise<GroundedAnswer> => {
+      const startedAt = Date.now();
+      const response = (await client.responses.create({
+        model: apiModelId,
+        instructions: CITED_ANSWER_SYSTEM_PROMPT,
+        input: question,
+        max_output_tokens: 2048,
+        tools: [{ type: "web_search" }],
+      } as unknown as CreateParams)) as unknown as ResponseLike & {
+        output?: unknown;
+      };
+      return {
+        answer: response.output_text ?? "",
+        citations: extractOpenAiUrlCitations(response.output),
+        outputTokens: openAiResponsesOutputTokens(response.usage),
+        elapsedMs: Date.now() - startedAt,
+        model: apiModelId,
+      };
+    },
+  };
 };
 
 export const createOpenAiResponsesCompletionClient = (

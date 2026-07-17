@@ -3,6 +3,9 @@ import type {
   CompletionClient,
   CompletionOptions,
   GeneratedImage,
+  GroundedAnswer,
+  GroundedAnswerClient,
+  GroundedCitation,
   ImageGenerationClient,
   JsonSchema,
   StreamedCompletion,
@@ -115,6 +118,72 @@ export const createGoogleCompletionClient = (
       } as unknown as Parameters<typeof client.models.generateContent>[0]);
       return {
         raw: response.text ?? "",
+        outputTokens: googleOutputTokens(response.usageMetadata),
+        elapsedMs: Date.now() - startedAt,
+        model: apiModelId,
+      };
+    },
+  };
+};
+
+// ── Google Search grounding (grounded answers for the trend-recency topic) ────
+
+const CITED_ANSWER_SYSTEM_PROMPT =
+  "Answer the question concisely and factually, and cite the sources you used.";
+
+// A grounded generateContent response carries the sources under
+// `candidates[0].groundingMetadata.groundingChunks[].web` (`uri` + `title`, no
+// published date). Read the shape defensively — grounding metadata is absent
+// when the model chose not to search — and de-duplicate by URL. Pure and
+// exported so it is unit-tested without a network call.
+export const extractGoogleGroundingCitations = (
+  candidate: unknown,
+): GroundedCitation[] => {
+  const metadata = (candidate as { groundingMetadata?: unknown } | undefined)
+    ?.groundingMetadata;
+  const chunks = (metadata as { groundingChunks?: unknown } | undefined)
+    ?.groundingChunks;
+  if (!Array.isArray(chunks)) return [];
+  const byUrl = new Map<string, GroundedCitation>();
+  for (const chunk of chunks) {
+    if (chunk === null || typeof chunk !== "object") continue;
+    const web = (chunk as { web?: unknown }).web;
+    if (web === null || typeof web !== "object" || web === undefined) continue;
+    const record = web as Record<string, unknown>;
+    const uri = typeof record.uri === "string" ? record.uri : undefined;
+    if (uri === undefined) continue;
+    const title = typeof record.title === "string" ? record.title : undefined;
+    byUrl.set(uri, { url: uri, ...(title === undefined ? {} : { title }) });
+  }
+  return [...byUrl.values()];
+};
+
+// Grounded-answer client for the trend-recency topic: one question in, one
+// cited answer out, with the Google Search grounding tool enabled
+// (`tools: [{ googleSearch: {} }]`). Tool parameters follow the current
+// Gemini API grounding documentation; the topic's first real trial is the live
+// verification of this wiring.
+export const createGoogleGroundedClient = (
+  apiModelId: string,
+  apiKey: string,
+): GroundedAnswerClient => {
+  const client = new GoogleGenAI({ apiKey });
+  return {
+    model: apiModelId,
+    answer: async (question: string): Promise<GroundedAnswer> => {
+      const startedAt = Date.now();
+      const response = await client.models.generateContent({
+        model: apiModelId,
+        contents: question,
+        config: {
+          systemInstruction: CITED_ANSWER_SYSTEM_PROMPT,
+          maxOutputTokens: 2048,
+          tools: [{ googleSearch: {} }],
+        } as unknown,
+      } as unknown as Parameters<typeof client.models.generateContent>[0]);
+      return {
+        answer: response.text ?? "",
+        citations: extractGoogleGroundingCitations(response.candidates?.[0]),
         outputTokens: googleOutputTokens(response.usageMetadata),
         elapsedMs: Date.now() - startedAt,
         model: apiModelId,

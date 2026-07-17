@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain, Infrastructure]
 effort: 4h
-commit_hash:
+commit_hash: 24b5440
 category: Added
 mission: periodic-research-target-trend-catchable-ai-models-grok-perplexity
 depends_on: [20260714005200-kickoff-propose-periodic-research.md]
@@ -86,3 +86,37 @@ Remaining before this ticket archives:
    runner (same split as the SVG scaffold's follow-up).
 3. **Ground-truth history DB** under `docs/research-reports/trend-recency-history/`
    — real per-trial probe generation (belongs with the first-trial ticket).
+
+## Completion (2026-07-17, trend desk)
+
+All three remaining items are resolved (keyless — no paid call was made):
+
+1. **Grounded wiring** — four new grounded-answer adapters behind the existing
+   ACLs: `createXaiGroundedClient` (Live Search `search_parameters` +
+   `citations`), `createGoogleGroundedClient` (`googleSearch` tool +
+   `groundingChunks`), `createOpenAiWebSearchGroundedClient` (Responses
+   `web_search` tool + `url_citation` annotations), and
+   `createAnthropicGroundedClient` (`web_search` server tool; cited-source
+   preference with `page_age` date enrichment). Each citation parser is pure,
+   exported, and unit-tested (8 new tests); `run.ts` now routes every grounded
+   card instead of throwing. Tool parameters follow each provider's current
+   documentation — the **live verification** of these params is inherently the
+   first `--real` trial (ticket 20260714010001), which spends money and stays
+   owner-gated.
+2. **Entrypoint + npm scripts + unified CLI** —
+   `src/entrypoints/run-trend-recency.ts` (SVG-parity: report + data artifact,
+   `--estimate` preview, estimate-before-real), `trend-recency{,:fixture,:real,:estimate}`
+   npm scripts, `TopicSpec` in `research/domain/topic.ts`, and the runner binding
+   in `run-research.ts` (dispatcher sync test passes). A new
+   `domain/report.ts` renders the standard 7-section English article; an
+   unmeasured stat renders "not measured", never a faked number.
+3. **Ground-truth DB shape** —
+   `docs/research-reports/trend-recency-history/README.md` commits the auditable
+   per-trial probe-set schema (probe + answer + citations, instrument-versioned);
+   the first dated set is written by the first real trial, as planned.
+
+Verification (raw exit codes): `make install` 0, `make build` 0 (packages +
+VitePress docs), `make test` 0 (487 passed / 1 skipped, incl. 11 new), `make
+lint` 0; `npm run research -- trend-recency --fixture` 0 (byte-stable across two
+runs — identical sha256 for the committed report and data artifact);
+`npm run research -- trend-recency --estimate` 0 (~$0.47 total, ceiling $30).
