@@ -7,18 +7,21 @@ origin_pr_url: https://github.com/qmu/research/pull/15
 origin_branch: work-20260622-191220
 origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
+last_seen: 2026-07-13T09:48:58+09:00
+first_seen: 2026-07-13T09:48:58+09:00
+concern_id: jp-pages-are-overwritten-by-the
 severity: moderate
-status: active
-resolved_by_pr:
-resolved_by_commit:
+status: resolved
+resolved_by_pr: 22
+resolved_by_commit: f3cc3ac
 ---
 
-# JSON artifact link resolution deferred
+# JP pages are overwritten by the insights-translation stage after real runs
 
 ## Description
 
-Reports link to raw JSON run-artifacts by relative path, but the corporate copy only transfers Markdown, so the transparency links will not resolve on the Astro site until artifacts join the copy set or switch to stable GitHub URLs (see [0597161](https://github.com/qmu/research/commit/0597161) in docs/research-reports/)
+Running `research -- <topic> --real` ends with an insights translation that overwrites the topic's Japanese page with a non-outline document; the enforced-outline test catches it, but the recovery step is manual (see [ec38a52](https://github.com/qmu/research/commit/ec38a52) in packages/tech/src/research/translate-runner.ts)
 
 ## How to Fix
 
-Extend scripts/publish-research.sh to copy .data.json alongside .md, or point artifact references at stable raw.githubusercontent.com URLs
+Run `npm run research:translate-report -- <topic>` after every real run (now documented), or reorder the pipeline so the full-report translation is the terminal JP stage
