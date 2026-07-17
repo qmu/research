@@ -25,17 +25,23 @@ Measured metrics are generation latency (ms, lower is better), prompt adherence 
 
 ## 3. Scope and Constraints
 
-- **Judged, but rubric-constrained.** A fixed vision judge (`fixture-judge`) answers deterministic yes/no questions and transcribes rendered text; it never scores beauty or style. Swapping the judge is an instrument change, not a routine update.
+- **Judged, but rubric-constrained.** A fixed vision judge (`claude-sonnet-5`) answers deterministic yes/no questions and transcribes rendered text; it never scores beauty or style. Swapping the judge is an instrument change, not a routine update.
 - Prompt manifest version `1`: 8 prompts (6 rubric, 2 exact-text). History connects same-manifest-version points only.
 - **Image binaries are not committed.** The artifact records byte length, timing, judge answers, and scores — enough to regenerate this page — never the images themselves.
 - The fixture path is keyless and deterministic; real model numbers appear only after an owner runs the real path within the approved cost ceiling (run `--estimate` first).
-- Point-in-time: measured behavior reflects the models and APIs at `2026-01-01T00:00:00.000Z`; catalog prices are as of each row's last-verified date.
+- Point-in-time: measured behavior reflects the models and APIs at `2026-07-17T00:53:39.901Z`; catalog prices are as of each row's last-verified date.
 
 ## 4. Verification Results
 
-This run has **0 measured** of 3 model rows (non-measured rows are `fixtured` harness checks or `error` rows, never faked numbers).
+This run has **3 measured** of 3 model rows (non-measured rows are `fixtured` harness checks or `error` rows, never faked numbers).
 
-There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
+| Metric | Best (model) | Median | Worst |
+| ------ | ------------ | ------ | ----- |
+| Generation latency | 4976 ms — Grok Imagine | 6526 ms | 11689 ms |
+| Prompt adherence | 100.0% — GPT Image 1.5 | 100.0% | 100.0% |
+| Text render accuracy | 100.0% — GPT Image 1.5 | 100.0% | 100.0% |
+
+"Best"/"Worst" follow each metric's own direction (lower latency is better, higher adherence and text accuracy are better). Per-image catalog prices are reference data in the model table. The full per-model and per-prompt records are in section 7, Verification Data.
 
 **推移 / Trend across surveys**
 
@@ -43,7 +49,7 @@ This is the first comparable survey in the series, so there is no multi-survey t
 
 ## 5. Analysis
 
-This run has no measured rows; every configuration was fixtured or errored, so no cross-model claim is made. The committed fixture page exists to prove the pipeline, not to compare models.
+Rows with `measured` provenance can be compared on latency, adherence, and text rendering; price is catalog context. A low adherence score with a high text score (or the reverse) localizes what a model gets wrong — constraint following versus glyph rendering.
 
 ## 6. Reproduction
 
@@ -76,9 +82,9 @@ No external resources are created. Generated images are held in memory for judgi
 
 | Model | Provider | Provenance | Price/image | Latency (mean±sd) | Adherence (mean±sd) | Text accuracy (mean±sd) | Note |
 | ----- | -------- | ---------- | ----------- | ----------------- | ------------------- | ----------------------- | ---- |
-| GPT Image 1.5 | openai | fixtured | $0.034 (1024x1024 medium) | 25 ± 15 (n=8) | 100.0% ± 0.0% (n=6) | 100.0% ± 0.0% (n=2) |  |
-| Gemini 2.5 Flash Image | google | fixtured | $0.039 (1024x1024 standard) | 25 ± 15 (n=8) | 100.0% ± 0.0% (n=6) | 100.0% ± 0.0% (n=2) |  |
-| Grok Imagine | xai | fixtured | $0.020 (standard) | 25 ± 15 (n=8) | 100.0% ± 0.0% (n=6) | 100.0% ± 0.0% (n=2) |  |
+| GPT Image 1.5 | openai | measured | $0.034 (1024x1024 medium) | 11689 ± 885 (n=8) | 100.0% ± 0.0% (n=6) | 100.0% ± 0.0% (n=2) |  |
+| Gemini 2.5 Flash Image | google | measured | $0.039 (1024x1024 standard) | 6526 ± 1717 (n=8) | 100.0% ± 0.0% (n=6) | 100.0% ± 0.0% (n=2) |  |
+| Grok Imagine | xai | measured | $0.020 (standard) | 4976 ± 535 (n=8) | 100.0% ± 0.0% (n=6) | 100.0% ± 0.0% (n=2) |  |
 
 **Prompt manifest (version 1)**
 
@@ -93,11 +99,11 @@ No external resources are created. Generated images are held in memory for judgi
 | text-hello-benchmark | text | 0 | HELLO BENCHMARK |
 | text-qmu-research-2026 | text | 0 | QMU RESEARCH 2026 |
 
-**Judge provenance.** Every image was read by `fixture-judge`; each call's rubric answers and transcriptions are preserved verbatim in the artifact.
+**Judge provenance.** Every image was read by `claude-sonnet-5`; each call's rubric answers and transcriptions are preserved verbatim in the artifact.
 
 The complete run record is committed as [`image-generation-comparison.data.json`](./image-generation-comparison.data.json): per-call prompts, latencies, image byte lengths, judge answers, and scores.
 
-Generated: 2026-01-01T00:00:00.000Z
+Generated: 2026-07-17T00:53:39.901Z
 
 **過去の調査 / Past surveys in this series**
 
