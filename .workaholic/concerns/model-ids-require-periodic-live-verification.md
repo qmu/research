@@ -7,18 +7,21 @@ origin_pr_url: https://github.com/qmu/research/pull/15
 origin_branch: work-20260622-191220
 origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
+last_seen: 2026-07-13T09:48:58+09:00
+first_seen: 2026-07-13T09:48:58+09:00
+concern_id: model-ids-require-periodic-live-verification
 severity: moderate
-status: resolved
-resolved_by_pr: 22
-resolved_by_commit: f3cc3ac
+status: active
+resolved_by_pr: 
+resolved_by_commit: 
 ---
 
-# JP pages are overwritten by the insights-translation stage after real runs
+# Model IDs require periodic live verification
 
 ## Description
 
-Running `research -- <topic> --real` ends with an insights translation that overwrites the topic's Japanese page with a non-outline document; the enforced-outline test catches it, but the recovery step is manual (see [ec38a52](https://github.com/qmu/research/commit/ec38a52) in packages/tech/src/research/translate-runner.ts)
+Curated model ids churn: grok-code-fast-1 was retired mid-branch, some web names do not match wire ids, and mid/small-tier prices are best-known estimates (see [c148f4f](https://github.com/qmu/research/commit/c148f4f), [1c734f1](https://github.com/qmu/research/commit/1c734f1) in packages/tech/src/llm-model-comparison/models.ts)
 
 ## How to Fix
 
-Run `npm run research:translate-report -- <topic>` after every real run (now documented), or reorder the pipeline so the full-report translation is the terminal JP stage
+Schedule periodic verification runs against the providers, record a last-verified date in models.ts, and document per-provider deprecation policies in docs/dependency-decisions.md

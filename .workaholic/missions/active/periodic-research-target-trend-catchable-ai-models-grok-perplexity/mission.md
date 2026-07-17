@@ -125,3 +125,4 @@ or scaffolding occurs before the proposal is approved.
 - 2026-07-17 — publish (20260714010002) remains gated: design review passed for
   the instrument, but 3 of 6 grounded subjects were error rows (xAI migration,
   Sonar key) — whether to publish at this coverage is the developer's call.
+- 2026-07-17 — story reported — work-20260717-150003.md

@@ -119,10 +119,12 @@ const groundedClientFor = (
     return groundedFromCompletion(completionClientFor(card, key));
   }
   // Grounded search-tool wiring for the chat providers. Each adapter enables
-  // that provider's own search surface (xAI Live Search `search_parameters`,
-  // Gemini `googleSearch` tool, OpenAI Responses `web_search` tool, Anthropic
-  // `web_search` server tool) per its current documentation; the first real
-  // trial (ticket 20260714010001) is the live verification of these params.
+  // that provider's own search surface (xAI Agent Tools `web_search`, Gemini
+  // `googleSearch` tool, OpenAI Responses `web_search` tool, Anthropic
+  // `web_search` server tool) per its current documentation. The 2026-07-17 first
+  // real trial verified the Gemini, OpenAI, and Anthropic wiring live (measured
+  // rows) and RETIRED the xAI one: Live Search answered 410, so the xAI adapter
+  // was migrated to Agent Tools and awaits its own owner-gated live probe.
   if (card.provider === "xai") {
     return createXaiGroundedClient(card.apiModelId, key);
   }

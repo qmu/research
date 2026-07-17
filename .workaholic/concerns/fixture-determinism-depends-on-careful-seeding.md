@@ -7,18 +7,21 @@ origin_pr_url: https://github.com/qmu/research/pull/15
 origin_branch: work-20260622-191220
 origin_commit: 147224c
 created_at: 2026-07-13T09:48:58+09:00
+last_seen: 2026-07-13T09:48:58+09:00
+first_seen: 2026-07-13T09:48:58+09:00
+concern_id: fixture-determinism-depends-on-careful-seeding
 severity: moderate
 status: active
-resolved_by_pr:
-resolved_by_commit:
+resolved_by_pr: 
+resolved_by_commit: 
 ---
 
-# Model IDs require periodic live verification
+# Fixture determinism depends on careful seeding
 
 ## Description
 
-Curated model ids churn: grok-code-fast-1 was retired mid-branch, some web names do not match wire ids, and mid/small-tier prices are best-known estimates (see [c148f4f](https://github.com/qmu/research/commit/c148f4f), [1c734f1](https://github.com/qmu/research/commit/1c734f1) in packages/tech/src/llm-model-comparison/models.ts)
+Byte-stable fixture reports require the pinned timestamp plus per-trial-index seeding; a future probe redesign could silently break byte-stability if the seeding strategy is not carried forward (see [679dcfe](https://github.com/qmu/research/commit/679dcfe) in packages/tech/src/vendors/llm/fixture.ts; instrument v2 preserved it in [c79751f](https://github.com/qmu/research/commit/c79751f))
 
 ## How to Fix
 
-Schedule periodic verification runs against the providers, record a last-verified date in models.ts, and document per-provider deprecation policies in docs/dependency-decisions.md
+Document the determinism precondition beside the fixture client and include a two-consecutive-runs byte-stability check in the quality gate of any ticket touching the fixture shape

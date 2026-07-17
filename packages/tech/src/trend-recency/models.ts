@@ -19,13 +19,19 @@ export const TREND_MODELS: ReadonlyArray<TrendModelCard> = [
     id: "grok-4-3-grounded",
     provider: "xai",
     grounding: "grounded",
-    modelName: "Grok 4.3 + Live Search",
+    // Live Search was retired mid-series (410 on the 2026-07-17 trial); this
+    // subject is the same base model on xAI's replacement grounded surface, the
+    // Agent Tools `web_search` tool.
+    modelName: "Grok 4.3 + Agent Tools web search",
     apiModelId: "grok-4.3",
     inputCostPerMTok: 1.25,
     outputCostPerMTok: 2.5,
-    searchCostPerKRequestsUsd: 25,
-    lastVerified: "2026-07-14",
-    source: "https://docs.x.ai/developers/models/grok-4.3",
+    // Agent Tools re-priced the grounded surface DOWN: retired Live Search billed
+    // $25/1k searches, the replacement `web_search` tool bills $5/1k successful
+    // calls. Token prices are unchanged ($1.25/$2.50 per Mtok for grok-4.3).
+    searchCostPerKRequestsUsd: 5,
+    lastVerified: "2026-07-17",
+    source: "https://docs.x.ai/developers/pricing",
   },
   {
     id: "sonar-grounded",
