@@ -49,7 +49,7 @@ No dated frames have been archived yet.
 
 ### Image generation
 
-No dated frames have been archived yet.
+- 2026-07-17T00:53:39.901Z: [English](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison) · [Japanese](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja) · [data.json](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.data.json)
 
 ### Speech (TTS / STT / STS)
 

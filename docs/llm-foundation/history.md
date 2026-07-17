@@ -49,7 +49,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### 画像生成
 
-まだ日付別フレームは保存されていない。
+- 2026-07-17T00:53:39.901Z: [English](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison) · [Japanese](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja) · [data.json](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.data.json)
 
 ### 音声 (TTS/STT/STS)
 

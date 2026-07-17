@@ -29,12 +29,23 @@ export const createXaiCompletionClient = (
 
 // Grok Imagine speaks the OpenAI Images protocol at the same base URL, so the
 // image-generation port is the OpenAI adapter with the URL swapped, like the
-// completion client above.
+// completion client above. Dialect: xAI rejects the `size` argument
+// (400 "Argument not supported: size", observed on the 2026-07-17 first real
+// trial) and returns a URL unless `response_format: "b64_json"` is requested,
+// so both dialect switches differ from OpenAI's defaults here.
 export const createXaiImageGenerationClient = (
   apiModelId: string,
   apiKey: string,
 ): ImageGenerationClient =>
-  createOpenAiCompatibleImageGenerationClient(apiModelId, apiKey, XAI_BASE_URL);
+  createOpenAiCompatibleImageGenerationClient(
+    apiModelId,
+    apiKey,
+    XAI_BASE_URL,
+    {
+      includeSize: false,
+      requestB64Json: true,
+    },
+  );
 
 // ── Live Search (grounded answers for the trend-recency topic) ────────────────
 

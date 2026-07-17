@@ -13,10 +13,10 @@ export const IMAGE_MODELS: ReadonlyArray<ImageModelCard> = [
     provider: "openai",
     modelName: "GPT Image 1.5",
     apiModelId: "gpt-image-1.5",
-    pricePerImageUsd: 0.04,
+    pricePerImageUsd: 0.034,
     sizeTier: "1024x1024 medium",
-    lastVerified: "2026-07-13",
-    source: "https://developers.openai.com/api/docs/pricing",
+    lastVerified: "2026-07-17",
+    source: "https://developers.openai.com/api/docs/models/gpt-image-1.5",
   },
   {
     id: "gemini-2.5-flash-image",
@@ -25,7 +25,7 @@ export const IMAGE_MODELS: ReadonlyArray<ImageModelCard> = [
     apiModelId: "gemini-2.5-flash-image",
     pricePerImageUsd: 0.039,
     sizeTier: "1024x1024 standard",
-    lastVerified: "2026-07-13",
+    lastVerified: "2026-07-17",
     source: "https://ai.google.dev/gemini-api/docs/pricing",
   },
   {
@@ -35,7 +35,7 @@ export const IMAGE_MODELS: ReadonlyArray<ImageModelCard> = [
     apiModelId: "grok-imagine-image",
     pricePerImageUsd: 0.02,
     sizeTier: "standard",
-    lastVerified: "2026-07-13",
+    lastVerified: "2026-07-17",
     source: "https://docs.x.ai/developers/models",
   },
 ];
