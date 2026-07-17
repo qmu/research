@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain]
 effort:
-commit_hash:
+commit_hash: a6b95b2
 category: Changed
 depends_on:
 mission: per-topic-research-pipeline-benchmark-llm-insights-jp-translation
