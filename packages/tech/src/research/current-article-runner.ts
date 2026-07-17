@@ -20,6 +20,7 @@ import {
   snapshotPointsFor,
   type SnapshotPoint,
 } from "./domain/snapshot";
+import { findTopic } from "./domain/topic";
 
 /**
  * The effectful driver for the dated survey-article composition (pure blocks in
@@ -153,6 +154,11 @@ export const composeTopicCurrentArticle = async (
 ): Promise<boolean> => {
   const topic = findPublishedResearchTopic(topicId);
   if (topic === undefined) return false;
+  // Hand-authored reference articles (kind "article", e.g. agent-sdk) are not
+  // survey-series pages: they carry no measured series, and their pages are
+  // maintained by hand. The site-wide compose/append commands must never
+  // inject survey blocks into them.
+  if (findTopic(topicId)?.kind === "article") return false;
   const root = repoRoot();
   const currentPath = resolve(root, topic.source.docsPath);
   if (!(await exists(currentPath))) return false;
@@ -183,6 +189,9 @@ export const appendRelatedToTopicPages = async (
 ): Promise<number> => {
   const topic = findPublishedResearchTopic(topicId);
   if (topic === undefined) return 0;
+  // Same guard as composeTopicCurrentArticle: hand-authored article-kind
+  // pages never receive survey-series blocks.
+  if (findTopic(topicId)?.kind === "article") return 0;
   const root = repoRoot();
   const frames = framesInTendencyWindow(await readHistoryFrames(topicId));
   let written = 0;

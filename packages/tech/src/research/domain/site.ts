@@ -144,6 +144,55 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     },
   },
   {
+    // Reference topic (design comparison, not measured): both pages are
+    // hand-authored — the Japanese article is the canonical original at its
+    // long-served URL, the English page its hand-written counterpart. No LLM
+    // stage runs for this topic; provenance labels (design comparison /
+    // 未測定 / 要確認) are carried in the articles themselves.
+    id: "agent-sdk",
+    artifactBase: "agent-sdk-comparison",
+    npmScript: "npm run research -- agent-sdk --fixture",
+    source: {
+      text: "Agent SDK comparison",
+      docsPath: "docs/research-reports/agent-sdk-comparison.md",
+      summary:
+        "A design comparison of agent frameworks/runtimes (OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph) from public documentation — not measured.",
+    },
+    japanese: {
+      text: "Agent SDKの比較",
+      docsPath: "docs/llm-foundation/agent-sdk-comparison.md",
+      summary:
+        "公開ドキュメントに基づく agent framework / runtime の設計比較。設計比較 / 未測定 / 要確認 の provenance を各セルに明記する。",
+    },
+    qmuSlug: "agent-sdk-comparison",
+    design: {
+      cadence: "quarterly",
+      offCadenceTrigger:
+        "a major agent SDK release or a breaking design change at a covered SDK",
+      subjects:
+        "OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph — public documentation only",
+      metrics: [
+        {
+          name: "designComparison",
+          unit: "provenance-labelled cells",
+          direction: "reference",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 0,
+        maximum: 0,
+        premises:
+          "hand-authored design comparison over public documentation; no measurement calls",
+      },
+      costPerRun: {
+        ceilingUsd: 0,
+        premises: "keyless and costless; reads public documentation only",
+      },
+      accumulates:
+        "dated revisions of the design comparison, one frame per archive",
+    },
+  },
+  {
     id: "speed",
     artifactBase: "llm-speed-comparison",
     npmScript: "npm run research -- speed --real",
