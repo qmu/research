@@ -50,6 +50,10 @@ This run has **8 probed** of 8 provider rows (the rest are `unreachable` — no 
 
 "Best"/"Worst" follow each metric's own direction (lower cold start and lower cost are better). The isolation model, published rate, and capability columns are reference data in the provider tables. The full per-provider records are in section 7, Verification Data.
 
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+
 ## 5. Analysis
 
 Rows with `fixtured`/`measured` provenance can be compared on cold start and cost; isolation, price, and capability are reference context. A low cold-start p50 with a high p95 localizes tail-latency risk; a cheap $/vCPU-hr with a slow boot trades responsiveness for cost.
