@@ -90,6 +90,8 @@ const capSeries = (
 
 const TREND_LABEL = "**推移 / Trend across surveys**";
 
+const RELATED_LABEL = "**過去の調査 / Past surveys in this series**";
+
 /** Distinct measured dates for a metric — a real trend needs at least two. */
 const distinctDates = (
   points: ReadonlyArray<SnapshotPoint>,
@@ -191,7 +193,9 @@ export const buildRelatedBlock = (
  * Inject the 推移 (trend) block before "## 5." (end of §4 Verification
  * Results). The trend is composed into the English page BEFORE translation, so
  * its caption translates into the Japanese page. An empty block is a no-op.
- * Pure and idempotent-safe only on a freshly rendered (un-composed) article.
+ * Pure and idempotent: an article that already carries a trend block is
+ * returned unchanged (normalized), so re-running a compose pass over an
+ * already-composed page can never inject a second block.
  */
 export const composeCurrentArticle = (
   articleMarkdown: string,
@@ -199,6 +203,7 @@ export const composeCurrentArticle = (
 ): string => {
   const out = articleMarkdown.replace(/\n+$/, "\n");
   if (trendBlock.trim() === "") return out;
+  if (out.includes(TREND_LABEL)) return out;
   const marker = "\n## 5. ";
   const index = out.indexOf(marker);
   return index === -1
@@ -209,14 +214,33 @@ export const composeCurrentArticle = (
 /**
  * Append the 過去の調査 (past surveys) block at the end of §7 Verification
  * Data (the last section). Applied AFTER translation, per language, so each
- * page links its own-language frames. An empty block is a no-op.
+ * page links its own-language frames. An empty block is a no-op. Idempotent:
+ * an article that already carries a past-surveys block is returned unchanged,
+ * so re-running an append pass can never stack a second block.
  */
 export const appendRelatedBlock = (
   articleMarkdown: string,
   relatedBlock: string,
 ): string =>
-  relatedBlock.trim() === ""
+  relatedBlock.trim() === "" || articleMarkdown.includes(RELATED_LABEL)
     ? articleMarkdown
     : `${articleMarkdown.replace(/\n+$/, "\n")}\n${relatedBlock.trim()}\n`;
+
+/**
+ * The newest dated frame that carries BOTH the English survey article and the
+ * data artifact — the pair the current pages are restored from. Frames missing
+ * either file (e.g. a partially-written archive) are skipped rather than
+ * half-restored.
+ */
+export const latestCompleteFrame = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): ResearchHistoryFrame | undefined =>
+  [...frames]
+    .filter(
+      (frame) => frame.sourcePath !== undefined && frame.dataPath !== undefined,
+    )
+    .sort((left, right) =>
+      right.generatedAt.localeCompare(left.generatedAt),
+    )[0];
 
 export { framesInTendencyWindow, snapshotPointsFor };

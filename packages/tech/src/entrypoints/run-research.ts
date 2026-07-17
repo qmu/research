@@ -12,6 +12,7 @@ import { runTranslationStage } from "../research/translate-runner";
 import { runReportTranslation } from "../research/report-translation-runner";
 import {
   appendRelatedToTopicPages,
+  composeCurrentPagesFromLatestMeasuredFrame,
   composeTopicCurrentArticle,
 } from "../research/current-article-runner";
 import { findPublishedResearchTopic } from "../research/domain/site";
@@ -172,19 +173,29 @@ export const main = async (): Promise<void> => {
     // The benchmark stage of the in-place topics rewrites the committed
     // current page, erasing the composed survey-series blocks (推移 /
     // 過去の調査). On the keyless write paths — fixture, plus estimate for the
-    // catalog kind, whose reference generator renders on every mode —
-    // re-compose them immediately so regeneration stays byte-stable against
-    // the committed page. Only the freshly-rewritten ENGLISH page is
-    // re-composed (compose is not idempotent); the Japanese page is untouched
-    // on these paths. A real run composes later, around the translation stage.
+    // catalog kind, whose reference generator renders on every mode — restore
+    // the committed shape so regeneration stays byte-stable:
+    //   - A topic with a MEASURED dated frame renders its current pages from
+    //     that frame (the committed real-data source of truth); the fixture
+    //     render just written is preserved as the gitignored `*.fixture.*`
+    //     side files, so the keyless pipeline stays exercised without ever
+    //     being presented as the current survey.
+    //   - Otherwise (no real trial yet) the fixture render IS the current
+    //     page, re-composed in place as before. Only the freshly-rewritten
+    //     ENGLISH page is touched on this fallback; the Japanese page is
+    //     untouched. A real run composes later, around the translation stage.
     if (
       stage === "benchmark" &&
       spec.fixtureRewritesCurrentPage === true &&
-      (mode === "fixture" ||
-        (mode === "estimate" && spec.kind === "catalog")) &&
-      (await composeTopicCurrentArticle(spec.id))
+      (mode === "fixture" || (mode === "estimate" && spec.kind === "catalog"))
     ) {
-      await appendRelatedToTopicPages(spec.id, ["en"]);
+      const restored = await composeCurrentPagesFromLatestMeasuredFrame(
+        spec.id,
+        { fixtureRenderAside: true },
+      );
+      if (!restored && (await composeTopicCurrentArticle(spec.id))) {
+        await appendRelatedToTopicPages(spec.id, ["en"]);
+      }
     }
   }
 };

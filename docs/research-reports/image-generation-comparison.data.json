@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-01-01T00:00:00.000Z",
-  "fixture": true,
+  "generatedAt": "2026-07-17T00:53:39.901Z",
+  "fixture": false,
   "trials": 1,
-  "judgeModel": "fixture-judge",
+  "judgeModel": "claude-sonnet-5",
   "manifestVersion": "1",
   "runs": [
     {
@@ -13,13 +13,13 @@
       "pricePerImageUsd": 0.034,
       "sizeTier": "1024x1024 medium",
       "source": "https://developers.openai.com/api/docs/models/gpt-image-1.5",
-      "provenance": "fixtured",
-      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T00:53:39.901Z",
       "trialsRequested": 1,
       "stats": {
         "generationLatencyMs": {
-          "mean": 24.5,
-          "stdDev": 15.259657363687523,
+          "mean": 11688.875,
+          "stdDev": 885.2374076241598,
           "n": 8
         },
         "promptAdherence": {
@@ -38,8 +38,8 @@
           "promptId": "three-red-circles",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 12,
-          "imageByteLength": 70,
+          "latencyMs": 11745,
+          "imageByteLength": 122603,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -61,8 +61,8 @@
           "promptId": "square-left-of-triangle",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 14,
-          "imageByteLength": 70,
+          "latencyMs": 10713,
+          "imageByteLength": 172706,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -88,8 +88,8 @@
           "promptId": "five-green-stars-row",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 47,
-          "imageByteLength": 70,
+          "latencyMs": 12274,
+          "imageByteLength": 115155,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -111,8 +111,8 @@
           "promptId": "black-cat-facing-left",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 47,
-          "imageByteLength": 70,
+          "latencyMs": 13354,
+          "imageByteLength": 82337,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -134,8 +134,8 @@
           "promptId": "two-orange-one-purple-diamond",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 30,
-          "imageByteLength": 70,
+          "latencyMs": 11304,
+          "imageByteLength": 119704,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -157,8 +157,8 @@
           "promptId": "red-circle-above-blue-line",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 22,
-          "imageByteLength": 70,
+          "latencyMs": 10817,
+          "imageByteLength": 93738,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -180,8 +180,8 @@
           "promptId": "text-hello-benchmark",
           "kind": "text",
           "repetition": 0,
-          "latencyMs": 13,
-          "imageByteLength": 70,
+          "latencyMs": 12154,
+          "imageByteLength": 116651,
           "imageMimeType": "image/png",
           "judgeTranscription": "HELLO BENCHMARK",
           "textRenderAccuracy": 1
@@ -190,8 +190,8 @@
           "promptId": "text-qmu-research-2026",
           "kind": "text",
           "repetition": 0,
-          "latencyMs": 11,
-          "imageByteLength": 70,
+          "latencyMs": 11150,
+          "imageByteLength": 132451,
           "imageMimeType": "image/png",
           "judgeTranscription": "QMU RESEARCH 2026",
           "textRenderAccuracy": 1
@@ -206,13 +206,13 @@
       "pricePerImageUsd": 0.039,
       "sizeTier": "1024x1024 standard",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
-      "provenance": "fixtured",
-      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T00:53:39.901Z",
       "trialsRequested": 1,
       "stats": {
         "generationLatencyMs": {
-          "mean": 24.5,
-          "stdDev": 15.259657363687523,
+          "mean": 6526.375,
+          "stdDev": 1716.9229899944344,
           "n": 8
         },
         "promptAdherence": {
@@ -231,8 +231,8 @@
           "promptId": "three-red-circles",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 12,
-          "imageByteLength": 70,
+          "latencyMs": 6367,
+          "imageByteLength": 907357,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -254,8 +254,8 @@
           "promptId": "square-left-of-triangle",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 14,
-          "imageByteLength": 70,
+          "latencyMs": 10266,
+          "imageByteLength": 1270115,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -281,8 +281,8 @@
           "promptId": "five-green-stars-row",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 47,
-          "imageByteLength": 70,
+          "latencyMs": 7582,
+          "imageByteLength": 255359,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -304,8 +304,8 @@
           "promptId": "black-cat-facing-left",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 47,
-          "imageByteLength": 70,
+          "latencyMs": 5667,
+          "imageByteLength": 177955,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -327,8 +327,8 @@
           "promptId": "two-orange-one-purple-diamond",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 30,
-          "imageByteLength": 70,
+          "latencyMs": 5223,
+          "imageByteLength": 349240,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -350,8 +350,8 @@
           "promptId": "red-circle-above-blue-line",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 22,
-          "imageByteLength": 70,
+          "latencyMs": 4882,
+          "imageByteLength": 178363,
           "imageMimeType": "image/png",
           "judgeAnswers": [
             {
@@ -373,8 +373,8 @@
           "promptId": "text-hello-benchmark",
           "kind": "text",
           "repetition": 0,
-          "latencyMs": 13,
-          "imageByteLength": 70,
+          "latencyMs": 5999,
+          "imageByteLength": 222117,
           "imageMimeType": "image/png",
           "judgeTranscription": "HELLO BENCHMARK",
           "textRenderAccuracy": 1
@@ -383,8 +383,8 @@
           "promptId": "text-qmu-research-2026",
           "kind": "text",
           "repetition": 0,
-          "latencyMs": 11,
-          "imageByteLength": 70,
+          "latencyMs": 6225,
+          "imageByteLength": 232138,
           "imageMimeType": "image/png",
           "judgeTranscription": "QMU RESEARCH 2026",
           "textRenderAccuracy": 1
@@ -399,13 +399,13 @@
       "pricePerImageUsd": 0.02,
       "sizeTier": "standard",
       "source": "https://docs.x.ai/developers/models",
-      "provenance": "fixtured",
-      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "provenance": "measured",
+      "measuredAt": "2026-07-17T01:00:27.855Z",
       "trialsRequested": 1,
       "stats": {
         "generationLatencyMs": {
-          "mean": 24.5,
-          "stdDev": 15.259657363687523,
+          "mean": 4976.25,
+          "stdDev": 534.8411646728133,
           "n": 8
         },
         "promptAdherence": {
@@ -424,9 +424,9 @@
           "promptId": "three-red-circles",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 12,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 5598,
+          "imageByteLength": 104948,
+          "imageMimeType": "image/jpeg",
           "judgeAnswers": [
             {
               "constraintId": "circle-count",
@@ -447,9 +447,9 @@
           "promptId": "square-left-of-triangle",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 14,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 5113,
+          "imageByteLength": 98680,
+          "imageMimeType": "image/jpeg",
           "judgeAnswers": [
             {
               "constraintId": "has-blue-square",
@@ -474,9 +474,9 @@
           "promptId": "five-green-stars-row",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 47,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 4284,
+          "imageByteLength": 59635,
+          "imageMimeType": "image/jpeg",
           "judgeAnswers": [
             {
               "constraintId": "star-count",
@@ -497,9 +497,9 @@
           "promptId": "black-cat-facing-left",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 47,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 4117,
+          "imageByteLength": 37041,
+          "imageMimeType": "image/jpeg",
           "judgeAnswers": [
             {
               "constraintId": "is-cat",
@@ -520,9 +520,9 @@
           "promptId": "two-orange-one-purple-diamond",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 30,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 5145,
+          "imageByteLength": 123011,
+          "imageMimeType": "image/jpeg",
           "judgeAnswers": [
             {
               "constraintId": "orange-count",
@@ -543,9 +543,9 @@
           "promptId": "red-circle-above-blue-line",
           "kind": "adherence",
           "repetition": 0,
-          "latencyMs": 22,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 5567,
+          "imageByteLength": 87589,
+          "imageMimeType": "image/jpeg",
           "judgeAnswers": [
             {
               "constraintId": "has-red-circle",
@@ -566,9 +566,9 @@
           "promptId": "text-hello-benchmark",
           "kind": "text",
           "repetition": 0,
-          "latencyMs": 13,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 4965,
+          "imageByteLength": 48880,
+          "imageMimeType": "image/jpeg",
           "judgeTranscription": "HELLO BENCHMARK",
           "textRenderAccuracy": 1
         },
@@ -576,9 +576,9 @@
           "promptId": "text-qmu-research-2026",
           "kind": "text",
           "repetition": 0,
-          "latencyMs": 11,
-          "imageByteLength": 70,
-          "imageMimeType": "image/png",
+          "latencyMs": 5021,
+          "imageByteLength": 47636,
+          "imageMimeType": "image/jpeg",
           "judgeTranscription": "QMU RESEARCH 2026",
           "textRenderAccuracy": 1
         }
