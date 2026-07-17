@@ -20,6 +20,7 @@ import {
   snapshotPointsFor,
   type SnapshotPoint,
 } from "./domain/snapshot";
+import { findTopic } from "./domain/topic";
 
 /**
  * The effectful driver for the dated survey-article composition (pure blocks in
@@ -153,6 +154,11 @@ export const composeTopicCurrentArticle = async (
 ): Promise<boolean> => {
   const topic = findPublishedResearchTopic(topicId);
   if (topic === undefined) return false;
+  // Hand-authored reference articles (kind "article", e.g. agent-sdk) are not
+  // survey-series pages: they carry no measured series, and their pages are
+  // maintained by hand. The site-wide compose/append commands must never
+  // inject survey blocks into them.
+  if (findTopic(topicId)?.kind === "article") return false;
   const root = repoRoot();
   const currentPath = resolve(root, topic.source.docsPath);
   if (!(await exists(currentPath))) return false;
@@ -172,20 +178,28 @@ export const composeTopicCurrentArticle = async (
  * Append the 過去の調査 (past surveys) block to a topic's English and Japanese
  * current pages, AFTER translation — each page links its own-language frames,
  * so the links resolve in both qmu-co-jp language sections. Returns the number
- * of pages written.
+ * of pages written. `languages` narrows the write to the pages that were
+ * freshly (re-)rendered: the keyless fixture path rewrites only the English
+ * page, so it passes `["en"]` to leave the committed Japanese page untouched
+ * (the block is append-only, never idempotent).
  */
 export const appendRelatedToTopicPages = async (
   topicId: string,
+  languages: ReadonlyArray<ArticleLanguage> = ["en", "ja"],
 ): Promise<number> => {
   const topic = findPublishedResearchTopic(topicId);
   if (topic === undefined) return 0;
+  // Same guard as composeTopicCurrentArticle: hand-authored article-kind
+  // pages never receive survey-series blocks.
+  if (findTopic(topicId)?.kind === "article") return 0;
   const root = repoRoot();
   const frames = framesInTendencyWindow(await readHistoryFrames(topicId));
   let written = 0;
-  const pages: ReadonlyArray<{ path: string; language: ArticleLanguage }> = [
+  const allPages: ReadonlyArray<{ path: string; language: ArticleLanguage }> = [
     { path: topic.source.docsPath, language: "en" },
     { path: topic.japanese.docsPath, language: "ja" },
   ];
+  const pages = allPages.filter((page) => languages.includes(page.language));
   for (const page of pages) {
     const absolute = resolve(root, page.path);
     if (!(await exists(absolute))) continue;

@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: bugfix
 layer: [Domain]
 effort:
-commit_hash:
+commit_hash: 363f108
 category: Changed
 depends_on:
 mission: per-topic-research-pipeline-benchmark-llm-insights-jp-translation

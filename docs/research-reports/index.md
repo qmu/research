@@ -19,6 +19,7 @@ Past generated frames are listed in [History](./history).
 **Topics**
 
 - [Foundation model catalog](./foundation-models) — A reference catalog of the compared models: provider, tier, price, effort, and API surface.
+- [Agent SDK comparison](./agent-sdk-comparison) — A design comparison of agent frameworks/runtimes (OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph) from public documentation — not measured.
 - [LLM response speed](./llm-speed-comparison) — Sustained throughput, time-to-first-token, and total latency.
 - [LLM output accuracy](./llm-accuracy-comparison) — JSON-schema limits, length-instruction following, and information accuracy.
 - [LLM API availability](./llm-availability) — Status-page incident history and derived 30/90-day availability trends.

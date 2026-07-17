@@ -168,6 +168,24 @@ export const main = async (): Promise<void> => {
         `research ${spec.id}: stage '${stage}' skipped (mode ${mode})\n`,
       );
     }
+
+    // The benchmark stage of the in-place topics rewrites the committed
+    // current page, erasing the composed survey-series blocks (推移 /
+    // 過去の調査). On the keyless write paths — fixture, plus estimate for the
+    // catalog kind, whose reference generator renders on every mode —
+    // re-compose them immediately so regeneration stays byte-stable against
+    // the committed page. Only the freshly-rewritten ENGLISH page is
+    // re-composed (compose is not idempotent); the Japanese page is untouched
+    // on these paths. A real run composes later, around the translation stage.
+    if (
+      stage === "benchmark" &&
+      spec.fixtureRewritesCurrentPage === true &&
+      (mode === "fixture" ||
+        (mode === "estimate" && spec.kind === "catalog")) &&
+      (await composeTopicCurrentArticle(spec.id))
+    ) {
+      await appendRelatedToTopicPages(spec.id, ["en"]);
+    }
   }
 };
 

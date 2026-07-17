@@ -30,7 +30,7 @@ The measured metrics are character error rate (CER), word error rate (WER), and 
 
 ## 4. Verification Results
 
-This run has **0 measured** of 19 model rows (non-measured rows are `fixtured` harness checks or `out-of-scope` integration gaps).
+This run has **0 measured** of 27 model rows (non-measured rows are `fixtured` harness checks or `out-of-scope` integration gaps).
 
 There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
 
@@ -88,6 +88,14 @@ The OCR fixture and real paths create no external cloud resources. They render l
 | Grok 4.20 Reasoning | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 | Grok 4.20 Non-Reasoning | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 | Grok Build 0.1 | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Sonar | Perplexity | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Sonar Pro | Perplexity | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Sonar Reasoning Pro | Perplexity | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Claude Opus 4.8 (Bedrock) | AWS Bedrock | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Claude Sonnet 5 (Bedrock) | AWS Bedrock | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Claude Opus 4.8 (Vertex) | Google Vertex AI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Claude Opus 4.8 (OpenRouter) | OpenRouter | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| GPT-5.5 (OpenRouter) | OpenRouter | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 
 **Dataset.** QMU synthetic document OCR fixture v1 (`qmu-synthetic-document-ocr-v1`), manifest version 2026-07-08. Source: Repository-authored deterministic synthetic document manifest. License: MIT; generated document text, field ground truth, and rendered images are authored for this repository and may be redistributed under the repository license. Images are rendered deterministically at run time from this manifest; no third-party document images are committed.
 

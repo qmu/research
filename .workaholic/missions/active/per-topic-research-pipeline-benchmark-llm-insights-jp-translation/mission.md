@@ -5,6 +5,7 @@ slug: per-topic-research-pipeline-benchmark-llm-insights-jp-translation
 status: active
 created_at: 2026-07-09T02:20:03+09:00
 author: a@qmu.jp
+assignee: a@qmu.jp
 tickets: []
 stories: []
 concerns: []
@@ -69,7 +70,7 @@ owner-gated, regenerable artifact (the existing `.real` pattern).
 - [x] A Japanese auto-translation stage renders the EN insights report into JP, real-run/owner-gated with a deterministic keyless fixture stub (#20260709022002-japanese-auto-translation-stage.md)
 - [x] The monolithic compare engine is split into distinct speed and accuracy topics under the unified CLI, each emitting its own data artifact + insights + JP (#20260709022003-split-compare-speed-accuracy-topics.md)
 - [x] RAG, OCR, and availability are migrated onto the unified topic CLI and gain the insights + JP layer without losing their benchmarks (#20260709022004-migrate-existing-topics-to-unified-cli.md)
-- [ ] The non-benchmark reference topics (foundation-model catalog, Agent SDK design comparison) fit the topic/article structure with insights/JP and clear no-live-benchmark provenance (#20260709022005-nonbenchmark-reference-topics.md)
+- [x] The non-benchmark reference topics (foundation-model catalog, Agent SDK design comparison) fit the topic/article structure with insights/JP and clear no-live-benchmark provenance (#20260709022005-nonbenchmark-reference-topics.md)
 - [x] The VitePress site + publishing present each topic as EN report + JP translation directly, removing the meta IA stubs/intro and reconciling the exporter/boundary (#20260709022006-per-topic-site-and-publishing-rework.md)
 
 ## Changelog
@@ -82,3 +83,6 @@ owner-gated, regenerable artifact (the existing `.real` pattern).
 - 2026-07-17 — reconciliation against main (ticket 20260717000606): items 1–5 and 7 verified with evidence — commits 7de604d (unified CLI + topic registry), d8f1afd (insights.ts, fixture stub + provenance), 321dd5d (translate.ts, verifyNumbersPreserved), 90f11d9 (speed/accuracy split), efc5f83 (RAG/OCR/availability insights+JP), 56d4067+d196d60 (site main line, meta stubs/combined pages removed); keyless `npm run research -- <topic> --fixture` passes for speed/accuracy/rag/ocr/availability/foundation-models/agent-sdk; `--estimate` prices insights+translation stages; 50 domain/CLI tests green; published EN reports + JP pages (`*.insights.ja.md`, provenance frontmatter, generated 2026-07-13 real run) committed for all six published topics — 6/7 checked
 - 2026-07-17 — item 6 left unchecked: foundation-models is complete (catalog kind, insights+JP published) but agent-sdk has no insights/JP layer and no site placement (absent from site.ts, article orphaned from nav) — residue ticket 20260717003610-agent-sdk-insights-and-site-placement.md
 - 2026-07-17 — reconciliation residue filed: keyless fixture artifact drift vs models.ts 27-model registry and compose-path divergence (20260717003611), legacy superseded docs/llm-foundation JP pages still served as orphans (20260717003612)
+- 2026-07-17 — residue ticket 20260717003611 archived (363f108, work-20260717-101001): keyless fixture path re-composes the 推移/過去の調査 blocks after the benchmark stage (fixtureRewritesCurrentPage on TopicSpec), committed artifacts regenerated to the 27-model / 8-provider registry (foundation-models, ocr-comparison, llm-model-comparison.data.json, agent-vm apiReachable), and a `make drift` CI gate now verifies byte-stability of every keyless fixture against the committed pages
+- 2026-07-17 — residue ticket 20260717003610 archived (a6b95b2, work-20260717-101001): agent-sdk published as a hand-authored EN/JP pair on the standard 7-section outline (EN docs/research-reports/agent-sdk-comparison.md new; JP canonical stays at docs/llm-foundation/agent-sdk-comparison.md), registered in site.ts after foundation-models with design-comparison provenance, on both sidebars, indexes, copy-plan and the qmu publish ticket; article-kind pages are guarded from survey-block composition — item 6 checked, acceptance now 7/7
+- 2026-07-17 — residue ticket 20260717003612 archived (06ad3a2, work-20260717-101001): the three superseded llm-foundation JP orphan pages replaced by explicit meta-refresh redirect stubs to their canonical *.insights.ja pages; qmu-co-jp checked — no stale old-slug copies, no retiredQmuSlugs change needed

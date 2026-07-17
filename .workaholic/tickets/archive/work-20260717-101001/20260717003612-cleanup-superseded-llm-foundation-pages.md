@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: housekeeping
 layer: [UX]
 effort:
-commit_hash:
+commit_hash: 06ad3a2
 category: Removed
 depends_on:
 mission: per-topic-research-pipeline-benchmark-llm-insights-jp-translation

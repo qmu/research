@@ -1,6 +1,6 @@
 ---
 title: Foundation model catalog
-description: A curated reference catalog of 19 foundation models across 4 providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.
+description: A curated reference catalog of 27 foundation models across 8 providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.
 ---
 
 # Foundation model catalog
@@ -15,7 +15,7 @@ The catalog gives readers one place to verify which providers, model names, API 
 
 ### Target Models
 
-19 foundation models across 4 providers are listed. The single source of truth is the model registry (`packages/tech/src/llm-model-comparison/models.ts`).
+27 foundation models across 8 providers are listed. The single source of truth is the model registry (`packages/tech/src/llm-model-comparison/models.ts`).
 
 ### Target Metrics
 
@@ -33,6 +33,10 @@ Every value is curated catalog data with a cited source, not a live measurement.
 | OpenAI | 8 | flagship, mid, small | $0.15–$5.00 | $0.60–$30.00 |
 | Google | 3 | flagship, mid, small | $0.10–$2.00 | $0.40–$12.00 |
 | xAI | 4 | frontier, flagship, mid, small | $1.00–$1.25 | $2.00–$2.50 |
+| Perplexity | 3 | mid, flagship, frontier | $1.00–$3.00 | $1.00–$15.00 |
+| AWS Bedrock | 2 | flagship, mid | $3.00–$5.00 | $15.00–$25.00 |
+| Google Vertex AI | 1 | flagship | $5.00 | $25.00 |
+| OpenRouter | 2 | flagship | $5.00 | $25.00–$30.00 |
 
 Every value is curated catalog data (provenance: `catalog`), not a measured value; prices are the USD-per-1M-token range across each provider's listed models. The full per-model catalog table is in section 7, Verification Data.
 
@@ -86,6 +90,14 @@ No external resources are created. Re-rendering only rewrites the catalog Markdo
 | xAI | Grok 4.20 Reasoning | `grok-4.20-0309-reasoning` | flagship | chat | 2026 | $1.25 | $2.50 | n/a |
 | xAI | Grok 4.20 Non-Reasoning | `grok-4.20-0309-non-reasoning` | mid | chat | 2026 | $1.25 | $2.50 | n/a |
 | xAI | Grok Build 0.1 | `grok-build-0.1` | small | chat | 2026 | $1.00 | $2.00 | n/a |
+| Perplexity | Sonar | `sonar` | mid | chat | 2025 | $1.00 | $1.00 | n/a |
+| Perplexity | Sonar Pro | `sonar-pro` | flagship | chat | 2025 | $3.00 | $15.00 | n/a |
+| Perplexity | Sonar Reasoning Pro | `sonar-reasoning-pro` | frontier | chat | 2025 | $2.00 | $8.00 | n/a |
+| AWS Bedrock | Claude Opus 4.8 (Bedrock) | `claude-opus-4-8` | flagship | chat | 2026 | $5.00 | $25.00 | low, medium, high, xhigh, max |
+| AWS Bedrock | Claude Sonnet 5 (Bedrock) | `claude-sonnet-5` | mid | chat | 2026-06 | $3.00 | $15.00 | low, medium, high, xhigh, max |
+| Google Vertex AI | Claude Opus 4.8 (Vertex) | `claude-opus-4-8` | flagship | chat | 2026 | $5.00 | $25.00 | low, medium, high, xhigh, max |
+| OpenRouter | Claude Opus 4.8 (OpenRouter) | `anthropic/claude-opus-4.8` | flagship | chat | 2026 | $5.00 | $25.00 | n/a |
+| OpenRouter | GPT-5.5 (OpenRouter) | `openai/gpt-5.5` | flagship | chat | 2026 | $5.00 | $30.00 | n/a |
 
 **Legend.** Every column is curated catalog data (provenance: `catalog`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; `n/a` means the model exposes no user-selectable effort control.
 
@@ -95,6 +107,10 @@ No external resources are created. Re-rendering only rewrites the catalog Markdo
 - **OpenAI:** https://developers.openai.com/api/docs/pricing
 - **Google:** https://ai.google.dev/gemini-api/docs/pricing
 - **xAI:** https://docs.x.ai/developers/models/grok-4.3
+- **Perplexity:** https://docs.perplexity.ai/guides/pricing
+- **AWS Bedrock:** https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock
+- **Google Vertex AI:** https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai
+- **OpenRouter:** https://openrouter.ai/anthropic/claude-opus-4.8
 
 The catalog regenerates from `packages/tech/src/llm-model-comparison/models.ts`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered.
 
