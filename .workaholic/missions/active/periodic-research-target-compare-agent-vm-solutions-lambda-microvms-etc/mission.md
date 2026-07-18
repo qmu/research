@@ -6,6 +6,7 @@ status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
+drive_authorized: true
 tickets:
   - 20260714005157-kickoff-propose-periodic-research.md
   - 20260714024001-agent-vm-real-coldstart-cost-probe.md
@@ -158,6 +159,10 @@ ML-training benchmarks (a separate topic); a security audit of the isolation
 boundary (the topic records each vendor's *stated* isolation model, not a
 pen-test of it).
 
+## Experience
+
+The published agent-VM comparison shows, per reachable sandbox provider, measured cold-start latency, warm-reuse latency, and fixed-task cost from a committed dated frame; unreachable providers appear as honest error/not-measured rows with per-cell provenance. The keyless fixture path renders the same page shape byte-stable.
+
 ## Acceptance
 
 <!-- One checklist item per criterion, each naming the ticket/story expected to satisfy it.
@@ -170,7 +175,7 @@ pen-test of it).
 - [x] `agent-vm` topic wired into `publishedResearchTopics` with `ResearchDesign` metadata; English/Japanese indexes regenerate from it (#20260714024002-agent-vm-wire-into-published-topics.md)
 - [x] Per-provider accumulated `HistoryPoint` history + 推移/過去の調査 composition into the current article (#20260714024003-agent-vm-history-and-trend-composition.md)
 - [ ] First validation trial run + design review; cadence confirmed or revised (gated on approval + credentials: #20260714024004-agent-vm-first-validation-trial.md)
-- [ ] Japanese translation + qmu publish wiring for the topic (#20260714024005-agent-vm-japanese-translation-and-publish.md)
+- [x] Japanese translation + qmu publish wiring for the topic (#20260714024005-agent-vm-japanese-translation-and-publish.md — pipeline translation shipped 2026-07-18)
 
 ## Changelog
 
@@ -185,3 +190,6 @@ pen-test of it).
 - 2026-07-17 — ticket archived — 20260714024002-agent-vm-wire-into-published-topics.md
 - 2026-07-17 — publish + trend composition drive (keyless): topic registered in `publishedResearchTopics` with the approved design, EN/JP indexes regenerated, keyless JP placeholder page shipped; `agentVmSnapshotPoints` extractor + artifact `instrumentVersion` wire the 推移/過去の調査 composition; 477 tests + lint + docs dead-link build green. Remaining tickets stay blocked: #024001/#024004 on provider tokens + spend approval, #024005 on an LLM key for the pipeline translation (todo tickets carry Blocked notes) — mission.md
 - 2026-07-17 — ticket archived — 20260714024003-agent-vm-history-and-trend-composition.md
+- 2026-07-18 — night drive: LLM key now present, so the JP pipeline translation ran for real. `research:translate-report -- agent-vm` regenerated `agent-vm-comparison.insights.ja.md` from the current English page with provenance frontmatter (translation_model claude-sonnet-5); EN/JP indexes byte-identical, copy-plan/qmu-ticket carry it in order. Estimated cost ≤ ~$2 worst-case (8 calls, ~5,638 prompt + ≤131,072 output tokens @ claude-sonnet-5; actual a fraction), inside the $1–$8 gate — the only spend this drive. tech tests/lint/build + docs dead-link build green (raw exit 0) — 20260714024005-agent-vm-japanese-translation-and-publish.md
+- 2026-07-18 — ticket archived — 20260714024005-agent-vm-japanese-translation-and-publish.md
+- 2026-07-18 — night drive: real cold-start probe (#024001) and first validation trial (#024004) remain externally blocked — no bootable sandbox provider credential is present. AWS instance role absent (IMDS 404, `aws sts` NoCredentials); no FLY_*/E2B_*/MODAL_*/VERCEL_*/DAYTONA_*/NORTHFLANK_* tokens; only LLM keys + Cloudflare (deploy-coupled Sandbox SDK, no REST boot adapter) present. Demonstrated the honest real path: `agent-vm --estimate` = ~$0.0004 compute (within $8 ceiling) and `--real` recorded all 8 providers `unreachable` with zero spend and zero orphaned resources (no boot occurred). Tickets left in todo with dated Blocked notes — 20260714024001-agent-vm-real-coldstart-cost-probe.md, 20260714024004-agent-vm-first-validation-trial.md

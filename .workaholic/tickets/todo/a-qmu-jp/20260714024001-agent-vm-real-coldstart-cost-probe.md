@@ -111,3 +111,29 @@ Skipped this drive — externally blocked, not faked complete:
 The keyless framework is already merged (`42bb286`); the publish wiring landed
 this drive (#024002), so once tokens appear the path is
 `npm run agent-vm:estimate` (must be ≤ $8) → owner-approved `agent-vm:real`.
+
+## Blocked (2026-07-18 night drive)
+
+Attempted, still externally blocked — no bootable sandbox provider credential
+is reachable:
+
+- **AWS unreachable**: `aws sts get-caller-identity` returns NoCredentials and
+  the instance-metadata role list returns 404 (no IAM role attached), so the
+  AWS Lambda microVM subject cannot be measured (and has no adapter yet anyway).
+- **No provider tokens**: `packages/tech/.env` holds only LLM keys
+  (OPENAI/ANTHROPIC/GOOGLE/XAI) and Cloudflare (ACCOUNT_ID/API_TOKEN). None of
+  `FLY_API_TOKEN`/`FLY_APP_NAME`, `E2B_*`, `MODAL_*`, `VERCEL_*`, `DAYTONA_*`,
+  `NORTHFLANK_*` are set, so the one landed adapter (Fly Machines) cannot boot.
+- **Cloudflare is present but not a clean CI boot-timer**: the Cloudflare
+  Sandbox SDK is a deployed-Worker + container binding, not a REST create-and-
+  time endpoint like Fly Machines, so it has no `vendors/sandbox` adapter and
+  standing up / tearing down that infra unattended is outside this drive's
+  zero-orphan-resource scope.
+
+Demonstrated the honest real path rather than skipping silently:
+`npm run agent-vm:estimate` = 8 providers × 5 reps, ~$0.0004 compute
+(order-of-magnitude, inside the $8 ceiling), and `--real` (to a scratch
+OUTPUT_PATH) printed the missing-credential guidance and recorded all 8
+providers `provenance: "unreachable"` — no boot, no spend, no fabricated
+numbers, zero orphaned resources. Path stays: land a bootable provider token
+→ `agent-vm:estimate` (≤ $8) → owner-approved `agent-vm:real`.

@@ -69,3 +69,16 @@ authorization. Depends on #024001's live confirmation; everything keyless it
 needs (publish wiring #024002, trend composition #024003) is now merged, so the
 first trial's frame will chart as soon as an owner runs
 `research -- agent-vm --estimate` → `--real` with credentials.
+
+## Blocked (2026-07-18 night drive)
+
+Attempted, still blocked on the same root cause as #024001: no bootable sandbox
+provider is reachable (AWS instance role absent; no Fly/E2B/Modal/Vercel/
+Daytona/Northflank tokens; Cloudflare present but deploy-coupled). A `--real`
+run therefore records every provider `unreachable`, which produces **no measured
+cold-start/cost data** — so this trial's Quality Gate (cold-start/cost
+*discriminate between providers*, cost verified against `--estimate` within the
+$8 ceiling) cannot be satisfied and the quarterly cadence cannot yet be
+validated. The estimate was run and recorded (~$0.0004 compute, inside the
+ceiling); no boot occurred, so no spend and zero orphaned resources. Unblocks
+the moment #024001 lands a bootable provider token.

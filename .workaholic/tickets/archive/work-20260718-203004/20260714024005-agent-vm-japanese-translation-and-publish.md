@@ -74,3 +74,33 @@ Partially superseded by #024002, remainder blocked:
   call, which this run is not authorized to make. It runs as part of the first
   real trial (#024004), which composes the English current article first
   (English → translate → Japanese, never forked).
+
+## Final Report (2026-07-18 night drive)
+
+Unblocked and completed: `ANTHROPIC_API_KEY` is now present in
+`packages/tech/.env`, so the pipeline translation ran for real.
+
+- `docs/research-reports/agent-vm-comparison.insights.ja.md` is now the
+  `research:translate-report` pipeline translation of the current English page
+  (`agent-vm-comparison.md`), replacing the hand-authored keyless placeholder.
+  It carries the required provenance frontmatter:
+  `translated_from: agent-vm-comparison.md`,
+  `translation_model: claude-sonnet-5`, `source_artifact`, `source_commit`,
+  `generated_at`, `provenance: llm-translation`.
+- Paid call cost: `--estimate` reported 8 calls, ~5,638 prompt + ≤131,072
+  output tokens on `claude-sonnet-5` — a worst-case ceiling of ~$2, well inside
+  the mission's $1–$8 gate; actual output (one ~8 KB page) is a fraction of the
+  ceiling. This is the only spend this drive incurred (the sandbox probe
+  reached zero providers, so it spent nothing).
+- The topic was already registered in `publishedResearchTopics` (#024002), so
+  `research:site -- write-indexes` regenerated the EN/JP indexes byte-identically
+  and `copy-plan`/`qmu-ticket` carry `agent-vm-comparison` in the same order.
+- Guards + verification green on disk (raw exit codes 0): `packages/tech` tests
+  (566 passed, 1 skipped), lint, build, and the VitePress docs dead-link build.
+  Published-page guards (title==label, no-mermaid, §4 budget, 7-section outline)
+  are part of the passing test suite.
+
+The English current article translated here is still the keyless fixture page;
+when the first real cold-start trial (#024004) lands a measured page, re-running
+`research:translate-report` refreshes this JP page from that measured frame
+(English → translate → Japanese, never forked).
