@@ -3,8 +3,8 @@ created_at: 2026-07-18T20:54:43+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [Domain]
-effort:
-commit_hash:
+effort: 2h
+commit_hash: 88154cf
 category: Added
 depends_on:
 mission: image-generation-benchmark
@@ -82,3 +82,42 @@ infographic / meeting-document ＋ v1 を `mechanical` として保持）と画�
   プローブは判定後に破棄され、フレーム肥大を抑える。
 - qmu-co-jp への画像アセット反映は publish ticket flow（/ship）で行う。本チケット
   はこのリポジトリ側の real フレーム化までを範囲とする。
+
+## Final Report
+
+Implemented (commit `88154cf`). Manifest v2 の初回 real トライアルを承認済み上限
+内で実施し、生成画像付きの日付付き履歴フレームとしてコミットした。
+
+- **見積り**: `--estimate` = 生成 ~$1.47（3 モデル × 13 プロンプト）＋ insights
+  ~$0.02 ＋ 全文 JP 翻訳（上限）→ all-in ~$3.5、承認上限 $20 の十分内。
+- **実行**: `npm run research -- image-generation --real`（generatedAt
+  `2026-07-18T15:04:12.341Z`、judge `claude-sonnet-5`、1 repetition、manifest v2
+  13 プロンプト）。**2/3 measured, 1 error（正直な error 行、捏造なし）**:
+  - GPT Image 1.5 — measured、adherence 95.5% ± 10.1%、text 100%、latency
+    18085 ± 6170 ms、practical 画像 5 枚永続化。
+  - Gemini 2.5 Flash Image — **error**（`returned no image`）。v1 では measured
+    だったため provider 応答のリグレッション。owner ゲートのコスト方針に従い
+    real 再実行はせず error 行として記録（フォローアップで Google ACL の空応答
+    ハードニング＋ id 再検証）。
+  - Grok Imagine — measured、adherence 100%、text 100%、latency 5346 ± 876 ms、
+    practical 画像 5 枚永続化。
+- **フレーム化**: 実 English を canonical に昇格（artifact 参照を `.data.json`
+  へ書換）→ `research:translate-report` で v2 の実レポートを JP 翻訳 → 
+  `research:archive -- image-generation --generated-at 2026-07-18T15:04:12.341Z`
+  で `history/image-generation/2026-07-18T15-04-12-341Z/` を生成（`.md`/`.ja.md`
+  /`.data.json` は bare な v2、`images/` に 10 枚、design-validation-review.md
+  添付）。各 practical call に `imagePath`/`imageSha256`/`imageByteLength` を記録。
+- **再合成**: `research -- image-generation --fixture` で canonical EN/JP を測定
+  フレームから再合成（推移/過去の調査ブロック付与、frame images を
+  `docs/research-reports/images/` へミラー、fixture レンダは `.fixture.*` へ退避）。
+  4 ページ計 40 の画像参照が全て disk 上で解決。
+- **検証（bare exit codes）**: `packages/tech` → `npm test` 84 files / 591 pass
+  / 1 skip（`published-images` 存在ガード含む・緑）、`npm run build` 0、
+  `npm run lint` 0。
+- **実コスト**: ≈$1.1–1.3（生成 GPT 13×$0.034 + Grok 13×$0.020 = $0.70、judge
+  26 reads ≈$0.17、insights ≈$0.02、全文 JP 翻訳 2 回 ≈$0.2–0.4。Gemini は画像
+  未返却のため配信課金なし）。承認上限 $20 の十分内。
+- **予算メモ**: GPT の photo(1.40MB)/infographic(1.47MB) 2 枚が per-image
+  budget 512 KiB 超過。「証拠を落とさない」方針に従い返却バイトのまま永続化
+  （sha256 が証拠）。フレーム `images/` 合計 ~4.6MB。恒久的問題化するなら小さい
+  size tier か可逆再エンコードをフォローアップで。
