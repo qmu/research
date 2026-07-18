@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain]
 effort: 1h
-commit_hash: 6640ec6
+commit_hash: d2324fd
 category: Added
 mission: periodic-research-target-svg-generation-and-animation
 depends_on: [20260714013000-svg-generation-build-runner-cli-and-pages.md]
