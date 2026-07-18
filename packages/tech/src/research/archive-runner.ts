@@ -3,9 +3,11 @@ import { dirname, resolve } from "node:path";
 import {
   findPublishedResearchTopic,
   historyPathFor,
+  IMAGE_ASSET_DIR_NAME,
   reportFrameSources,
   type ResearchSiteTopic,
 } from "./domain/site";
+import { copyImageDir } from "../image-generation/domain/image-store";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
 
@@ -122,6 +124,17 @@ export const archiveReportFrame = async (
     if (copied) {
       written.push(copy.destination);
     }
+  }
+  // Move a real run's generated images (written to `<artifactBase>.real.images`)
+  // into the frame's `images/` directory, so the committed frame carries the
+  // pictures its article embeds. A text-only run has no such directory; the copy
+  // is a no-op then.
+  const realImagesDir = reportSources.source.replace(/\.md$/, ".real.images");
+  const frameImagesDir = `${dirname(
+    historyPathFor(topic, options.generatedAt, "source"),
+  )}/${IMAGE_ASSET_DIR_NAME}`;
+  if (await copyImageDir(repoPath(realImagesDir), repoPath(frameImagesDir))) {
+    written.push(frameImagesDir);
   }
   return written;
 };
