@@ -6,6 +6,7 @@ status: active
 created_at: 2026-07-13T23:56:50+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
+drive_authorized: true
 tickets: []
 stories: []
 concerns: []
@@ -60,6 +61,10 @@ about, behind the existing `CompletionClient` port (`vendors/llm/types.ts`):
 Ollama); rewriting the comparison methodology; and touching the corporate-copy /
 `qmu-co-jp` publishing path beyond what a normal report run already does.
 
+## Experience
+
+A comparison-sweep real run includes at least one IaaS-hosted model (AWS Bedrock or Vertex AI) with per-cell provenance in the committed data artifact; credentialed access flows through the credential contract and the IaaS-hosted rows render exactly like API-key provider rows.
+
 ## Acceptance
 
 <!-- Progress is checked/total, computed from this list. Tickets are "(ticket TBD)"
@@ -108,6 +113,17 @@ Ollama); rewriting the comparison methodology; and touching the corporate-copy /
   20260715054500-close-out-iaas-hosted-models-mission.md): items 1–6 and 8 checked
   with the commit-level evidence above; keyless CI green on main
   (build-research-tech at PR #37 merge and on subsequent main pushes) — 7/8 checked
+- 2026-07-18 — item 7 attempted under /monitor (desk work-20260718-203002),
+  drive-authorized conditioned on credential reachability. Read-only probe:
+  **Bedrock UNREACHABLE** (`aws sts get-caller-identity` → NoCredentials, no
+  instance role); **Vertex ADC present but unusable** (`GOOGLE_CLOUD_PROJECT`
+  unset, ADC has no quota project, no metadata server, and `aiplatform.googleapis.com`
+  is DISABLED on the accessible projects; Claude-on-Vertex also needs manual Model
+  Garden terms acceptance). Neither cloud reachable → **no spend**, no `--estimate`,
+  no sweep. Minted the final-acceptance ticket
+  `20260718203500-iaas-hosted-first-real-sweep-run.md` capturing the exact run
+  recipe and the verified blocker. Escalation: cloud credentials needed for the
+  IaaS real run. Item 7 stays unchecked — 7/8.
 - 2026-07-17 — item 7 left unchecked: no AWS (`AWS_ACCESS_KEY_ID`) or GCP
   (`GOOGLE_CLOUD_PROJECT` + ADC) credentials exist in the environment, the
   Bedrock/Vertex live paths have never executed, and a real sweep incurs spend
