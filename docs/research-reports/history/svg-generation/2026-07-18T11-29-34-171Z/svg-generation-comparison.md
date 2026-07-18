@@ -43,10 +43,6 @@ This run has **4 measured** of 4 model rows (non-measured rows are `fixtured` ha
 
 "Best"/"Worst" follow each metric's own direction (higher validity, fidelity, and animation presence are better, lower latency is better). Prompt fidelity is the fixed vision judge's rubric score over the rasterized drawing; animation presence is measured over the animated prompts only. Token cost and path complexity are reference columns in the model table. The full per-model and per-prompt records are in section 7, Verification Data.
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. Analysis
 
 Rows with `measured` provenance can be compared on validity, fidelity, animation, latency, and cost; path complexity is descriptive context. The pair of validity and fidelity localizes failures: valid but low-fidelity means the model parses but draws the wrong thing, while high fidelity with low animation presence means it draws well but cannot express motion.
@@ -102,9 +98,3 @@ Fidelity instrument: judge model `claude-sonnet-5`, rasterizer `resvg-js@2`.
 The complete run record is committed as [`svg-generation-comparison.data.json`](./svg-generation-comparison.data.json): per-call prompts, latencies, SVG byte lengths, output-token counts, the generated SVG source, the judge's per-constraint verdicts, and every score.
 
 Generated: 2026-07-18T11:29:34.171Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-18T11:29:34.171Z](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison)
