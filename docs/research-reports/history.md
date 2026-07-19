@@ -19,10 +19,6 @@ The topic order matches [LLMs Research](./) and
 - 2026-07-09T11:54:54.587Z: [English](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
 - 2026-07-09T11:02:05.370Z: [English](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)
 
-### Agent SDK comparison
-
-No dated frames have been archived yet.
-
 ### LLM response speed
 
 - 2026-07-12T05:47:26.268Z: [English](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison) · [Japanese](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja) · [data.json](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.data.json)
@@ -39,19 +35,31 @@ No dated frames have been archived yet.
 
 - 2026-07-09T11:08:12.753Z: [English](./history/availability/2026-07-09T11-08-12-753Z/llm-availability) · [Japanese](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja) · [data.json](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.data.json)
 
-### OCR capability comparison
+### Token counting and metering
 
-- 2026-07-09T11:03:48.277Z: [English](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison) · [Japanese](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja) · [data.json](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.data.json)
+- 2026-07-17T03:02:34.699Z: [English](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison) · [Japanese](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja) · [data.json](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.data.json)
 
 ### RAG vector store benchmark
 
 - 2026-07-09T11:02:46.726Z: [English](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark) · [Japanese](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja) · [data.json](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.data.json)
 
+### OCR capability comparison
+
+- 2026-07-09T11:03:48.277Z: [English](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison) · [Japanese](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja) · [data.json](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.data.json)
+
 ### Image generation
 
 - 2026-07-17T00:53:39.901Z: [English](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison) · [Japanese](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja) · [data.json](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.data.json)
 
+### SVG generation
+
+No dated frames have been archived yet.
+
 ### Speech (TTS / STT / STS)
+
+No dated frames have been archived yet.
+
+### Agent SDK comparison
 
 No dated frames have been archived yet.
 
@@ -59,14 +67,6 @@ No dated frames have been archived yet.
 
 No dated frames have been archived yet.
 
-### SVG generation
-
-No dated frames have been archived yet.
-
 ### Agent VM / sandbox comparison
 
 No dated frames have been archived yet.
-
-### Token counting and metering
-
-- 2026-07-17T03:02:34.699Z: [English](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison) · [Japanese](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja) · [data.json](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.data.json)
