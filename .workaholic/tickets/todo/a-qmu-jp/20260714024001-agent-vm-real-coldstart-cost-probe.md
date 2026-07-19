@@ -137,3 +137,36 @@ OUTPUT_PATH) printed the missing-credential guidance and recorded all 8
 providers `provenance: "unreachable"` — no boot, no spend, no fabricated
 numbers, zero orphaned resources. Path stays: land a bootable provider token
 → `agent-vm:estimate` (≤ $8) → owner-approved `agent-vm:real`.
+
+## Progress (2026-07-19 night drive) — second adapter landed (keyless)
+
+Widened measured-probe coverage per this ticket's "Remaining" list (adapters
+for E2B/Modal/Vercel/etc. as small `SANDBOX_ADAPTERS` entries):
+
+- **Daytona adapter** `vendors/sandbox/daytona.ts` over the documented Daytona
+  REST API (control plane `app.daytona.io/api`: create `POST /sandbox`, poll
+  `GET /sandbox/{id}` until `started`, stop/start for warm reuse, force-delete
+  teardown; toolbox exec `proxy.app.daytona.io/toolbox/{id}/process/execute`).
+  Plain HTTP through an injectable transport (no Daytona SDK dep — no new
+  `docs/dependency-decisions.md` entry needed), so boot/reuse/run/teardown are
+  unit-tested without a live token (7 tests). Registered in `SANDBOX_ADAPTERS`
+  (env `DAYTONA_API_KEY`); `apiReachable` flipped true for `daytona` and the
+  committed fixture artifact regenerated (one line: `apiReachable` false→true;
+  report md byte-stable). E2B was evaluated and deferred: its exec runs through
+  `envd` on the sandbox host, not a clean control-plane REST endpoint, so it
+  does not map to the boot/reuse/run/teardown port without live confirmation.
+- Exact Daytona create-body / toolbox-exec response shapes are documented-but-
+  unverified (same posture as the Fly adapter): confirmed on the first live run,
+  and a wrong shape degrades to an honest `error` row (runner try/catch). Set
+  `DAYTONA_API_KEY` (+ optional `DAYTONA_SNAPSHOT`/`DAYTONA_TARGET`) to boot.
+- 574 tech tests + lint + typecheck green (raw exit 0); fixture-drift byte-clean.
+
+## Blocked (2026-07-19 night drive)
+
+Still externally blocked for a **real run** — no bootable VM-provider credential
+is present this run: `FLY_API_TOKEN`/`FLY_APP_NAME`, `DAYTONA_API_KEY`, `E2B_*`,
+`MODAL_*`, `VERCEL_*`, `NORTHFLANK_*` all unset (`.env` holds only LLM keys +
+Cloudflare account/token). No monetary spend authorized. Reason recorded:
+**no reachable VM provider — FLY_API_TOKEN/FLY_APP_NAME (and now DAYTONA_API_KEY)
+absent this run.** The keyless adapter above is the productive work this drive;
+`--real` still records every provider `unreachable` with zero boots/spend.
