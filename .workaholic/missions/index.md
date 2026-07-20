@@ -3,7 +3,6 @@
 ## active
 
 * [image-generation-benchmark](active/image-generation-benchmark/mission.md) - Image generation benchmark
-* [per-topic-research-pipeline-benchmark-llm-insights-jp-translation](active/per-topic-research-pipeline-benchmark-llm-insights-jp-translation/mission.md) - Per-topic research pipeline: benchmark, LLM insights, JP translation
 * [periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc](active/periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc/mission.md) - Periodic Research Target: Compare Agent VM Solutions (Lambda MicroVMs etc)
 * [periodic-research-target-compare-deep-research-alike-apis](active/periodic-research-target-compare-deep-research-alike-apis/mission.md) - "Periodic Research Target: Compare Deep Research-alike APIs"
 * [periodic-research-target-computer-use-via-playwright](active/periodic-research-target-computer-use-via-playwright/mission.md) - Periodic Research Target: Computer Use via Playwright
@@ -15,3 +14,4 @@
 ## archive
 
 * [living-research-development-guideline](archive/living-research-development-guideline/mission.md) - Living research development guideline
+* [per-topic-research-pipeline-benchmark-llm-insights-jp-translation](archive/per-topic-research-pipeline-benchmark-llm-insights-jp-translation/mission.md) - Per-topic research pipeline: benchmark, LLM insights, JP translation
