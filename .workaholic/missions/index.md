@@ -9,9 +9,9 @@
 * [periodic-research-target-svg-generation-and-animation](active/periodic-research-target-svg-generation-and-animation/mission.md) - Periodic Research Target: SVG Generation and Animation
 * [periodic-research-target-text-to-speech-speech-to-text-speech-to-speech](active/periodic-research-target-text-to-speech-speech-to-text-speech-to-speech/mission.md) - Periodic Research Target: Text-to-Speech, Speech-to-Text, Speech-to-Speech
 * [periodic-research-target-trend-catchable-ai-models-grok-perplexity](active/periodic-research-target-trend-catchable-ai-models-grok-perplexity/mission.md) - Periodic Research Target: Trend-Catchable AI Models (Grok, Perplexity)
-* [support-iaas-hosted-models-vertex-ai-aws-bedrock](active/support-iaas-hosted-models-vertex-ai-aws-bedrock/mission.md) - Support IaaS-hosted models (Vertex AI, AWS Bedrock)
 
 ## archive
 
 * [living-research-development-guideline](archive/living-research-development-guideline/mission.md) - Living research development guideline
 * [per-topic-research-pipeline-benchmark-llm-insights-jp-translation](archive/per-topic-research-pipeline-benchmark-llm-insights-jp-translation/mission.md) - Per-topic research pipeline: benchmark, LLM insights, JP translation
+* [support-iaas-hosted-models-vertex-ai-aws-bedrock](archive/support-iaas-hosted-models-vertex-ai-aws-bedrock/mission.md) - Support IaaS-hosted models (Vertex AI, AWS Bedrock)

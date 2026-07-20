@@ -2,7 +2,7 @@
 type: Mission
 title: Support IaaS-hosted models (Vertex AI, AWS Bedrock)
 slug: support-iaas-hosted-models-vertex-ai-aws-bedrock
-status: active
+status: achieved
 created_at: 2026-07-13T23:56:50+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -183,3 +183,4 @@ A comparison-sweep real run includes at least one IaaS-hosted model (AWS Bedrock
   concerns (Bedrock `anthropic.`-prefixed wire ids, `awsSecretAccessKey` option
   name, OpenRouter `n/a` effort ladder) are preserved in the archived close-out
   ticket
+- 2026-07-21 — mission achieved — mission.md
