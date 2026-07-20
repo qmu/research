@@ -98,6 +98,38 @@ A comparison-sweep real run includes at least one IaaS-hosted model (AWS Bedrock
 
 ## Changelog
 
+- 2026-07-20 — **item 7 first LIVE IaaS run executed** (desk work-20260718-203002)
+  with real AWS SSO credentials (profile `q`, account 839625015061,
+  PowerUserAccess), region `us-east-1`. The Bedrock SigV4 adapter path
+  (`vendors/llm/bedrock.ts`, `@anthropic-ai/bedrock-sdk`) was exercised for real:
+  `npm run compare -- --models bedrock-claude-opus-4-8,bedrock-claude-sonnet-5
+  --detail standard`. Both target models returned **HTTP 403 permission_error** on
+  the live Converse/Invoke call — quote: `anthropic.claude-opus-4-8 is not
+  available for this account. You can explore other available models on Amazon
+  Bedrock. For additional access options, contact AWS Sales …` (and the identical
+  message for `anthropic.claude-sonnet-5`). Both configs are recorded as honest
+  **`provenance: "error"`** rows in the artifact, the history point
+  (`llm-model-comparison.history.json`, entry generatedAt
+  2026-07-20T07:00:41.413Z, 3 trials each), and the archived frame
+  `docs/research-reports/history/2026-07-20T07-00-41.413Z.data.json.gz`.
+  **Cost: estimated ~$3.05 (rough, 6 configs × 3 trials → ~126 calls); actual
+  ~$0** — every call 403s immediately before any billable inference. The 403 is a
+  server-side entitlement fact (not an adapter defect): it proves the SigV4
+  adapter authenticates and reaches Bedrock. The **prior generation IS accessible
+  on the same account/region** (`anthropic.claude-opus-4-7`,
+  `anthropic.claude-sonnet-4-6`, `anthropic.claude-haiku-4-5-*`,
+  `anthropic.claude-3-haiku-*` all return 200), so this is an
+  **availability/entitlement lag** between first-party Claude and AWS Bedrock for
+  the newest models (opus-4-8, sonnet-5). `aws bedrock
+  get-foundation-model-availability` does NOT distinguish the two (it reports
+  `agreement: NOT_AVAILABLE, auth: AUTHORIZED, entitlement: AVAILABLE, region:
+  AVAILABLE` for BOTH working and non-working models) — the invoke result is the
+  only ground truth. **The finding IS the entitlement lag.** Acceptance item 7's
+  literal `provenance: "measured"` sub-clause is **NOT satisfiable for the target
+  models until AWS grants entitlement**; the honest `error` row is the correct
+  record per the ticket's No-fabrication policy. Item 7 left **unchecked** —
+  whether to reframe it and close the mission is an owner decision handled outside
+  this run. Still 7/8.
 - 2026-07-14 — mission created and drafted (Goal / Scope / Acceptance) — mission.md
 - 2026-07-16 — all backend work merged to main via PR #37 (merge 84e01eb): c1d14a1
   generalized credential contract (`CREDENTIAL_SPEC`, non-`apiKey` auth, keyless

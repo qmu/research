@@ -94,6 +94,37 @@ a later credentialed run executes without re-deriving any of it.
 - Estimated and actual USD cost recorded in the mission changelog; total within
   the owner-approved ceiling.
 
+## Findings — 2026-07-20 live Bedrock run (research result, ticket kept in todo)
+
+The run recipe was executed for real with AWS SSO credentials (profile `q`,
+account 839625015061, PowerUserAccess), `AWS_REGION=us-east-1`:
+`npm run compare -- --models bedrock-claude-opus-4-8,bedrock-claude-sonnet-5
+--detail standard`.
+
+- **Both target models returned HTTP 403 `permission_error`** on the live
+  Converse/Invoke call:
+  `anthropic.claude-opus-4-8 is not available for this account. You can explore
+  other available models on Amazon Bedrock. For additional access options,
+  contact AWS Sales at https://aws.amazon.com/contact-us/sales-support/`
+  (identical for `anthropic.claude-sonnet-5`).
+- Both configs are recorded as honest **`provenance: "error"`** rows in the
+  artifact, the appended history point (`llm-model-comparison.history.json`,
+  entry generatedAt 2026-07-20T07:00:41.413Z, 3 trials each), and the archived
+  frame `docs/research-reports/history/2026-07-20T07-00-41.413Z.data.json.gz`.
+- **Cost: estimated ~$3.05 (rough); actual ~$0** — every call 403s before any
+  billable inference.
+- The 403 is a **server-side entitlement fact, not an adapter defect** — it
+  proves the SigV4 adapter authenticates and reaches Bedrock. Prior-generation
+  Claude models (opus-4-7, sonnet-4-6, haiku-4-5, 3-haiku) return 200 on the same
+  account/region. `aws bedrock get-foundation-model-availability` does not
+  distinguish the working vs non-working models; the invoke result is the ground
+  truth.
+- **The research finding is this availability/entitlement lag** between
+  first-party Claude and AWS Bedrock for the newest models (opus-4-8, sonnet-5).
+  Acceptance #7's literal `provenance: "measured"` is not satisfiable for the
+  target models until AWS grants entitlement. Ticket intentionally **kept in
+  todo**; #7 checkbox left unchecked — reframe/close is an owner decision.
+
 ## Considerations
 
 **Credential reachability probe — 2026-07-18 20:30 JST (this desk, read-only):**

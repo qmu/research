@@ -3187,6 +3187,312 @@
           "measuredAt": "2026-07-12T05:47:26.268Z"
         }
       ]
+    },
+    {
+      "generatedAt": "2026-07-20T07:00:41.413Z",
+      "trials": 3,
+      "points": [
+        {
+          "id": "bedrock-claude-opus-4-8",
+          "provider": "bedrock",
+          "modelName": "Claude Opus 4.8 (Bedrock)",
+          "effort": "low",
+          "provenance": "error",
+          "throughputTokensPerSec": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "totalLatencyMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaDepth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaBreadth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "measuredAt": "2026-07-20T07:00:41.413Z"
+        },
+        {
+          "id": "bedrock-claude-opus-4-8",
+          "provider": "bedrock",
+          "modelName": "Claude Opus 4.8 (Bedrock)",
+          "effort": "high",
+          "provenance": "error",
+          "throughputTokensPerSec": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "totalLatencyMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaDepth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaBreadth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "measuredAt": "2026-07-20T07:00:41.413Z"
+        },
+        {
+          "id": "bedrock-claude-opus-4-8",
+          "provider": "bedrock",
+          "modelName": "Claude Opus 4.8 (Bedrock)",
+          "effort": "max",
+          "provenance": "error",
+          "throughputTokensPerSec": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "totalLatencyMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaDepth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaBreadth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "measuredAt": "2026-07-20T07:00:41.413Z"
+        },
+        {
+          "id": "bedrock-claude-sonnet-5",
+          "provider": "bedrock",
+          "modelName": "Claude Sonnet 5 (Bedrock)",
+          "effort": "low",
+          "provenance": "error",
+          "throughputTokensPerSec": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "totalLatencyMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaDepth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaBreadth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "measuredAt": "2026-07-20T07:00:41.413Z"
+        },
+        {
+          "id": "bedrock-claude-sonnet-5",
+          "provider": "bedrock",
+          "modelName": "Claude Sonnet 5 (Bedrock)",
+          "effort": "high",
+          "provenance": "error",
+          "throughputTokensPerSec": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "totalLatencyMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaDepth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaBreadth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "measuredAt": "2026-07-20T07:00:41.413Z"
+        },
+        {
+          "id": "bedrock-claude-sonnet-5",
+          "provider": "bedrock",
+          "modelName": "Claude Sonnet 5 (Bedrock)",
+          "effort": "max",
+          "provenance": "error",
+          "throughputTokensPerSec": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "ttftMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "totalLatencyMs": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaDepth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "maxSchemaBreadth": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "lengthAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "informationAccuracy": {
+            "mean": 0,
+            "stdDev": 0,
+            "n": 0,
+            "method": "error-zero"
+          },
+          "measuredAt": "2026-07-20T07:00:41.413Z"
+        }
+      ]
     }
   ]
 }
