@@ -49,10 +49,6 @@ provenance: llm-translation
 
 「最良」「最悪」は各メトリクス固有の方向性に従います（妥当性、忠実度、アニメーション有無は値が高いほど良く、レイテンシは値が低いほど良い）。プロンプト忠実度は、ラスタライズされた描画に対する固定ビジョン審査員のルーブリックスコアです。アニメーション有無は、アニメーションを伴うプロンプトのみを対象に測定しています。トークンコストとパス複雑度は、モデル表における参考列です。モデルごと・プロンプトごとの全記録は、セクション7「検証データ」に記載しています。
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. 考察
 
 `measured` の裏付けを持つ行は、妥当性、忠実度、アニメーション、レイテンシ、コストの観点で比較できる。パス複雑度はあくまで説明的な文脈情報である。妥当性と忠実度の組み合わせは、失敗箇所を特定するのに役立つ。妥当ではあるが忠実度が低い場合は、モデルが解析はできているものの誤ったものを描画していることを意味し、一方で忠実度は高いがアニメーションの存在が低い場合は、描画自体はうまくできているが動きを表現できないことを意味する。
@@ -108,9 +104,3 @@ npm run research -- svg-generation --real
 実行記録一式は [`svg-generation-comparison.data.json`](./svg-generation-comparison.data.json) としてコミットされている: 呼び出しごとのプロンプト、レイテンシ、SVGのバイト長、出力トークン数、生成されたSVGソース、判定モデルによる制約ごとの判定結果、そしてすべてのスコアが含まれる。
 
 生成日時: 2026-07-18T11:29:34.171Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-18T11:29:34.171Z](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.ja)

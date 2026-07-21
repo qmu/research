@@ -53,7 +53,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### SVG生成
 
-まだ日付別フレームは保存されていない。
+- 2026-07-18T11:29:34.171Z: [English](../research-reports/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison) · [Japanese](../research-reports/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.ja) · [data.json](../research-reports/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.data.json)
 
 ### 音声 (TTS/STT/STS)
 

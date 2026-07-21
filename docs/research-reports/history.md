@@ -53,7 +53,7 @@ The topic order matches [LLMs Research](./) and
 
 ### SVG generation
 
-No dated frames have been archived yet.
+- 2026-07-18T11:29:34.171Z: [English](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison) · [Japanese](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.ja) · [data.json](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.data.json)
 
 ### Speech (TTS / STT / STS)
 
