@@ -144,55 +144,6 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     },
   },
   {
-    // Reference topic (design comparison, not measured): both pages are
-    // hand-authored — the Japanese article is the canonical original at its
-    // long-served URL, the English page its hand-written counterpart. No LLM
-    // stage runs for this topic; provenance labels (design comparison /
-    // 未測定 / 要確認) are carried in the articles themselves.
-    id: "agent-sdk",
-    artifactBase: "agent-sdk-comparison",
-    npmScript: "npm run research -- agent-sdk --fixture",
-    source: {
-      text: "Agent SDK comparison",
-      docsPath: "docs/research-reports/agent-sdk-comparison.md",
-      summary:
-        "A design comparison of agent frameworks/runtimes (OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph) from public documentation — not measured.",
-    },
-    japanese: {
-      text: "Agent SDKの比較",
-      docsPath: "docs/llm-foundation/agent-sdk-comparison.md",
-      summary:
-        "公開ドキュメントに基づく agent framework / runtime の設計比較。設計比較 / 未測定 / 要確認 の provenance を各セルに明記する。",
-    },
-    qmuSlug: "agent-sdk-comparison",
-    design: {
-      cadence: "quarterly",
-      offCadenceTrigger:
-        "a major agent SDK release or a breaking design change at a covered SDK",
-      subjects:
-        "OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph — public documentation only",
-      metrics: [
-        {
-          name: "designComparison",
-          unit: "provenance-labelled cells",
-          direction: "reference",
-        },
-      ],
-      trialsPerRun: {
-        minimum: 0,
-        maximum: 0,
-        premises:
-          "hand-authored design comparison over public documentation; no measurement calls",
-      },
-      costPerRun: {
-        ceilingUsd: 0,
-        premises: "keyless and costless; reads public documentation only",
-      },
-      accumulates:
-        "dated revisions of the design comparison, one frame per archive",
-    },
-  },
-  {
     id: "speed",
     artifactBase: "llm-speed-comparison",
     npmScript: "npm run research -- speed --real",
@@ -330,48 +281,55 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     },
   },
   {
-    id: "ocr",
-    artifactBase: "ocr-comparison",
-    npmScript: "npm run research -- ocr --real",
+    id: "token-metering",
+    artifactBase: "token-metering-comparison",
+    npmScript: "npm run research -- token-metering --real",
     source: {
-      text: "OCR capability comparison",
-      docsPath: "docs/research-reports/ocr-comparison.md",
+      text: "Token counting and metering",
+      docsPath: "docs/research-reports/token-metering-comparison.md",
       summary:
-        "CER/WER and structured field extraction over synthetic documents.",
+        "Library-independent input-token counting — exact self-implemented BPE where the vocabulary is published, calibrated estimation where it is not — validated against API-reported counts on a pinned English/Japanese/code sample set.",
     },
     japanese: {
-      text: "OCR能力",
-      docsPath: "docs/research-reports/ocr-comparison.insights.ja.md",
-      summary: "視覚対応モデルの文字起こしと構造化抽出の比較。",
+      text: "トークン計測",
+      docsPath:
+        "docs/research-reports/token-metering-comparison.insights.ja.md",
+      summary:
+        "トークナイザライブラリに依存しない入力トークンの自前カウント（語彙公開系は自前BPE、非公開系は較正付き推定）を、日英・コードの固定サンプルで API 実測値と照合する。",
     },
-    dataPath: "docs/research-reports/ocr-comparison.data.json",
-    qmuSlug: "ocr-comparison",
+    dataPath: "docs/research-reports/token-metering-comparison.data.json",
+    qmuSlug: "token-metering",
     design: {
-      cadence: "monthly",
-      offCadenceTrigger: "a vision-capable model release",
-      subjects: "vision-capable models in the foundation-models catalog",
+      cadence: "quarterly (first validation trial on approval)",
+      offCadenceTrigger:
+        "a new model family / tokenizer generation at a covered provider, or a published pricing-structure change (cache multipliers, image conversion)",
+      subjects:
+        "four provider families, one representative model each: Anthropic Claude (claude-sonnet-5, calibrated estimator vs. unbilled count_tokens), OpenAI (gpt-5.5, exact self-BPE from the published o200k_base vocabulary vs. billed usage.prompt_tokens), Google Gemini (gemini-3.1-pro-preview, calibrated estimator vs. unbilled countTokens), OSS/local (Qwen2.5-Coder on Workers AI, exact self-BPE from tokenizer.json vs. usage.prompt_tokens)",
       metrics: [
         {
-          name: "characterErrorRate",
-          unit: "ratio",
+          name: "holdoutMeanAbsErrorPct",
+          unit: "%",
           direction: "lower-is-better",
         },
-        { name: "wordErrorRate", unit: "ratio", direction: "lower-is-better" },
-        { name: "fieldAccuracy", unit: "ratio", direction: "higher-is-better" },
+        {
+          name: "holdoutMaxAbsErrorPct",
+          unit: "%",
+          direction: "lower-is-better",
+        },
       ],
       trialsPerRun: {
         minimum: 1,
-        maximum: 3,
+        maximum: 1,
         premises:
-          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+          "token counting is deterministic per provider tokenizer version, so one pass over the 30-sample manifest per family suffices; repetition adds cost without narrowing variance",
       },
       costPerRun: {
-        ceilingUsd: 20,
+        ceilingUsd: 5,
         premises:
-          "provider token/image charges over the synthetic document set; no measured baseline yet; run ocr:estimate first",
+          "two families read unbilled count endpoints ($0); two families bill 30 minimal completions each (~cents at catalog input rates); insights + JP translation add the usual per-topic LLM cost; run `research -- token-metering --estimate` first. $5 is the mission's approved total measurement ceiling (2026-07-17)",
       },
       accumulates:
-        "per-model HistoryPoint series for each OCR metric, one point per dated frame",
+        "per-family HistoryPoint series for holdout mean/max absolute error, one point per dated trial; charts connect same-instrument-version (same sample manifest) points only",
     },
   },
   {
@@ -419,6 +377,51 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       },
       accumulates:
         "per-backend HistoryPoint series for retrieval and latency metrics, one point per dated frame",
+    },
+  },
+  {
+    id: "ocr",
+    artifactBase: "ocr-comparison",
+    npmScript: "npm run research -- ocr --real",
+    source: {
+      text: "OCR capability comparison",
+      docsPath: "docs/research-reports/ocr-comparison.md",
+      summary:
+        "CER/WER and structured field extraction over synthetic documents.",
+    },
+    japanese: {
+      text: "OCR能力",
+      docsPath: "docs/research-reports/ocr-comparison.insights.ja.md",
+      summary: "視覚対応モデルの文字起こしと構造化抽出の比較。",
+    },
+    dataPath: "docs/research-reports/ocr-comparison.data.json",
+    qmuSlug: "ocr-comparison",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger: "a vision-capable model release",
+      subjects: "vision-capable models in the foundation-models catalog",
+      metrics: [
+        {
+          name: "characterErrorRate",
+          unit: "ratio",
+          direction: "lower-is-better",
+        },
+        { name: "wordErrorRate", unit: "ratio", direction: "lower-is-better" },
+        { name: "fieldAccuracy", unit: "ratio", direction: "higher-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 20,
+        premises:
+          "provider token/image charges over the synthetic document set; no measured baseline yet; run ocr:estimate first",
+      },
+      accumulates:
+        "per-model HistoryPoint series for each OCR metric, one point per dated frame",
     },
   },
   {
@@ -477,131 +480,6 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       },
       accumulates:
         "per-model HistoryPoint series for latency, adherence, and text accuracy, one point per dated frame; charts connect same-manifest-version points only",
-    },
-  },
-  {
-    id: "speech",
-    artifactBase: "speech-comparison",
-    npmScript: "npm run research -- speech --real",
-    source: {
-      text: "Speech (TTS / STT / STS)",
-      docsPath: "docs/research-reports/speech-comparison.md",
-      summary:
-        "Text-to-speech intelligibility & latency, speech-to-text word accuracy & latency, per-unit cost, and speech-to-speech realtime capability.",
-    },
-    japanese: {
-      text: "音声 (TTS/STT/STS)",
-      docsPath: "docs/research-reports/speech-comparison.insights.ja.md",
-      summary:
-        "音声合成の明瞭度とレイテンシ、音声認識の単語精度とレイテンシ、単価、リアルタイム音声対話の対応状況の比較。",
-    },
-    dataPath: "docs/research-reports/speech-comparison.data.json",
-    qmuSlug: "speech-comparison",
-    design: {
-      cadence: "monthly",
-      offCadenceTrigger:
-        "a TTS/STT model release or price change at a covered provider",
-      subjects:
-        "API-accessible speech models in the curated speech registry (OpenAI, ElevenLabs, Google, Amazon, Deepgram, AssemblyAI for TTS/STT; OpenAI, Google, AWS, xAI cataloged for STS; Anthropic exposes no speech API and is recorded as not applicable)",
-      metrics: [
-        { name: "latencyMs", unit: "ms", direction: "lower-is-better" },
-        {
-          name: "ttsIntelligibility",
-          unit: "ratio",
-          direction: "higher-is-better",
-        },
-        {
-          name: "sttWordAccuracy",
-          unit: "ratio",
-          direction: "higher-is-better",
-        },
-        {
-          name: "ttsPricePer1MCharsUsd",
-          unit: "USD/1M chars",
-          direction: "reference",
-        },
-        {
-          name: "sttPricePerMinuteUsd",
-          unit: "USD/audio-minute",
-          direction: "reference",
-        },
-      ],
-      trialsPerRun: {
-        minimum: 1,
-        maximum: 3,
-        premises:
-          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
-      },
-      costPerRun: {
-        ceilingUsd: 10,
-        premises:
-          "TTS billed per character plus one STT-judge read of each synthesized clip; STT billed per audio minute; the 3-utterance manifest estimates ~$0.04/trial; run `research -- speech --estimate` first",
-      },
-      accumulates:
-        "per-subject HistoryPoint series for latency, TTS intelligibility, and STT word accuracy, one point per dated frame; charts connect same-manifest-version points only",
-    },
-  },
-  {
-    id: "computer-use",
-    artifactBase: "computer-use-comparison",
-    npmScript: "npm run research -- computer-use --real",
-    source: {
-      text: "Computer use",
-      docsPath: "docs/research-reports/computer-use-comparison.md",
-      summary:
-        "Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.",
-    },
-    japanese: {
-      text: "コンピュータ操作",
-      docsPath: "docs/research-reports/computer-use-comparison.insights.ja.md",
-      summary:
-        "API ネイティブなコンピュータ操作エージェントの、固定 Playwright ハーネス上での固定ブラウザタスク群に対するタスク成功率・手数・レイテンシ・実時間・タスク単価の比較。",
-    },
-    dataPath: "docs/research-reports/computer-use-comparison.data.json",
-    qmuSlug: "computer-use",
-    design: {
-      cadence: "quarterly",
-      offCadenceTrigger:
-        "a new or updated computer-use model/tool at a covered provider (Anthropic, OpenAI, Google)",
-      subjects:
-        "API-native computer-use tools, one config per provider (Anthropic computer_20251124 on Claude Sonnet 5, OpenAI computer on computer-use-preview, Google computer_use on Gemini 2.5 Computer Use), all driven through one fixed Playwright harness; xAI exposes no computer-use tool and is recorded as not applicable",
-      metrics: [
-        {
-          name: "taskSuccessRate",
-          unit: "ratio",
-          direction: "higher-is-better",
-        },
-        {
-          name: "stepsToComplete",
-          unit: "actions",
-          direction: "lower-is-better",
-        },
-        {
-          name: "latencyPerActionMs",
-          unit: "ms",
-          direction: "lower-is-better",
-        },
-        {
-          name: "wallClockPerTaskMs",
-          unit: "ms",
-          direction: "lower-is-better",
-        },
-        { name: "costPerTaskUsd", unit: "USD", direction: "lower-is-better" },
-        { name: "recoveryRate", unit: "ratio", direction: "lower-is-better" },
-      ],
-      trialsPerRun: {
-        minimum: 1,
-        maximum: 3,
-        premises:
-          "one repetition detects large movements; three bound run-to-run variance reported as stdDev, but each repetition re-pays the full multi-turn screenshot cost",
-      },
-      costPerRun: {
-        ceilingUsd: 40,
-        premises:
-          "3 subjects × 8 tasks × 1–3 repetitions, ~15 screenshot-dominated turns per task at each model's token rates; run `research -- computer-use --estimate` first",
-      },
-      accumulates:
-        "per-subject HistoryPoint series for success rate, wall-clock, and cost per task, one point per dated frame; charts connect same-suite-version, same-harness points only",
     },
   },
   {
@@ -669,6 +547,180 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       },
       accumulates:
         "per-model HistoryPoint series for render validity, prompt fidelity, animation presence, and mean token cost, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
+  {
+    id: "speech",
+    artifactBase: "speech-comparison",
+    npmScript: "npm run research -- speech --real",
+    source: {
+      text: "Speech (TTS / STT / STS)",
+      docsPath: "docs/research-reports/speech-comparison.md",
+      summary:
+        "Text-to-speech intelligibility & latency, speech-to-text word accuracy & latency, per-unit cost, and speech-to-speech realtime capability.",
+    },
+    japanese: {
+      text: "音声 (TTS/STT/STS)",
+      docsPath: "docs/research-reports/speech-comparison.insights.ja.md",
+      summary:
+        "音声合成の明瞭度とレイテンシ、音声認識の単語精度とレイテンシ、単価、リアルタイム音声対話の対応状況の比較。",
+    },
+    dataPath: "docs/research-reports/speech-comparison.data.json",
+    qmuSlug: "speech-comparison",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger:
+        "a TTS/STT model release or price change at a covered provider",
+      subjects:
+        "API-accessible speech models in the curated speech registry (OpenAI, ElevenLabs, Google, Amazon, Deepgram, AssemblyAI for TTS/STT; OpenAI, Google, AWS, xAI cataloged for STS; Anthropic exposes no speech API and is recorded as not applicable)",
+      metrics: [
+        { name: "latencyMs", unit: "ms", direction: "lower-is-better" },
+        {
+          name: "ttsIntelligibility",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "sttWordAccuracy",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "ttsPricePer1MCharsUsd",
+          unit: "USD/1M chars",
+          direction: "reference",
+        },
+        {
+          name: "sttPricePerMinuteUsd",
+          unit: "USD/audio-minute",
+          direction: "reference",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev",
+      },
+      costPerRun: {
+        ceilingUsd: 10,
+        premises:
+          "TTS billed per character plus one STT-judge read of each synthesized clip; STT billed per audio minute; the 3-utterance manifest estimates ~$0.04/trial; run `research -- speech --estimate` first",
+      },
+      accumulates:
+        "per-subject HistoryPoint series for latency, TTS intelligibility, and STT word accuracy, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
+  {
+    // Reference topic (design comparison, not measured): both pages are
+    // hand-authored — the Japanese article is the canonical original at its
+    // long-served URL, the English page its hand-written counterpart. No LLM
+    // stage runs for this topic; provenance labels (design comparison /
+    // 未測定 / 要確認) are carried in the articles themselves.
+    id: "agent-sdk",
+    artifactBase: "agent-sdk-comparison",
+    npmScript: "npm run research -- agent-sdk --fixture",
+    source: {
+      text: "Agent SDK comparison",
+      docsPath: "docs/research-reports/agent-sdk-comparison.md",
+      summary:
+        "A design comparison of agent frameworks/runtimes (OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph) from public documentation — not measured.",
+    },
+    japanese: {
+      text: "Agent SDKの比較",
+      docsPath: "docs/llm-foundation/agent-sdk-comparison.md",
+      summary:
+        "公開ドキュメントに基づく agent framework / runtime の設計比較。設計比較 / 未測定 / 要確認 の provenance を各セルに明記する。",
+    },
+    qmuSlug: "agent-sdk-comparison",
+    design: {
+      cadence: "quarterly",
+      offCadenceTrigger:
+        "a major agent SDK release or a breaking design change at a covered SDK",
+      subjects:
+        "OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph — public documentation only",
+      metrics: [
+        {
+          name: "designComparison",
+          unit: "provenance-labelled cells",
+          direction: "reference",
+        },
+      ],
+      trialsPerRun: {
+        minimum: 0,
+        maximum: 0,
+        premises:
+          "hand-authored design comparison over public documentation; no measurement calls",
+      },
+      costPerRun: {
+        ceilingUsd: 0,
+        premises: "keyless and costless; reads public documentation only",
+      },
+      accumulates:
+        "dated revisions of the design comparison, one frame per archive",
+    },
+  },
+  {
+    id: "computer-use",
+    artifactBase: "computer-use-comparison",
+    npmScript: "npm run research -- computer-use --real",
+    source: {
+      text: "Computer use",
+      docsPath: "docs/research-reports/computer-use-comparison.md",
+      summary:
+        "Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.",
+    },
+    japanese: {
+      text: "コンピュータ操作",
+      docsPath: "docs/research-reports/computer-use-comparison.insights.ja.md",
+      summary:
+        "API ネイティブなコンピュータ操作エージェントの、固定 Playwright ハーネス上での固定ブラウザタスク群に対するタスク成功率・手数・レイテンシ・実時間・タスク単価の比較。",
+    },
+    dataPath: "docs/research-reports/computer-use-comparison.data.json",
+    qmuSlug: "computer-use",
+    design: {
+      cadence: "quarterly",
+      offCadenceTrigger:
+        "a new or updated computer-use model/tool at a covered provider (Anthropic, OpenAI, Google)",
+      subjects:
+        "API-native computer-use tools, one config per provider (Anthropic computer_20251124 on Claude Sonnet 5, OpenAI computer on computer-use-preview, Google computer_use on Gemini 2.5 Computer Use), all driven through one fixed Playwright harness; xAI exposes no computer-use tool and is recorded as not applicable",
+      metrics: [
+        {
+          name: "taskSuccessRate",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "stepsToComplete",
+          unit: "actions",
+          direction: "lower-is-better",
+        },
+        {
+          name: "latencyPerActionMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        {
+          name: "wallClockPerTaskMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        { name: "costPerTaskUsd", unit: "USD", direction: "lower-is-better" },
+        { name: "recoveryRate", unit: "ratio", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev, but each repetition re-pays the full multi-turn screenshot cost",
+      },
+      costPerRun: {
+        ceilingUsd: 40,
+        premises:
+          "3 subjects × 8 tasks × 1–3 repetitions, ~15 screenshot-dominated turns per task at each model's token rates; run `research -- computer-use --estimate` first",
+      },
+      accumulates:
+        "per-subject HistoryPoint series for success rate, wall-clock, and cost per task, one point per dated frame; charts connect same-suite-version, same-harness points only",
     },
   },
   {
@@ -748,58 +800,6 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       },
       accumulates:
         "per-provider HistoryPoint series for coldStartMsP50 and publishedVcpuHourUsd, one point per dated trial; charts connect same-instrument-version points only",
-    },
-  },
-  {
-    id: "token-metering",
-    artifactBase: "token-metering-comparison",
-    npmScript: "npm run research -- token-metering --real",
-    source: {
-      text: "Token counting and metering",
-      docsPath: "docs/research-reports/token-metering-comparison.md",
-      summary:
-        "Library-independent input-token counting — exact self-implemented BPE where the vocabulary is published, calibrated estimation where it is not — validated against API-reported counts on a pinned English/Japanese/code sample set.",
-    },
-    japanese: {
-      text: "トークン計測",
-      docsPath:
-        "docs/research-reports/token-metering-comparison.insights.ja.md",
-      summary:
-        "トークナイザライブラリに依存しない入力トークンの自前カウント（語彙公開系は自前BPE、非公開系は較正付き推定）を、日英・コードの固定サンプルで API 実測値と照合する。",
-    },
-    dataPath: "docs/research-reports/token-metering-comparison.data.json",
-    qmuSlug: "token-metering",
-    design: {
-      cadence: "quarterly (first validation trial on approval)",
-      offCadenceTrigger:
-        "a new model family / tokenizer generation at a covered provider, or a published pricing-structure change (cache multipliers, image conversion)",
-      subjects:
-        "four provider families, one representative model each: Anthropic Claude (claude-sonnet-5, calibrated estimator vs. unbilled count_tokens), OpenAI (gpt-5.5, exact self-BPE from the published o200k_base vocabulary vs. billed usage.prompt_tokens), Google Gemini (gemini-3.1-pro-preview, calibrated estimator vs. unbilled countTokens), OSS/local (Qwen2.5-Coder on Workers AI, exact self-BPE from tokenizer.json vs. usage.prompt_tokens)",
-      metrics: [
-        {
-          name: "holdoutMeanAbsErrorPct",
-          unit: "%",
-          direction: "lower-is-better",
-        },
-        {
-          name: "holdoutMaxAbsErrorPct",
-          unit: "%",
-          direction: "lower-is-better",
-        },
-      ],
-      trialsPerRun: {
-        minimum: 1,
-        maximum: 1,
-        premises:
-          "token counting is deterministic per provider tokenizer version, so one pass over the 30-sample manifest per family suffices; repetition adds cost without narrowing variance",
-      },
-      costPerRun: {
-        ceilingUsd: 5,
-        premises:
-          "two families read unbilled count endpoints ($0); two families bill 30 minimal completions each (~cents at catalog input rates); insights + JP translation add the usual per-topic LLM cost; run `research -- token-metering --estimate` first. $5 is the mission's approved total measurement ceiling (2026-07-17)",
-      },
-      accumulates:
-        "per-family HistoryPoint series for holdout mean/max absolute error, one point per dated trial; charts connect same-instrument-version (same sample manifest) points only",
     },
   },
 ];
