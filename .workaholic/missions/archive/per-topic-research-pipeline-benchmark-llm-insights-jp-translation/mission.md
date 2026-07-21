@@ -2,7 +2,7 @@
 type: Mission
 title: Per-topic research pipeline: benchmark, LLM insights, JP translation
 slug: per-topic-research-pipeline-benchmark-llm-insights-jp-translation
-status: active
+status: achieved
 created_at: 2026-07-09T02:20:03+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -86,3 +86,4 @@ owner-gated, regenerable artifact (the existing `.real` pattern).
 - 2026-07-17 — residue ticket 20260717003611 archived (363f108, work-20260717-101001): keyless fixture path re-composes the 推移/過去の調査 blocks after the benchmark stage (fixtureRewritesCurrentPage on TopicSpec), committed artifacts regenerated to the 27-model / 8-provider registry (foundation-models, ocr-comparison, llm-model-comparison.data.json, agent-vm apiReachable), and a `make drift` CI gate now verifies byte-stability of every keyless fixture against the committed pages
 - 2026-07-17 — residue ticket 20260717003610 archived (a6b95b2, work-20260717-101001): agent-sdk published as a hand-authored EN/JP pair on the standard 7-section outline (EN docs/research-reports/agent-sdk-comparison.md new; JP canonical stays at docs/llm-foundation/agent-sdk-comparison.md), registered in site.ts after foundation-models with design-comparison provenance, on both sidebars, indexes, copy-plan and the qmu publish ticket; article-kind pages are guarded from survey-block composition — item 6 checked, acceptance now 7/7
 - 2026-07-17 — residue ticket 20260717003612 archived (06ad3a2, work-20260717-101001): the three superseded llm-foundation JP orphan pages replaced by explicit meta-refresh redirect stubs to their canonical *.insights.ja pages; qmu-co-jp checked — no stale old-slug copies, no retiredQmuSlugs change needed
+- 2026-07-19 — mission achieved — mission.md
