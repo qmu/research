@@ -32,5 +32,6 @@ Past generated frames are listed in [History](./history).
 - [Computer use](./computer-use-comparison) — Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.
 - [Agent VM / sandbox comparison](./agent-vm-comparison) — Isolation model, published price, capability envelope, and probed cold-start latency and fixed-task cost of the sandbox / microVM platforms agents run untrusted code in.
 - [Deep research APIs](./deep-research-comparison) — Rubric answer quality, citation validity, source diversity, latency, and per-query cost of autonomous deep-research endpoints, held against a transparent Anthropic build-your-own baseline.
+- [Trend recency](./trend-recency-comparison) — Web-grounded knowledge recency of search-augmented systems vs. ungrounded controls: recency accuracy, citation validity and freshness, answer latency, and search-billing cost over trailing-window event probes.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

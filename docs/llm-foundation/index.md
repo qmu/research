@@ -83,6 +83,11 @@ API ネイティブなコンピュータ操作エージェントの、固定 Pla
 自律型ディープリサーチAPIの回答品質（ルーブリック）、引用妥当性、ソース多様性、レイテンシ、クエリ単価を、透明な Anthropic 自前実装ベースラインと比較。
 英語ソースは [Deep research APIs](/research-reports/deep-research-comparison)。
 
+### [トレンド追随](/research-reports/trend-recency-comparison.insights.ja)
+
+検索拡張システムがどれだけ最新の出来事を正しく追えているかを、非グラウンディングの対照と対で測る比較。直近の出来事プローブに対する再現正答率、引用の妥当性・鮮度、応答レイテンシ、検索課金コストを扱う。
+英語ソースは [Trend recency](/research-reports/trend-recency-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`

@@ -1,0 +1,124 @@
+---
+title: トレンド追随
+source_artifact: docs/research-reports/trend-recency-comparison.data.json
+source_commit: 676dcc3
+insights_model: source-report
+translated_from: trend-recency-comparison.md
+translation_model: claude-sonnet-5
+generated_at: 2026-07-18T15:20:19.234Z
+trials: 0
+provenance: llm-translation
+---
+# トレンド追随
+
+このレポートは、**検索拡張システムがどれだけ現在に追いついているか**を比較するものです。各対象は同一の最近のイベントに関するプローブに回答し、グラウンディングされた各対象は同じベースモデルの**グラウンディングなしのコントロール**と対にされます。これにより、ライブ検索がパラメトリック記憶に対して何を付加しているかを数値として切り分けています。このページのすべてのスコアは、回答テキストとその引用から**機械的に**算出されています——キーワードプロキシによる鮮度、棄権、引用URLの妥当性、引用元の情報の古さです。セマンティックなLLM審査による評価とハルシネーション率メトリクスは、後のバージョンの計測器で導入される予定です。
+
+## 1. 調査の目的
+
+本調査の目的は、どのAIシステムが実際に「今何が起きているか」を把握しているか——つまり、モデルが学習時点で記憶した内容ではなく、直近の期間の出来事について検索・取得し、正しく報告できているか——を記録し、その鮮度がレイテンシと検索課金の面でどれだけのコストを伴うかを明らかにすることにある。この月次シリーズは、世界が動き続ける中で誰が追随できているかという、他のどのトピック（速度、精度、可用性、OCR、RAG）でも測定されない問いに答えるものである。
+
+## 2. 測定対象
+
+### 対象モデル
+
+対象は、キュレーション済みレジストリ（`packages/tech/src/trend-recency/models.ts`）に登録された10種類の構成である。各プロバイダーごとに検索拡張済みの構成（Web検索ツールを備えたAgent ToolsによるGrok、Perplexity SonarおよびSonar Pro、Google Search groundingを備えたGemini、Web検索ツールを備えたGPT、Web検索ツールを備えたClaude）が1つずつ用意されており、ベースモデルが検索なしの状態でも存在する場合は、それぞれ同一モデルの検索なしコントロールと対でまとめられている。すべての行には出典と最終確認日が記載されている。
+
+### 対象メトリクス
+
+測定するメトリクスは以下の通りである。recency accuracy（直近ウィンドウのイベント調査に対して、期待されるキーワードすべてを含めて回答できた割合。意味論的ジャッジの機械的な代理指標であり、値が高いほど良い）、abstention rate（正直な回答保留の割合であり、記述的な指標）、citation validity（返却された引用のうち、整形式のhttp(s) URLを備えている割合。実際にURLが解決するかどうかの検証は後続の計測バージョンで扱う。値が高いほど良い）、citation freshness（日付付きの引用について、イベント発生時点からの経過日数の中央値。値が低いほど良い。引用は、プロバイダーが日付を返すか引用元URLに日付が埋め込まれている場合に「日付あり」とみなされ、いずれの日付情報も持たない行については、経過日数0ではなく「未測定」として報告する）、そしてanswer latency（ミリ秒単位、値が低いほど良い）。1000リクエストあたりの検索課金額はキュレーションによる参考列であり、実際の試行によって精緻化されている。
+
+## 3. 範囲と制約
+
+- **機械的判定であり、意味的判定ではない（今のところ）。** スコアは回答テキストとその引用のみを読み取るものであり、LLM審査員による最新性評価とハルシネーション率メトリクスは後続のインストゥルメントバージョンで対応する予定である。これはSVGトピックがビジョン審査員メトリクスを先送りしたのと全く同じ扱いである。
+- **プローブマニフェストバージョン `trend-recency-v2-20260717`**（3件のプローブ、30日間のウィンドウ）。実トライアルごとに、その直前の30日間のトレーリングウィンドウ内のイベントから新規にプローブセットを抽出し、そのグラウンドトゥルースおよび裏付けとなる日付入りソースとともに `docs/research-reports/trend-recency-history/` 配下にそのセットをコミットする。これにより、メトリクスは構造上「このトライアル時点から遡って30日以内のイベント」であり続け、すべてのトライアルが監査可能となる。履歴・トレンド系列は、同一インストゥルメントバージョンのポイント同士のみを接続する。
+- **対をなす対照群。** グラウンディングされたチャット対象にはすべて、同一ベースモデルのグラウンディングなし対照群が存在する。Perplexity Sonarは検索ネイティブであり、グラウンディングなしの対となるものは存在しない。
+- **グラウンディングされたツール接続は、現行のプロバイダードキュメントに準拠している**（xAI Agent Toolsの `web_search`、Geminiの `googleSearch`、OpenAI Responsesの `web_search`、Anthropicの `web_search`）。2026-07-17の最初の実トライアルでは、Gemini、OpenAI、Anthropicの接続が実環境で稼働することを検証し、`410 "Live search is deprecated"` という応答を返したxAI Live Search面は廃止された。このアダプターはAgent Toolsの `web_search`（Responses）面に移行され、2026-07-18に実環境での稼働が検証され、Grokのグラウンディング行は測定済み行となった。Perplexity SonarおよびSonar Proは、`PERPLEXITY_API_KEY` が発行されるまではエラー行のままであり、いかなる行についても「動作していると仮定した」扱いにはしていない。
+- フィクスチャ経路はキー不要かつ決定的であり、実際の数値はオーナーが承認された上限（$30/トライアル ― まず `--estimate` を実行すること。検索の追加料金が支配的である）内で実経路を実行した後にのみ現れる。
+- 時点情報：測定された挙動は、`2026-07-17T01:34:36.857Z` 時点のモデル、検索プロダクト、およびウェブそのものを反映している。
+
+## 4. 検証結果
+
+今回の実行では、対象10行のうち**8件を測定**した（非測定の行は`fixtured`のハーネスチェックまたは`error`行であり、数値を捏造することは一切ない）。
+
+| メトリクス | 最良（subject） | 中央値 | 最悪 |
+| ------ | -------------- | ------ | ----- |
+| 即時性精度 | 100.0% — Grok 4.3 + Agent Tools web search | 50.0% | 0.0% |
+| 引用妥当性 | 100.0% — Grok 4.3 + Agent Tools web search | 50.0% | 0.0% |
+| 引用の新しさ | 0.0 d — Grok 4.3 + Agent Tools web search | 0.0 d | 0.0 d |
+| 応答レイテンシ | 3211 ms — Claude Opus 4.8（検索なし） | 6231 ms | 9753 ms |
+
+「最良」「最悪」は各メトリクス固有の方向性に従う（即時性精度と引用妥当性は高いほど良く、引用の経過日数とレイテンシは低いほど良い）。グラウンディングありと対照群（control）の比較——ライブ検索がパラメトリックメモリに対してどれだけの付加価値をもたらすか——は、セクション7の表において各グラウンディング済みsubjectを同一ベースモデルの非グラウンディングcontrolと比較することで読み取れる。
+
+**推移 / Trend across surveys**
+
+The measured metrics across the dated surveys in this series (same-instrument runs only):
+
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="trend-recency-recencyAccuracy-trend-title trend-recency-recencyAccuracy-trend-desc" viewBox="0 0 640 320"><title id="trend-recency-recencyAccuracy-trend-title">recencyAccuracy over surveys</title><desc id="trend-recency-recencyAccuracy-trend-desc">recencyAccuracy (ratio) per subject across the survey series.</desc><rect x="0" y="0" width="640" height="320" fill="#ffffff"/><line x1="64.00" y1="256.00" x2="616.00" y2="256.00" stroke="#333333" stroke-width="1"/><line x1="64.00" y1="32.00" x2="64.00" y2="256.00" stroke="#333333" stroke-width="1"/><text x="64.00" y="276.00" font-size="10">2026-07-17</text><text x="616.00" y="276.00" text-anchor="end" font-size="10">2026-07-18</text><text x="320.00" y="306.00" text-anchor="middle" font-size="12">Survey date</text><text x="14.00" y="160.00" transform="rotate(-90 14.00 160.00)" text-anchor="middle" font-size="12">recencyAccuracy (ratio)</text><text x="56.00" y="36.00" text-anchor="end" font-size="10">1.0</text><text x="56.00" y="256.00" text-anchor="end" font-size="10">0.0</text><g><circle cx="616.00" cy="32.00" r="3.5" fill="#1f77b4"><title>Grok 4.3 + Agent Tools web search 2026-07-18 1.0</title></circle></g><g><circle cx="64.00" cy="32.00" r="3.5" fill="#d62728"><title>Gemini 3.1 Pro + Google Search grounding 2026-07-17 1.0</title></circle></g><g><circle cx="64.00" cy="32.00" r="3.5" fill="#2ca02c"><title>GPT-5.5 + web search 2026-07-17 1.0</title></circle></g><g><circle cx="64.00" cy="32.00" r="3.5" fill="#9467bd"><title>Claude Opus 4.8 + web search 2026-07-17 1.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#8c564b"><title>Grok 4.3 (no search) 2026-07-17 0.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#e377c2"><title>Gemini 3.1 Pro (no grounding) 2026-07-17 0.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#7f7f7f"><title>GPT-5.5 (no search) 2026-07-17 0.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#bcbd22"><title>Claude Opus 4.8 (no search) 2026-07-17 0.0</title></circle></g><g><line x1="484.00" y1="18.00" x2="504.00" y2="18.00" stroke="#1f77b4" stroke-width="2"/><text x="508.00" y="22.00" font-size="10">Grok 4.3 + Agent Tools web search</text></g><g><line x1="484.00" y1="33.00" x2="504.00" y2="33.00" stroke="#d62728" stroke-width="2" stroke-dasharray="5 3"/><text x="508.00" y="37.00" font-size="10">Gemini 3.1 Pro + Google Search grounding</text></g><g><line x1="484.00" y1="48.00" x2="504.00" y2="48.00" stroke="#2ca02c" stroke-width="2" stroke-dasharray="2 3"/><text x="508.00" y="52.00" font-size="10">GPT-5.5 + web search</text></g><g><line x1="484.00" y1="63.00" x2="504.00" y2="63.00" stroke="#9467bd" stroke-width="2" stroke-dasharray="8 3 2 3"/><text x="508.00" y="67.00" font-size="10">Claude Opus 4.8 + web search</text></g><g><line x1="484.00" y1="78.00" x2="504.00" y2="78.00" stroke="#8c564b" stroke-width="2" stroke-dasharray="1 3"/><text x="508.00" y="82.00" font-size="10">Grok 4.3 (no search)</text></g><g><line x1="484.00" y1="93.00" x2="504.00" y2="93.00" stroke="#e377c2" stroke-width="2"/><text x="508.00" y="97.00" font-size="10">Gemini 3.1 Pro (no grounding)</text></g><g><line x1="484.00" y1="108.00" x2="504.00" y2="108.00" stroke="#7f7f7f" stroke-width="2" stroke-dasharray="5 3"/><text x="508.00" y="112.00" font-size="10">GPT-5.5 (no search)</text></g><g><line x1="484.00" y1="123.00" x2="504.00" y2="123.00" stroke="#bcbd22" stroke-width="2" stroke-dasharray="2 3"/><text x="508.00" y="127.00" font-size="10">Claude Opus 4.8 (no search)</text></g></svg>
+
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="trend-recency-citationValidity-trend-title trend-recency-citationValidity-trend-desc" viewBox="0 0 640 320"><title id="trend-recency-citationValidity-trend-title">citationValidity over surveys</title><desc id="trend-recency-citationValidity-trend-desc">citationValidity (ratio) per subject across the survey series.</desc><rect x="0" y="0" width="640" height="320" fill="#ffffff"/><line x1="64.00" y1="256.00" x2="616.00" y2="256.00" stroke="#333333" stroke-width="1"/><line x1="64.00" y1="32.00" x2="64.00" y2="256.00" stroke="#333333" stroke-width="1"/><text x="64.00" y="276.00" font-size="10">2026-07-17</text><text x="616.00" y="276.00" text-anchor="end" font-size="10">2026-07-18</text><text x="320.00" y="306.00" text-anchor="middle" font-size="12">Survey date</text><text x="14.00" y="160.00" transform="rotate(-90 14.00 160.00)" text-anchor="middle" font-size="12">citationValidity (ratio)</text><text x="56.00" y="36.00" text-anchor="end" font-size="10">1.0</text><text x="56.00" y="256.00" text-anchor="end" font-size="10">0.0</text><g><circle cx="616.00" cy="32.00" r="3.5" fill="#1f77b4"><title>Grok 4.3 + Agent Tools web search 2026-07-18 1.0</title></circle></g><g><circle cx="64.00" cy="32.00" r="3.5" fill="#d62728"><title>Gemini 3.1 Pro + Google Search grounding 2026-07-17 1.0</title></circle></g><g><circle cx="64.00" cy="32.00" r="3.5" fill="#2ca02c"><title>GPT-5.5 + web search 2026-07-17 1.0</title></circle></g><g><circle cx="64.00" cy="32.00" r="3.5" fill="#9467bd"><title>Claude Opus 4.8 + web search 2026-07-17 1.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#8c564b"><title>Grok 4.3 (no search) 2026-07-17 0.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#e377c2"><title>Gemini 3.1 Pro (no grounding) 2026-07-17 0.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#7f7f7f"><title>GPT-5.5 (no search) 2026-07-17 0.0</title></circle></g><g><circle cx="64.00" cy="256.00" r="3.5" fill="#bcbd22"><title>Claude Opus 4.8 (no search) 2026-07-17 0.0</title></circle></g><g><line x1="484.00" y1="18.00" x2="504.00" y2="18.00" stroke="#1f77b4" stroke-width="2"/><text x="508.00" y="22.00" font-size="10">Grok 4.3 + Agent Tools web search</text></g><g><line x1="484.00" y1="33.00" x2="504.00" y2="33.00" stroke="#d62728" stroke-width="2" stroke-dasharray="5 3"/><text x="508.00" y="37.00" font-size="10">Gemini 3.1 Pro + Google Search grounding</text></g><g><line x1="484.00" y1="48.00" x2="504.00" y2="48.00" stroke="#2ca02c" stroke-width="2" stroke-dasharray="2 3"/><text x="508.00" y="52.00" font-size="10">GPT-5.5 + web search</text></g><g><line x1="484.00" y1="63.00" x2="504.00" y2="63.00" stroke="#9467bd" stroke-width="2" stroke-dasharray="8 3 2 3"/><text x="508.00" y="67.00" font-size="10">Claude Opus 4.8 + web search</text></g><g><line x1="484.00" y1="78.00" x2="504.00" y2="78.00" stroke="#8c564b" stroke-width="2" stroke-dasharray="1 3"/><text x="508.00" y="82.00" font-size="10">Grok 4.3 (no search)</text></g><g><line x1="484.00" y1="93.00" x2="504.00" y2="93.00" stroke="#e377c2" stroke-width="2"/><text x="508.00" y="97.00" font-size="10">Gemini 3.1 Pro (no grounding)</text></g><g><line x1="484.00" y1="108.00" x2="504.00" y2="108.00" stroke="#7f7f7f" stroke-width="2" stroke-dasharray="5 3"/><text x="508.00" y="112.00" font-size="10">GPT-5.5 (no search)</text></g><g><line x1="484.00" y1="123.00" x2="504.00" y2="123.00" stroke="#bcbd22" stroke-width="2" stroke-dasharray="2 3"/><text x="508.00" y="127.00" font-size="10">Claude Opus 4.8 (no search)</text></g></svg>
+
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="trend-recency-latencyMs-trend-title trend-recency-latencyMs-trend-desc" viewBox="0 0 640 320"><title id="trend-recency-latencyMs-trend-title">latencyMs over surveys</title><desc id="trend-recency-latencyMs-trend-desc">latencyMs (ms) per subject across the survey series.</desc><rect x="0" y="0" width="640" height="320" fill="#ffffff"/><line x1="64.00" y1="256.00" x2="616.00" y2="256.00" stroke="#333333" stroke-width="1"/><line x1="64.00" y1="32.00" x2="64.00" y2="256.00" stroke="#333333" stroke-width="1"/><text x="64.00" y="276.00" font-size="10">2026-07-17</text><text x="616.00" y="276.00" text-anchor="end" font-size="10">2026-07-18</text><text x="320.00" y="306.00" text-anchor="middle" font-size="12">Survey date</text><text x="14.00" y="160.00" transform="rotate(-90 14.00 160.00)" text-anchor="middle" font-size="12">latencyMs (ms)</text><text x="56.00" y="36.00" text-anchor="end" font-size="10">9753.3</text><text x="56.00" y="256.00" text-anchor="end" font-size="10">3211.0</text><g><circle cx="64.00" cy="256.00" r="3.5" fill="#1f77b4"><title>Claude Opus 4.8 (no search) 2026-07-17 3211.0</title></circle></g><g><circle cx="64.00" cy="213.00" r="3.5" fill="#d62728"><title>GPT-5.5 + web search 2026-07-17 4467.0</title></circle></g><g><circle cx="64.00" cy="197.78" r="3.5" fill="#2ca02c"><title>Grok 4.3 (no search) 2026-07-17 4911.3</title></circle></g><g><circle cx="64.00" cy="164.02" r="3.5" fill="#9467bd"><title>Gemini 3.1 Pro (no grounding) 2026-07-17 5897.3</title></circle></g><g><circle cx="64.00" cy="141.18" r="3.5" fill="#8c564b"><title>GPT-5.5 (no search) 2026-07-17 6564.7</title></circle></g><g><circle cx="64.00" cy="129.87" r="3.5" fill="#e377c2"><title>Claude Opus 4.8 + web search 2026-07-17 6895.0</title></circle></g><g><circle cx="616.00" cy="119.61" r="3.5" fill="#7f7f7f"><title>Grok 4.3 + Agent Tools web search 2026-07-18 7194.7</title></circle></g><g><circle cx="64.00" cy="32.00" r="3.5" fill="#bcbd22"><title>Gemini 3.1 Pro + Google Search grounding 2026-07-17 9753.3</title></circle></g><g><line x1="484.00" y1="18.00" x2="504.00" y2="18.00" stroke="#1f77b4" stroke-width="2"/><text x="508.00" y="22.00" font-size="10">Claude Opus 4.8 (no search)</text></g><g><line x1="484.00" y1="33.00" x2="504.00" y2="33.00" stroke="#d62728" stroke-width="2" stroke-dasharray="5 3"/><text x="508.00" y="37.00" font-size="10">GPT-5.5 + web search</text></g><g><line x1="484.00" y1="48.00" x2="504.00" y2="48.00" stroke="#2ca02c" stroke-width="2" stroke-dasharray="2 3"/><text x="508.00" y="52.00" font-size="10">Grok 4.3 (no search)</text></g><g><line x1="484.00" y1="63.00" x2="504.00" y2="63.00" stroke="#9467bd" stroke-width="2" stroke-dasharray="8 3 2 3"/><text x="508.00" y="67.00" font-size="10">Gemini 3.1 Pro (no grounding)</text></g><g><line x1="484.00" y1="78.00" x2="504.00" y2="78.00" stroke="#8c564b" stroke-width="2" stroke-dasharray="1 3"/><text x="508.00" y="82.00" font-size="10">GPT-5.5 (no search)</text></g><g><line x1="484.00" y1="93.00" x2="504.00" y2="93.00" stroke="#e377c2" stroke-width="2"/><text x="508.00" y="97.00" font-size="10">Claude Opus 4.8 + web search</text></g><g><line x1="484.00" y1="108.00" x2="504.00" y2="108.00" stroke="#7f7f7f" stroke-width="2" stroke-dasharray="5 3"/><text x="508.00" y="112.00" font-size="10">Grok 4.3 + Agent Tools web search</text></g><g><line x1="484.00" y1="123.00" x2="504.00" y2="123.00" stroke="#bcbd22" stroke-width="2" stroke-dasharray="2 3"/><text x="508.00" y="127.00" font-size="10">Gemini 3.1 Pro + Google Search grounding</text></g></svg>
+
+## 5. 考察
+
+`measured` の来歴を持つ行については、鮮度精度、引用の妥当性、フレッシュネス、レイテンシで比較可能であり、検索の課金額は参考情報として扱う。ペア対照設計により、発見事項を局所化できる。グラウンディングされた対象が自身の対照条件を鮮度精度で上回っていれば、ライブ検索が機能していることを示す一方、対照条件がグラウンディングされた対をなす相手と一致している場合は、その出来事がすでにパラメトリックメモリに含まれていたことを意味し、検証対象とする期間の窓をより狭めるべきである。
+
+## 6. 再現方法
+
+### 再現手順
+
+```sh
+git clone https://github.com/qmu/research
+cd research/packages/tech
+npm install
+
+# キー不要のセルフテスト（決定論的なフィクスチャクライアント）:
+npm run research -- trend-recency --fixture
+
+# コストプレビュー後、オーナー限定の実実行:
+npm run research -- trend-recency --estimate
+npm run research -- trend-recency --real
+```
+
+### 再現コスト（目安）
+
+フィクスチャ経路はキー不要でコストもかからない。実トライアルでは、各プロバイダに対して回答トークン分に加えて検索サーチャージ（リクエストごと、またはグラウンディングされたクエリごとに課金され、支配的なコストとなる）が課金される。合意された上限は1トライアルあたり$30であり、`--estimate` を先に実行しなければならない。上限を超える見積もりが出た場合は再承認のため停止する。
+
+### クリーンアップ
+
+永続的なプロバイダ側リソースは作成されない。回答と引用はメモリ上でスコアリングされ、実行はローカルのMarkdown/JSON成果物のみを書き出す — コミット前にレビューすること。
+
+## 7. 検証データ
+
+**主体別結果**
+
+| 主体 | プロバイダー | グラウンディング | 出所 | 直近性（平均±標準偏差） | 棄権（平均±標準偏差） | 引用の妥当性（平均±標準偏差） | 引用の鮮度（平均±標準偏差） | レイテンシ（平均±標準偏差） | 検索 $/1kリクエスト | 備考 |
+| ------- | -------- | --------- | ---------- | ----------------- | -------------------- | --------------------------- | ---------------------- | ----------------- | --------------- | ---- |
+| Grok 4.3 + Agent Tools web search | xai | grounded | measured | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0 d ± 0.0 d (n=1) | 7195 ± 1313 (n=3) | $5.00 |  |
+| Perplexity Sonar | perplexity | grounded | error | 未測定 | 未測定 | 未測定 | 未測定 | 未測定 | $5.00 | Error: PERPLEXITY_API_KEY is required for a real perplexity run. |
+| Perplexity Sonar Pro | perplexity | grounded | error | 未測定 | 未測定 | 未測定 | 未測定 | 未測定 | $8.00 | Error: PERPLEXITY_API_KEY is required for a real perplexity run. |
+| Gemini 3.1 Pro + Google Search grounding | google | grounded | measured | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 未測定 | 9753 ± 3608 (n=3) | $35.00 |  |
+| GPT-5.5 + web search | openai | grounded | measured | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 未測定 | 4467 ± 790 (n=3) | $10.00 |  |
+| Claude Opus 4.8 + web search | anthropic | grounded | measured | 100.0% ± 0.0% (n=3) | 33.3% ± 57.7% (n=3) | 100.0% ± 0.0% (n=3) | 未測定 | 6895 ± 612 (n=3) | $10.00 |  |
+| Grok 4.3 (no search) | xai | ungrounded | measured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 未測定 | 4911 ± 1803 (n=3) | $0.00 |  |
+| Gemini 3.1 Pro (no grounding) | google | ungrounded | measured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 未測定 | 5897 ± 2839 (n=3) | $0.00 |  |
+| GPT-5.5 (no search) | openai | ungrounded | measured | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 未測定 | 6565 ± 2796 (n=3) | $0.00 |  |
+| Claude Opus 4.8 (no search) | anthropic | ungrounded | measured | 0.0% ± 0.0% (n=3) | 100.0% ± 0.0% (n=3) | 0.0% ± 0.0% (n=3) | 未測定 | 3211 ± 603 (n=3) | $0.00 |  |
+
+**プローブ一覧（バージョン trend-recency-v2-20260717、30日間ウィンドウ）**
+
+| プローブID | トピック | イベント日 | 期待キーワード |
+| -------- | ----- | ---------- | ----------------- |
+| 20260712-wimbledon-mens-champion | sports | 2026-07-12 | 1 |
+| 20260715-world-cup-finalists | sports | 2026-07-15 | 2 |
+| 20260709-gpt-5-6-variants | ai-models | 2026-07-09 | 2 |
+
+完全な実行記録は [`trend-recency-comparison.data.json`](./trend-recency-comparison.data.json) としてコミットされています。各呼び出しの質問、回答、引用、レイテンシ、出力トークン数、およびすべてのスコアが含まれます。
+
+生成日時: 2026-07-17T01:34:36.857Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
+
+- [2026-07-17T01:34:36.857Z](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja)

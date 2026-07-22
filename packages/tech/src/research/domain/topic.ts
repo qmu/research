@@ -259,9 +259,11 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
     // The entrypoint defaults to its keyless fixture and switches to a real
     // (key-gated, search-billed) run with --real, like OCR and image-generation.
     modeArgv: { fixture: [], estimate: ["--estimate"], real: ["--real"] },
-    // The skeleton runs only the benchmark stage; insights/translation are added
-    // when the topic publishes (the publish ticket registers it in site.ts).
-    stages: ["benchmark"],
+    // Published: a real run composes the current article and its Japanese
+    // translation, like the other published benchmark topics. The keyless
+    // fixture path still runs only the benchmark stage (CI-exercised), and
+    // re-composes the current pages from the latest measured dated frame.
+    stages: ["benchmark", "insights", "translation"],
     fixtureRewritesCurrentPage: true,
   },
   {

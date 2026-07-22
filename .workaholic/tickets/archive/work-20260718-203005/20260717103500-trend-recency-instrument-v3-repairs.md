@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain, Infrastructure]
 effort: 4h
-commit_hash:
+commit_hash: 0d1688c
 category: Changed
 mission: periodic-research-target-trend-catchable-ai-models-grok-perplexity
 depends_on: [20260714010001-trend-recency-first-validation-trial.md]
@@ -144,3 +144,38 @@ even when a package fails** — the Makefile's `for p in $(PACKAGES)` loop takes
 last package's status, so a `tsc` error in `packages/tech` was masked by
 `packages/industry` passing. CI invokes these same targets. Verified per-package
 with `npm test` instead. Same shape for `build`/`lint`.
+
+## Final Report — 2026-07-18 (drive on desk `work-20260718-203005`)
+
+**Outcome: implemented (keyless scope complete); two owner-gated items escalated.**
+
+The v3 keyless repairs (Findings 1–3) were already implemented and merged to
+`main` in commit `0d1688c` ("Repair the trend-recency instrument (v3, keyless):
+xAI Agent Tools migration, final-stance abstention scoring, citation date
+signal"), an ancestor of this desk branch. This drive re-verified the keyless
+Quality Gate against the committed code and archives the ticket; no new code was
+needed.
+
+### Quality Gate verdict
+
+- ✅ **Re-scoring the committed v2 result frame with the new abstention scorer**
+  flags the recorded GPT-5.5/Grok control abstentions and un-flags the grounded
+  Claude false positive. Verified by `src/trend-recency/rescore-v2-frame.test.ts`
+  passing in the full suite (566 passed / 1 skipped, exit 0) on this desk.
+- ⛔ **Single-subject `--real` probe of `grok-4-3-grounded`** — OWNER-GATED, PAID.
+  Not runnable by an autonomous drive (spend approval + `XAI_API_KEY`; the drive
+  charter forbids new benchmark measurement calls). Left unchecked; escalated.
+  Until it runs, the Grok grounded row stays an honest `error` row (xAI 410),
+  exactly as `run.ts`, the adapter comment, and the §3 report scope already state.
+- ✅ **Keyless fixture path stays byte-stable; test / lint green.** On this desk:
+  `npm run build` 0 · `npx vitest --run` 0 (566 passed) · `npm run lint` 0 ·
+  `bash scripts/check-fixture-drift.sh` 0 (fixtures byte-stable).
+
+### Still owner-gated (not code; carried by the mission, not this ticket)
+
+- **Live xAI verification** of the Agent Tools migration (the paid probe above).
+- **Finding 4 — `PERPLEXITY_API_KEY`** is still unprovisioned (a new billing
+  relationship), so both Sonar rows stay `error` rows. Owner action.
+
+These two are the only reasons the instrument does not measure 10/10 subjects;
+both are external/paid and outside an autonomous drive's charter.

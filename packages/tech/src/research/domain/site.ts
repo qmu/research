@@ -857,6 +857,69 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
         "per-subject HistoryPoint series for answer quality (primary), cost per query, and latency, one point per dated frame; charts connect same-manifest-version points only",
     },
   },
+  {
+    id: "trend-recency",
+    artifactBase: "trend-recency-comparison",
+    npmScript: "npm run research -- trend-recency --real",
+    source: {
+      text: "Trend recency",
+      docsPath: "docs/research-reports/trend-recency-comparison.md",
+      summary:
+        "Web-grounded knowledge recency of search-augmented systems vs. ungrounded controls: recency accuracy, citation validity and freshness, answer latency, and search-billing cost over trailing-window event probes.",
+    },
+    japanese: {
+      text: "トレンド追随",
+      docsPath: "docs/research-reports/trend-recency-comparison.insights.ja.md",
+      summary:
+        "検索拡張システムがどれだけ最新の出来事を正しく追えているかを、非グラウンディングの対照と対で測る比較。直近の出来事プローブに対する再現正答率、引用の妥当性・鮮度、応答レイテンシ、検索課金コストを扱う。",
+    },
+    dataPath: "docs/research-reports/trend-recency-comparison.data.json",
+    qmuSlug: "trend-recency-comparison",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger:
+        "a new or materially changed web-grounded / search product (a new Grok or Sonar tier, a provider enabling or changing a web-search tool) or a major base-model release at a covered provider",
+      subjects:
+        "one search-augmented configuration per provider surface (Grok with the Agent Tools web-search tool, Perplexity Sonar and Sonar Pro, Gemini with Google Search grounding, GPT with the web-search tool, Claude with the web-search tool), each — where the base model exists ungrounded — paired with a no-search control of the same base model; Perplexity Sonar is search-native and has no ungrounded twin",
+      metrics: [
+        {
+          name: "recencyAccuracy",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "hallucinationRate",
+          unit: "ratio",
+          direction: "lower-is-better",
+        },
+        {
+          name: "citationValidity",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "citationFreshnessDays",
+          unit: "days",
+          direction: "lower-is-better",
+        },
+        { name: "latencyMs", unit: "ms", direction: "lower-is-better" },
+        { name: "costPerQueryUsd", unit: "USD", direction: "reference" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "~10 configurations (grounded subjects + ungrounded controls) × ~30 trailing-window event probes × 1–3 repetitions; more repetitions narrow run-to-run latency/cost variance (reported as stdDev) but multiply the grounded providers' search surcharges",
+      },
+      costPerRun: {
+        ceilingUsd: 30,
+        premises:
+          "grounded providers bill web/search separately from tokens (the dominant cost); estimated ~$8 (1 rep) to ~$30 (3 reps) per trial; ungrounded controls are token-only. Run `research -- trend-recency --estimate` first — an estimate above the ceiling stops for re-approval",
+      },
+      accumulates:
+        "per-subject HistoryPoint series for recencyAccuracy, citationValidity, and latencyMs, one point per monthly survey; charts connect same-instrument-version points only. The curated probe sets and their ground truth accumulate as a committed JSON DB under docs/research-reports/trend-recency-history/",
+    },
+  },
 ];
 
 /**
