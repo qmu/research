@@ -391,6 +391,18 @@ const snapshotPointExtractors: Readonly<
     "citationValidity",
     "latencyMs",
   ]),
+  // The deep-research artifact is the same `{ runs: [{ id, measuredAt,
+  // provenance, stats: { <metric>: { mean } } }] }` shape as OCR/image-generation.
+  // The proposal accumulates answer quality (primary) plus cost and latency
+  // (secondary); citation validity and source diversity are trended too as the
+  // discriminating trust signals. Only `provenance: "measured"` rows chart.
+  "deep-research": statsRunsSnapshotPoints([
+    "answerQuality",
+    "citationValidity",
+    "sourceDiversity",
+    "latencyMs",
+    "costUsd",
+  ]),
 };
 
 /** Points for one topic's artifact; topics without an extractor chart nothing. */

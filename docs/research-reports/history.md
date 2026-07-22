@@ -71,6 +71,10 @@ No dated frames have been archived yet.
 
 No dated frames have been archived yet.
 
+### Deep research APIs
+
+- 2026-07-19T02:12:52.868Z: [English](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison) · [Japanese](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja) · [data.json](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.data.json)
+
 ### Trend recency
 
 - 2026-07-17T01:34:36.857Z: [English](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison) · [Japanese](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja) · [data.json](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.data.json)

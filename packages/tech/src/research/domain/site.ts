@@ -803,6 +803,61 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     },
   },
   {
+    id: "deep-research",
+    artifactBase: "deep-research-comparison",
+    npmScript: "npm run research -- deep-research --real",
+    source: {
+      text: "Deep research APIs",
+      docsPath: "docs/research-reports/deep-research-comparison.md",
+      summary:
+        "Rubric answer quality, citation validity, source diversity, latency, and per-query cost of autonomous deep-research endpoints, held against a transparent Anthropic build-your-own baseline.",
+    },
+    japanese: {
+      text: "ディープリサーチAPI",
+      docsPath: "docs/research-reports/deep-research-comparison.insights.ja.md",
+      summary:
+        "自律型ディープリサーチAPIの回答品質（ルーブリック）、引用妥当性、ソース多様性、レイテンシ、クエリ単価を、透明な Anthropic 自前実装ベースラインと比較。",
+    },
+    dataPath: "docs/research-reports/deep-research-comparison.data.json",
+    qmuSlug: "deep-research-apis",
+    design: {
+      cadence: "monthly",
+      offCadenceTrigger:
+        "a deep-research endpoint release, retirement, or material search/tool re-pricing at a covered provider",
+      subjects:
+        "the turnkey deep-research endpoints (OpenAI o3-deep-research, Perplexity sonar-deep-research, Gemini Deep Research via the Interactions API, Grok Agent Tools) held against the Anthropic build-your-own baseline (Claude + web_search loop)",
+      metrics: [
+        { name: "answerQuality", unit: "ratio", direction: "higher-is-better" },
+        {
+          name: "citationValidity",
+          unit: "ratio",
+          direction: "higher-is-better",
+        },
+        {
+          name: "sourceDiversity",
+          unit: "count",
+          direction: "higher-is-better",
+        },
+        { name: "citationCount", unit: "count", direction: "reference" },
+        { name: "latencyMs", unit: "ms", direction: "lower-is-better" },
+        { name: "costUsd", unit: "USD", direction: "lower-is-better" },
+      ],
+      trialsPerRun: {
+        minimum: 1,
+        maximum: 3,
+        premises:
+          "one repetition detects large movements; three bound run-to-run variance reported as stdDev, but deep-research queries are ~10–100× the cost/latency of a single completion, so the recurring cadence favours a small fixed question set over many repetitions",
+      },
+      costPerRun: {
+        ceilingUsd: 60,
+        premises:
+          "5 subjects × 4–6 questions × 1–3 repetitions at ~$1–4 blended per query plus one LLM-judge read per report; run `research -- deep-research --estimate` first (Floor design ≈ $25–60)",
+      },
+      accumulates:
+        "per-subject HistoryPoint series for answer quality (primary), cost per query, and latency, one point per dated frame; charts connect same-manifest-version points only",
+    },
+  },
+  {
     id: "trend-recency",
     artifactBase: "trend-recency-comparison",
     npmScript: "npm run research -- trend-recency --real",

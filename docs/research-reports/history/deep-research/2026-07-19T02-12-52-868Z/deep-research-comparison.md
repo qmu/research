@@ -43,10 +43,6 @@ This run has **2 measured** of 5 subject rows (non-measured rows are `fixtured` 
 
 "Best"/"Worst" follow each metric's own direction (higher quality/validity/diversity is better; lower latency and cost are better). The full per-subject and per-question records are in section 7, Verification Data.
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. Analysis
 
 Rows with `measured` provenance can be compared on quality, citation integrity, diversity, latency, and cost. Reading answer quality against citation validity localizes the failure mode that most distinguishes deep-research products — a fluent report with unsupported citations scores high on quality but low on validity. The Anthropic baseline row anchors whether a turnkey endpoint's premium buys better research than a loop we can run ourselves.
@@ -102,9 +98,3 @@ No external resources are created. Reports are held in memory for judging and di
 The complete run record is committed as [`deep-research-comparison.data.json`](./deep-research-comparison.data.json): per-call latencies, costs, citation domains, judge answers, and scores.
 
 Generated: 2026-07-19T02:12:52.868Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-19T02:12:52.868Z](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison)
