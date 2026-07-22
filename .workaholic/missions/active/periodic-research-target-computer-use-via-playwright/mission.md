@@ -59,6 +59,23 @@ harness-isolation trial; adopting a drifting live-site public suite directly
 browser loop / any paid model in CI (the fixture path stays keyless,
 network-free, and deterministic).
 
+## Experience
+
+A reader opens the published EN/JP Computer-Use pages and sees, from a committed
+real dated trial frame produced within the $40/trial ceiling, per-subject
+**measured** rows for the three API-native computer-use tools (Anthropic
+`computer_20251124`, OpenAI `computer`, Google `computer_use`) — each driven
+through **one fixed Playwright harness** against the pinned deterministic fixture
+site — reporting success rate, steps, latency, wall-clock, cost, and recovery,
+each cell carrying honest provenance that distinguishes a measured value from the
+keyless fixture. The rows **discriminate** the agents (the suite's optimal
+trajectory solves 8/8 while a do-nothing agent solves 0/8, so a differing score
+reflects capability, not page loading), the committed artifacts re-render the
+report at any later time without re-spending, and the mission's quarterly cadence
+is confirmed or revised against that first real trial. The keyless fixture and
+estimate paths stay byte-stable and never launch a browser, so CI reproduces the
+pages without a key or spend.
+
 ## Acceptance
 
 - [x] Research design (cadence, subjects, metrics, cost/trial range, accumulated history, task-suite reproducibility) proposed for owner approval before scaffolding (#20260714005201-kickoff-propose-periodic-research.md)
@@ -80,3 +97,4 @@ network-free, and deterministic).
 - 2026-07-14 — OPEN DECISION for the owner: the runnable harness needs the `playwright` npm package (a NEW dependency); the "repo Playwright MCP plugin" named in the design drives the agent's browser, not a reader's `--real` CLI. Blocks the harness implementation; recorded in the real-trial ticket — 20260714013000-computer-use-first-real-trial.md
 - 2026-07-14 — ticket archived — 20260714005201-kickoff-propose-periodic-research.md
 - 2026-07-14 — ticket archived — 20260714010000-computer-use-via-playwright-topic.md
+- 2026-07-22 — playwright npm dependency approved (recorded in docs/dependency-decisions.md); trial ticket 013000 moved icebox→todo and its OPEN DECISION resolved; mission Experience written. Strategy link + drive_authorized deferred pending a strategy-granularity decision with the developer — mission.md

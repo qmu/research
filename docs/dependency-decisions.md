@@ -462,6 +462,36 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   re-licensed source is a one-file URL change, and a withdrawn vocabulary
   degrades that family to the calibrated-estimator method with a stated band.
 
+### playwright (packages/tech) — approved 2026-07-22
+
+- **Reason**: The `computer-use` topic's real `--real` harness loop needs a browser
+  driver to run the agent's browser (observe = screenshot + accessibility snapshot
+  → act = click/type/navigate) against the pinned deterministic fixture site
+  (`computer-use-fixture-site@1`). The design originally named "the repo Playwright
+  MCP plugin", but that plugin drives the *agent's* browser inside Claude Code, not
+  a standalone CLI a reader clones and runs — so a runnable harness needs the
+  `playwright` npm package. **Approved 2026-07-22 by the developer** (a@qmu.jp) in
+  the /mission planning session, together with the first real Computer Use trial
+  (within the $40/trial ceiling). Isolated behind the `ComputerUseClient` port
+  (`packages/tech/src/vendors/llm/`); used **only on the gated `--real` path** — the
+  keyless fixture and estimate paths stay byte-stable and never launch a browser, so
+  CI remains browser-free and keyless.
+- **Assessment**:
+  - License: Apache-2.0 — compatible with this MIT repo.
+  - Reputation: The de-facto browser-automation framework (Microsoft); broad
+    adoption, prebuilt browser binaries per platform (including linux-arm64), active
+    security response.
+  - Development status: Actively maintained, frequent releases.
+  - Sustainability: Backed by Microsoft; the harness stays behind the
+    `ComputerUseClient` ACL and keeps the keyless deterministic fixture path as a
+    browser-free fallback.
+- **Monitoring**: Dependabot (`.github/dependabot.yml`), `npm audit` in CI, and the
+  keyless fixture-stability / published-page guards (which never launch a browser).
+- **Exit strategy**: Reached only through the `ComputerUseClient` port and the fixed
+  harness adapter; the domain scoring, task suite, and reports do not depend on
+  Playwright. Swapping to `playwright-core` over an already-installed chromium, or to
+  another driver, is a one-adapter change with no domain impact.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
