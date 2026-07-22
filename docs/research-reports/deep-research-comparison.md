@@ -23,21 +23,33 @@ Measured metrics are answer quality against a per-question rubric (satisfied ite
 
 ## 3. Scope and Constraints
 
-- **Judged, but rubric-constrained.** A fixed LLM judge (`fixture-judge`) answers deterministic yes/no questions and checks citations; it never scores prose style. Swapping the judge is an instrument change, not a routine update.
+- **Judged, but rubric-constrained.** A fixed LLM judge (`claude-sonnet-5`) answers deterministic yes/no questions and checks citations; it never scores prose style. Swapping the judge is an instrument change, not a routine update.
 - Question manifest version `2026-07`: 4 domain-neutral, well-documented research questions chosen for checkable, reproducible answers. History connects same-manifest-version points only.
 - **Report text is not committed.** The artifact records report length, timing, cost, citation domains, judge answers, and scores — enough to regenerate this page — never the full report bodies.
 - The fixture path is keyless and deterministic; real numbers appear only after an owner runs the real path within the approved cost ceiling (run `--estimate` first).
-- Point-in-time: measured behavior reflects the endpoints and APIs at `2026-01-01T00:00:00.000Z`; reference per-query prices are as of each row's last-verified date.
+- Point-in-time: measured behavior reflects the endpoints and APIs at `2026-07-19T02:12:52.868Z`; reference per-query prices are as of each row's last-verified date.
 
 ## 4. Verification Results
 
-This run has **0 measured** of 5 subject rows (non-measured rows are `fixtured` harness checks or `error` rows, never faked numbers).
+This run has **2 measured** of 5 subject rows (non-measured rows are `fixtured` harness checks or `error` rows, never faked numbers).
 
-There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-subject table is in section 7, Verification Data.
+| Metric | Best (subject) | Median | Worst |
+| ------ | -------------- | ------ | ----- |
+| Answer quality (rubric) | 75.0% — Grok DeepSearch | 71.9% | 68.8% |
+| Citation validity | 70.8% — Anthropic build-your-own (Claude + web_search) | 47.9% | 25.0% |
+| Source diversity | 14.0 — Anthropic build-your-own (Claude + web_search) | 10.9 | 7.8 |
+| Latency | 20.9 s — Grok DeepSearch | 38.9 s | 57.0 s |
+| Cost per query | $0.04 — Grok DeepSearch | $0.16 | $0.29 |
+
+"Best"/"Worst" follow each metric's own direction (higher quality/validity/diversity is better; lower latency and cost are better). The full per-subject and per-question records are in section 7, Verification Data.
+
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
 
 ## 5. Analysis
 
-This run has no measured rows; every subject was fixtured or errored, so no cross-subject claim is made. The committed fixture page exists to prove the pipeline, not to compare subjects.
+Rows with `measured` provenance can be compared on quality, citation integrity, diversity, latency, and cost. Reading answer quality against citation validity localizes the failure mode that most distinguishes deep-research products — a fluent report with unsupported citations scores high on quality but low on validity. The Anthropic baseline row anchors whether a turnkey endpoint's premium buys better research than a loop we can run ourselves.
 
 ## 6. Reproduction
 
@@ -70,11 +82,11 @@ No external resources are created. Reports are held in memory for judging and di
 
 | Subject | Provider | Provenance | Quality (mean±sd) | Citation validity | Source diversity | Latency | Cost/query | Note |
 | ------- | -------- | ---------- | ----------------- | ----------------- | ---------------- | ------- | ---------- | ---- |
-| OpenAI o3 Deep Research | openai | fixtured | 100.0% ± 0.0% (n=4) | 100.0% ± 0.0% (n=4) | 3.8 ± 1.0 (n=4) | 1.4 s ± 0.2 s (n=4) | $0.00 ± $0.00 (n=4) |  |
-| Perplexity Sonar Deep Research | perplexity | fixtured | 100.0% ± 0.0% (n=4) | 100.0% ± 0.0% (n=4) | 3.8 ± 1.0 (n=4) | 1.4 s ± 0.2 s (n=4) | $0.00 ± $0.00 (n=4) |  |
-| Gemini Deep Research | google | fixtured | 100.0% ± 0.0% (n=4) | 100.0% ± 0.0% (n=4) | 3.8 ± 1.0 (n=4) | 1.4 s ± 0.2 s (n=4) | $0.00 ± $0.00 (n=4) |  |
-| Grok DeepSearch | xai | fixtured | 100.0% ± 0.0% (n=4) | 100.0% ± 0.0% (n=4) | 3.8 ± 1.0 (n=4) | 1.4 s ± 0.2 s (n=4) | $0.00 ± $0.00 (n=4) |  |
-| Anthropic build-your-own (Claude + web_search) _(baseline)_ | anthropic | fixtured | 100.0% ± 0.0% (n=4) | 100.0% ± 0.0% (n=4) | 3.8 ± 1.0 (n=4) | 1.4 s ± 0.2 s (n=4) | $0.00 ± $0.00 (n=4) |  |
+| OpenAI o3 Deep Research | openai | error | not measured | not measured | not measured | not measured | not measured | Error: 520 status code (no body) |
+| Perplexity Sonar Deep Research | perplexity | error | not measured | not measured | not measured | not measured | not measured | Error: PERPLEXITY_API_KEY is required for a real perplexity run. |
+| Gemini Deep Research | google | error | not measured | not measured | not measured | not measured | not measured | Error: 400 {"error":{"message":"The 'system_instruction' parameter is not supported for the deep-research-preview-04-2026 agent. Please include any specific instructions in the 'input' prompt instead.","code":"invalid_request"}} |
+| Grok DeepSearch | xai | measured | 75.0% ± 50.0% (n=4) | 25.0% ± 50.0% (n=4) | 7.8 ± 5.4 (n=4) | 20.9 s ± 6.0 s (n=4) | $0.04 ± $0.02 (n=4) |  |
+| Anthropic build-your-own (Claude + web_search) _(baseline)_ | anthropic | measured | 68.8% ± 47.3% (n=4) | 70.8% ± 37.0% (n=4) | 14.0 ± 5.2 (n=4) | 57.0 s ± 7.6 s (n=4) | $0.29 ± $0.12 (n=4) |  |
 
 **Question manifest (version 2026-07)**
 
@@ -85,8 +97,14 @@ No external resources are created. Reports are held in memory for judging and di
 | svb-collapse | 4 | What were the principal causes of the March 2023 collapse of Silicon Valley Bank? |
 | intermittent-fasting | 4 | Summarize the current scientific evidence on the health effects of intermittent fasting, distinguishing well-supported findings from uncertain ones. |
 
-**Judge provenance.** Every report was graded by `fixture-judge`; each call's rubric answers, citation checks, and citation domains are preserved verbatim in the artifact.
+**Judge provenance.** Every report was graded by `claude-sonnet-5`; each call's rubric answers, citation checks, and citation domains are preserved verbatim in the artifact.
 
 The complete run record is committed as [`deep-research-comparison.data.json`](./deep-research-comparison.data.json): per-call latencies, costs, citation domains, judge answers, and scores.
 
-Generated: 2026-01-01T00:00:00.000Z
+Generated: 2026-07-19T02:12:52.868Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
+
+- [2026-07-19T02:12:52.868Z](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison)

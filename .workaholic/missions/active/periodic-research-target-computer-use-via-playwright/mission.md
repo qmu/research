@@ -6,6 +6,8 @@ status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
+strategy: periodically-benchmark-computer-use-browser-agent-capabilities
+drive_authorized: true
 tickets:
   - 20260714005201-kickoff-propose-periodic-research.md
   - 20260714010000-computer-use-via-playwright-topic.md
@@ -59,13 +61,30 @@ harness-isolation trial; adopting a drifting live-site public suite directly
 browser loop / any paid model in CI (the fixture path stays keyless,
 network-free, and deterministic).
 
+## Experience
+
+A reader opens the published EN/JP Computer-Use pages and sees, from a committed
+real dated trial frame produced within the $40/trial ceiling, per-subject
+**measured** rows for the three API-native computer-use tools (Anthropic
+`computer_20251124`, OpenAI `computer`, Google `computer_use`) — each driven
+through **one fixed Playwright harness** against the pinned deterministic fixture
+site — reporting success rate, steps, latency, wall-clock, cost, and recovery,
+each cell carrying honest provenance that distinguishes a measured value from the
+keyless fixture. The rows **discriminate** the agents (the suite's optimal
+trajectory solves 8/8 while a do-nothing agent solves 0/8, so a differing score
+reflects capability, not page loading), the committed artifacts re-render the
+report at any later time without re-spending, and the mission's quarterly cadence
+is confirmed or revised against that first real trial. The keyless fixture and
+estimate paths stay byte-stable and never launch a browser, so CI reproduces the
+pages without a key or spend.
+
 ## Acceptance
 
 - [x] Research design (cadence, subjects, metrics, cost/trial range, accumulated history, task-suite reproducibility) proposed for owner approval before scaffolding (#20260714005201-kickoff-propose-periodic-research.md)
 - [x] Owner approves the design proposal and the $40/trial cost ceiling (proposal-first gate — approved 2026-07-14 for the keyless build + published pages; only the real paid trial stays gated) (#20260714010000-computer-use-via-playwright-topic.md)
 - [x] Topic runnable via `npm run research -- computer-use` with fixture/estimate/real modes; keyless deterministic fixture (byte-stable, no browser in CI) — fixture & estimate work; real records honest `error` rows until the harness lands (#20260714010000-computer-use-via-playwright-topic.md)
 - [x] Published EN + JP pages in `publishedResearchTopics` passing the title==sidebar-label, no-mermaid, section-4 budget, and 7-section outline guards (#20260714010000-computer-use-via-playwright-topic.md)
-- [ ] First real trial run within the approved cost ceiling, committed as a dated history frame with the design-validation review and confirmed cadence (guideline step 3 — implements the real Playwright harness loop) (#20260714013000-computer-use-first-real-trial.md)
+- [x] First real trial run within the approved cost ceiling, committed as a dated history frame with the design-validation review and confirmed cadence (guideline step 3 — implements the real Playwright harness loop) (#20260714013000-computer-use-first-real-trial.md — archived under work-20260718-203006)
 - [ ] qmu-co-jp receives the new article through the publish ticket flow on the next `/ship`
 
 ## Changelog
@@ -80,3 +99,11 @@ network-free, and deterministic).
 - 2026-07-14 — OPEN DECISION for the owner: the runnable harness needs the `playwright` npm package (a NEW dependency); the "repo Playwright MCP plugin" named in the design drives the agent's browser, not a reader's `--real` CLI. Blocks the harness implementation; recorded in the real-trial ticket — 20260714013000-computer-use-first-real-trial.md
 - 2026-07-14 — ticket archived — 20260714005201-kickoff-propose-periodic-research.md
 - 2026-07-14 — ticket archived — 20260714010000-computer-use-via-playwright-topic.md
+- 2026-07-18 — implemented the real Playwright harness loop keyless (resolving the OPEN DECISION): added `playwright`, the provider-neutral `AgentPolicy` seam, the fixed harness (local site server + fresh-context-per-attempt + selector/coordinate actuation + predicate-decided success via the domain), and replaced the three `HARNESS_PENDING` refusals with harness-backed SDK brains (pure translators unit-tested keyless; live request key-gated). A keyless oracle self-test drives a REAL chromium and solves 8/8 while the noop control solves 0/8. `npm test` 585 pass, build + lint green, fixture `.data.json` byte-stable, estimate ~$2.45/trial. The first real trial within the $40 ceiling now needs only keys + owner trigger — 20260718204500-computer-use-real-playwright-harness-loop.md
+- 2026-07-18 — ticket archived — 20260718204500-computer-use-real-playwright-harness-loop.md
+- 2026-07-19 — first real trial executed (owner-authorized; estimate ~$2.45, actual ≈ $5.9 incl. JP full-report translation and one aborted re-run, ceiling $40): dated frame `2026-07-18T15:08:10.261Z` committed — 2 of 3 rows measured (Anthropic Claude Sonnet 5 25% task success; OpenAI `error` on a browser-context crash; Gemini 2.5 `measured` 0%). A live probe diagnosed the two failures as the same root cause: OpenAI Responses computer-use (first action `screenshot`) and Gemini computer-use (first call `open_web_browser`) are stateful multi-turn protocols the memoryless v1 policy cannot drive. Hardened the OpenAI/Google adapters to record an honest not-measured error instead of a fabricated 0%; corrected the harness label to the `playwright` npm package; recomposed canonical EN/JP/data from the measured frame; wrote the design-validation review; quarterly cadence confirmed. Filed follow-up 20260719003000 (icebox) for the stateful threaded loops — commit 82ff282 — 20260714013000-computer-use-first-real-trial.md
+- 2026-07-19 — ticket archived — 20260714013000-computer-use-first-real-trial.md
+- 2026-07-22 — playwright npm dependency approved (recorded in docs/dependency-decisions.md); trial ticket 013000 moved icebox→todo and its OPEN DECISION resolved; mission Experience written. Strategy link + drive_authorized deferred pending a strategy-granularity decision with the developer — mission.md
+- 2026-07-22 — strategy created — periodically-benchmark-computer-use-browser-agent-capabilities — strategy.md
+- 2026-07-22 — mission replanned — playwright dependency approved; first real trial authorized ($40 ceiling); strategy linked; drive-ready — mission.md
+- 2026-07-22 — recovered the stranded real Playwright harness + first real trial (frame 2026-07-18T15-08-10-261Z, 2/3 measured) from orphan branch work-20260718-203006 onto current main: lifted the harness code + tests + published EN/JP/data + dated frame, brought the playwright dependency, deduped the dependency-decisions entry, archived the trial ticket, and re-ticked Acceptance item 5 — mission.md

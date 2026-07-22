@@ -1,51 +1,66 @@
 ---
 title: コンピュータ操作
 source_artifact: docs/research-reports/computer-use-comparison.data.json
+source_commit: 19e2e3b
 insights_model: source-report
 translated_from: computer-use-comparison.md
-translation_model: manual-translation-keyless
-generated_at: 2026-01-01T00:00:00.000Z
+translation_model: claude-sonnet-5
+generated_at: 2026-07-18T15:50:57.944Z
 trials: 0
-provenance: manual-translation
+provenance: llm-translation
 ---
-
 # コンピュータ操作
 
-このレポートは、コンピュータ操作モデルを**機械的に検証可能な**タスク成果のみで比較します——各被験対象は同一の固定ブラウザハーネスで固定タスク群を操作し、成功は最終ページ状態に対する宣言的な述語で判定されます。美的評価や操作過程への主観的判断はスコアに一切含まれません。
+本レポートでは、**機械的に検証可能な**タスク成果のみに基づいてコンピュータ操作モデルを比較する — 各対象は固定のブラウザハーネス上で、固定されたタスクスイートを実行し、成否は最終的なページ状態に対する宣言的述語によって判定される。美的観点や実行過程に対する主観的評価はスコアに一切反映されない。
 
 ## 1. 調査の目的
 
-本調査の目的は、API ネイティブなコンピュータ操作ツールにはどのようなものが存在し、それぞれが固定されたブラウザタスク群をどれだけ確実に完了できるか、解決までに何手（ステップ）と実時間を要するか、そして 1 タスクあたりのコストがいくらか——つまり、あるプロバイダーのエージェントを実際の Web 作業に組み込めるかどうかを左右する特性を記録することである。
+本調査の目的は、API ネイティブなコンピュータ操作（computer-use）ツールとしてどのようなものが存在するか、それぞれが固定のブラウザタスク一式をどの程度の信頼性でこなせるか、1回の解決にどれだけのステップ数と実時間（wall-clock）を要するか、そして1タスクあたりのコストはいくらかを記録することにある。これらは、あるプロバイダーのエージェントを実際のWeb作業に組み込めるかどうかを左右する特性である。
 
 ## 2. 測定対象
 
 ### 対象モデル
 
-対象は、選定済みレジストリ（`packages/tech/src/computer-use/models.ts`）に含まれる 3 つの API ネイティブなコンピュータ操作ツールであり、プロバイダーごとに 1 構成、それぞれ引用元および最終確認日と共に掲載されている。すべて同一の固定ハーネス（Playwright（リポジトリの Playwright MCP プラグイン））で駆動されるため、変動する要因はモデル／ツールのみである。
+対象は、厳選されたレジストリ（`packages/tech/src/computer-use/models.ts`）に登録された、API-nativeなcomputer-useツール3件であり、プロバイダーごとに1つの構成を採用し、それぞれ出典と最終検証日を明記している。すべて同一の固定ハーネス（Playwright（`playwright` npmパッケージ、ヘッドレスChromium、ローカルフィクスチャサーバー））で駆動されるため、変動要因はモデル／ツールのみとなる。
 
-- **xAI（Grok）** は対象外である：API ネイティブなコンピュータ操作ツールを提供していないため（2026-07-14 時点で確認済み）。
+- **xAI（Grok）** は対象外である：API-nativeなcomputer-useツールを公開していないため（2026-07-14 に確認済み）。
 
 ### 対象メトリクス
 
-測定対象のメトリクスは、タスク成功率（満たされた述語数／試行数、高いほど良い）、完了手数（成功試行あたりのアクション数、低いほど良い）、アクションあたりレイテンシ（ms、低いほど良い）、タスクあたり実時間（秒、低いほど良い）、タスク単価（トークン使用量から算出した USD、低いほど良い）、およびリカバリ率（リカバリを要した試行数／試行数、低いほど良い——副次的な堅牢性の指標）である。
+計測するメトリクスは、タスク成功率（達成した述語数／試行回数、高いほど良い）、完了までのステップ数（成功した試行あたりのアクション数、低いほど良い）、アクションごとのレイテンシ（ms、低いほど良い）、タスクあたりの実時間（s、低いほど良い）、タスクあたりのコスト（トークン使用量から算出したUSD、低いほど良い）、およびリカバリー率（リカバリーを要した試行／試行回数、低いほど良い — 副次的な堅牢性の指標）である。
 
 ## 3. 範囲と制約
 
-- **述語で判定し、主観評価はしない。** 各タスクの成功は、最終的な DOM／URL に対する宣言的なチェック（URL の接尾辞、テキストの存在、入力値、要素数）で判定される。LLM による判定も美的な採点も行わない。タスク群の変更はバージョンの引き上げに相当する。
-- タスク群バージョン `1`：固定された自己完結型のフィクスチャサイト（`computer-use-fixture-site@1`）上の 8 タスク。公開ベンチマーク（OSWorld 2.0、WebArena、WebVoyager）はメトリクス定義が参照する基準であるが、v1 は独自の決定論的タスク群を固定する——ライブサイト型や分裂したバリアント型のベンチマークはそれ自体が再現可能ではないためである。履歴は同一タスク群バージョン・同一ハーネスの地点同士のみを接続する。
-- **ブラウザのみ、プロバイダーごとに 1 構成。** デスクトップ OS（OSWorld）およびモバイル（AndroidWorld）のタスクは v1 の範囲外であり、第 2 の DOM ファーストなハーネス（browser-use）も範囲外である。
-- フィクスチャ経路はキー不要かつ決定論的で、ブラウザを一切起動しない。実際の識別可能な数値は、オーナーが承認済みのコスト上限内で実経路を実行した場合にのみ現れる（まず `--estimate` を実行すること）。
-- 特定時点のもの：計測された挙動は `2026-01-01T00:00:00.000Z` 時点のモデル・ツール・API を反映している。カタログのトークン価格は各行の最終確認日時点のものである。
+- **判定は述語ベースであり、決してジャッジしない。** 各タスクの成否は、最終的なDOM／URLに対する宣言的チェック（URLサフィックス、表示されているテキスト、入力値、要素数）によって決まる。LLM-as-judgeも美的スコアも用いない。スイートを変更する場合はバージョンを上げる。
+
+- タスクスイートバージョン `1`：ピン留めされた自己完結型フィクスチャサイト（`computer-use-fixture-site@1`）上の 8 タスク。公開スイート（OSWorld 2.0、WebArena、WebVoyager）は我々のメトリクス定義が準拠する参照基準であり、v1 は独自の決定論的スイートをピン留めしている。これは、ライブサイトや断片化されたバリアントのスイートそれ自体には再現性がないためである。履歴は、同一スイートバージョン・同一ハーネスのポイント同士のみを接続する。
+
+- **ブラウザのみ、プロバイダーごとに 1 構成。** デスクトップOS（OSWorld）およびモバイル（AndroidWorld）のタスクは v1 の対象外であり、2 つ目のDOMファーストのハーネス（browser-use）も対象外である。
+
+- フィクスチャパスはキー不要かつ決定論的であり、ブラウザを起動することは決してない。実際の識別力を持つ数値は、承認されたコスト上限内でオーナーが実際のパスを実行した後にのみ現れる（まず `--estimate` を実行すること）。
+
+- 測定時点：計測された挙動は `2026-07-18T15:08:10.261Z` 時点のモデル、ツール、APIを反映している。カタログ上のトークン価格は各行の最終検証日時点のものである。
 
 ## 4. 検証結果
 
-この実行では、3 つの被験行のうち **0 件が計測値** である（計測値でない行は `fixtured` のハーネス確認、または `error` 行であり、数値を捏造することはない）。すべての被験対象は同一の固定ハーネス（Playwright（リポジトリの Playwright MCP プラグイン））で駆動され、変動する要因はモデル／ツールのみである。
+今回の実行では、3件の対象行のうち**2件が測定済み**です（未測定の行は `fixtured` によるハーネスチェックか `error` 行であり、数値を捏造することはありません）。すべての対象は同一の固定ハーネス（Playwright（`playwright` npm パッケージ、ヘッドレス Chromium、ローカルフィクスチャサーバー））を通じて駆動されており、唯一の変数はモデル／ツールです。
 
-要約すべき計測値は存在しない。コミットされたフィクスチャページは、スコアリングのパイプラインが端から端まで動作することを示すものである。被験対象ごと・タスクごとの記録はセクション 7「検証データ」にある。
+| メトリクス | 最良（対象） | 中央値 | 最悪 |
+| ------ | -------------- | ------ | ----- |
+| タスク成功率 | 25.0% — Claude Sonnet 5 (Computer Use) | 12.5% | 0.0% |
+| 完了までのステップ数 | 0.0 — Gemini 2.5 Computer Use | 1.0 | 2.0 |
+| タスクあたりの実時間 | 3.8 s — Gemini 2.5 Computer Use | 35.3 s | 66.8 s |
+| タスクあたりのコスト | $0.003 — Gemini 2.5 Computer Use | $0.146 | $0.289 |
+
+「最良」／「最悪」は各メトリクス固有の方向性に従います（成功率は高いほど良く、ステップ数・実時間・コストは低いほど良い）。アクションごとのレイテンシと復旧率については、セクション7の対象別テーブルを参照してください。
+
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
 
 ## 5. 考察
 
-この実行には計測行が存在しない。すべての被験対象は fixtured または error であったため、モデル間の主張は行わない。コミットされたフィクスチャページは、モデルを比較するためではなくパイプラインを実証するために存在する。実経路では、ハーネスループが未接続の被験対象は、数値を捏造せず正直に `error` 行を記録する。
+`measured` の来歴を持つ行は、成功率、ステップ数、レイテンシ、実時間（wall-clock）、コストの観点で比較できる。ステップ数や実時間が多いにもかかわらず成功率が高いモデルは、目的にたどり着くのが遅いモデルであることを示す。成功率が低くコストも低いモデルは、安易に諦めるモデルである。リカバリー率は、自己修正できるモデルと最初のミスで失敗してしまうモデルを区別する指標となる。
 
 ## 6. 再現方法
 
@@ -56,47 +71,53 @@ git clone https://github.com/qmu/research
 cd research/packages/tech
 npm install
 
-# キー不要の自己検証（決定論的なフィクスチャクライアント、ブラウザ・キーとも不要）:
+# キー不要のセルフテスト（決定論的なフィクスチャクライアント。ブラウザもキーも不要）:
 npm run research -- computer-use --fixture
 
-# コストの事前見積り、その後オーナー承認制の実行:
+# コストのプレビュー、その後オーナー限定の実実行:
 npm run research -- computer-use --estimate
 npm run research -- computer-use --real
 ```
 
 ### 再現コスト（目安）
 
-フィクスチャ経路はキー不要かつ無償である。実試行では、各プロバイダーに対して基盤モデルのトークン単価で課金される（アクション単位の別料金はない）。マルチターンのループを通じてスクリーンショットが入力側トークンの大半を占める。合意されている上限は 1 試行あたり $40 であり、まず `--estimate` を実行しなければならない。
+フィクスチャ経路はキー不要でコストもかからない。実トライアルでは各プロバイダーに対して基盤モデルのトークン料金が課金される（アクションごとの別料金はない）。複数ターンのループ全体を通じて、入力側はスクリーンショットが支配的となる。合意された上限はトライアルあたり$40であり、まず`--estimate`を実行する必要がある。
 
 ### クリーンアップ
 
-外部リソースは一切作成されない。ブラウザセッションは一時的であり、スクリーンショットはループ中メモリ上に保持されて破棄される。実行が書き出すのはローカルの Markdown／JSON アーティファクトのみである——コミット前に内容を確認すること。
+外部リソースは作成されない。ブラウザセッションは一時的なものであり、スクリーンショットはループ処理のためにメモリ上に保持された後に破棄される。実行によって書き込まれるのはローカルのMarkdown/JSON成果物のみであり、コミット前にレビューすること。
 
 ## 7. 検証データ
 
-**被験対象ごとの結果**
+**科目別結果**
 
-| 被験対象 | プロバイダー | 由来 | ツール | トークン単価 入/出（USD/MTok） | 成功率 | 手数 | アクション毎レイテンシ | タスク毎実時間 | タスク単価 | リカバリ | 備考 |
+| 対象 | プロバイダー | 出典 | ツール | トークン価格 入力/出力 (USD/MTok) | 成功率 | ステップ数 | アクションあたりレイテンシ | タスクあたり実時間 | タスクあたりコスト | リカバリー | 備考 |
 | ------- | -------- | ---------- | ---- | ----------------------------- | ------- | ----- | -------------- | --------------- | --------- | -------- | ---- |
-| Claude Sonnet 5 (Computer Use) | anthropic | fixtured | `computer_20251124` | 3 / 15 | 100.0% ± 0.0% (n=8) | 4.9 ± 1.6 (n=8) | 72 ms ± 6 ms (n=8) | 0.4 s ± 0.1 s (n=8) | $0.035 ± $0.011 (n=8) | 0.0% ± 0.0% (n=8) |  |
-| OpenAI computer-use-preview | openai | fixtured | `computer` | 3 / 12 | 100.0% ± 0.0% (n=8) | 4.9 ± 1.6 (n=8) | 72 ms ± 6 ms (n=8) | 0.4 s ± 0.1 s (n=8) | $0.033 ± $0.010 (n=8) | 0.0% ± 0.0% (n=8) |  |
-| Gemini 2.5 Computer Use | google | fixtured | `computer_use` | 1.25 / 10 | 100.0% ± 0.0% (n=8) | 4.9 ± 1.6 (n=8) | 72 ms ± 6 ms (n=8) | 0.4 s ± 0.1 s (n=8) | $0.018 ± $0.005 (n=8) | 0.0% ± 0.0% (n=8) |  |
+| Claude Sonnet 5 (Computer Use) | anthropic | 計測済み | `computer_20251124` | 3 / 15 | 25.0% ± 46.3% (n=8) | 2.0 ± 1.4 (n=2) | 2731 ms ± 189 ms (n=8) | 66.8 s ± 36.6 s (n=8) | $0.289 ± $0.156 (n=8) | 0.0% ± 0.0% (n=8) |  |
+| OpenAI computer-use-preview | openai | エラー | `computer` | 3 / 12 | 未測定 | 未測定 | 未測定 | 未測定 | 未測定 | 未測定 | Error: browser.newContext: Target page, context or browser has been closed |
+| Gemini 2.5 Computer Use | google | 計測済み | `computer_use` | 1.25 / 10 | 0.0% ± 0.0% (n=8) | 未測定 | 0 ms ± 0 ms (n=8) | 3.8 s ± 0.3 s (n=8) | $0.003 ± $0.000 (n=8) | 0.0% ± 0.0% (n=8) |  |
 
-**タスク群（バージョン 1、サイト `computer-use-fixture-site@1`）**
+**タスクスイート（バージョン 1、サイト `computer-use-fixture-site@1`）**
 
-| タスク ID | カテゴリ | 最小手数 | 成功述語 |
+| タスクID | カテゴリ | 最適ステップ数 | 成功判定条件 |
 | ------- | -------- | ------------- | ----------------- |
-| open-product-from-catalog | navigation | 2 | url-ends-with: /product/widget.html |
-| search-and-open-first-result | search | 4 | url-ends-with: /product/notebook.html |
-| add-two-items-to-cart | multi-step | 6 | element-count: #cart-items li=2 |
-| submit-contact-form | form | 5 | text-present: Thank you, your message was sent |
-| apply-discount-code | form | 3 | input-value: #applied-code=SAVE10 |
-| confirm-order-total | extraction | 3 | input-value: #confirm-total=63 |
-| filter-catalog-by-category | navigation | 2 | url-ends-with: /catalog.html?category=stationery |
-| update-account-nickname | form | 3 | input-value: #nickname=researcher |
+| open-product-from-catalog | ナビゲーション | 2 | url-ends-with: /product/widget.html |
+| search-and-open-first-result | 検索 | 4 | url-ends-with: /product/notebook.html |
+| add-two-items-to-cart | マルチステップ | 6 | element-count: #cart-items li=2 |
+| submit-contact-form | フォーム | 5 | text-present: Thank you, your message was sent |
+| apply-discount-code | フォーム | 3 | input-value: #applied-code=SAVE10 |
+| confirm-order-total | 抽出 | 3 | input-value: #confirm-total=63 |
+| filter-catalog-by-category | ナビゲーション | 2 | url-ends-with: /catalog.html?category=stationery |
+| update-account-nickname | フォーム | 3 | input-value: #nickname=researcher |
 
-**ハーネス。** すべての被験対象は Playwright（リポジトリの Playwright MCP プラグイン）で駆動された。各試行の完全なアクション軌跡、タイミング、トークン使用量はアーティファクトに逐語的に保存されている。
+**ハーネス。** すべての対象は Playwright（`playwright` npm パッケージ、ヘッドレス Chromium、ローカルフィクスチャサーバー）を通じて操作された。各試行の完全な行動軌跡、タイミング、トークン使用量は、成果物内に逐語的に保存されている。
 
-完全な実行記録は [`computer-use-comparison.data.json`](./computer-use-comparison.data.json) としてコミットされている：試行ごとの軌跡、アクションごとのレイテンシ、トークン数、スコア。
+完全な実行記録は [`computer-use-comparison.data.json`](./computer-use-comparison.data.json) としてコミットされている：試行ごとの軌跡、アクションごとのレイテンシ、トークン数、スコアを含む。
 
-生成日時: 2026-01-01T00:00:00.000Z
+生成日時: 2026-07-18T15:08:10.261Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
+
+- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja)

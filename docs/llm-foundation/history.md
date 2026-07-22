@@ -57,7 +57,8 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### 音声 (TTS/STT/STS)
 
-まだ日付別フレームは保存されていない。
+- 2026-07-19T02:22:34.606Z: [English](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison) · [Japanese](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja) · [data.json](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison.data.json)
+- 2026-07-18T15:09:30.905Z: [English](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison) · [Japanese](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja) · [data.json](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.data.json)
 
 ### Agent SDKの比較
 
@@ -65,8 +66,16 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### コンピュータ操作
 
-まだ日付別フレームは保存されていない。
+- 2026-07-18T15:08:10.261Z: [English](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison) · [Japanese](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja) · [data.json](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.data.json)
 
 ### エージェントVM/サンドボックス
 
 まだ日付別フレームは保存されていない。
+
+### ディープリサーチAPI
+
+- 2026-07-19T02:12:52.868Z: [English](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison) · [Japanese](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja) · [data.json](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.data.json)
+
+### トレンド追随
+
+- 2026-07-17T01:34:36.857Z: [English](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison) · [Japanese](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja) · [data.json](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.data.json)

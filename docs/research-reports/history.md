@@ -57,7 +57,8 @@ The topic order matches [LLMs Research](./) and
 
 ### Speech (TTS / STT / STS)
 
-No dated frames have been archived yet.
+- 2026-07-19T02:22:34.606Z: [English](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison) · [Japanese](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja) · [data.json](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison.data.json)
+- 2026-07-18T15:09:30.905Z: [English](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison) · [Japanese](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja) · [data.json](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.data.json)
 
 ### Agent SDK comparison
 
@@ -65,8 +66,16 @@ No dated frames have been archived yet.
 
 ### Computer use
 
-No dated frames have been archived yet.
+- 2026-07-18T15:08:10.261Z: [English](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison) · [Japanese](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja) · [data.json](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.data.json)
 
 ### Agent VM / sandbox comparison
 
 No dated frames have been archived yet.
+
+### Deep research APIs
+
+- 2026-07-19T02:12:52.868Z: [English](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison) · [Japanese](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja) · [data.json](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.data.json)
+
+### Trend recency
+
+- 2026-07-17T01:34:36.857Z: [English](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison) · [Japanese](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja) · [data.json](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.data.json)

@@ -1,17 +1,31 @@
 import type {
   AudioClip,
+  SpeechToSpeechClient,
   SpeechToTextClient,
   TextToSpeechClient,
 } from "../vendors/speech/types";
 import {
+  createFixtureSpeechToSpeechClient,
   createFixtureSpeechToTextClient,
   createFixtureTextToSpeechClient,
   encodeFixtureAudio,
 } from "../vendors/speech/fixture";
+import { createOpenAiSpeechToSpeechClient } from "../vendors/speech/openai-realtime";
+import { createGeminiSpeechToSpeechClient } from "../vendors/speech/gemini-live";
 import {
   createOpenAiSpeechToTextClient,
   createOpenAiTextToSpeechClient,
 } from "../vendors/speech/openai";
+import { createElevenLabsTextToSpeechClient } from "../vendors/speech/elevenlabs";
+import {
+  createDeepgramSpeechToTextClient,
+  createDeepgramTextToSpeechClient,
+} from "../vendors/speech/deepgram";
+import { createAssemblyAiSpeechToTextClient } from "../vendors/speech/assemblyai";
+import {
+  createGoogleSpeechToTextClient,
+  createGoogleTextToSpeechClient,
+} from "../vendors/speech/google";
 import { SPEECH_MANIFEST } from "./domain/manifest";
 import { summarizeStat, wordAccuracy, wordErrorRate } from "./domain/score";
 import type {
@@ -20,6 +34,9 @@ import type {
   SpeechComparisonResult,
   SpeechModelCard,
   SpeechModelRun,
+  StsCapability,
+  StsRoundTripCall,
+  StsRoundTripRun,
   SttUtterance,
 } from "./domain/types";
 import {
@@ -53,21 +70,59 @@ const STT_WORDS_PER_MINUTE = 150;
 
 const OPENAI_KEY_ENV = "OPENAI_API_KEY";
 
+/** Conservative flat cost estimate per speech-to-speech round-trip (one short
+ * turn). Realtime STS is token-billed on audio in/out, so a single per-unit
+ * price does not apply; this over-estimates a few seconds of output audio so the
+ * ceiling check stays safe. Only providers with a wired realtime adapter
+ * (`realtimeKeyEnv`) are priced — the others are not spent on. */
+const STS_USD_PER_ROUND_TRIP = 0.1;
+
+/** The env var each provider's real adapter is key-gated by. A provider with no
+ * bearer/API-key REST adapter yet (Amazon needs AWS SigV4; see below) is absent
+ * here on purpose. */
+const PROVIDER_KEY_ENV: Partial<Record<SpeechModelCard["provider"], string>> = {
+  openai: OPENAI_KEY_ENV,
+  elevenlabs: "ELEVENLABS_API_KEY",
+  google: "GOOGLE_API_KEY",
+  deepgram: "DEEPGRAM_API_KEY",
+  assemblyai: "ASSEMBLYAI_API_KEY",
+};
+
+/** Read a provider's key from the environment on the real path, or throw a
+ * clear error so `runSpeechComparison` records an honest `provenance: "error"`
+ * row rather than substituting a fixture (which would corrupt provenance). */
+const requireKey = (card: SpeechModelCard): string => {
+  const env = PROVIDER_KEY_ENV[card.provider];
+  if (env === undefined) {
+    throw new Error(
+      `real adapter for provider '${card.provider}' is not wired yet ` +
+        `(Amazon needs AWS SigV4 + the Transcribe async-S3 design decision; ` +
+        `tracked as a follow-up); run --fixture or select a wired provider.`,
+    );
+  }
+  const key = process.env[env];
+  if (key === undefined || key === "") {
+    throw new Error(`${env} is required for a real ${card.provider} run.`);
+  }
+  return key;
+};
+
 const ttsClientFor = (
   card: SpeechModelCard,
   fixture: boolean,
 ): TextToSpeechClient => {
   if (fixture) return createFixtureTextToSpeechClient(card.apiModelId);
-  if (card.provider === "openai") {
-    const key = process.env[OPENAI_KEY_ENV];
-    if (key === undefined || key === "") {
-      throw new Error(`${OPENAI_KEY_ENV} is required for a real OpenAI run.`);
-    }
+  const key = requireKey(card);
+  if (card.provider === "openai")
     return createOpenAiTextToSpeechClient(card.apiModelId, key);
-  }
+  if (card.provider === "elevenlabs")
+    return createElevenLabsTextToSpeechClient(card.apiModelId, key);
+  if (card.provider === "google")
+    return createGoogleTextToSpeechClient(card.apiModelId, key);
+  if (card.provider === "deepgram")
+    return createDeepgramTextToSpeechClient(card.apiModelId, key);
   throw new Error(
-    `real TTS adapter for provider '${card.provider}' is not wired yet ` +
-      `(the first-trial ticket implements it); run --fixture or select OpenAI.`,
+    `no real TTS adapter for provider '${card.provider}'; run --fixture.`,
   );
 };
 
@@ -76,16 +131,17 @@ const sttClientFor = (
   fixture: boolean,
 ): SpeechToTextClient => {
   if (fixture) return createFixtureSpeechToTextClient(card.apiModelId);
-  if (card.provider === "openai") {
-    const key = process.env[OPENAI_KEY_ENV];
-    if (key === undefined || key === "") {
-      throw new Error(`${OPENAI_KEY_ENV} is required for a real OpenAI run.`);
-    }
+  const key = requireKey(card);
+  if (card.provider === "openai")
     return createOpenAiSpeechToTextClient(card.apiModelId, key);
-  }
+  if (card.provider === "deepgram")
+    return createDeepgramSpeechToTextClient(card.apiModelId, key);
+  if (card.provider === "assemblyai")
+    return createAssemblyAiSpeechToTextClient(card.apiModelId, key);
+  if (card.provider === "google")
+    return createGoogleSpeechToTextClient(card.apiModelId, key);
   throw new Error(
-    `real STT adapter for provider '${card.provider}' is not wired yet ` +
-      `(the first-trial ticket implements it); run --fixture or select OpenAI.`,
+    `no real STT adapter for provider '${card.provider}'; run --fixture.`,
   );
 };
 
@@ -98,6 +154,37 @@ const ttsJudgeFor = (fixture: boolean): SpeechToTextClient => {
     throw new Error(`${OPENAI_KEY_ENV} is required for the real STT judge.`);
   }
   return createOpenAiSpeechToTextClient(TTS_JUDGE_MODEL_ID, key);
+};
+
+/** The realtime speech-to-speech client for a cataloged provider. On the real
+ * path a provider with no `realtimeKeyEnv` (no wired realtime adapter) throws,
+ * so `runStsRoundTrips` records an honest `provenance: "error"` row rather than
+ * a fabricated latency — the same contract as `requireKey`. */
+const stsClientFor = (
+  capability: StsCapability,
+  fixture: boolean,
+): SpeechToSpeechClient => {
+  if (fixture) return createFixtureSpeechToSpeechClient(capability.apiModelId);
+  const env = capability.realtimeKeyEnv;
+  if (env === undefined) {
+    throw new Error(
+      `no wired realtime adapter for '${capability.provider}' ` +
+        `(${capability.apiName}); it stays a cataloged capability. Wire it or run --fixture.`,
+    );
+  }
+  const key = process.env[env];
+  if (key === undefined || key === "") {
+    throw new Error(
+      `${env} is required for a real ${capability.provider} speech-to-speech round-trip.`,
+    );
+  }
+  if (capability.provider === "OpenAI")
+    return createOpenAiSpeechToSpeechClient(capability.apiModelId, key);
+  if (capability.provider === "Google")
+    return createGeminiSpeechToSpeechClient(capability.apiModelId, key);
+  throw new Error(
+    `no real speech-to-speech adapter for provider '${capability.provider}'; run --fixture.`,
+  );
 };
 
 const byteLengthOfBase64 = (base64: string): number =>
@@ -230,6 +317,86 @@ const runOneCard = async (
   return calls;
 };
 
+const aggregateSts = (
+  capability: StsCapability,
+  provenance: Provenance,
+  measuredAt: string,
+  trials: number,
+  calls: ReadonlyArray<StsRoundTripCall>,
+  error?: string,
+): StsRoundTripRun => ({
+  provider: capability.provider,
+  apiName: capability.apiName,
+  apiModelId: capability.apiModelId,
+  source: capability.source,
+  provenance,
+  measuredAt,
+  trialsRequested: trials,
+  stats: {
+    roundTripLatencyMs: summarizeStat(
+      calls.map((call) => call.firstAudioLatencyMs),
+    ),
+  },
+  calls,
+  ...(error === undefined ? {} : { error }),
+});
+
+/** Measure one round-trip per STS turn × repetition for a cataloged provider. */
+const runOneSts = async (
+  capability: StsCapability,
+  fixture: boolean,
+  trials: number,
+): Promise<ReadonlyArray<StsRoundTripCall>> => {
+  const client = stsClientFor(capability, fixture);
+  const calls: StsRoundTripCall[] = [];
+  for (let repetition = 0; repetition < trials; repetition += 1) {
+    for (const turn of SPEECH_MANIFEST.sts) {
+      const trip = await client.roundTrip(turn.prompt);
+      calls.push({
+        turnId: turn.id,
+        repetition,
+        firstAudioLatencyMs: trip.firstAudioLatencyMs,
+        firstAudioByteLength: trip.firstAudioByteLength,
+      });
+    }
+  }
+  return calls;
+};
+
+const runStsRoundTrips = async (
+  fixture: boolean,
+  measuredAt: string,
+  trials: number,
+): Promise<ReadonlyArray<StsRoundTripRun>> => {
+  const runs: StsRoundTripRun[] = [];
+  for (const capability of STS_CAPABILITIES) {
+    try {
+      const calls = await runOneSts(capability, fixture, trials);
+      runs.push(
+        aggregateSts(
+          capability,
+          fixture ? "fixtured" : "measured",
+          measuredAt,
+          trials,
+          calls,
+        ),
+      );
+    } catch (error) {
+      runs.push(
+        aggregateSts(
+          capability,
+          "error",
+          measuredAt,
+          trials,
+          [],
+          String(error),
+        ),
+      );
+    }
+  }
+  return runs;
+};
+
 export const runSpeechComparison = async (
   options: SpeechRunOptions,
 ): Promise<SpeechComparisonResult> => {
@@ -257,6 +424,7 @@ export const runSpeechComparison = async (
       );
     }
   }
+  const stsRuns = await runStsRoundTrips(options.fixture, generatedAt, trials);
   return {
     generatedAt,
     fixture: options.fixture,
@@ -265,6 +433,7 @@ export const runSpeechComparison = async (
     manifestVersion: SPEECH_MANIFEST.version,
     runs,
     stsCapabilities: STS_CAPABILITIES,
+    stsRuns,
     nonSubjects: NON_SUBJECT_PROVIDERS,
     artifactPath: "speech-comparison.data.json",
   };
@@ -296,7 +465,7 @@ export const estimateSpeech = (
     const cost = sttMinutes * card.price * trialCount;
     return `  ${card.id}: ~$${cost.toFixed(4)} (${SPEECH_MANIFEST.stt.length} clip(s) × ${trialCount})`;
   });
-  const total = selectedCards(modelIds).reduce((sum, card) => {
+  const ttsSttTotal = selectedCards(modelIds).reduce((sum, card) => {
     if (card.capability === "tts") {
       return (
         sum +
@@ -307,9 +476,31 @@ export const estimateSpeech = (
     }
     return sum + sttMinutes * card.price * trialCount;
   }, 0);
+
+  // Speech-to-speech: only the cataloged providers with a wired realtime adapter
+  // are spent on; the estimate is a flat per-round-trip over-estimate (STS is
+  // token-billed, no single per-unit price). Skipped entirely when --models
+  // selects only TTS/STT subjects.
+  const includeSts = modelIds === undefined || modelIds.length === 0;
+  const stsTurns = SPEECH_MANIFEST.sts.length;
+  const stsProviders = STS_CAPABILITIES.filter(
+    (entry) => entry.realtimeKeyEnv !== undefined,
+  );
+  const stsLines = includeSts
+    ? stsProviders.map((entry) => {
+        const cost = STS_USD_PER_ROUND_TRIP * stsTurns * trialCount;
+        return `  sts:${entry.provider}: ~$${cost.toFixed(4)} (${stsTurns} turn(s) × ${trialCount}, realtime round-trip, token-billed est.)`;
+      })
+    : [];
+  const stsTotal = includeSts
+    ? stsProviders.length * STS_USD_PER_ROUND_TRIP * stsTurns * trialCount
+    : 0;
+
+  const total = ttsSttTotal + stsTotal;
   return [
-    "speech estimate (real run; audio-duration figures are approximations):",
+    "speech estimate (real run; audio-duration and STS token figures are approximations):",
     ...lines,
+    ...stsLines,
     `  total: ~$${total.toFixed(2)} (agreed ceiling: $10/trial — stop for re-approval above it)`,
     "No persistent provider resources are created; audio is scored in memory and discarded.",
   ].join("\n");

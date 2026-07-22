@@ -40,8 +40,8 @@ export type SpeechModelCard = Readonly<{
 }>;
 
 /** A provider's realtime speech-to-speech (duplex) API, cataloged as a
- * capability. v1 records existence with a cited source; round-trip latency is
- * measured by a later ticket. */
+ * capability with a cited source. Round-trip latency is measured separately (see
+ * `StsRoundTripRun`); this record is the catalog, always present. */
 export type StsCapability = Readonly<{
   provider: string;
   apiName: string;
@@ -49,6 +49,36 @@ export type StsCapability = Readonly<{
   duplexRealtime: boolean;
   lastVerified: string;
   source: string;
+  /** The env var whose presence lets the round-trip be measured on a real run.
+   * Absent for providers with no wired realtime adapter (AWS, xAI), so those
+   * stay honest `error` rows without a spend attempt. */
+  realtimeKeyEnv?: string;
+}>;
+
+/** One speech-to-speech round-trip: the first-audio latency after a short input
+ * turn is committed (see `SpeechToSpeechClient`). */
+export type StsRoundTripCall = Readonly<{
+  turnId: string;
+  repetition: number;
+  firstAudioLatencyMs: number;
+  /** Byte length of the first audio-output chunk (diagnostic, not scored). */
+  firstAudioByteLength: number;
+}>;
+
+/** A measured (or attempted) speech-to-speech subject: an `StsCapability` plus
+ * the round-trip latency stat, with honest per-row provenance exactly like the
+ * TTS/STT subject rows. */
+export type StsRoundTripRun = Readonly<{
+  provider: string;
+  apiName: string;
+  apiModelId: string;
+  source: string;
+  provenance: Provenance;
+  measuredAt: string;
+  trialsRequested: number;
+  stats: Readonly<{ roundTripLatencyMs: Stat }>;
+  calls: ReadonlyArray<StsRoundTripCall>;
+  error?: string;
 }>;
 
 /** A provider in this repo's stack that exposes no speech API, recorded so the
@@ -76,10 +106,21 @@ export type SttUtterance = Readonly<{
   audioSource: string;
 }>;
 
+/** One short input turn a speech-to-speech round-trip commits; the metric is the
+ * latency to the first audio-output chunk, not the turn's content. */
+export type StsTurn = Readonly<{
+  id: string;
+  prompt: string;
+}>;
+
 export type SpeechManifest = Readonly<{
   version: string;
   tts: ReadonlyArray<TtsUtterance>;
   stt: ReadonlyArray<SttUtterance>;
+  /** Realtime round-trip turns. Added without a version bump: they introduce a
+   * new independent series (STS latency) and leave the TTS/STT inputs byte-for-
+   * byte unchanged, so same-version history for those series stays valid. */
+  sts: ReadonlyArray<StsTurn>;
 }>;
 
 export type Stat = Readonly<{
@@ -145,6 +186,9 @@ export type SpeechComparisonResult = Readonly<{
   manifestVersion: string;
   runs: ReadonlyArray<SpeechModelRun>;
   stsCapabilities: ReadonlyArray<StsCapability>;
+  /** Measured (or attempted) speech-to-speech round-trip latency, one per
+   * cataloged realtime provider. Aligns 1:1 with `stsCapabilities` by provider. */
+  stsRuns: ReadonlyArray<StsRoundTripRun>;
   nonSubjects: ReadonlyArray<NonSubjectProvider>;
   artifactPath: string;
 }>;
