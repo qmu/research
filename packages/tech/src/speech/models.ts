@@ -155,6 +155,7 @@ export const STS_CAPABILITIES: ReadonlyArray<StsCapability> = [
     duplexRealtime: true,
     lastVerified: "2026-07-14",
     source: "https://developers.openai.com/api/docs/models/gpt-realtime",
+    realtimeKeyEnv: "OPENAI_API_KEY",
   },
   {
     provider: "Google",
@@ -163,8 +164,11 @@ export const STS_CAPABILITIES: ReadonlyArray<StsCapability> = [
     duplexRealtime: true,
     lastVerified: "2026-07-14",
     source: "https://ai.google.dev/gemini-api/docs/live",
+    realtimeKeyEnv: "GOOGLE_API_KEY",
   },
   {
+    // No wired realtime adapter (Bedrock bidirectional streaming needs AWS
+    // SigV4 + the event-stream framing); stays an honest error row, no spend.
     provider: "AWS",
     apiName: "Bedrock Nova Sonic (legacy; Nova 2 Sonic successor)",
     apiModelId: "amazon.nova-sonic-v1:0",
@@ -174,6 +178,7 @@ export const STS_CAPABILITIES: ReadonlyArray<StsCapability> = [
       "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-sonic.html",
   },
   {
+    // No wired realtime adapter yet; honest error row, no spend.
     provider: "xAI",
     apiName: "Grok Voice Agent API",
     apiModelId: "grok-voice-latest",

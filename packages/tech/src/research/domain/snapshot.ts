@@ -204,6 +204,105 @@ export const statsRunsSnapshotPoints =
   };
 
 /**
+ * Points from the speech artifact: `{ runs: [{ id, modelName, capability,
+ * measuredAt, provenance, stats: { latencyMs: { mean, n }, intelligibility:
+ * { mean, n }, wordAccuracy: { mean, n } } }] }`. Only `provenance: "measured"`
+ * rows chart (fixtured/error rows never render as live measurements, ADR 0004).
+ *
+ * The quality metric is capability-specific and its point is named for the
+ * design series it feeds: a TTS row charts `ttsIntelligibility` (from the STT
+ * judge's word-accuracy over the synthesized clip) and an STT row charts
+ * `sttWordAccuracy`. Every measured row also charts `latencyMs`. Each run's
+ * `stats` carries all three keys regardless of capability — the inapplicable
+ * one summarizes an empty sample as `{ mean: 0, n: 0 }` — so the emitter guards
+ * on `n > 0`, never charting a spurious zero for the metric a row did not
+ * measure.
+ *
+ * Speech-to-speech round-trip latency lives in a separate `stsRuns` array (one
+ * entry per realtime provider); each measured `n>0` entry charts
+ * `stsRoundTripLatencyMs` under a `sts:<provider>` series id.
+ */
+export const speechSnapshotPoints = (
+  artifact: unknown,
+): ReadonlyArray<SnapshotPoint> => {
+  const root = asRecord(artifact);
+  if (root === undefined) return [];
+  const generatedAt =
+    typeof root.generatedAt === "string" ? root.generatedAt : "";
+  const runs = Array.isArray(root.runs) ? root.runs : [];
+  const points: SnapshotPoint[] = [];
+  for (const run of runs) {
+    const r = asRecord(run);
+    if (r === undefined || r.provenance !== "measured") continue;
+    const id = typeof r.id === "string" ? r.id : undefined;
+    if (id === undefined) continue;
+    const label = typeof r.modelName === "string" ? r.modelName : id;
+    const measuredAt =
+      typeof r.measuredAt === "string" ? r.measuredAt : generatedAt;
+    const stats = asRecord(r.stats);
+    const capability = r.capability;
+    // metric name in the design series ← stat key in the artifact
+    const wanted: ReadonlyArray<readonly [string, string]> = [
+      ["latencyMs", "latencyMs"],
+      ...(capability === "tts"
+        ? ([["ttsIntelligibility", "intelligibility"]] as const)
+        : capability === "stt"
+          ? ([["sttWordAccuracy", "wordAccuracy"]] as const)
+          : []),
+    ];
+    for (const [metric, statKey] of wanted) {
+      const stat = asRecord(stats?.[statKey]);
+      const mean = stat?.mean;
+      const count = stat?.n;
+      if (
+        typeof mean === "number" &&
+        Number.isFinite(mean) &&
+        typeof count === "number" &&
+        count > 0
+      ) {
+        points.push({
+          seriesId: id,
+          seriesLabel: label,
+          metric,
+          measuredAt,
+          value: mean,
+        });
+      }
+    }
+  }
+  // Speech-to-speech round-trip latency is a separate series shape: one series
+  // per realtime provider, keyed by `sts:<provider>` so it never collides with a
+  // TTS/STT subject id. Only measured, n>0 rows chart (ADR 0004).
+  const stsRuns = Array.isArray(root.stsRuns) ? root.stsRuns : [];
+  for (const run of stsRuns) {
+    const r = asRecord(run);
+    if (r === undefined || r.provenance !== "measured") continue;
+    const provider = typeof r.provider === "string" ? r.provider : undefined;
+    if (provider === undefined) continue;
+    const measuredAt =
+      typeof r.measuredAt === "string" ? r.measuredAt : generatedAt;
+    const stat = asRecord(asRecord(r.stats)?.roundTripLatencyMs);
+    const mean = stat?.mean;
+    const count = stat?.n;
+    if (
+      typeof mean === "number" &&
+      Number.isFinite(mean) &&
+      typeof count === "number" &&
+      count > 0
+    ) {
+      points.push({
+        seriesId: `sts:${provider}`,
+        seriesLabel: `${provider} (STS)`,
+        metric: "stsRoundTripLatencyMs",
+        measuredAt,
+        value: mean,
+      });
+    }
+  }
+  return points;
+};
+
+/**
  * Points from the RAG artifact: `{ runs: [{ backend: { id, name },
  * measuredAt, provenance, retrieval: { recallAtK, ndcgAtK },
  * operational: { queryLatencyP50Ms, costUsd } }] }`. One series per backend.
@@ -376,6 +475,7 @@ const snapshotPointExtractors: Readonly<
     "promptFidelity",
     "animationPresence",
   ]),
+  speech: speechSnapshotPoints,
   rag: ragSnapshotPoints,
   "agent-vm": agentVmSnapshotPoints,
   "token-metering": tokenMeteringSnapshotPoints,

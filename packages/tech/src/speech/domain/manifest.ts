@@ -45,4 +45,13 @@ export const SPEECH_MANIFEST: SpeechManifest = {
         "Harvard sentences list 1, Open Speech Repository (public domain): https://www.voiptroubleshooter.com/open_speech/american.html",
     },
   ],
+  sts: [
+    {
+      id: "sts-greeting",
+      // A single short, punctuation-light turn: it bounds token-billed cost and
+      // keeps the round-trip a well-defined "time to first spoken audio", not a
+      // long generation whose length would dominate the latency.
+      prompt: "Please say a short friendly greeting",
+    },
+  ],
 };

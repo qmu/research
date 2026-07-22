@@ -586,6 +586,11 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
           direction: "higher-is-better",
         },
         {
+          name: "stsRoundTripLatencyMs",
+          unit: "ms",
+          direction: "lower-is-better",
+        },
+        {
           name: "ttsPricePer1MCharsUsd",
           unit: "USD/1M chars",
           direction: "reference",
@@ -605,10 +610,10 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
       costPerRun: {
         ceilingUsd: 10,
         premises:
-          "TTS billed per character plus one STT-judge read of each synthesized clip; STT billed per audio minute; the 3-utterance manifest estimates ~$0.04/trial; run `research -- speech --estimate` first",
+          "TTS billed per character plus one STT-judge read of each synthesized clip; STT billed per audio minute; STS realtime round-trips are token-billed (estimated conservatively per turn); the manifest estimates well under $1/trial; run `research -- speech --estimate` first",
       },
       accumulates:
-        "per-subject HistoryPoint series for latency, TTS intelligibility, and STT word accuracy, one point per dated frame; charts connect same-manifest-version points only",
+        "per-subject HistoryPoint series for latency, TTS intelligibility, STT word accuracy, and STS round-trip first-audio latency, one point per dated frame; charts connect same-manifest-version points only",
     },
   },
   {

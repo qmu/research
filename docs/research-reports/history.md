@@ -57,7 +57,8 @@ The topic order matches [LLMs Research](./) and
 
 ### Speech (TTS / STT / STS)
 
-No dated frames have been archived yet.
+- 2026-07-19T02:22:34.606Z: [English](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison) · [Japanese](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja) · [data.json](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison.data.json)
+- 2026-07-18T15:09:30.905Z: [English](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison) · [Japanese](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja) · [data.json](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.data.json)
 
 ### Agent SDK comparison
 

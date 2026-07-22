@@ -57,10 +57,6 @@ provenance: llm-translation
 
 **音声対音声（Speech-to-speech）** — カタログ化された4のプロバイダーのうち4がリアルタイム双方向APIを提供しており、往復レイテンシは後続の試行で測定される。全機能一覧は7節に記載している。「最良」「最悪」は各メトリクスの方向性（レイテンシは低いほど良く、明瞭度と単語正解率は高いほど良い）に従う。
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. 考察
 
 `measured` の来歴を持つ行は、レイテンシと単語正解率について能力ごとに比較可能である。価格はカタログの参考情報にすぎない。text-to-speech の明瞭度と speech-to-text の単語正解率を対比することで、誤差がどこで生じているか——合成の明瞭さか、それとも認識の精度か——を特定できる。
@@ -132,10 +128,3 @@ SPEECH_AUDIO_DIR=./audio OPENAI_API_KEY=... npm run research -- speech --real
 完全な実行記録は[`speech-comparison.data.json`](./speech-comparison.data.json)としてコミットされている：呼び出しごとのレイテンシ、音声バイト長、文字起こし、スコアを含む。
 
 生成日時: 2026-07-18T15:09:30.905Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-19T02:22:34.606Z](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja)
-- [2026-07-18T15:09:30.905Z](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja)

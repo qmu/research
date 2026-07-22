@@ -51,10 +51,6 @@ This run has **2 measured** of 10 subject rows (non-measured rows are `fixtured`
 
 **Speech-to-speech** — round-trip first-audio latency measured for 2 of 4 realtime providers: fastest 381 ms — OpenAI; slowest 1326 ms — Google. Per-provider rows and unreachable providers are in section 7. "Best"/"Worst" follow each metric's direction (lower latency, higher intelligibility and word accuracy are better).
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. Analysis
 
 Rows with `measured` provenance can be compared within a capability on latency and word-accuracy; price is catalog context. Contrasting text-to-speech intelligibility with speech-to-text word accuracy localizes where error enters — synthesis clarity versus recognition.
@@ -128,10 +124,3 @@ The round-trip is the first-audio latency after committing one short text input 
 The complete run record is committed as [`speech-comparison.data.json`](./speech-comparison.data.json): per-call latencies, audio byte lengths, transcriptions, and scores.
 
 Generated: 2026-07-19T02:22:34.606Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-19T02:22:34.606Z](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison)
-- [2026-07-18T15:09:30.905Z](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison)
