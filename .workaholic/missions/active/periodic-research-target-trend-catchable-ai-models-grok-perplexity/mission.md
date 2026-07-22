@@ -6,6 +6,8 @@ status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
+drive_authorized: true
+strategy: benchmark-how-well-ai-systems-keep-up-with-real-world-change
 tickets:
   - 20260714005200-kickoff-propose-periodic-research.md
   - 20260714010000-scaffold-trend-recency-instrument.md
@@ -52,6 +54,31 @@ translation.
 public search/grounding API; benchmarking the underlying search indexes
 themselves (we measure the model+search *product*, not the crawler). No paid run
 or scaffolding occurs before the proposal is approved.
+
+## Experience
+
+`npm run research -- trend-recency --real` runs the instrument end to end: for each
+recent-event probe in the committed ground-truth DB it queries every configured surface
+in two variants — grounded (the provider's live search/grounding tool on) and an
+ungrounded control (same model, retrieval off) — and scores six per-config metrics
+(recencyAccuracy, hallucinationRate, citationValidity, citationFreshnessDays, latencyMs,
+costPerQueryUsd). `--estimate` prints the projected cost without spending; the keyless
+fixture path produces a byte-stable page and data artifact so CI stays green with no key.
+Each run appends a `HistoryPoint` so the report renders a month-over-month trend, and a
+dated full record lands under `docs/research-reports/trend-recency-history/`.
+
+Observable outcomes the deliverable must show:
+
+- The `trend-recency` topic is registered in `site.ts`, so it appears in both the English
+  `LLMs Research` list and the Japanese `LLM基礎検証` list in the shared topic order, with
+  matching EN and JP index entries.
+- The published survey article is a dated snapshot that reports each surface's grounded
+  vs. control metrics side by side, names error rows honestly (an unreachable surface is
+  shown as an error, never as a passing measurement), and links its citations.
+- A Japanese translation of the report exists and reads as a parallel page to the English
+  source.
+- On the validation trial the grounded configs separate from their ungrounded controls on
+  recencyAccuracy, and providers separate from each other on latency and cost.
 
 ## Acceptance
 
@@ -126,3 +153,5 @@ or scaffolding occurs before the proposal is approved.
   the instrument, but 3 of 6 grounded subjects were error rows (xAI migration,
   Sonar key) — whether to publish at this coverage is the developer's call.
 - 2026-07-17 — story reported — work-20260717-150003.md
+- 2026-07-22 — strategy created — benchmark-how-well-ai-systems-keep-up-with-real-world-change — mission.md
+- 2026-07-22 — mission replanned — publish drive authorized (spend-free: site.ts registration + dated survey article + JP translation); drive-ready for /monitor — mission.md
