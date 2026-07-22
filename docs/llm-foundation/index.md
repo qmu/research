@@ -78,6 +78,11 @@ API ネイティブなコンピュータ操作エージェントの、固定 Pla
 エージェントが untrusted コードを実行するサンドボックス／microVM 基盤の分離モデル、公表価格、機能エンベロープ、実測コールドスタートと固定タスクコストの比較。
 英語ソースは [Agent VM / sandbox comparison](/research-reports/agent-vm-comparison)。
 
+### [ディープリサーチAPI](/research-reports/deep-research-comparison.insights.ja)
+
+自律型ディープリサーチAPIの回答品質（ルーブリック）、引用妥当性、ソース多様性、レイテンシ、クエリ単価を、透明な Anthropic 自前実装ベースラインと比較。
+英語ソースは [Deep research APIs](/research-reports/deep-research-comparison)。
+
 ## provenance について
 
 日本語ページは、英語側のトピックと同じ順序で配置する。現在の `*.insights.ja.md`
