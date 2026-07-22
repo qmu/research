@@ -99,13 +99,15 @@ This repository has two delivery surfaces:
    source/destination plan from `npm run research:site -- copy-plan` and copies
    Japanese Markdown into
    `../qmu-co-jp/docs/llm-foundation-research/<name>.md`. The corporate site
-   (Astro) renders the copies; commit and deploy `qmu-co-jp` separately. See
+   (Cloudflare Workers, built from `packages/site`) renders the copies; commit
+   and deploy `qmu-co-jp` separately. See
    `docs/adr/0003-*` for the boundary.
 
 ### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
 
 Publishing does not edit `qmu-co-jp` directly — that repo has its own writing
-conventions (である体), docker Astro build, and `/ship` deploy. Instead, this
+conventions (である体), a Cloudflare Workers build (Wrangler, `packages/site`),
+and `/ship` deploy. Instead, this
 repo's `/ship` generates a **publish ticket** into the sibling `qmu-co-jp` repo,
 and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
 
@@ -122,8 +124,9 @@ and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
 4. Write a ticket into that worktree's `.workaholic/tickets/todo/` using
    `npm run research:site -- qmu-ticket` as the ordered payload. The ticket tells
    qmu-co-jp to copy/delete Markdown, update navigation and JP/EN indexes in the
-   same order, verify with the docker Astro build, then commit and deploy via
-   that repo's own `/ship` (`scripts/deploy.sh`).
+   same order, verify with the site build (`npm run build` in `packages/site`),
+   then commit and deploy via that repo's own `/ship` (`scripts/deploy.sh`, which
+   runs `npm run deploy` = build + `wrangler deploy` to Cloudflare Workers).
 5. **Tell the user to run `/drive` in `qmu-co-jp`** to apply the ticket.
 
 CI must be green before merge to `main` (type-check, tests, lint, dependency
