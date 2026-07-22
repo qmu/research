@@ -639,3 +639,41 @@ describe("agentVmSnapshotPoints", () => {
     expect(agentVmSnapshotPoints({ runs: [{ card: {} }] })).toEqual([]);
   });
 });
+
+describe("trend-recency snapshot points", () => {
+  const artifact = {
+    generatedAt: "2026-07-17T01:34:36.857Z",
+    runs: [
+      {
+        id: "gemini-3-1-pro-grounded",
+        modelName: "Gemini 3.1 Pro + Google Search grounding",
+        provenance: "measured",
+        measuredAt: "2026-07-17T01:34:36.857Z",
+        stats: {
+          recencyAccuracy: { mean: 1, n: 3 },
+          citationValidity: { mean: 1, n: 3 },
+          latencyMs: { mean: 4500, n: 3 },
+        },
+      },
+      {
+        id: "grok-4-3-grounded",
+        modelName: "Grok 4.3 + Agent Tools web search",
+        provenance: "error",
+        stats: {},
+      },
+    ] as const,
+  };
+
+  it("charts the three measured metrics for measured rows only", () => {
+    const points = snapshotPointsFor("trend-recency", artifact);
+    expect(points.map((p) => p.metric)).toEqual([
+      "recencyAccuracy",
+      "citationValidity",
+      "latencyMs",
+    ]);
+    expect(points.every((p) => p.seriesId === "gemini-3-1-pro-grounded")).toBe(
+      true,
+    );
+    expect(points.map((p) => p.value)).toEqual([1, 1, 4500]);
+  });
+});

@@ -137,4 +137,5 @@ SPEECH_AUDIO_DIR=./audio OPENAI_API_KEY=... npm run research -- speech --real
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
+- [2026-07-19T02:22:34.606Z](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja)
 - [2026-07-18T15:09:30.905Z](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja)
