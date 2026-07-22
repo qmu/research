@@ -1,6 +1,5 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { stripSurveyBlocks } from "./domain/current-article";
 import {
   findPublishedResearchTopic,
   historyPathFor,
@@ -12,23 +11,14 @@ const repoRoot = (): string => resolve(process.cwd(), "../..");
 
 const repoPath = (path: string): string => resolve(repoRoot(), path);
 
-/** Frame copies are text; a per-copy transform rewrites content on the way in.
- * Markdown pages are stripped of the cross-run survey-series blocks (see
- * `stripSurveyBlocks`); the data artifact is copied verbatim. */
-type FrameTransform = (content: string) => string;
-
-const identity: FrameTransform = (content) => content;
-
 const copyIfPresent = async (
   source: string | undefined,
   destination: string,
-  transform: FrameTransform = identity,
 ): Promise<boolean> => {
   if (source === undefined) return false;
   try {
-    const content = await readFile(repoPath(source), "utf8");
     await mkdir(dirname(repoPath(destination)), { recursive: true });
-    await writeFile(repoPath(destination), transform(content), "utf8");
+    await copyFile(repoPath(source), repoPath(destination));
     return true;
   } catch (error: unknown) {
     const code =
@@ -72,7 +62,6 @@ const copyPreferringReal = async (
   topic: ResearchSiteTopic,
   source: string | undefined,
   destination: string,
-  transform: FrameTransform = identity,
 ): Promise<boolean> => {
   if (source !== undefined) {
     try {
@@ -80,7 +69,7 @@ const copyPreferringReal = async (
       await mkdir(dirname(repoPath(destination)), { recursive: true });
       await writeFile(
         repoPath(destination),
-        transform(rewriteRealArtifactReferences(real, topic.artifactBase)),
+        rewriteRealArtifactReferences(real, topic.artifactBase),
         "utf8",
       );
       return true;
@@ -92,7 +81,7 @@ const copyPreferringReal = async (
       if (code !== "ENOENT") throw error;
     }
   }
-  return copyIfPresent(source, destination, transform);
+  return copyIfPresent(source, destination);
 };
 
 export type ArchiveReportOptions = Readonly<{
@@ -113,31 +102,23 @@ export const archiveReportFrame = async (
       source: reportSources.source,
       destination: historyPathFor(topic, options.generatedAt, "source"),
       preferReal: true,
-      transform: stripSurveyBlocks,
     },
     {
       source: topic.dataPath,
       destination: historyPathFor(topic, options.generatedAt, "data"),
       preferReal: true,
-      transform: identity,
     },
     {
       source: reportSources.japanese,
       destination: historyPathFor(topic, options.generatedAt, "japanese"),
       preferReal: false,
-      transform: stripSurveyBlocks,
     },
   ];
   const written: string[] = [];
   for (const copy of copies) {
     const copied = copy.preferReal
-      ? await copyPreferringReal(
-          topic,
-          copy.source,
-          copy.destination,
-          copy.transform,
-        )
-      : await copyIfPresent(copy.source, copy.destination, copy.transform);
+      ? await copyPreferringReal(topic, copy.source, copy.destination)
+      : await copyIfPresent(copy.source, copy.destination);
     if (copied) {
       written.push(copy.destination);
     }

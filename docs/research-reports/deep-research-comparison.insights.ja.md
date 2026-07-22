@@ -51,7 +51,7 @@ provenance: llm-translation
 
 **推移 / Trend across surveys**
 
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+これはシリーズ中で初めての比較可能な調査であるため、まだグラフ化できる複数回にわたる調査推移は存在しない。同一手法による2回目の調査がアーカイブされた時点で、ここに推移グラフが表示されるようになる。以前の調査は「検証データ」の下にリンクされている。
 
 ## 5. 考察
 
@@ -111,6 +111,6 @@ npm run research -- deep-research --real
 
 **過去の調査 / Past surveys in this series**
 
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
+このトピックに関する過去の日付付き調査（新しい順） — それぞれがその実行時点での完全な記事です。
 
-- [2026-07-19T02:12:52.868Z](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja)
+- [2026-07-19T02:12:52.868Z](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison)

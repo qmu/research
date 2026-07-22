@@ -227,39 +227,6 @@ export const appendRelatedBlock = (
     : `${articleMarkdown.replace(/\n+$/, "\n")}\n${relatedBlock.trim()}\n`;
 
 /**
- * Remove the two cross-run survey-series blocks (推移 / 過去の調査) from a
- * composed current page, leaving the pure 7-section article. The inverse of
- * `composeCurrentArticle` + `appendRelatedBlock`, applied when archiving a
- * dated frame: a frame is a standalone snapshot of one run's article, so it
- * must NOT carry the series blocks — their `./history/<topic>/<frame>/...`
- * links are top-level-relative and become dead (doubled path, and
- * self-referential for a single-survey topic) once they live inside a frame
- * directory. Idempotent: an already-pure article is returned unchanged
- * (normalized to end with a single newline).
- */
-export const stripSurveyBlocks = (articleMarkdown: string): string => {
-  let out = articleMarkdown;
-  // The 過去の調査 block is appended at the very end — drop from its label on.
-  const relatedIndex = out.indexOf(RELATED_LABEL);
-  if (relatedIndex !== -1) {
-    out = `${out.slice(0, relatedIndex).replace(/\s+$/, "")}\n`;
-  }
-  // The 推移 block is injected before a section heading (normally "## 5.") —
-  // drop from its label up to that next heading, keeping the heading.
-  const trendIndex = out.indexOf(TREND_LABEL);
-  if (trendIndex !== -1) {
-    const nextHeading = out.indexOf("\n## ", trendIndex + TREND_LABEL.length);
-    out =
-      nextHeading === -1
-        ? `${out.slice(0, trendIndex).replace(/\s+$/, "")}\n`
-        : `${out.slice(0, trendIndex).replace(/\s+$/, "")}\n\n${out.slice(
-            nextHeading + 1,
-          )}`;
-  }
-  return out;
-};
-
-/**
  * The newest dated frame that carries BOTH the English survey article and the
  * data artifact — the pair the current pages are restored from. Frames missing
  * either file (e.g. a partially-written archive) are skipped rather than

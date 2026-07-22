@@ -5,7 +5,6 @@ import {
   buildTrendBlock,
   composeCurrentArticle,
   latestCompleteFrame,
-  stripSurveyBlocks,
 } from "./current-article";
 import type { ResearchHistoryFrame, ResearchSiteTopic } from "./site";
 import type { SnapshotPoint } from "./snapshot";
@@ -86,40 +85,6 @@ describe("composeCurrentArticle (trend into §4)", () => {
         "**推移 / Trend across surveys**\n\nnewer chart",
       ),
     ).toBe(once);
-  });
-});
-
-describe("stripSurveyBlocks (frame snapshots are pure articles)", () => {
-  // A composed CURRENT page carries both cross-run blocks and a top-level
-  // `](./history/...)` past-survey link. An archived FRAME snapshot must carry
-  // NEITHER: that link doubles the /history/ segment (and self-references) from
-  // inside a frame dir, so it is dead in the VitePress build.
-  const composed = appendRelatedBlock(
-    composeCurrentArticle(
-      article,
-      "**推移 / Trend across surveys**\n\nfirst-survey placeholder",
-    ),
-    buildRelatedBlock(frames, "ja"),
-  );
-
-  it("removes both survey-series blocks and the ./history/ link", () => {
-    expect(composed).toContain("**推移 / Trend across surveys**");
-    expect(composed).toContain("**過去の調査 / Past surveys in this series**");
-    expect(composed).toContain("](./history/");
-    const pure = stripSurveyBlocks(composed);
-    expect(pure).not.toContain("**推移 / Trend across surveys**");
-    expect(pure).not.toContain("**過去の調査 / Past surveys in this series**");
-    expect(pure).not.toContain("](./history/");
-    // The 7-section article survives intact.
-    expect(pure).toContain("## 4. Verification Results");
-    expect(pure).toContain("## 5. Analysis");
-    expect(pure).toContain("## 7. Verification Data");
-  });
-
-  it("round-trips to the pure article and is idempotent", () => {
-    const pure = stripSurveyBlocks(composed);
-    expect(pure).toBe(article.replace(/\n+$/, "\n"));
-    expect(stripSurveyBlocks(pure)).toBe(pure);
   });
 });
 
