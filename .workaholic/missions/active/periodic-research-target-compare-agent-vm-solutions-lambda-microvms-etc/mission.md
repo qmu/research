@@ -6,6 +6,8 @@ status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
+strategy: periodically-benchmark-agent-vm-sandbox-execution-platforms
+drive_authorized: true
 tickets:
   - 20260714005157-kickoff-propose-periodic-research.md
   - 20260714024001-agent-vm-real-coldstart-cost-probe.md
@@ -158,6 +160,43 @@ ML-training benchmarks (a separate topic); a security audit of the isolation
 boundary (the topic records each vendor's *stated* isolation model, not a
 pen-test of it).
 
+## Experience
+
+What a reader and an operator can observe once this mission is satisfied:
+
+- **The comparison page renders for every subject, keyless.**
+  `docs/research-reports/agent-vm-comparison.md` (and its `.data.json` artifact)
+  shows all eight providers as a reference catalog — isolation model, published
+  vCPU/GB-hour price, billing granularity, max runtime, snapshot/resume,
+  filesystem persistence, egress, GPU — with no credentials and no spend.
+- **A real trial adds measured rows per reachable provider.** After an
+  owner-approved `npm run research -- agent-vm --real`, the artifact carries
+  `coldStartMsP50`/`coldStartMsP95`, `warmReuseMs`, `fixedTaskWallClockMs`, and
+  `measuredCostPerTaskUsd` for each provider whose credentials are present
+  (Fly.io first, via `FLY_API_TOKEN`+`FLY_APP_NAME`). These are real timings
+  from booting, reusing, and running one fixed CPU task — never fabricated.
+- **Missing credentials read as honest unreachable rows, not failures.** A
+  provider with no token in the environment is recorded `unreachable` / 未測定
+  for that trial; the run reports exactly which env vars are missing, spends
+  nothing, and does not crash. A trial with zero reachable providers still
+  produces a valid page.
+- **Cost stays inside the gate and nothing leaks.** `--estimate` prices a run
+  before `--real`; an estimate outside the agreed $1–$8 range stops for
+  re-approval. After any real run, no orphaned sandboxes remain (teardown is
+  code-guaranteed even on error paths).
+- **The survey publishes in both languages with history.** The topic ships the
+  standard 7-section dated survey wired into `publishedResearchTopics`, with 推移
+  (trend) and 過去の調査 (past-survey) blocks once three or more trials
+  accumulate, and a Japanese page generated as a pipeline translation of the
+  composed English current article (English → translate → Japanese, never
+  forked). The EN and JP indexes list it in the same order.
+
+This is testable: the keyless catalog and page shape are asserted by the
+existing unit tests and the published-page guards (title==label, no-mermaid, §4
+budget, 7-section outline); the unreachable-row behavior is exercised by running
+`--real` with no tokens; the measured rows appear only after a credentialed,
+owner-approved trial.
+
 ## Acceptance
 
 <!-- One checklist item per criterion, each naming the ticket/story expected to satisfy it.
@@ -185,3 +224,6 @@ pen-test of it).
 - 2026-07-17 — ticket archived — 20260714024002-agent-vm-wire-into-published-topics.md
 - 2026-07-17 — publish + trend composition drive (keyless): topic registered in `publishedResearchTopics` with the approved design, EN/JP indexes regenerated, keyless JP placeholder page shipped; `agentVmSnapshotPoints` extractor + artifact `instrumentVersion` wire the 推移/過去の調査 composition; 477 tests + lint + docs dead-link build green. Remaining tickets stay blocked: #024001/#024004 on provider tokens + spend approval, #024005 on an LLM key for the pipeline translation (todo tickets carry Blocked notes) — mission.md
 - 2026-07-17 — ticket archived — 20260714024003-agent-vm-history-and-trend-composition.md
+- 2026-07-22 — real cold-start/warm-reuse/fixed-task cost probe spend APPROVED by the developer (a@qmu.jp) in the /mission planning session; recorded in tickets #024001/#024004/#024005 (remaining gate is environmental credentials only — FLY_API_TOKEN+FLY_APP_NAME for the Fly.io probe / an LLM key for the pipeline translation; the `--real` path self-reports missing credentials and records unreachable rows). Wrote the mission's `## Experience` section (observable measured/unreachable rows per provider + the published EN/JP survey with 推移/history). `drive_authorized` remains unstamped: it needs a linked strategy, and the strategy-granularity decision is pending with the developer — mission.md
+- 2026-07-22 — strategy created — periodically-benchmark-agent-vm-sandbox-execution-platforms — strategy.md
+- 2026-07-22 — mission replanned — real cost probe authorized (spend approved 2026-07-22); strategy linked; drive-ready — mission.md
