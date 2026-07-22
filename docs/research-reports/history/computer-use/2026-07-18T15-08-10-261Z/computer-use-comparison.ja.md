@@ -115,3 +115,9 @@ npm run research -- computer-use --real
 完全な実行記録は [`computer-use-comparison.data.json`](./computer-use-comparison.data.json) としてコミットされている：試行ごとの軌跡、アクションごとのレイテンシ、トークン数、スコアを含む。
 
 生成日時: 2026-07-18T15:08:10.261Z
+
+**過去の調査 / Past surveys in this series**
+
+このトピックに関する過去の日付付き調査（新しい順）— それぞれが該当実行の完全な記事となっている。
+
+- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison)
