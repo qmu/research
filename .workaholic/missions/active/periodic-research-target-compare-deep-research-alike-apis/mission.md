@@ -11,11 +11,6 @@ drive_authorized: true
 tickets:
   - 20260714005156-kickoff-propose-periodic-research.md
   - 20260714013000-scaffold-deep-research-instrument.md
-  - 20260722100001-deep-research-subject-vendors.md
-  - 20260722100002-deep-research-metrics-and-graders.md
-  - 20260722100003-deep-research-first-validation-trial.md
-  - 20260722100004-deep-research-publish-topic.md
-  - 20260722100005-deep-research-history-series.md
 stories: []
 concerns: []
 ---
@@ -110,11 +105,11 @@ corporate `qmu-co-jp` copy is untouched here — it flows through `/ship`.
 
 - [x] Proposal-first design (cadence, subjects, metrics, cost/trial range, accumulated history) drafted with cited current offerings and developer-approved (#20260714005156-kickoff-propose-periodic-research.md + `proposal.md`)
 - [x] Topic `deep-research` scaffolded under `packages/tech/src/deep-research/` with layered `domain/ entrypoints/ vendors/`, a subject registry, and a keyless fixture path that keeps CI green (#20260714013000-scaffold-deep-research-instrument.md)
-- [ ] All five subjects reachable behind `vendors/` (OpenAI o3-deep-research, Perplexity sonar-deep-research, Gemini Deep Research, Grok DeepSearch, Anthropic build-your-own baseline), dependencies recorded in `docs/dependency-decisions.md` (#20260722100001-deep-research-subject-vendors.md)
-- [ ] Metrics + graders implemented (rubric quality via LLM judge, citation count, citation validity, source diversity, latency, cost per query) and recorded in full in the `.data.json` artifact (#20260722100002-deep-research-metrics-and-graders.md)
-- [ ] `npm run research -- deep-research --estimate` prices a trial, and the first disposable validation trial runs `--real` within the approved budget (#20260722100003-deep-research-first-validation-trial.md)
-- [ ] First trial archived as a dated survey, current English article + JP translation generated, topic registered in `publishedResearchTopics` (`site.ts`), and indexes written (#20260722100004-deep-research-publish-topic.md)
-- [ ] `HistoryPoint` series wired so the 推移 (trend) block accumulates the rubric/cost/latency time series across surveys (#20260722100005-deep-research-history-series.md)
+- [x] All five subjects reachable behind `vendors/` (OpenAI o3-deep-research, Perplexity sonar-deep-research, Gemini Deep Research, Grok DeepSearch, Anthropic build-your-own baseline), dependencies recorded in `docs/dependency-decisions.md` — satisfied by recovered real work `vendors/deep-research/{providers,pricing}.ts` (#deep-research-subject-vendors.md — recovered work-20260718-203009)
+- [x] Metrics + graders implemented (rubric quality via LLM judge, citation count, citation validity, source diversity, latency, cost per query) and recorded in full in the `.data.json` artifact — satisfied by recovered `deep-research/{run,models}.ts` + `domain/score` and the real `.data.json` (#deep-research-metrics-and-graders.md — recovered work-20260718-203009)
+- [x] `npm run research -- deep-research --estimate` prices a trial, and the first disposable validation trial runs `--real` within the approved budget — satisfied by the recovered real trial frame `history/deep-research/2026-07-19T02-12-52-868Z/` (fixture:false; honest error rows where keys absent) (#deep-research-first-validation-trial.md — recovered work-20260718-203009)
+- [x] First trial archived as a dated survey, current English article + JP translation generated, topic registered in `publishedResearchTopics` (`site.ts`), and indexes written — satisfied by the recovered dated frame + `deep-research-comparison.{md,insights.ja.md,data.json}` + re-registered `site.ts` + regenerated indexes (#publish-deep-research-topic.md — recovered work-20260718-203009)
+- [x] `HistoryPoint` series wired so the 推移 (trend) block accumulates the rubric/cost/latency time series across surveys — satisfied by the recovered `snapshot.ts` `deep-research` extractor + `site.ts` `design.accumulates` (#deep-research-history-series.md — recovered work-20260718-203009)
 
 ## Changelog
 
@@ -128,3 +123,4 @@ corporate `qmu-co-jp` copy is untouched here — it flows through `/ship`.
 - 2026-07-22 — ticket added — 20260722100005-deep-research-history-series.md
 - 2026-07-22 — strategy created — periodically-benchmark-deep-research-autonomous-research-apis — strategy.md
 - 2026-07-22 — mission replanned — proposal approved at Floor tier (≈$32); post-approval queue emitted; strategy linked; drive-ready — mission.md
+- 2026-07-22 — recovered stranded real trial + topic onto current main (orphan work-20260718; frame 2026-07-19, fixture:false); re-registered topic in site.ts/snapshot.ts + regenerated indexes; ticked acceptance 3-7; superseded 5 re-run tickets; npm test/build/lint green — mission.md

@@ -4,6 +4,7 @@ description: Proposal-first design (cadence, subjects, metrics, cost, accumulate
 status: awaiting-approval
 mission: periodic-research-target-compare-deep-research-alike-apis
 drafted_at: 2026-07-14
+refreshed_at: 2026-07-18
 ---
 
 # Proposal: Deep Research-alike APIs periodic-research instrument
@@ -13,6 +14,15 @@ This is the **proposal-first** artifact required by `CLAUDE.md` and
 new research topic is built. It presents the five required elements — cadence,
 comparison subjects, metrics, cost/trial-count range, and accumulated history —
 for developer approval.
+
+> **Refresh note (2026-07-18).** The five offerings' access shapes and prices
+> below were re-verified against current vendor/pricing sources as of 2026-07-18
+> (see [Sources](#sources-verified-2026-07-18)). All five remain API-accessible;
+> the material change since the 2026-07-14 draft is firmer per-query pricing and
+> confirmation that Gemini Deep Research runs only on the now-GA **Interactions
+> API** (the agent itself stays in preview). This refresh is still **drafting
+> only** — the proposal-first approval gate is unchanged and no code or paid run
+> has been added.
 
 > **Gate.** Per the guideline: *"No paid run and no scaffolding happens before
 > approval."* Nothing in `packages/tech/src/` has been created and no API has
@@ -53,10 +63,12 @@ topics, because those never trigger the search-and-synthesize loop.
 **Monthly**, matching the sibling model topics (`speed`, `accuracy`,
 `availability`). This landscape moves on a weeks-to-months rhythm — over the
 survey window the deep-research surface has already turned over materially
-(Google shipped Deep Research on the stateful Interactions API in preview
-04-2026; xAI's tool/agent surface and Grok model tier shifted through
-2026; OpenAI's `o3-deep-research` and Perplexity's `sonar-deep-research` are
-themselves recent). Monthly bounds how stale the current article can be.
+(the Gemini Interactions API reached GA in 2026 while its Deep Research agent —
+`deep-research-preview-04-2026` plus the heavier `deep-research-max-preview-04-2026`
+— stays in preview; xAI's Grok model tier advanced to Grok 4.5 with server-side
+agent tools; OpenAI's `o3-deep-research` / `o4-mini-deep-research` and Perplexity's
+`sonar-deep-research` continue to re-price). Monthly bounds how stale the current
+article can be.
 
 **Off-cadence trigger:** any subject provider ships a new deep-research endpoint,
 retires one, or changes its search/tool pricing materially — that event fires an
@@ -73,13 +85,13 @@ The five deep-research offerings enumerated in the kickoff ticket, each reached
 through its documented programmatic entry point behind a `vendors/` anti-
 corruption layer:
 
-| # | Subject | Endpoint / model id (as surveyed) | Access shape | Notes |
+| # | Subject | Endpoint / model id (verified 2026-07-18) | Access shape | Notes |
 |---|---------|-----------------------------------|--------------|-------|
-| 1 | **OpenAI Deep Research** | `o3-deep-research` (and cheaper `o4-mini-deep-research`) | Responses API, web search always-on | 200K context; ~10–30 web searches/query |
-| 2 | **Perplexity Sonar Deep Research** | `sonar-deep-research` | OpenAI-compatible chat endpoint | billed on input/output **+ citation + reasoning + search-query** tokens |
-| 3 | **Google Gemini Deep Research** | `deep-research-preview-04-2026` (+ `deep-research-max-*`) on Gemini 3.1 Pro | **Interactions API**, `background=True` only | up to ~160 searches/task; returns cited report, native charts |
-| 4 | **xAI Grok DeepSearch** | Grok 4.x + Agent Tools (Web/X Search) | chat + built-in tool calls | tool calls billed separately ($5/1k successful) |
-| 5 | **Anthropic build-your-own baseline** | Claude (current catalog model) + `web_search` tool + extended thinking, agentic loop | Messages API, self-orchestrated | the reproducible in-house reference; not a single vendor "deep research" product |
+| 1 | **OpenAI Deep Research** | `o3-deep-research` ($10/$40 per M in/out); cheaper `o4-mini-deep-research` ($2/$8, ~$0.41/typical query) | **Responses API**, web search always-on | ~10–30 web searches/query at $10/1k adds ~$0.10–0.30/query |
+| 2 | **Perplexity Sonar Deep Research** | `sonar-deep-research` ($2/$8 per M in/out) | OpenAI-compatible chat endpoint | billed on input/output **+ citation ($2/M) + reasoning ($3/M) + search queries ($5/1k)** |
+| 3 | **Google Gemini Deep Research** | `deep-research-preview-04-2026` (+ heavier `deep-research-max-preview-04-2026`) on Gemini 3.1 Pro ($2/$12 per M in/out) | **Interactions API (GA)**, stateful background execution only | ~80 grounded searches/standard task ($14/1k → ~$1.12/task); 5–20 min, 60 min max; returns cited report + native charts. Agent still preview |
+| 4 | **xAI Grok DeepSearch** | Grok 4.5 ($2/$6 per M in/out) + server-side Agent Tools (Web/X Search) | chat + built-in tool calls | web/X search tools billed $5/1k calls each; agent chooses tool count, so cost scales with query. Consumer "DeepSearch" is the SuperGrok UI feature; the API path is model + agent tools |
+| 5 | **Anthropic build-your-own baseline** | Claude (current catalog model) + `web_search` tool ($10/1k searches) + extended thinking + advanced tool use, agentic loop | Messages API, self-orchestrated | the reproducible in-house reference; Anthropic ships **no single "deep research" endpoint** — the report-writing loop is built by the caller |
 
 Subject 5 is deliberately the **DIY reference**: Anthropic ships no single
 "deep-research" endpoint, so the comparison holds the four turnkey products
@@ -125,11 +137,14 @@ the artifact reports as standard deviation — but deep-research queries are ~10
 the cost and latency of a single completion, so the tension is sharper here than
 in the sibling topics.
 
-Per-query cost varies widely by provider and question complexity (surveyed
-2026-07-14): OpenAI `o3-deep-research` ≈ **$1.5–8/query** (batch halves it),
-Perplexity `sonar-deep-research` ≈ **$0.4+/query**, Gemini Deep Research ≈
-**$1–3/query**, Grok DeepSearch = tokens + tool fees, Anthropic loop = tokens +
-web-search tool fees. Blended working figure ≈ **$1–4/query**.
+Per-query cost varies widely by provider and question complexity (verified
+2026-07-18): OpenAI `o3-deep-research` ≈ **$1.5–8/query** (the cheaper
+`o4-mini-deep-research` runs a typical query ≈ **$0.41**), Perplexity
+`sonar-deep-research` ≈ **$0.40–$1+/query**, Gemini Deep Research ≈ **$1–3/task**
+(≈ $2 typical, dominated by ~$1.12 of grounded-search fees), Grok DeepSearch =
+Grok 4.5 tokens + Web/X-search tool fees at $5/1k calls, Anthropic loop = Claude
+tokens + web-search tool fees at $10/1k. Blended working figure ≈ **$1–4/query**;
+the two OpenAI/Perplexity mini tiers pull the floor lower.
 
 | Configuration | Queries | Indicative cost |
 |---------------|---------|-----------------|
@@ -174,10 +189,14 @@ is a plain note, per the guideline.
 5. **Tiers** — one tier per subject for the first trial (proposed), deferring
    `o4-mini` / Gemini **Max** to a later scope change?
 
-## Sources (surveyed 2026-07-14)
+## Sources (verified 2026-07-18)
 
-- OpenAI o3-deep-research pricing/behaviour — [pricepertoken](https://pricepertoken.com/pricing-page/model/openai-o3-deep-research), [OpenAI docs](https://developers.openai.com/api/docs/models/o3-deep-research), [TokenMix](https://tokenmix.ai/blog/openai-deep-research-api)
-- Perplexity Sonar Deep Research pricing — [Perplexity docs](https://docs.perplexity.ai/docs/getting-started/pricing), [pricepertoken](https://pricepertoken.com/pricing-page/model/perplexity-sonar-deep-research)
-- Gemini Deep Research (Interactions API) — [Gemini API docs](https://ai.google.dev/gemini-api/docs/deep-research), [deep-research-preview-04-2026](https://ai.google.dev/gemini-api/docs/models/deep-research-preview-04-2026)
-- xAI Grok DeepSearch / Agent Tools pricing — [xAI API](https://x.ai/api), [CometAPI](https://www.cometapi.com/grok-api-pricing-cost-guide/), [AI Pricing Guru](https://www.aipricing.guru/xai-pricing/)
-- Anthropic web-search tool + agentic pattern — Claude Messages API `web_search` tool + extended thinking (in-house reference, no dedicated deep-research endpoint)
+The 2026-07-14 draft's figures were re-checked against current vendor docs and
+pricing trackers on 2026-07-18; all five subjects remain API-accessible and the
+prices below are the ones carried into the tables above.
+
+- **OpenAI Deep Research** — `o3-deep-research` $10/$40, `o4-mini-deep-research` $2/$8 (~$0.41/typical query), Responses API, web search always-on (~10–30 searches/query at $10/1k): [OpenAI model docs](https://developers.openai.com/api/docs/models/o3-deep-research), [TokenCost](https://tokencost.app/blog/openai-deep-research-api-pricing), [pricepertoken](https://pricepertoken.com/pricing-page/model/openai-o3-deep-research)
+- **Perplexity `sonar-deep-research`** — $2/$8 base + citation $2/M + reasoning $3/M + search $5/1k queries, ~$0.40–$1+/query: [Perplexity pricing docs](https://docs.perplexity.ai/docs/getting-started/pricing), [pricepertoken](https://pricepertoken.com/pricing-page/model/perplexity-sonar-deep-research)
+- **Gemini Deep Research** — `deep-research-preview-04-2026` (+ `deep-research-max-preview-04-2026`) on Gemini 3.1 Pro ($2/$12), Interactions API (GA) background-only, ~80 grounded searches/task at $14/1k (~$1.12/task), ~$1–3/task, 5–20 min (60 min max): [Gemini Deep Research agent docs](https://ai.google.dev/gemini-api/docs/interactions/deep-research), [model card](https://ai.google.dev/gemini-api/docs/models/deep-research-preview-04-2026), [TokenCost](https://tokencost.app/blog/gemini-deep-research-agent-cost)
+- **xAI Grok DeepSearch** — API path = Grok 4.5 ($2/$6) + server-side agent tools (Web/X search $5/1k calls each); consumer DeepSearch is the SuperGrok feature: [xAI pricing docs](https://docs.x.ai/developers/pricing), [AI Pricing Guru](https://www.aipricing.guru/xai-pricing/)
+- **Anthropic build-your-own baseline** — no single deep-research endpoint; Claude (current catalog model) + `web_search` tool at $10/1k searches + extended thinking + advanced tool use (dynamic filtering): [Anthropic web-search tool docs](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool), [web-search launch](https://claude.com/blog/web-search-api), [advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use)

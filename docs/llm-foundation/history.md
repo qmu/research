@@ -70,3 +70,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 ### エージェントVM/サンドボックス
 
 まだ日付別フレームは保存されていない。
+
+### ディープリサーチAPI
+
+- 2026-07-19T02:12:52.868Z: [English](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison) · [Japanese](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja) · [data.json](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.data.json)
