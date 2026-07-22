@@ -491,3 +491,21 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.
+
+## deep-research topic — real subject clients (2026-07-19)
+
+- **Decision**: No new dependency. The five deep-research subjects reuse the SDKs
+  already vendored for the LLM topics — `openai` (OpenAI Responses
+  `o3-deep-research`, Perplexity `sonar-deep-research`, and Grok Agent Tools, all
+  OpenAI-compatible with a swapped base URL), `@google/genai` (the GA Interactions
+  API deep-research agent, background + poll), and `@anthropic-ai/sdk` (the
+  build-your-own baseline: Messages + the `web_search` tool loop).
+- **Assessment**: All three SDKs are already assessed above for the LLM topics;
+  this topic adds no library, only new surfaces (Responses deep-research models,
+  the `interactions.*` resource, and the `web_search` tool) behind
+  `src/vendors/deep-research/`.
+- **Monitoring**: The recurring trial surfaces a broken surface as a per-subject
+  `error` row (never a fabricated number); per-query cost is derived from billed
+  usage via the pure `pricing.ts` and cross-checked against the curated midpoint.
+- **Exit strategy**: Each subject is one adapter behind the `DeepResearchClient`
+  port; a retired or re-shaped endpoint is a single-file change.

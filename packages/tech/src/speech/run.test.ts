@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { estimateSpeech, runSpeechComparison } from "./run";
-import { SPEECH_MODELS } from "./models";
+import { SPEECH_MODELS, STS_CAPABILITIES } from "./models";
 
 describe("runSpeechComparison (fixture path)", () => {
   it("scores every subject perfectly through the keyless clients", async () => {
@@ -38,6 +38,22 @@ describe("runSpeechComparison (fixture path)", () => {
     ).toBe(true);
   });
 
+  it("measures a byte-stable STS round-trip per cataloged provider on the fixture path", async () => {
+    const result = await runSpeechComparison({ fixture: true, trials: 3 });
+    expect(result.stsRuns).toHaveLength(STS_CAPABILITIES.length);
+    for (const run of result.stsRuns) {
+      expect(run.provenance, run.provider).toBe("fixtured");
+      expect(run.trialsRequested, run.provider).toBe(3);
+      // 3 repetitions × the manifest's STS turns.
+      expect(run.calls.length, run.provider).toBeGreaterThanOrEqual(3);
+      expect(run.stats.roundTripLatencyMs.mean, run.provider).toBeGreaterThan(
+        0,
+      );
+      // Deterministic fixture latency → zero variance across identical reps.
+      expect(run.stats.roundTripLatencyMs.stdDev, run.provider).toBe(0);
+    }
+  });
+
   it("records repetitions as stdDev-bearing samples", async () => {
     const result = await runSpeechComparison({ fixture: true, trials: 3 });
     for (const run of result.runs) {
@@ -56,5 +72,22 @@ describe("estimateSpeech", () => {
     for (const card of SPEECH_MODELS) {
       expect(text).toContain(card.id);
     }
+  });
+
+  it("prices an STS line only for realtime providers with a wired adapter", () => {
+    const text = estimateSpeech(undefined, 1);
+    for (const entry of STS_CAPABILITIES) {
+      const line = `sts:${entry.provider}`;
+      if (entry.realtimeKeyEnv === undefined) {
+        expect(text, line).not.toContain(line);
+      } else {
+        expect(text, line).toContain(line);
+      }
+    }
+  });
+
+  it("omits STS lines when only TTS/STT subjects are selected", () => {
+    const text = estimateSpeech(["openai-tts-1"], 1);
+    expect(text).not.toContain("sts:");
   });
 });

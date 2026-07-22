@@ -56,7 +56,7 @@ provenance: llm-translation
 
 **推移 / Trend across surveys**
 
-これはシリーズ内で初めての比較可能な調査であるため、まだ複数調査にわたるトレンドを図示することはできません。同一手法による2回目の調査がアーカイブされた時点で、ここにトレンドチャートが表示されるようになります。過去の調査は「検証データ」の下にリンクされています。
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
 
 ## 5. 考察
 
@@ -118,6 +118,6 @@ npm run research -- computer-use --real
 
 **過去の調査 / Past surveys in this series**
 
-このトピックに関する過去の日付付き調査（新しい順）— それぞれが該当実行の完全な記事となっている。
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison)
+- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja)
