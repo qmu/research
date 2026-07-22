@@ -132,3 +132,9 @@ SPEECH_AUDIO_DIR=./audio OPENAI_API_KEY=... npm run research -- speech --real
 完全な実行記録は[`speech-comparison.data.json`](./speech-comparison.data.json)としてコミットされている：呼び出しごとのレイテンシ、音声バイト長、文字起こし、スコアを含む。
 
 生成日時: 2026-07-18T15:09:30.905Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
+
+- [2026-07-18T15:09:30.905Z](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja)
