@@ -69,3 +69,12 @@ authorization. Depends on #024001's live confirmation; everything keyless it
 needs (publish wiring #024002, trend composition #024003) is now merged, so the
 first trial's frame will chart as soon as an owner runs
 `research -- agent-vm --estimate` → `--real` with credentials.
+
+### Spend approval (2026-07-22)
+
+Spend approved by the developer (a@qmu.jp) 2026-07-22 in the /mission planning
+session. Remaining gate is environmental credentials only — FLY_API_TOKEN +
+FLY_APP_NAME for the Fly.io probe (024001/024004) and an LLM API key for the
+pipeline translation (024005). The `--real` path self-reports missing
+credentials and records unreachable rows, so the drive proceeds and measures
+whatever providers are reachable.
