@@ -6,7 +6,7 @@ status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
-strategy: periodic-foundational-research-comparing-llm-and-agentic-api-surfaces
+strategy: periodically-benchmark-deep-research-autonomous-research-apis
 drive_authorized: true
 tickets:
   - 20260714005156-kickoff-propose-periodic-research.md
@@ -123,4 +123,5 @@ corporate `qmu-co-jp` copy is untouched here — it flows through `/ship`.
 - 2026-07-22 — ticket added — 20260722100003-deep-research-first-validation-trial.md
 - 2026-07-22 — ticket added — 20260722100004-deep-research-publish-topic.md
 - 2026-07-22 — ticket added — 20260722100005-deep-research-history-series.md
-- 2026-07-22 — mission replanned — proposal approved at Floor tier (≈$32 ceiling); post-approval queue emitted (5 tickets); drive-ready — mission.md
+- 2026-07-22 — strategy created — periodically-benchmark-deep-research-autonomous-research-apis — strategy.md
+- 2026-07-22 — mission replanned — proposal approved at Floor tier (≈$32); post-approval queue emitted; strategy linked; drive-ready — mission.md
