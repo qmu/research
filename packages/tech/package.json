@@ -72,7 +72,7 @@
     "tsx": "^4.19.0",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.18.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "@anthropic-ai/bedrock-sdk": "^0.32.0",
