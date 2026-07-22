@@ -65,7 +65,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### コンピュータ操作
 
-まだ日付別フレームは保存されていない。
+- 2026-07-18T15:08:10.261Z: [English](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison) · [Japanese](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja) · [data.json](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.data.json)
 
 ### エージェントVM/サンドボックス
 
