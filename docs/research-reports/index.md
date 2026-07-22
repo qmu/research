@@ -31,5 +31,6 @@ Past generated frames are listed in [History](./history).
 - [Agent SDK comparison](./agent-sdk-comparison) — A design comparison of agent frameworks/runtimes (OpenAI Agents SDK, Claude Agent SDK, Cloudflare Agents SDK, LangGraph) from public documentation — not measured.
 - [Computer use](./computer-use-comparison) — Task success, steps, latency, wall-clock, and per-task cost for API-native computer-use agents over a pinned browser-task suite, one fixed Playwright harness.
 - [Agent VM / sandbox comparison](./agent-vm-comparison) — Isolation model, published price, capability envelope, and probed cold-start latency and fixed-task cost of the sandbox / microVM platforms agents run untrusted code in.
+- [Trend recency](./trend-recency-comparison) — Web-grounded knowledge recency of search-augmented systems vs. ungrounded controls: recency accuracy, citation validity and freshness, answer latency, and search-billing cost over trailing-window event probes.
 
 To add a study, see the `TEMPLATE.md` in the relevant package under `packages/`.

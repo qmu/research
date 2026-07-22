@@ -70,3 +70,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 ### エージェントVM/サンドボックス
 
 まだ日付別フレームは保存されていない。
+
+### トレンド追随
+
+- 2026-07-17T01:34:36.857Z: [English](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison) · [Japanese](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja) · [data.json](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.data.json)

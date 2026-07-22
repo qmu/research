@@ -12,7 +12,6 @@ tickets:
   - 20260714005200-kickoff-propose-periodic-research.md
   - 20260714010000-scaffold-trend-recency-instrument.md
   - 20260714010001-trend-recency-first-validation-trial.md
-  - 20260714010002-trend-recency-publish-topic.md
 stories: []
 concerns: []
 ---
@@ -93,7 +92,7 @@ Observable outcomes the deliverable must show:
   its metrics discriminate grounded configs from ungrounded controls and
   providers from each other
   (#20260714010001-trend-recency-first-validation-trial.md)
-- [ ] Topic registered in `site.ts` and published as a dated survey article with a
+- [x] Topic registered in `site.ts` and published as a dated survey article with a
   Japanese translation and regenerated indexes
   (#20260714010002-trend-recency-publish-topic.md)
 
@@ -155,3 +154,4 @@ Observable outcomes the deliverable must show:
 - 2026-07-17 — story reported — work-20260717-150003.md
 - 2026-07-22 — strategy created — benchmark-how-well-ai-systems-keep-up-with-real-world-change — mission.md
 - 2026-07-22 — mission replanned — publish drive authorized (spend-free: site.ts registration + dated survey article + JP translation); drive-ready for /monitor — mission.md
+- 2026-07-22 — ticket archived — publish acceptance (item 4) recovered onto current main: stranded real trial (fixture:false 2026-07-17 frame, Grok Agent Tools measured row), published EN/JP pages, and site.ts/topic.ts/snapshot.ts registration lifted from the orphan trend desk; --fixture recomposes the real page byte-identically; npm test/build/lint exit 0 — 20260714010002-trend-recency-publish-topic.md

@@ -70,3 +70,7 @@ No dated frames have been archived yet.
 ### Agent VM / sandbox comparison
 
 No dated frames have been archived yet.
+
+### Trend recency
+
+- 2026-07-17T01:34:36.857Z: [English](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison) · [Japanese](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja) · [data.json](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.data.json)

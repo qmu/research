@@ -379,6 +379,18 @@ const snapshotPointExtractors: Readonly<
   rag: ragSnapshotPoints,
   "agent-vm": agentVmSnapshotPoints,
   "token-metering": tokenMeteringSnapshotPoints,
+  // The trend-recency artifact is `{ runs: [{ id, modelName, measuredAt,
+  // provenance, stats: { <metric>: { mean } } }] }` — the same stats-runs shape
+  // as OCR / image-generation. Chart the three metrics with a real measured
+  // signal on the keyless-scorable path (recency accuracy, citation validity,
+  // answer latency); abstention is descriptive and freshness had no signal in
+  // the first trial, so neither is charted. Only `provenance: "measured"` rows
+  // chart — the xAI 410 and unprovisioned-Sonar error rows never do.
+  "trend-recency": statsRunsSnapshotPoints([
+    "recencyAccuracy",
+    "citationValidity",
+    "latencyMs",
+  ]),
 };
 
 /** Points for one topic's artifact; topics without an extractor chart nothing. */
