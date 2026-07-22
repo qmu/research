@@ -6,6 +6,8 @@ status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
+strategy: periodically-benchmark-computer-use-browser-agent-capabilities
+drive_authorized: true
 tickets:
   - 20260714005201-kickoff-propose-periodic-research.md
   - 20260714010000-computer-use-via-playwright-topic.md
@@ -98,3 +100,5 @@ pages without a key or spend.
 - 2026-07-14 — ticket archived — 20260714005201-kickoff-propose-periodic-research.md
 - 2026-07-14 — ticket archived — 20260714010000-computer-use-via-playwright-topic.md
 - 2026-07-22 — playwright npm dependency approved (recorded in docs/dependency-decisions.md); trial ticket 013000 moved icebox→todo and its OPEN DECISION resolved; mission Experience written. Strategy link + drive_authorized deferred pending a strategy-granularity decision with the developer — mission.md
+- 2026-07-22 — strategy created — periodically-benchmark-computer-use-browser-agent-capabilities — strategy.md
+- 2026-07-22 — mission replanned — playwright dependency approved; first real trial authorized ($40 ceiling); strategy linked; drive-ready — mission.md
