@@ -4,7 +4,7 @@ author: a@qmu.jp
 type: enhancement
 layer: [Domain]
 effort: 4h
-commit_hash:
+commit_hash: 82ff282
 category: Added
 mission: periodic-research-target-computer-use-via-playwright
 depends_on: [20260714010000-computer-use-via-playwright-topic.md]
@@ -101,3 +101,48 @@ So this ticket is now: decide the dependency, implement the loops, run the trial
 Keep the harness behind `vendors/`; the keyless fixture path and all guards must
 stay green (CI never launches a browser). Honour the $40/trial ceiling — an
 estimate above it stops for re-approval.
+
+## Quality Gate
+
+- [x] `--estimate` recorded (~$2.45 total) and confirmed within the $40 ceiling
+      before the paid run.
+- [x] Real trial executed; dated frame `2026-07-18T15:08:10.261Z` committed with
+      measured EN/JP/data + design-validation review.
+- [x] Honest provenance: no fabricated numbers; not-measured subjects surfaced as
+      `error`/0% with an explicit prose caveat, never a silent fake score.
+- [x] `cd packages/tech && npm run build && npm test && npm run lint` all exit 0
+      (589 tests pass).
+- [x] Keyless fixture path and byte-stable composition preserved (`.fixture.*`
+      side files gitignored; compose-from-frame idempotent).
+
+## Final Report
+
+**Outcome: implemented.** The real Playwright harness loop had already landed
+keyless (commit 19e2e3b); this ticket ran the first owner-authorized paid trial
+and closed the loop honestly.
+
+- **Estimate then run:** `--estimate` = ~$2.45 total (Anthropic $1.01 / OpenAI
+  $0.94 / Google $0.51), well under the $40 ceiling. Ran `research -- computer-use
+  --real`.
+- **Result (frame `2026-07-18T15:08:10.261Z`, 1 rep, 8 tasks):** 2 of 3 rows
+  measured. Anthropic Claude Sonnet 5 `measured` — 25% task success (2/8; the
+  two solved tasks in 1 and 3 steps, the six multi-step tasks ran to the 30-step
+  cap). OpenAI `error` (browser context closed under heavy host load). Google
+  Gemini 2.5 `measured` 0% with 0 steps.
+- **Root cause found (live probe):** OpenAI Responses computer-use and Gemini
+  computer-use are stateful multi-turn protocols — OpenAI's first action is
+  `screenshot`, Gemini's first call is `open_web_browser`, both of which only
+  advance with threaded history the memoryless v1 policy does not keep.
+- **Fixes committed (82ff282):** the OpenAI/Google adapters now record an honest
+  not-measured error for the untranslatable stateful bootstrap action instead of
+  a silent fabricated 0% (keyless tests pin the real payload shapes); the harness
+  label was corrected to the `playwright` npm package. Canonical EN/JP/data pages
+  recomposed from the measured frame, JP re-translated from the measured report,
+  indexes regenerated. Filed follow-up `20260719003000-computer-use-stateful-provider-loops.md`
+  (icebox) for the stateful threaded loops that will let all three subjects be
+  measured.
+- **Cost:** benchmark ≈ $2.35 (Anthropic $2.31 incl. six 30-step failures —
+  the flat 15-turn estimate premise understates a low-success run; noted for the
+  estimator), insights + JP full-report translation ≈ $2.0, plus one aborted
+  re-run ≈ $1.5 (launched, then killed to honour "do not re-run"). Total ≈ $5.9,
+  inside the $40 ceiling.

@@ -54,10 +54,6 @@ provenance: llm-translation
 
 「最良」／「最悪」は各メトリクス固有の方向性に従います（成功率は高いほど良く、ステップ数・実時間・コストは低いほど良い）。アクションごとのレイテンシと復旧率については、セクション7の対象別テーブルを参照してください。
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. 考察
 
 `measured` の来歴を持つ行は、成功率、ステップ数、レイテンシ、実時間（wall-clock）、コストの観点で比較できる。ステップ数や実時間が多いにもかかわらず成功率が高いモデルは、目的にたどり着くのが遅いモデルであることを示す。成功率が低くコストも低いモデルは、安易に諦めるモデルである。リカバリー率は、自己修正できるモデルと最初のミスで失敗してしまうモデルを区別する指標となる。
@@ -115,9 +111,3 @@ npm run research -- computer-use --real
 完全な実行記録は [`computer-use-comparison.data.json`](./computer-use-comparison.data.json) としてコミットされている：試行ごとの軌跡、アクションごとのレイテンシ、トークン数、スコアを含む。
 
 生成日時: 2026-07-18T15:08:10.261Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja)

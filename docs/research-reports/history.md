@@ -66,7 +66,7 @@ No dated frames have been archived yet.
 
 ### Computer use
 
-No dated frames have been archived yet.
+- 2026-07-18T15:08:10.261Z: [English](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison) · [Japanese](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja) · [data.json](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.data.json)
 
 ### Agent VM / sandbox comparison
 

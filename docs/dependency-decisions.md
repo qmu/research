@@ -462,6 +462,32 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   re-licensed source is a one-file URL change, and a withdrawn vocabulary
   degrades that family to the calibrated-estimator method with a stated band.
 
+### playwright (packages/tech)
+
+- **Reason**: The `computer-use` topic drives every subject model through one
+  fixed browser harness so the only variable across subjects is the model/tool.
+  `playwright` is that harness's actuation + observation engine (launch chromium,
+  navigate, click/type/select, screenshot, read the final DOM). Building a real
+  browser-automation layer ourselves is out of scope; the alternative discussed
+  in the design — the repo's Playwright MCP plugin — drives the *agent's* own
+  browser, not a reader's `--real` CLI, so a library dependency is required.
+  Approved 2026-07-22 by the developer (a@qmu.jp) in the /mission planning
+  session, together with the first real Computer Use trial (within the $40/trial
+  ceiling).
+- **Assessment**:
+  - License: Apache-2.0 — compatible with this MIT public repo.
+  - Reputation: The de-facto browser-automation library (Microsoft), broad
+    adoption, active security response.
+  - Development status: Actively maintained, frequent releases.
+  - Sustainability: Backed by Microsoft with a large contributor base.
+- **Monitoring**: Dependabot, `npm audit` in CI.
+- **Exit strategy**: Isolated behind
+  `packages/tech/src/computer-use/vendors/playwright-harness.ts` (the only file
+  that imports it, dynamically, so the keyless fixture/estimate paths never load
+  it). The harness is reached only on the owner-triggered real path and by the
+  env-gated harness self-test; swapping engines (e.g. a CDP driver) is a
+  single-file change behind the provider-neutral `AgentPolicy` seam.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

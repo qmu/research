@@ -44,10 +44,6 @@ This run has **2 measured** of 3 subject rows (non-measured rows are `fixtured` 
 
 "Best"/"Worst" follow each metric's own direction (higher success is better; lower steps, wall-clock, and cost are better). Per-action latency and recovery rate are in the section 7 per-subject table.
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. Analysis
 
 Rows with `measured` provenance can be compared on success, steps, latency, wall-clock, and cost. A high success rate with many steps or high wall-clock localizes a model that gets there slowly; a low success rate with low cost is a model that gives up cheaply. Recovery rate separates models that self-correct from those that fail on the first misstep.
@@ -105,9 +101,3 @@ No external resources are created. The browser session is ephemeral and screensh
 The complete run record is committed as [`computer-use-comparison.data.json`](./computer-use-comparison.data.json): per-attempt trajectories, per-action latencies, token counts, and scores.
 
 Generated: 2026-07-18T15:08:10.261Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison)
