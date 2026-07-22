@@ -6,6 +6,8 @@ status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
+strategy: periodically-benchmark-agent-vm-sandbox-execution-platforms
+drive_authorized: true
 tickets:
   - 20260714005157-kickoff-propose-periodic-research.md
   - 20260714024001-agent-vm-real-coldstart-cost-probe.md
@@ -223,3 +225,5 @@ owner-approved trial.
 - 2026-07-17 — publish + trend composition drive (keyless): topic registered in `publishedResearchTopics` with the approved design, EN/JP indexes regenerated, keyless JP placeholder page shipped; `agentVmSnapshotPoints` extractor + artifact `instrumentVersion` wire the 推移/過去の調査 composition; 477 tests + lint + docs dead-link build green. Remaining tickets stay blocked: #024001/#024004 on provider tokens + spend approval, #024005 on an LLM key for the pipeline translation (todo tickets carry Blocked notes) — mission.md
 - 2026-07-17 — ticket archived — 20260714024003-agent-vm-history-and-trend-composition.md
 - 2026-07-22 — real cold-start/warm-reuse/fixed-task cost probe spend APPROVED by the developer (a@qmu.jp) in the /mission planning session; recorded in tickets #024001/#024004/#024005 (remaining gate is environmental credentials only — FLY_API_TOKEN+FLY_APP_NAME for the Fly.io probe / an LLM key for the pipeline translation; the `--real` path self-reports missing credentials and records unreachable rows). Wrote the mission's `## Experience` section (observable measured/unreachable rows per provider + the published EN/JP survey with 推移/history). `drive_authorized` remains unstamped: it needs a linked strategy, and the strategy-granularity decision is pending with the developer — mission.md
+- 2026-07-22 — strategy created — periodically-benchmark-agent-vm-sandbox-execution-platforms — strategy.md
+- 2026-07-22 — mission replanned — real cost probe authorized (spend approved 2026-07-22); strategy linked; drive-ready — mission.md
