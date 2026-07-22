@@ -12,6 +12,7 @@ import {
   snapshotBudgetProblems,
   snapshotFixtureNarrative,
   snapshotPointsFor,
+  speechSnapshotPoints,
   statsRunsSnapshotPoints,
   stripSvgMarkup,
   TENDENCY_WINDOW_MONTHS,
@@ -360,6 +361,143 @@ describe("statsRunsSnapshotPoints (ocr / image-generation shape)", () => {
         ],
       }),
     ).toEqual([]);
+  });
+});
+
+describe("speechSnapshotPoints", () => {
+  it("charts latency plus the capability-specific quality metric per measured run", () => {
+    const points = speechSnapshotPoints({
+      generatedAt: "2026-07-18T15:09:30.905Z",
+      runs: [
+        {
+          id: "openai-tts-1",
+          modelName: "OpenAI TTS-1",
+          capability: "tts",
+          provenance: "measured",
+          measuredAt: "2026-07-18T15:09:30.905Z",
+          stats: {
+            latencyMs: { mean: 1679, n: 9 },
+            intelligibility: { mean: 1, n: 9 },
+            wordAccuracy: { mean: 0, n: 0 },
+          },
+        },
+        {
+          id: "openai-whisper-1",
+          modelName: "OpenAI Whisper",
+          capability: "stt",
+          provenance: "measured",
+          measuredAt: "2026-07-18T15:09:30.905Z",
+          stats: {
+            latencyMs: { mean: 1124, n: 9 },
+            intelligibility: { mean: 0, n: 0 },
+            wordAccuracy: { mean: 0.958, n: 9 },
+          },
+        },
+      ],
+    });
+    expect(points).toEqual([
+      {
+        seriesId: "openai-tts-1",
+        seriesLabel: "OpenAI TTS-1",
+        metric: "latencyMs",
+        measuredAt: "2026-07-18T15:09:30.905Z",
+        value: 1679,
+      },
+      {
+        seriesId: "openai-tts-1",
+        seriesLabel: "OpenAI TTS-1",
+        metric: "ttsIntelligibility",
+        measuredAt: "2026-07-18T15:09:30.905Z",
+        value: 1,
+      },
+      {
+        seriesId: "openai-whisper-1",
+        seriesLabel: "OpenAI Whisper",
+        metric: "latencyMs",
+        measuredAt: "2026-07-18T15:09:30.905Z",
+        value: 1124,
+      },
+      {
+        seriesId: "openai-whisper-1",
+        seriesLabel: "OpenAI Whisper",
+        metric: "sttWordAccuracy",
+        measuredAt: "2026-07-18T15:09:30.905Z",
+        value: 0.958,
+      },
+    ]);
+  });
+
+  it("never charts the inapplicable quality metric a zero-count stat carries", () => {
+    const points = speechSnapshotPoints({
+      runs: [
+        {
+          id: "openai-tts-1",
+          capability: "tts",
+          provenance: "measured",
+          measuredAt: "2026-07-18T15:09:30.905Z",
+          stats: {
+            latencyMs: { mean: 1679, n: 9 },
+            intelligibility: { mean: 1, n: 9 },
+            wordAccuracy: { mean: 0, n: 0 },
+          },
+        },
+      ],
+    });
+    expect(points.map((point) => point.metric)).toEqual([
+      "latencyMs",
+      "ttsIntelligibility",
+    ]);
+  });
+
+  it("skips fixtured and error rows", () => {
+    expect(
+      speechSnapshotPoints({
+        runs: [
+          {
+            id: "google-neural2",
+            capability: "tts",
+            provenance: "error",
+            stats: { latencyMs: { mean: 0, n: 0 } },
+          },
+          {
+            id: "openai-tts-1",
+            capability: "tts",
+            provenance: "fixtured",
+            stats: { latencyMs: { mean: 5, n: 3 } },
+          },
+        ],
+      }),
+    ).toEqual([]);
+  });
+
+  it("charts STS round-trip latency per measured realtime provider, skipping error rows", () => {
+    const points = speechSnapshotPoints({
+      generatedAt: "2026-07-18T15:09:30.905Z",
+      runs: [],
+      stsRuns: [
+        {
+          provider: "OpenAI",
+          provenance: "measured",
+          measuredAt: "2026-07-18T15:09:30.905Z",
+          stats: { roundTripLatencyMs: { mean: 640, n: 3 } },
+        },
+        {
+          provider: "Google",
+          provenance: "error",
+          measuredAt: "2026-07-18T15:09:30.905Z",
+          stats: { roundTripLatencyMs: { mean: 0, n: 0 } },
+        },
+      ],
+    });
+    expect(points).toEqual([
+      {
+        seriesId: "sts:OpenAI",
+        seriesLabel: "OpenAI (STS)",
+        metric: "stsRoundTripLatencyMs",
+        measuredAt: "2026-07-18T15:09:30.905Z",
+        value: 640,
+      },
+    ]);
   });
 });
 

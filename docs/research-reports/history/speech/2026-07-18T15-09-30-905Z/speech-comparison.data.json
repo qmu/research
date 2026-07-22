@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T02:22:34.606Z",
+  "generatedAt": "2026-07-18T15:09:30.905Z",
   "fixture": false,
   "trials": 3,
   "judgeModel": "whisper-1",
@@ -496,8 +496,7 @@
       "apiModelId": "gpt-realtime",
       "duplexRealtime": true,
       "lastVerified": "2026-07-14",
-      "source": "https://developers.openai.com/api/docs/models/gpt-realtime",
-      "realtimeKeyEnv": "OPENAI_API_KEY"
+      "source": "https://developers.openai.com/api/docs/models/gpt-realtime"
     },
     {
       "provider": "Google",
@@ -505,8 +504,7 @@
       "apiModelId": "gemini-2.5-flash-native-audio-preview-12-2025",
       "duplexRealtime": true,
       "lastVerified": "2026-07-14",
-      "source": "https://ai.google.dev/gemini-api/docs/live",
-      "realtimeKeyEnv": "GOOGLE_API_KEY"
+      "source": "https://ai.google.dev/gemini-api/docs/live"
     },
     {
       "provider": "AWS",
@@ -523,116 +521,6 @@
       "duplexRealtime": true,
       "lastVerified": "2026-07-14",
       "source": "https://docs.x.ai/developers/model-capabilities/audio/voice-agent"
-    }
-  ],
-  "stsRuns": [
-    {
-      "provider": "OpenAI",
-      "apiName": "Realtime API (GPT Realtime, GA)",
-      "apiModelId": "gpt-realtime",
-      "source": "https://developers.openai.com/api/docs/models/gpt-realtime",
-      "provenance": "measured",
-      "measuredAt": "2026-07-19T02:22:34.606Z",
-      "trialsRequested": 3,
-      "stats": {
-        "roundTripLatencyMs": {
-          "mean": 381.4732510000002,
-          "stdDev": 21.27636878355603,
-          "n": 3
-        }
-      },
-      "calls": [
-        {
-          "turnId": "sts-greeting",
-          "repetition": 0,
-          "firstAudioLatencyMs": 391.793095,
-          "firstAudioByteLength": 2
-        },
-        {
-          "turnId": "sts-greeting",
-          "repetition": 1,
-          "firstAudioLatencyMs": 395.6216040000004,
-          "firstAudioByteLength": 2
-        },
-        {
-          "turnId": "sts-greeting",
-          "repetition": 2,
-          "firstAudioLatencyMs": 357.0050540000002,
-          "firstAudioByteLength": 2
-        }
-      ]
-    },
-    {
-      "provider": "Google",
-      "apiName": "Gemini Live API (2.5 Flash Native Audio)",
-      "apiModelId": "gemini-2.5-flash-native-audio-preview-12-2025",
-      "source": "https://ai.google.dev/gemini-api/docs/live",
-      "provenance": "measured",
-      "measuredAt": "2026-07-19T02:22:34.606Z",
-      "trialsRequested": 3,
-      "stats": {
-        "roundTripLatencyMs": {
-          "mean": 1325.9568016666665,
-          "stdDev": 119.61879452469421,
-          "n": 3
-        }
-      },
-      "calls": [
-        {
-          "turnId": "sts-greeting",
-          "repetition": 0,
-          "firstAudioLatencyMs": 1238.3524009999996,
-          "firstAudioByteLength": 46080
-        },
-        {
-          "turnId": "sts-greeting",
-          "repetition": 1,
-          "firstAudioLatencyMs": 1277.277881,
-          "firstAudioByteLength": 46080
-        },
-        {
-          "turnId": "sts-greeting",
-          "repetition": 2,
-          "firstAudioLatencyMs": 1462.2401229999996,
-          "firstAudioByteLength": 46080
-        }
-      ]
-    },
-    {
-      "provider": "AWS",
-      "apiName": "Bedrock Nova Sonic (legacy; Nova 2 Sonic successor)",
-      "apiModelId": "amazon.nova-sonic-v1:0",
-      "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-sonic.html",
-      "provenance": "error",
-      "measuredAt": "2026-07-19T02:22:34.606Z",
-      "trialsRequested": 3,
-      "stats": {
-        "roundTripLatencyMs": {
-          "mean": 0,
-          "stdDev": 0,
-          "n": 0
-        }
-      },
-      "calls": [],
-      "error": "Error: no wired realtime adapter for 'AWS' (Bedrock Nova Sonic (legacy; Nova 2 Sonic successor)); it stays a cataloged capability. Wire it or run --fixture."
-    },
-    {
-      "provider": "xAI",
-      "apiName": "Grok Voice Agent API",
-      "apiModelId": "grok-voice-latest",
-      "source": "https://docs.x.ai/developers/model-capabilities/audio/voice-agent",
-      "provenance": "error",
-      "measuredAt": "2026-07-19T02:22:34.606Z",
-      "trialsRequested": 3,
-      "stats": {
-        "roundTripLatencyMs": {
-          "mean": 0,
-          "stdDev": 0,
-          "n": 0
-        }
-      },
-      "calls": [],
-      "error": "Error: no wired realtime adapter for 'xAI' (Grok Voice Agent API); it stays a cataloged capability. Wire it or run --fixture."
     }
   ],
   "nonSubjects": [

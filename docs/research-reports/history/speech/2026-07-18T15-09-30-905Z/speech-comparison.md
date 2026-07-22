@@ -15,21 +15,21 @@ The purpose is to record which speech APIs exist across text-to-speech, speech-t
 
 ### Target Models
 
-The subjects are the speech models in the curated registry (`packages/tech/src/speech/models.ts`): text-to-speech and speech-to-text APIs, each with a cited source and last-verified date. Speech-to-speech is cataloged as a realtime capability, and its round-trip first-audio latency is measured for providers with a wired realtime adapter (section 7).
+The subjects are the speech models in the curated registry (`packages/tech/src/speech/models.ts`): text-to-speech and speech-to-text APIs, each with a cited source and last-verified date. Speech-to-speech is cataloged as a realtime capability (section 7).
 
 - **Anthropic** is not a subject: it exposes no speech API (Claude accepts only text/image input and returns text) (verified 2026-07-14).
 
 ### Target Metrics
 
-Measured metrics are call latency (ms, lower is better), text-to-speech intelligibility (word-accuracy of a fixed STT judge's transcription vs the synthesized text, higher is better), speech-to-text word accuracy (1 − word error rate vs a reference transcript, higher is better), and speech-to-speech round-trip first-audio latency (ms from committing a short input turn to the first audio-output chunk over a realtime duplex session, lower is better). Per-character and per-minute prices are curated catalog data (reference), not measurements.
+Measured metrics are call latency (ms, lower is better), text-to-speech intelligibility (word-accuracy of a fixed STT judge's transcription vs the synthesized text, higher is better), and speech-to-text word accuracy (1 − word error rate vs a reference transcript, higher is better). Per-character and per-minute prices are curated catalog data (reference), not measurements.
 
 ## 3. Scope and Constraints
 
 - **Mechanically scored only.** Quality is word-accuracy against a reference; the instrument never scores naturalness or voice quality. Swapping the STT judge (`whisper-1`) is an instrument change, not a routine update.
 - Manifest version `1`: 3 text-to-speech utterance(s) and 3 speech-to-text reference clip(s). History connects same-manifest-version points only.
 - **Audio binaries are not committed.** The artifact records byte length, timing, transcriptions, and scores — enough to regenerate this page — never the audio itself. A real speech-to-text run reads reference clips from `SPEECH_AUDIO_DIR` (see the manifest's cited public-domain source).
-- The fixture path is keyless and deterministic. Real adapters are wired for OpenAI, ElevenLabs, Google, Deepgram, and AssemblyAI (TTS/STT REST) and for OpenAI Realtime and Google Gemini Live (STS round-trip); each row measures only when its provider key is present, otherwise it is an honest `error` row. Amazon (SigV4) and xAI stay unwired. Real numbers appear only after an owner runs the real path within the approved ceiling (run `--estimate` first).
-- Point-in-time: each measured row records its own `measuredAt` in the artifact (a frame may carry rows measured on different dates — e.g. a speech-to-speech round-trip added to a survey whose text-to-speech/speech-to-text rows stand from the prior run); catalog prices are as of each row's last-verified date. This frame's generated timestamp is `2026-07-19T02:22:34.606Z`.
+- The fixture path is keyless and deterministic; only the OpenAI adapters are wired for the real path in this first instrument (other providers land with the first real trial). Real numbers appear only after an owner runs the real path within the approved ceiling (run `--estimate` first).
+- Point-in-time: measured behavior reflects the APIs at `2026-07-18T15:09:30.905Z`; catalog prices are as of each row's last-verified date.
 
 ## 4. Verification Results
 
@@ -49,11 +49,7 @@ This run has **2 measured** of 10 subject rows (non-measured rows are `fixtured`
 | Transcription latency | 1124 ms — OpenAI Whisper | 1124 ms | 1124 ms |
 | Word accuracy | 95.8% — OpenAI Whisper | 95.8% | 95.8% |
 
-**Speech-to-speech** — round-trip first-audio latency measured for 2 of 4 realtime providers: fastest 381 ms — OpenAI; slowest 1326 ms — Google. Per-provider rows and unreachable providers are in section 7. "Best"/"Worst" follow each metric's direction (lower latency, higher intelligibility and word accuracy are better).
-
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+**Speech-to-speech** — 4 of 4 cataloged providers expose a realtime duplex API; round-trip latency is measured by a later trial. The full capability table is in section 7. "Best"/"Worst" follow each metric's direction (lower latency, higher intelligibility and word accuracy are better).
 
 ## 5. Analysis
 
@@ -78,7 +74,7 @@ SPEECH_AUDIO_DIR=./audio OPENAI_API_KEY=... npm run research -- speech --real
 
 ### Reproduction Cost (Estimate)
 
-The fixture path is keyless and costless. A real trial bills text-to-speech per character plus one STT-judge read of each synthesized clip, speech-to-text per audio minute (see the per-subject catalog prices), and speech-to-speech per realtime token (a short round-trip turn, estimated conservatively as a flat per-turn figure); the agreed ceiling is $10 per trial and `--estimate` must run first.
+The fixture path is keyless and costless. A real trial bills text-to-speech per character plus one STT-judge read of each synthesized clip, and speech-to-text per audio minute (see the per-subject catalog prices); the agreed ceiling is $10 per trial and `--estimate` must run first.
 
 ### Cleanup
 
@@ -101,16 +97,14 @@ No external resources are created. Synthesized and reference audio are held in m
 | Google Cloud Speech-to-Text (Chirp) | google | stt | error | 0.016 USD/audio-minute | yes | not measured | not measured | not measured | Error: Google STT chirp failed: 401 {   "error": {     "code": 401,     "message": "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication",     "status": "UNAUTHENTICATED",     "details": [       {         "@type": "type.googleapis.com/google.rpc.ErrorInfo",         "reason": "CREDENTIALS_MISSING",         "domain": "googleapis.com",         "metadata": {           "method": "google.cloud.speech.v1.Speech.Recognize",           "service": "speech.googleapis.com"         }       }     ]   } } |
 | Amazon Transcribe | amazon | stt | error | 0.006 USD/audio-minute | yes | not measured | not measured | not measured | Error: real adapter for provider 'amazon' is not wired yet (Amazon needs AWS SigV4 + the Transcribe async-S3 design decision; tracked as a follow-up); run --fixture or select a wired provider. |
 
-**Speech-to-speech (cataloged capability + measured round-trip)**
+**Speech-to-speech capability (cataloged)**
 
-The round-trip is the first-audio latency after committing one short text input turn over a realtime duplex session (a control simplification that keeps the measurement reproducible without a committed audio clip). Providers without a wired realtime adapter, or without a present key, are honest `error` / not-attempted rows.
-
-| Provider | API | Model id | Duplex realtime | Provenance | Round-trip first-audio (mean±sd) | Verified | Source / note |
-| -------- | --- | -------- | --------------- | ---------- | -------------------------------- | -------- | ------------- |
-| OpenAI | Realtime API (GPT Realtime, GA) | gpt-realtime | yes | measured | 381 ± 21 (n=3) | 2026-07-14 | https://developers.openai.com/api/docs/models/gpt-realtime |
-| Google | Gemini Live API (2.5 Flash Native Audio) | gemini-2.5-flash-native-audio-preview-12-2025 | yes | measured | 1326 ± 120 (n=3) | 2026-07-14 | https://ai.google.dev/gemini-api/docs/live |
-| AWS | Bedrock Nova Sonic (legacy; Nova 2 Sonic successor) | amazon.nova-sonic-v1:0 | yes | error | error | 2026-07-14 | Error: no wired realtime adapter for 'AWS' (Bedrock Nova Sonic (legacy; Nova 2 Sonic successor)); it stays a cataloged capability. Wire it or run --fixture. |
-| xAI | Grok Voice Agent API | grok-voice-latest | yes | error | error | 2026-07-14 | Error: no wired realtime adapter for 'xAI' (Grok Voice Agent API); it stays a cataloged capability. Wire it or run --fixture. |
+| Provider | API | Model id | Duplex realtime | Verified | Source |
+| -------- | --- | -------- | --------------- | -------- | ------ |
+| OpenAI | Realtime API (GPT Realtime, GA) | gpt-realtime | yes | 2026-07-14 | https://developers.openai.com/api/docs/models/gpt-realtime |
+| Google | Gemini Live API (2.5 Flash Native Audio) | gemini-2.5-flash-native-audio-preview-12-2025 | yes | 2026-07-14 | https://ai.google.dev/gemini-api/docs/live |
+| AWS | Bedrock Nova Sonic (legacy; Nova 2 Sonic successor) | amazon.nova-sonic-v1:0 | yes | 2026-07-14 | https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-sonic.html |
+| xAI | Grok Voice Agent API | grok-voice-latest | yes | 2026-07-14 | https://docs.x.ai/developers/model-capabilities/audio/voice-agent |
 
 **Utterance manifest (version 1)**
 
@@ -127,11 +121,4 @@ The round-trip is the first-audio latency after committing one short text input 
 
 The complete run record is committed as [`speech-comparison.data.json`](./speech-comparison.data.json): per-call latencies, audio byte lengths, transcriptions, and scores.
 
-Generated: 2026-07-19T02:22:34.606Z
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-19T02:22:34.606Z](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison)
-- [2026-07-18T15:09:30.905Z](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison)
+Generated: 2026-07-18T15:09:30.905Z

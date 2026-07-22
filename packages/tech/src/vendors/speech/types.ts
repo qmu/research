@@ -43,3 +43,25 @@ export type SpeechToTextClient = Readonly<{
   model: string;
   transcribe: (audio: AudioClip) => Promise<Transcription>;
 }>;
+
+/** The result of one speech-to-speech (realtime duplex) round-trip: the
+ * wall-clock latency from committing a short input turn to the first
+ * audio-output chunk. A single, well-defined round-trip — never a whole
+ * conversation — so the number is comparable across realtime providers. */
+export type SpeechToSpeechRoundTrip = Readonly<{
+  /** Wall-clock ms from committing the input turn to the first audio-out chunk. */
+  firstAudioLatencyMs: number;
+  /** Byte length of that first audio-output chunk (diagnostic, not scored). */
+  firstAudioByteLength: number;
+  model: string;
+}>;
+
+/** Speech-to-speech: a realtime duplex session. `roundTrip` sends one short
+ * input turn and resolves when the first audio-output chunk arrives. The input
+ * turn is text (a control simplification so the round-trip is reproducible
+ * without committing an audio clip); the measured number is the first
+ * audio-out latency after the input is committed. */
+export type SpeechToSpeechClient = Readonly<{
+  model: string;
+  roundTrip: (prompt: string) => Promise<SpeechToSpeechRoundTrip>;
+}>;

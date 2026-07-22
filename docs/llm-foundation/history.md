@@ -57,7 +57,8 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### 音声 (TTS/STT/STS)
 
-まだ日付別フレームは保存されていない。
+- 2026-07-19T02:22:34.606Z: [English](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison) · [Japanese](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja) · [data.json](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison.data.json)
+- 2026-07-18T15:09:30.905Z: [English](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison) · [Japanese](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja) · [data.json](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.data.json)
 
 ### Agent SDKの比較
 
