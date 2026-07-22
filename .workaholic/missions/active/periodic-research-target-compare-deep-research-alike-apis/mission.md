@@ -85,8 +85,11 @@ behind the `vendors/` boundary. Each result is scored on answer quality vs. a
 per-question rubric (LLM judge), citation count, citation validity, source
 diversity, latency, and cost per query, and every metric for every (subject,
 question, repetition) is recorded in full in the `.data.json` artifact so a report
-renders at any detail level. A subject whose key is absent produces an honest
-error/unreachable row — never a fabricated number.
+renders at any detail level. The published survey's rows **discriminate the five
+subjects** — separating them on quality, cost, and latency rather than collapsing
+into a tie — which is the disposable validation trial's bar for success. A subject
+whose key is absent produces an honest error/unreachable row — never a fabricated
+number.
 
 Without credentials the keyless fixture path still runs and CI stays green. The
 first trial is archived as a dated survey under
