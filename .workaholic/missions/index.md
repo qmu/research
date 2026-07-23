@@ -9,6 +9,7 @@
 * [periodic-research-target-svg-generation-and-animation](active/periodic-research-target-svg-generation-and-animation/mission.md) - Periodic Research Target: SVG Generation and Animation
 * [periodic-research-target-text-to-speech-speech-to-text-speech-to-speech](active/periodic-research-target-text-to-speech-speech-to-text-speech-to-speech/mission.md) - Periodic Research Target: Text-to-Speech, Speech-to-Text, Speech-to-Speech
 * [periodic-research-target-trend-catchable-ai-models-grok-perplexity](active/periodic-research-target-trend-catchable-ai-models-grok-perplexity/mission.md) - Periodic Research Target: Trend-Catchable AI Models (Grok, Perplexity)
+* [support-newly-released-gemini-models-in-the-llm-comparison](active/support-newly-released-gemini-models-in-the-llm-comparison/mission.md) - Support newly released Gemini models in the LLM comparison
 
 ## archive
 
