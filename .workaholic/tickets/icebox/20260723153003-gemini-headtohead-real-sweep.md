@@ -8,7 +8,53 @@ commit_hash:
 category: Added
 depends_on: 20260723153002-gemini-generational-delta-insight.md
 mission: support-newly-released-gemini-models-in-the-llm-comparison
+status: deferred
 ---
+
+> **DEFERRED — night run 2026-07-23 (drive-authorized, but NOT spent).**
+> This paid sweep was **not run**. Both gate conditions blocked spend, so per the
+> mission's Night-Mode floor the ticket is moved to `icebox/` unspent; tickets 1
+> and 2 (registry refresh + generational-delta insight) are committed and green.
+>
+> **Blocker 1 — full-sweep estimate exceeds the ceiling.** `npm run compare --
+> --estimate` (keyless dry run, 3 trials): **67 configs × probes → ~1407 API
+> calls, ~$21.18, ~211 min**. The authorized ceiling is **$15/run**, so the
+> standard full sweep must NOT run without a re-approved ceiling (≥ ~$22).
+>
+> **Blocker 2 — no provider API keys present.** `packages/tech/.env` is absent and
+> `GOOGLE_API_KEY` / `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` / `XAI_API_KEY` /
+> `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY` are all unset in the environment.
+> Without at least `GOOGLE_API_KEY` the Gemini rows cannot be `measured` — the
+> real path would fixture-and-flag them, never producing a measured delta.
+>
+> **Cheaper in-ceiling path recorded for the resume.** A Gemini-only scoped sweep
+> `npm run compare -- --models
+> google-gemini-3-6-flash,google-gemini-3-5-flash-lite,google-gemini-3-5-flash,google-gemini-3-1-flash-lite`
+> estimates **12 configs → ~252 calls, ~$1.67, ~38 min** — well under $15. It
+> measures the 4 paired Gemini rows (former + new Flash and Flash-Lite) under
+> identical instrument-v2 conditions, which is all the generational-delta needs;
+> the trade-off is that non-Gemini rows on the published pages stay at their last
+> real values rather than being re-measured in the same frame.
+>
+> **What is already in place (so the resume is a run + publish, not a rebuild).**
+> - Registry: `google-gemini-3-6-flash` / `google-gemini-3-5-flash-lite` are the
+>   current Gemini tier with web-verified prices; the former `gemini-3.5-flash` /
+>   `gemini-3.1-flash-lite` are retained and paired via `supersedes`/`supersededBy`
+>   metadata (commit 5a8c391).
+> - Insight: the generational-delta section renders in the split EN reports (§4
+>   summary + §7 detail) and the combined report; on the keyless path it correctly
+>   shows the `not-measured` label; on a measured frame it emits real per-metric
+>   deltas + a mechanical net verdict (commit 1b5a2e6).
+>
+> **To resume (when keys are available and the ceiling covers the chosen path):**
+> 1. `--estimate` again to confirm the current price.
+> 2. Run the sweep — the ~$1.67 Gemini-scoped run if the $15 ceiling stands, or the
+>    full ~$21.18 sweep only after the ceiling is re-approved.
+> 3. Archive a dated frame recording the exact Gemini ids/prices; recompose the
+>    EN speed/accuracy pages + the delta from the measured frame.
+> 4. `npm run research:translate-report` for the refreshed JP insights (the delta
+>    narrative included); regenerate the EN/JP indexes.
+> 5. Verify the keyless `--fixture` recomposition is byte-identical.
 
 # Run the owner-approved real head-to-head Gemini sweep and publish the refreshed comparison + delta
 
