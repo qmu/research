@@ -30,7 +30,7 @@ The measured metrics are character error rate (CER), word error rate (WER), and 
 
 ## 4. Verification Results
 
-This run has **0 measured** of 27 model rows (non-measured rows are `fixtured` harness checks or `out-of-scope` integration gaps).
+This run has **0 measured** of 29 model rows (non-measured rows are `fixtured` harness checks or `out-of-scope` integration gaps).
 
 There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
 
@@ -82,6 +82,8 @@ The OCR fixture and real paths create no external cloud resources. They render l
 | GPT-5.3 Codex | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 | GPT-5.1 Codex mini | OpenAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 | Gemini 3.1 Pro | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Gemini 3.6 Flash | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
+| Gemini 3.5 Flash-Lite | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 | Gemini 3.5 Flash | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 | Gemini 3.1 Flash-Lite | Google | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |
 | Grok 4.3 | xAI | out-of-scope | 2026-01-01T00:00:00.000Z | not measured | not measured | not measured | No VisionClient adapter is registered for this provider/API surface. |

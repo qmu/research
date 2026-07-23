@@ -55,6 +55,19 @@ export type ModelCard = Readonly<{
   outputCostPerMTok: number; // USD per 1M output tokens
   effortLevels: ReadonlyArray<EffortLevel>; // the effort levels swept — a configuration axis
   source: string; // citation URL — provenance is part of the type
+  // --- generational pairing (a controlled former→new head-to-head) -----------
+  // When a provider ships a new generation that supersedes a tier already in the
+  // registry, both are kept for one comparison round so the sweep measures them
+  // under IDENTICAL conditions (same tier, same effort ladder — only the model id
+  // differs). `generation` tags which side a card is on; the pairing is directed:
+  // the current card names its predecessor via `supersedes` (the previous card's
+  // `id`), and the previous card names its successor via `supersededBy`. This
+  // metadata is the single machine-readable source of truth for the pairing —
+  // the generational-delta insight reads it and never hardcodes which model
+  // replaces which. Absent on a card outside any active pairing.
+  generation?: "current" | "previous";
+  supersedes?: string; // current card → the previous card's `id`
+  supersededBy?: string; // previous card → the current card's `id`
 }>;
 
 // Which probe a captured call belongs to. Each probe exercises a distinct,
