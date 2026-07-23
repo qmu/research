@@ -5,7 +5,7 @@ type: enhancement
 layer: [Domain, UX]
 effort:
 commit_hash:
-category: Added
+category: Changed
 depends_on: 20260723153001-gemini-comparison-registry-add-new-models.md
 mission: support-newly-released-gemini-models-in-the-llm-comparison
 ---
