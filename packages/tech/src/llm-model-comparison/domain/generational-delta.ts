@@ -1,0 +1,508 @@
+import type { ConfigRun, ModelCard, ProbeStats } from "./types";
+import { EFFORT_LEVELS, type EffortLevel } from "./effort";
+import { providerDisplayName } from "./provider";
+
+/**
+ * The generational-delta insight: quantify, per paired tier, how a provider's new
+ * model generation improved over the one it replaced. It reads the former→new
+ * pairing from the registry's machine-readable metadata (`ModelCard.supersedes` /
+ * `supersededBy`) — never a hardcoded list — so it generalizes to any future
+ * pairing under the same strategy.
+ *
+ * Provenance is load-bearing. A per-metric SPEED/ACCURACY delta is computed only
+ * when BOTH sides of the pair are `measured` in the same frame; if either side is
+ * `fixtured` or `error`, no measured delta is synthesized and the pair is labelled
+ * not-measured. COST deltas are curated registry facts (input/output $/MTok), so
+ * they are always computed; but the mechanical net verdict needs the measured
+ * metrics, so it too reports `not-measured` whenever the measured deltas are
+ * withheld. Every number here is real arithmetic over the two rows — the narrative
+ * states the numbers, not adjectives.
+ */
+
+// A per-metric delta is "material" (a real move, not noise) when the relative
+// change clears this magnitude, or — when the former value is zero and a relative
+// change is undefined — when the absolute change clears a tiny epsilon.
+export const MATERIAL_RELATIVE = 0.01; // 1%
+const ABSOLUTE_EPSILON = 1e-9;
+
+export type MetricGroup = "speed" | "accuracy" | "cost";
+
+export type DeltaMetricSpec = Readonly<{
+  key: string;
+  title: string;
+  group: MetricGroup;
+  unit: string; // "" when unitless
+  kind: "number" | "percent" | "cost";
+  better: "higher" | "lower";
+}>;
+
+// The measured metrics come from ProbeStats means; the cost metrics come from the
+// curated ModelCard. Order here is the display order.
+const STAT_METRICS: ReadonlyArray<
+  DeltaMetricSpec & Readonly<{ statKey: keyof ProbeStats }>
+> = [
+  {
+    key: "throughputTokensPerSec",
+    statKey: "throughputTokensPerSec",
+    title: "Sustained throughput",
+    group: "speed",
+    unit: "tok/s",
+    kind: "number",
+    better: "higher",
+  },
+  {
+    key: "ttftMs",
+    statKey: "ttftMs",
+    title: "Time to first token",
+    group: "speed",
+    unit: "ms",
+    kind: "number",
+    better: "lower",
+  },
+  {
+    key: "totalLatencyMs",
+    statKey: "totalLatencyMs",
+    title: "Total response time",
+    group: "speed",
+    unit: "ms",
+    kind: "number",
+    better: "lower",
+  },
+  {
+    key: "maxSchemaDepth",
+    statKey: "maxSchemaDepth",
+    title: "Max schema depth",
+    group: "accuracy",
+    unit: "",
+    kind: "number",
+    better: "higher",
+  },
+  {
+    key: "maxSchemaBreadth",
+    statKey: "maxSchemaBreadth",
+    title: "Max schema breadth",
+    group: "accuracy",
+    unit: "",
+    kind: "number",
+    better: "higher",
+  },
+  {
+    key: "lengthAccuracy",
+    statKey: "lengthAccuracy",
+    title: "Length accuracy",
+    group: "accuracy",
+    unit: "",
+    kind: "percent",
+    better: "higher",
+  },
+  {
+    key: "informationAccuracy",
+    statKey: "informationAccuracy",
+    title: "Information accuracy",
+    group: "accuracy",
+    unit: "",
+    kind: "percent",
+    better: "higher",
+  },
+];
+
+const COST_METRICS: ReadonlyArray<
+  DeltaMetricSpec &
+    Readonly<{ cardKey: "inputCostPerMTok" | "outputCostPerMTok" }>
+> = [
+  {
+    key: "inputCostPerMTok",
+    cardKey: "inputCostPerMTok",
+    title: "Input cost",
+    group: "cost",
+    unit: "$/MTok",
+    kind: "cost",
+    better: "lower",
+  },
+  {
+    key: "outputCostPerMTok",
+    cardKey: "outputCostPerMTok",
+    title: "Output cost",
+    group: "cost",
+    unit: "$/MTok",
+    kind: "cost",
+    better: "lower",
+  },
+];
+
+export type DeltaOutcome = "improved" | "regressed" | "unchanged";
+
+export type DeltaMetric = Readonly<{
+  key: string;
+  title: string;
+  group: MetricGroup;
+  unit: string;
+  kind: "number" | "percent" | "cost";
+  better: "higher" | "lower";
+  previous: number;
+  current: number;
+  absolute: number; // current - previous
+  relative: number | null; // (current - previous) / previous; null when previous is 0
+  outcome: DeltaOutcome;
+}>;
+
+export type Verdict =
+  | "improved"
+  | "regressed"
+  | "mixed"
+  | "unchanged"
+  | "not-measured";
+
+export type GenerationDelta = Readonly<{
+  previousId: string;
+  currentId: string;
+  previousModelName: string;
+  currentModelName: string;
+  provider: string; // display name
+  tier: string;
+  effort: EffortLevel;
+  // True only when both rows are `measured`; the sole gate that lets a
+  // speed/accuracy delta exist.
+  measured: boolean;
+  notMeasuredReason?: string;
+  // Curated registry cost deltas — always present (input/output $/MTok).
+  costMetrics: ReadonlyArray<DeltaMetric>;
+  // Measured speed/accuracy deltas — present only when `measured`.
+  measuredMetrics: ReadonlyArray<DeltaMetric>;
+  verdict: Verdict;
+  verdictReason: string;
+}>;
+
+export type GenerationPair = Readonly<{
+  previousId: string;
+  currentId: string;
+}>;
+
+type PairingCard = Pick<
+  ModelCard,
+  "id" | "generation" | "supersedes" | "supersededBy"
+>;
+
+/**
+ * Read the former→new pairings from registry metadata. A pairing is emitted only
+ * when BOTH ids are present in the given cards. Both directions are honoured — a
+ * current card's `supersedes` and a previous card's `supersededBy` — and the
+ * result is de-duplicated, so the pairing is never hardcoded here.
+ */
+export const findGenerationPairs = (
+  cards: ReadonlyArray<PairingCard>,
+): ReadonlyArray<GenerationPair> => {
+  const ids = new Set(cards.map((card) => card.id));
+  const seen = new Set<string>();
+  const pairs: GenerationPair[] = [];
+  const add = (previousId: string, currentId: string): void => {
+    if (!ids.has(previousId) || !ids.has(currentId)) return;
+    const key = `${previousId}->${currentId}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    pairs.push({ previousId, currentId });
+  };
+  for (const card of cards) {
+    if (card.generation === "current" && card.supersedes !== undefined) {
+      add(card.supersedes, card.id);
+    }
+    if (card.generation === "previous" && card.supersededBy !== undefined) {
+      add(card.id, card.supersededBy);
+    }
+  }
+  return pairs;
+};
+
+const material = (absolute: number, relative: number | null): boolean =>
+  relative === null
+    ? Math.abs(absolute) > ABSOLUTE_EPSILON
+    : Math.abs(relative) >= MATERIAL_RELATIVE;
+
+const outcomeOf = (
+  spec: DeltaMetricSpec,
+  previous: number,
+  current: number,
+): DeltaOutcome => {
+  const absolute = current - previous;
+  const relative = previous === 0 ? null : absolute / previous;
+  if (!material(absolute, relative)) return "unchanged";
+  const currentIsBetter =
+    spec.better === "higher" ? current > previous : current < previous;
+  return currentIsBetter ? "improved" : "regressed";
+};
+
+const buildMetric = (
+  spec: DeltaMetricSpec,
+  previous: number,
+  current: number,
+): DeltaMetric => {
+  const absolute = current - previous;
+  return {
+    key: spec.key,
+    title: spec.title,
+    group: spec.group,
+    unit: spec.unit,
+    kind: spec.kind,
+    better: spec.better,
+    previous,
+    current,
+    absolute,
+    relative: previous === 0 ? null : absolute / previous,
+    outcome: outcomeOf(spec, previous, current),
+  };
+};
+
+const verdictOver = (metrics: ReadonlyArray<DeltaMetric>): Verdict => {
+  const improved = metrics.filter((m) => m.outcome === "improved").length;
+  const regressed = metrics.filter((m) => m.outcome === "regressed").length;
+  if (improved > 0 && regressed === 0) return "improved";
+  if (regressed > 0 && improved === 0) return "regressed";
+  if (improved > 0 && regressed > 0) return "mixed";
+  return "unchanged";
+};
+
+const countsSentence = (metrics: ReadonlyArray<DeltaMetric>): string => {
+  const improved = metrics.filter((m) => m.outcome === "improved").length;
+  const regressed = metrics.filter((m) => m.outcome === "regressed").length;
+  const unchanged = metrics.length - improved - regressed;
+  return `${improved} improved, ${regressed} regressed, ${unchanged} unchanged of ${metrics.length} metrics`;
+};
+
+const costDeltasFor = (
+  previous: ConfigRun,
+  current: ConfigRun,
+): ReadonlyArray<DeltaMetric> =>
+  COST_METRICS.map((spec) =>
+    buildMetric(spec, previous[spec.cardKey], current[spec.cardKey]),
+  );
+
+const measuredDeltasFor = (
+  previous: ConfigRun,
+  current: ConfigRun,
+): ReadonlyArray<DeltaMetric> =>
+  STAT_METRICS.map((spec) =>
+    buildMetric(
+      spec,
+      previous.stats[spec.statKey].mean,
+      current.stats[spec.statKey].mean,
+    ),
+  );
+
+/** Compute a single pair×effort delta between two configuration rows. The
+ * measured-metric guard: both rows must be `measured`, else only registry cost
+ * deltas are produced and the verdict is `not-measured`. */
+export const computeGenerationDelta = (
+  previous: ConfigRun,
+  current: ConfigRun,
+): GenerationDelta => {
+  const costMetrics = costDeltasFor(previous, current);
+  const bothMeasured =
+    previous.provenance === "measured" && current.provenance === "measured";
+  const base = {
+    previousId: previous.id,
+    currentId: current.id,
+    previousModelName: previous.modelName,
+    currentModelName: current.modelName,
+    provider: providerDisplayName(current.provider),
+    tier: current.tier,
+    effort: current.effort,
+    costMetrics,
+  };
+  if (!bothMeasured) {
+    const which = [
+      previous.provenance !== "measured"
+        ? `former (${previous.provenance})`
+        : "",
+      current.provenance !== "measured" ? `new (${current.provenance})` : "",
+    ]
+      .filter((s) => s !== "")
+      .join(" and ");
+    return {
+      ...base,
+      measured: false,
+      notMeasuredReason: `${which} not measured in this frame`,
+      measuredMetrics: [],
+      verdict: "not-measured",
+      verdictReason:
+        "Speed and accuracy were not measured for both generations in this frame, so no net verdict is derived.",
+    };
+  }
+  const measuredMetrics = measuredDeltasFor(previous, current);
+  const all = [...measuredMetrics, ...costMetrics];
+  return {
+    ...base,
+    measured: true,
+    measuredMetrics,
+    verdict: verdictOver(all),
+    verdictReason: countsSentence(all),
+  };
+};
+
+const effortIndex = (effort: EffortLevel): number => {
+  const i = EFFORT_LEVELS.indexOf(effort);
+  return i === -1 ? EFFORT_LEVELS.length : i;
+};
+
+/**
+ * Build every generational delta present in a sweep: for each registry pairing,
+ * one delta per effort level measured on BOTH sides, ordered by pairing then by
+ * the canonical effort order. Deterministic — the same configs always yield the
+ * same ordered deltas.
+ */
+export const buildGenerationDeltas = (
+  configs: ReadonlyArray<ConfigRun>,
+): ReadonlyArray<GenerationDelta> => {
+  const pairs = findGenerationPairs(configs);
+  const byId = new Map<string, ConfigRun[]>();
+  for (const config of configs) {
+    const list = byId.get(config.id) ?? [];
+    list.push(config);
+    byId.set(config.id, list);
+  }
+  const deltas: GenerationDelta[] = [];
+  for (const pair of pairs) {
+    const prevRuns = byId.get(pair.previousId) ?? [];
+    const currRuns = byId.get(pair.currentId) ?? [];
+    const efforts = [...new Set(currRuns.map((r) => r.effort))]
+      .filter((effort) => prevRuns.some((r) => r.effort === effort))
+      .sort((a, b) => effortIndex(a) - effortIndex(b));
+    for (const effort of efforts) {
+      const previous = prevRuns.find((r) => r.effort === effort);
+      const current = currRuns.find((r) => r.effort === effort);
+      if (previous === undefined || current === undefined) continue;
+      deltas.push(computeGenerationDelta(previous, current));
+    }
+  }
+  return deltas;
+};
+
+// --- markdown rendering ------------------------------------------------------
+
+const escapeCell = (text: string): string =>
+  text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
+
+const formatValue = (metric: DeltaMetric, value: number): string => {
+  if (metric.kind === "percent") return `${(value * 100).toFixed(0)}%`;
+  if (metric.kind === "cost") return `$${value.toFixed(2)}`;
+  const digits = metric.unit === "tok/s" ? 1 : 0;
+  return metric.unit === ""
+    ? value.toFixed(digits)
+    : `${value.toFixed(digits)} ${metric.unit}`;
+};
+
+const signed = (value: number, digits: number): string =>
+  `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(digits)}`;
+
+// The Change cell: signed absolute move in the metric's own unit, plus the signed
+// relative percentage when the former value was non-zero.
+const formatChange = (metric: DeltaMetric): string => {
+  if (metric.kind === "percent") {
+    const abs = `${signed(metric.absolute * 100, 0)}pp`;
+    return metric.relative === null
+      ? abs
+      : `${abs} (${signed(metric.relative * 100, 0)}%)`;
+  }
+  const digits = metric.kind === "cost" ? 2 : metric.unit === "tok/s" ? 1 : 0;
+  const unitSuffix =
+    metric.kind === "cost"
+      ? " $/MTok"
+      : metric.unit === ""
+        ? ""
+        : ` ${metric.unit}`;
+  const abs = `${signed(metric.absolute, digits)}${unitSuffix}`;
+  return metric.relative === null
+    ? abs
+    : `${abs} (${signed(metric.relative * 100, 0)}%)`;
+};
+
+const metricRow = (metric: DeltaMetric): string =>
+  `| ${escapeCell(metric.title)} | ${formatValue(metric, metric.previous)} | ` +
+  `${formatValue(metric, metric.current)} | ${formatChange(metric)} | ${metric.outcome} |`;
+
+export type DeltaRenderOptions = Readonly<{
+  // Which measured metric groups to render as rows. Cost rows are always shown
+  // (curated facts). Defaults to both measured groups. The NET VERDICT always
+  // reflects the full cross-metric picture regardless of what is displayed.
+  displayGroups?: ReadonlyArray<MetricGroup>;
+  // Top heading depth (2 → `##` for the combined report; 3 → `###` when embedded
+  // in a split report's §7). Defaults to 3.
+  headingLevel?: number;
+}>;
+
+const pairKey = (delta: GenerationDelta): string =>
+  `${delta.previousId}->${delta.currentId}`;
+
+/**
+ * Render the generational-delta section as Markdown. Returns "" when the sweep
+ * carries no registry pairing, so a report over unpaired models is unchanged
+ * (byte-stable). Deterministic for a given ordered set of configs.
+ */
+export const renderGenerationDeltaSection = (
+  configs: ReadonlyArray<ConfigRun>,
+  options: DeltaRenderOptions = {},
+): string => {
+  const deltas = buildGenerationDeltas(configs);
+  if (deltas.length === 0) return "";
+  const displayGroups = options.displayGroups ?? ["speed", "accuracy"];
+  const top = "#".repeat(options.headingLevel ?? 3);
+  const pairHead = `${top}#`;
+
+  const header =
+    "| Metric | Former | New | Change | Direction |\n" +
+    "| ------ | ------ | --- | ------ | --------- |";
+
+  const renderDelta = (delta: GenerationDelta): string => {
+    const shownMeasured = delta.measuredMetrics.filter((m) =>
+      displayGroups.includes(m.group),
+    );
+    const rows = [...shownMeasured, ...delta.costMetrics];
+    const table = `${header}\n${rows.map((m) => metricRow(m)).join("\n")}`;
+    const notMeasuredNote = delta.measured
+      ? ""
+      : `\n\n_Speed and accuracy deltas are omitted: ${escapeCell(
+          delta.notMeasuredReason ?? "not measured in this frame",
+        )}. No values are synthesized; only curated cost deltas are shown._`;
+    return (
+      `**Effort \`${escapeCell(delta.effort)}\`.**${notMeasuredNote}\n\n` +
+      `${table}\n\n` +
+      `_Net verdict: **${delta.verdict}** — ${escapeCell(delta.verdictReason)}._`
+    );
+  };
+
+  const byPair = new Map<string, GenerationDelta[]>();
+  const order: string[] = [];
+  for (const delta of deltas) {
+    const key = pairKey(delta);
+    if (!byPair.has(key)) {
+      byPair.set(key, []);
+      order.push(key);
+    }
+    byPair.get(key)?.push(delta);
+  }
+
+  const pairBlocks = order.map((key) => {
+    const group = byPair.get(key) ?? [];
+    const first = group[0];
+    if (first === undefined) return "";
+    const heading = `${pairHead} ${escapeCell(first.previousModelName)} → ${escapeCell(
+      first.currentModelName,
+    )}`;
+    return `${heading}\n\n${group.map(renderDelta).join("\n\n")}`;
+  });
+
+  const intro =
+    `${top} Generational comparison (former → new)\n\n` +
+    "For each provider tier that turned a generation this round, the former and " +
+    "the new model were swept under identical conditions (same tier, same effort " +
+    "ladder — only the model id differs), so these deltas isolate the generational " +
+    "change. A speed or accuracy delta appears only when both generations were " +
+    "`measured` in this frame; cost figures are curated registry facts. The net " +
+    "verdict is a mechanical rule over the per-metric deltas (each metric counts as " +
+    "moved only past a 1% relative threshold): **improved** when at least one metric " +
+    "improved and none regressed, **regressed** in the mirror case, **mixed** when " +
+    "both occur, and **unchanged** when every metric held within the threshold. " +
+    "Cheaper is an improvement; a faster-but-pricier result reads as mixed, never " +
+    "silently netted to improved.";
+
+  return `${intro}\n\n${pairBlocks.join("\n\n")}`;
+};

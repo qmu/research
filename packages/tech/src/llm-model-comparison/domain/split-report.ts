@@ -12,6 +12,7 @@ import {
   buildBatchedInformationAccuracyPrompt,
 } from "./information-accuracy";
 import { providerDisplayName } from "./provider";
+import { renderGenerationDeltaSection } from "./generational-delta";
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
 
 /**
@@ -299,6 +300,18 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
     .filter((sentence) => sentence !== "")
     .join("\n\n");
 
+  // Generational former→new deltas for this topic's metrics (plus curated cost),
+  // read from the registry pairing metadata. Empty string when the sweep carries
+  // no pairing, so an unpaired run's page stays byte-stable.
+  const generationDelta = renderGenerationDeltaSection(configs, {
+    displayGroups: [artifact.group],
+    headingLevel: 3,
+  });
+  const hasGenerationDelta = generationDelta !== "";
+  const generationDeltaSummary = hasGenerationDelta
+    ? "\n\nThis round includes a controlled former→new generational comparison: paired previous- and current-generation models were swept under identical conditions. The per-metric deltas and mechanically-derived net verdict are in section 7, Verification Data."
+    : "";
+
   return renderEnglishResearchArticle({
     title: artifact.title,
     description: `A reproducible ${artifact.group} comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations, covering ${coveredSummary}, over ${trialCount}. Projected from the shared LLM comparison sweep.`,
@@ -321,7 +334,7 @@ ${
 
 ${overviewTable(aspects, measuredRuns)}
 
-Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.`,
+Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.${generationDeltaSummary}`,
     analysis:
       analysis === ""
         ? "This run has no measured values for this topic; every configuration was fixtured or errored."
@@ -351,7 +364,7 @@ Each detail table reports observed min-max and contributing trial count for one 
 ${aspectSections}
 
 ${transparencySection(artifact)}
-
+${hasGenerationDelta ? `\n${generationDelta}\n` : ""}
 The projection writes \`${artifact.artifactPath}\` and this Markdown page. The source sweep remains \`${artifact.sourceArtifact}\`, so speed and accuracy stay auditable back to the same underlying run.`,
   });
 };
