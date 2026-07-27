@@ -9,7 +9,7 @@ assignee: a@qmu.jp
 strategy: keep-the-llm-speed-and-accuracy-comparison-current-as-providers-release-new-models
 drive_authorized: true
 predicted_hours:
-actual_hours:
+actual_hours: 0.47
 tickets: []
 stories: []
 concerns: []
@@ -85,7 +85,7 @@ within the $15 ceiling committed as a dated frame.
 
 - [x] Comparison registry updated: `gemini-3.6-flash` and `gemini-3.5-flash-lite` added as the latest Gemini with web-verified prices/effort/API surface; former `gemini-3.5-flash` and `gemini-3.1-flash-lite` retained as tagged previous-generation entries paired to their successors (identical tier/config); Pro unchanged; model reference catalog updated; keyless fixture byte-stable; per-package tests/build/lint green (#20260723153001-gemini-comparison-registry-add-new-models.md)
 - [x] Dedicated generational-delta insight: pairs each former→new Gemini tier, quantifies the per-metric delta (speed, accuracy, cost), and renders an explicit "what improved / what regressed / net verdict" narrative into the EN report (§4/§7) and the JP insights; keyless path deterministic; unit tests cover the pairing and delta math (#20260723153002-gemini-generational-delta-insight.md)
-- [ ] Real head-to-head sweep priced with `--estimate` then run within the $15/run ceiling under identical instrument-v2 conditions (only the Gemini models differ); committed as a dated frame; EN/JP comparison pages + generational-delta insight recomposed from the measured frame; provenance honest (#20260723153003-gemini-headtohead-real-sweep.md)
+- [x] Real head-to-head sweep priced with `--estimate` then run within the $15/run ceiling under identical instrument-v2 conditions (only the Gemini models differ); committed as a dated frame; EN/JP comparison pages + generational-delta insight recomposed from the measured frame; provenance honest (#20260723153003-gemini-headtohead-real-sweep.md)
 - [ ] qmu-co-jp receives the refreshed comparison + generational-delta article through the publish ticket flow on the next `/ship` (#20260723153003-gemini-headtohead-real-sweep.md)
 
 ## Changelog
@@ -101,3 +101,6 @@ within the $15 ceiling committed as a dated frame.
 - 2026-07-23 — drive-authorized — head-to-head sweep spend approved ($15/run ceiling, --estimate first); new Gemini = 3.6 Flash / 3.5 Flash-Lite (web-verified 2026-07-23); dedicated generational-delta insight; identical conditions — mission.md
 - 2026-07-23 — ticket archived — 20260723153001-gemini-comparison-registry-add-new-models.md
 - 2026-07-23 — ticket archived — 20260723153002-gemini-generational-delta-insight.md
+- 2026-07-23 — run recorded (+0.47h) — run-20260723-224446
+- 2026-07-27 — real head-to-head sweep run and published — 12/12 measured, merged to 54 configs, EN/JP recomposed — 20260723153003-gemini-headtohead-real-sweep.md
+- 2026-07-27 — acceptance correction — tick-acceptance ticked two items sharing one ticket marker; the qmu-co-jp publish item was reverted to unchecked (not done) — mission.md

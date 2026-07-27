@@ -303,9 +303,16 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
   // Generational former→new deltas for this topic's metrics (plus curated cost),
   // read from the registry pairing metadata. Empty string when the sweep carries
   // no pairing, so an unpaired run's page stays byte-stable.
+  // Nested one level below section 7 (H4, with per-pair blocks at H5) rather than
+  // as an H3. `article-outline` compares each published page's H3 sequence for
+  // EXACT equality against one shared list, so an H3 here would have to be added
+  // to that shared list — breaking every other topic's page, which carries only
+  // the five standard H3s. The section is content *of* section 7, so nesting it
+  // deeper keeps the cross-topic outline invariant intact instead of weakening it
+  // for one topic's optional section.
   const generationDelta = renderGenerationDeltaSection(configs, {
     displayGroups: [artifact.group],
-    headingLevel: 3,
+    headingLevel: 4,
   });
   const hasGenerationDelta = generationDelta !== "";
   const generationDeltaSummary = hasGenerationDelta

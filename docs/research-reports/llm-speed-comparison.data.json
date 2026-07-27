@@ -2,7 +2,7 @@
   "group": "speed",
   "title": "LLM response speed",
   "summary": "sustained generation throughput, time-to-first-token, and total response latency",
-  "generatedAt": "2026-07-12T05:47:26.268Z",
+  "generatedAt": "2026-07-27T04:37:01.015Z",
   "trials": 3,
   "judgeModel": "claude-opus-4-8",
   "probe": {
@@ -6065,17 +6065,19 @@
       "modelName": "Gemini 3.5 Flash",
       "apiModelId": "gemini-3.5-flash",
       "released": "2026",
-      "inputCostPerMTok": 0.3,
-      "outputCostPerMTok": 2.5,
+      "inputCostPerMTok": 1.5,
+      "outputCostPerMTok": 9,
       "effortLevels": [
         "low",
         "medium",
         "high"
       ],
+      "generation": "previous",
+      "supersededBy": "google-gemini-3-6-flash",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "effort": "low",
       "provenance": "measured",
-      "measuredAt": "2026-07-12T05:47:26.268Z",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
       "trialsRequested": 3,
       "trials": [
         {
@@ -6083,12 +6085,12 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 911.1111111111111,
-            "ttftMs": 7501,
-            "totalLatencyMs": 7591,
+            "throughputTokensPerSec": 609.0225563909775,
+            "ttftMs": 8169,
+            "totalLatencyMs": 8302,
             "maxSchemaDepth": 15,
             "maxSchemaBreadth": 192,
-            "lengthAccuracy": 0.355,
+            "lengthAccuracy": 0.365,
             "informationAccuracy": 0.3034188034188034
           },
           "calls": [
@@ -6096,10 +6098,10 @@
               "probe": "speed",
               "effort": "low",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text through a sophisticated process of statistical prediction, transforming human communication into mathematical representations. When a user provides a prompt, the system first translates the input into numerical tokens, which are the fundamental building blocks of its vocabulary. These tokens pass through a deep neural network, specifically a transformer architecture, which analyzes the relationships between words using self-attention mechanisms. This allows the model to understand context, grammar",
-              "outputTokens": 82,
-              "elapsedMs": 7591,
-              "ttftMs": 7501,
+              "rawOutput": "Large language models generate text through a sophisticated process of statistical prediction, transforming vast libraries of human knowledge into coherent, flowing sequences of words. At their core, these complex models do not understand language in the human sense; instead, they treat text as a series of numerical tokens. When prompted by a user, the system analyzes the input sequence and calculates the mathematical probability of every possible next word in its expansive vocabulary",
+              "outputTokens": 81,
+              "elapsedMs": 8302,
+              "ttftMs": 8169,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6113,12 +6115,12 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 290.3225806451613,
-            "ttftMs": 7808,
-            "totalLatencyMs": 8087,
+            "throughputTokensPerSec": 283.0882352941176,
+            "ttftMs": 7035,
+            "totalLatencyMs": 7307,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.12,
+            "lengthAccuracy": 0.22499999999999998,
             "informationAccuracy": null
           },
           "calls": [
@@ -6126,10 +6128,10 @@
               "probe": "speed",
               "effort": "low",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": ":or 183:summarizing 184:complex 185:ideas 186:with 187:remarkable 188:speed 189:and 190:apparent 191:intelligence.\n\n    We need exactly 9 more words to make it 200. Let's adjust the last",
-              "outputTokens": 81,
-              "elapsedMs": 8087,
-              "ttftMs": 7808,
+              "rawOutput": "\n\n    *Current count:* 167 words. Need 33 more words.\n\n    Let's expand:\n    \"simulate fluent, intelligent conversation in real time.\" (current end) ->\n    Let's replace: \"simulate fluent, intelligent conversation in real time. By analyzing billions of parameters, these systems seamlessly bridge the gap between mathematics and human expression",
+              "outputTokens": 77,
+              "elapsedMs": 7307,
+              "ttftMs": 7035,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6143,12 +6145,12 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 950.6172839506173,
-            "ttftMs": 7813,
-            "totalLatencyMs": 7894,
+            "throughputTokensPerSec": 578.9473684210526,
+            "ttftMs": 7356,
+            "totalLatencyMs": 7489,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.355,
+            "lengthAccuracy": 0.345,
             "informationAccuracy": null
           },
           "calls": [
@@ -6156,10 +6158,10 @@
               "probe": "speed",
               "effort": "low",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by predicting the most likely next word in a sequence based on vast amounts of data they analyzed during training. When a user provides a prompt, the model processes these input words by converting them into mathematical representations called embeddings. These embeddings capture semantic meaning and relationships between concepts. Through complex neural network architectures, specifically transformers, the system calculates attention weights to determine which parts of",
+              "rawOutput": "Large language models generate text through a sophisticated process of statistical prediction, transforming human language into mathematical representations. When a user provides a prompt, the model translates these words into numerical vectors, embedding them within a vast multidimensional space where semantic relationships are mapped. Using billions of parameters learned during training on diverse internet text, the system analyzes the context of the input. It does not possess a conscious",
               "outputTokens": 77,
-              "elapsedMs": 7894,
-              "ttftMs": 7813,
+              "elapsedMs": 7489,
+              "ttftMs": 7356,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6171,24 +6173,24 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 717.3503252356298,
-          "stdDev": 370.344036553342,
-          "min": 290.3225806451613,
-          "max": 950.6172839506173,
+          "mean": 490.35272003538256,
+          "stdDev": 180.1251071037936,
+          "min": 283.0882352941176,
+          "max": 609.0225563909775,
           "n": 3
         },
         "ttftMs": {
-          "mean": 7707.333333333333,
-          "stdDev": 178.70739585516134,
-          "min": 7501,
-          "max": 7813,
+          "mean": 7520,
+          "stdDev": 584.5177499443452,
+          "min": 7035,
+          "max": 8169,
           "n": 3
         },
         "totalLatencyMs": {
-          "mean": 7857.333333333333,
-          "stdDev": 250.0246654498978,
-          "min": 7591,
-          "max": 8087,
+          "mean": 7699.333333333333,
+          "stdDev": 529.7983893268583,
+          "min": 7307,
+          "max": 8302,
           "n": 3
         },
         "maxSchemaDepth": {
@@ -6206,10 +6208,10 @@
           "n": 1
         },
         "lengthAccuracy": {
-          "mean": 0.27666666666666667,
-          "stdDev": 0.13567731325956206,
-          "min": 0.12,
-          "max": 0.355,
+          "mean": 0.31166666666666665,
+          "stdDev": 0.07571877794400365,
+          "min": 0.22499999999999998,
+          "max": 0.365,
           "n": 3
         },
         "informationAccuracy": {
@@ -6223,10 +6225,10 @@
       "review": {
         "provenance": "judged",
         "judgeModel": "claude-opus-4-8",
-        "strengths": "Very high sustained throughput (717 tokens/sec) and solid structural capacity, handling deep JSON-schema nesting (15 levels) and wide field breadth (192), making it reliable for generating large, well-formed structured outputs.",
-        "weaknesses": "Poor instruction-following (28% length accuracy) and low factual reliability (30% QA F1), plus a slow ~7.7s time to first token that undercuts its raw speed for short interactions.",
-        "bestFor": "Best for high-volume, structure-heavy tasks like schema generation, data formatting, or template filling where throughput and valid structure matter more than factual precision or strict instruction adherence.",
-        "raw": "{\"strengths\":\"Very high sustained throughput (717 tokens/sec) and solid structural capacity, handling deep JSON-schema nesting (15 levels) and wide field breadth (192), making it reliable for generating large, well-formed structured outputs.\",\"weaknesses\":\"Poor instruction-following (28% length accuracy) and low factual reliability (30% QA F1), plus a slow ~7.7s time to first token that undercuts its raw speed for short interactions.\",\"bestFor\":\"Best for high-volume, structure-heavy tasks like schema generation, data formatting, or template filling where throughput and valid structure matter more than factual precision or strict instruction adherence.\"}"
+        "strengths": "Very high sustained throughput (490 tokens/sec) and can handle deeply nested (depth 15) and wide (192 fields) JSON schemas reliably.",
+        "weaknesses": "Slow time to first token (7.5s), poor length-instruction adherence (31%), and low factual QA accuracy (30% F1), with sample outputs showing degenerate or incomplete responses.",
+        "bestFor": "Best for high-volume structured-data generation and schema-conformant JSON output where raw throughput matters more than factual accuracy or precise instruction-following.",
+        "raw": "{\"strengths\":\"Very high sustained throughput (490 tokens/sec) and can handle deeply nested (depth 15) and wide (192 fields) JSON schemas reliably.\",\"weaknesses\":\"Slow time to first token (7.5s), poor length-instruction adherence (31%), and low factual QA accuracy (30% F1), with sample outputs showing degenerate or incomplete responses.\",\"bestFor\":\"Best for high-volume structured-data generation and schema-conformant JSON output where raw throughput matters more than factual accuracy or precise instruction-following.\"}"
       }
     },
     {
@@ -6236,17 +6238,19 @@
       "modelName": "Gemini 3.5 Flash",
       "apiModelId": "gemini-3.5-flash",
       "released": "2026",
-      "inputCostPerMTok": 0.3,
-      "outputCostPerMTok": 2.5,
+      "inputCostPerMTok": 1.5,
+      "outputCostPerMTok": 9,
       "effortLevels": [
         "low",
         "medium",
         "high"
       ],
+      "generation": "previous",
+      "supersededBy": "google-gemini-3-6-flash",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "effort": "medium",
       "provenance": "measured",
-      "measuredAt": "2026-07-12T05:47:26.268Z",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
       "trialsRequested": 3,
       "trials": [
         {
@@ -6254,23 +6258,23 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 603.0534351145038,
-            "ttftMs": 8456,
-            "totalLatencyMs": 8587,
+            "throughputTokensPerSec": 469.87951807228916,
+            "ttftMs": 7336,
+            "totalLatencyMs": 7502,
             "maxSchemaDepth": 15,
             "maxSchemaBreadth": 192,
-            "lengthAccuracy": 0.16500000000000004,
-            "informationAccuracy": 0.3034188034188034
+            "lengthAccuracy": 0.18000000000000005,
+            "informationAccuracy": 0.39141414141414144
           },
           "calls": [
             {
               "probe": "speed",
               "effort": "medium",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": " 20 words)\n    Let's do a precise word-by-word recount of a newly structured draft.\n\n6.  **Draft 2 (Precise Count):**\n\n    1. Large (1)\n    2. language (2)\n    3. models (3)\n    4. generate (4)\n    5. text (5)",
-              "outputTokens": 79,
-              "elapsedMs": 8587,
-              "ttftMs": 8456,
+              "rawOutput": "incredibly\", \"continually\") -> Wait, \"continually continues\" is bad English. Let's do: \"This rapid, highly iterative sequence continues indefatigably, building...\" (+2 words: \"highly\", \"indefatigably\")\n\n    Let's do a strict recount with the modified draft.\n\n    *Draft 2:*\n    Large language",
+              "outputTokens": 78,
+              "elapsedMs": 7502,
+              "ttftMs": 7336,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6281,156 +6285,158 @@
         },
         {
           "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 363.20754716981133,
+            "ttftMs": 7641,
+            "totalLatencyMs": 7853,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.235,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": " the next word, often introducing a controlled element of randomness to make the writing feel more natural and creative rather than repetitive.\"\nChange to:\n\"Once these complex mathematical probabilities are fully determined, the model carefully selects...\"\nLet's count:\nOriginal: \"Once (105) the (106) probabilities (107) are (108",
+              "outputTokens": 77,
+              "elapsedMs": 7853,
+              "ttftMs": 7641,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 512.6582278481013,
+            "ttftMs": 7021,
+            "totalLatencyMs": 7179,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.14500000000000002,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "7) \"conversation\" (188) \"with\" (189) \"remarkable\" (190) \"accuracy.\" (191)\n\n    Total count is 191 words. (With hyphenated counted as 1: \"high-dimensional\", \"self-attention\", \"auto-regressively\" = 3 words. If counted as 2",
+              "outputTokens": 81,
+              "elapsedMs": 7179,
+              "ttftMs": 7021,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 448.5817643634006,
+          "stdDev": 76.96799480033508,
+          "min": 363.20754716981133,
+          "max": 512.6582278481013,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 7332.666666666667,
+          "stdDev": 310.0134405688459,
+          "min": 7021,
+          "max": 7641,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 7511.333333333333,
+          "stdDev": 337.09691979211755,
+          "min": 7179,
+          "max": 7853,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 192,
+          "stdDev": 0,
+          "min": 192,
+          "max": 192,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.18666666666666668,
+          "stdDev": 0.04536885862938731,
+          "min": 0.14500000000000002,
+          "max": 0.235,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.39141414141414144,
+          "stdDev": 0,
+          "min": 0.39141414141414144,
+          "max": 0.39141414141414144,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Very high sustained throughput at 448.6 tokens/sec, and it handles deeply nested (15 levels) and wide (192 fields) JSON schemas reliably, making it strong for structured output generation.",
+        "weaknesses": "Poor length-instruction adherence (19%) and low QA accuracy (39% F1) indicate weak instruction-following and factual reliability, plus a slow ~7.3s time to first token hurts interactivity.",
+        "bestFor": "Best for high-volume, schema-driven data generation and transformation tasks where structural correctness and throughput matter more than factual precision or strict instruction compliance.",
+        "raw": "{\"strengths\":\"Very high sustained throughput at 448.6 tokens/sec, and it handles deeply nested (15 levels) and wide (192 fields) JSON schemas reliably, making it strong for structured output generation.\",\"weaknesses\":\"Poor length-instruction adherence (19%) and low QA accuracy (39% F1) indicate weak instruction-following and factual reliability, plus a slow ~7.3s time to first token hurts interactivity.\",\"bestFor\":\"Best for high-volume, schema-driven data generation and transformation tasks where structural correctness and throughput matter more than factual precision or strict instruction compliance.\"}"
+      }
+    },
+    {
+      "id": "google-gemini-3-5-flash",
+      "provider": "google",
+      "tier": "mid",
+      "modelName": "Gemini 3.5 Flash",
+      "apiModelId": "gemini-3.5-flash",
+      "released": "2026",
+      "inputCostPerMTok": 1.5,
+      "outputCostPerMTok": 9,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "previous",
+      "supersededBy": "google-gemini-3-6-flash",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "high",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
           "ok": true,
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 427.80748663101605,
-            "ttftMs": 8591,
-            "totalLatencyMs": 8778,
-            "maxSchemaDepth": null,
-            "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.18000000000000005,
-            "informationAccuracy": null
-          },
-          "calls": [
-            {
-              "probe": "speed",
-              "effort": "medium",
-              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "\n    Let's pause and build the rest carefully. Currently at 82 words.\n\n    ... thousands (80) of (81) potential (82) vocabulary (83) words (84) that (85) could (86) logically (87) follow. (88) It (89) then (90) selects (",
-              "outputTokens": 80,
-              "elapsedMs": 8778,
-              "ttftMs": 8591,
-              "schemaAxis": null,
-              "schemaValue": null,
-              "schemaConforms": null,
-              "informationQuestionId": null,
-              "error": null
-            }
-          ]
-        },
-        {
-          "trial": 3,
-          "ok": true,
-          "error": null,
-          "metrics": {
-            "throughputTokensPerSec": 705.3571428571429,
-            "ttftMs": 7307,
-            "totalLatencyMs": 7419,
-            "maxSchemaDepth": null,
-            "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.13,
-            "informationAccuracy": null
-          },
-          "calls": [
-            {
-              "probe": "speed",
-              "effort": "medium",
-              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "27. during\n    28. their\n    29. extensive\n    30. training.\n    31. When\n    32. a\n    33. user\n    34. inputs\n    35. a\n    36. specific\n    37. prompt,\n    38. the\n    39. model\n",
-              "outputTokens": 79,
-              "elapsedMs": 7419,
-              "ttftMs": 7307,
-              "schemaAxis": null,
-              "schemaValue": null,
-              "schemaConforms": null,
-              "informationQuestionId": null,
-              "error": null
-            }
-          ]
-        }
-      ],
-      "stats": {
-        "throughputTokensPerSec": {
-          "mean": 578.7393548675542,
-          "stdDev": 140.3632209359048,
-          "min": 427.80748663101605,
-          "max": 705.3571428571429,
-          "n": 3
-        },
-        "ttftMs": {
-          "mean": 8118,
-          "stdDev": 705.582737884084,
-          "min": 7307,
-          "max": 8591,
-          "n": 3
-        },
-        "totalLatencyMs": {
-          "mean": 8261.333333333334,
-          "stdDev": 735.7066897434964,
-          "min": 7419,
-          "max": 8778,
-          "n": 3
-        },
-        "maxSchemaDepth": {
-          "mean": 15,
-          "stdDev": 0,
-          "min": 15,
-          "max": 15,
-          "n": 1
-        },
-        "maxSchemaBreadth": {
-          "mean": 192,
-          "stdDev": 0,
-          "min": 192,
-          "max": 192,
-          "n": 1
-        },
-        "lengthAccuracy": {
-          "mean": 0.15833333333333335,
-          "stdDev": 0.025658007197234444,
-          "min": 0.13,
-          "max": 0.18000000000000005,
-          "n": 3
-        },
-        "informationAccuracy": {
-          "mean": 0.3034188034188034,
-          "stdDev": 0,
-          "min": 0.3034188034188034,
-          "max": 0.3034188034188034,
-          "n": 1
-        }
-      },
-      "review": {
-        "provenance": "judged",
-        "judgeModel": "claude-opus-4-8",
-        "strengths": "Very high sustained throughput (~579 tokens/sec) and capable of handling deeply nested (depth 15) and wide (192-field) JSON schemas, making it strong for structured-output generation at scale.",
-        "weaknesses": "Slow time to first token (~8 seconds) hurts interactivity, and both length-instruction adherence (16%) and factual QA accuracy (30%) are poor, with sample outputs showing truncated and unreliable content.",
-        "bestFor": "High-volume, latency-tolerant batch generation of complex structured/JSON data where schema conformance matters more than factual accuracy or precise instruction-following.",
-        "raw": "{\"strengths\":\"Very high sustained throughput (~579 tokens/sec) and capable of handling deeply nested (depth 15) and wide (192-field) JSON schemas, making it strong for structured-output generation at scale.\",\"weaknesses\":\"Slow time to first token (~8 seconds) hurts interactivity, and both length-instruction adherence (16%) and factual QA accuracy (30%) are poor, with sample outputs showing truncated and unreliable content.\",\"bestFor\":\"High-volume, latency-tolerant batch generation of complex structured/JSON data where schema conformance matters more than factual accuracy or precise instruction-following.\"}"
-      }
-    },
-    {
-      "id": "google-gemini-3-5-flash",
-      "provider": "google",
-      "tier": "mid",
-      "modelName": "Gemini 3.5 Flash",
-      "apiModelId": "gemini-3.5-flash",
-      "released": "2026",
-      "inputCostPerMTok": 0.3,
-      "outputCostPerMTok": 2.5,
-      "effortLevels": [
-        "low",
-        "medium",
-        "high"
-      ],
-      "source": "https://ai.google.dev/gemini-api/docs/pricing",
-      "effort": "high",
-      "provenance": "measured",
-      "measuredAt": "2026-07-12T05:47:26.268Z",
-      "trialsRequested": 3,
-      "trials": [
-        {
-          "trial": 1,
-          "ok": true,
-          "error": null,
-          "metrics": {
-            "throughputTokensPerSec": 569.3430656934306,
-            "ttftMs": 7706,
-            "totalLatencyMs": 7843,
+            "ttftMs": 8049,
+            "totalLatencyMs": 8236,
             "maxSchemaDepth": 15,
             "maxSchemaBreadth": 192,
-            "lengthAccuracy": 0.10999999999999999,
+            "lengthAccuracy": 0.125,
             "informationAccuracy": 0.13675213675213674
           },
           "calls": [
@@ -6438,10 +6444,10 @@
               "probe": "speed",
               "effort": "high",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": " into (151) 152. the (152) 153. model (153) 154. to (154) 155. predict (155) 156. the (156) 157. subsequent (157) 158. token",
-              "outputTokens": 78,
-              "elapsedMs": 7843,
-              "ttftMs": 7706,
+              "rawOutput": "\n    *Wait, need to continue from 147.*\n\n    147. This\n    148. expanded\n    149. text\n    150. becomes\n    151. the\n    152. new\n    153. basis\n    154. for\n    155. predicting\n    1",
+              "outputTokens": 80,
+              "elapsedMs": 8236,
+              "ttftMs": 8049,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6455,12 +6461,12 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 1490.909090909091,
-            "ttftMs": 7783,
-            "totalLatencyMs": 7838,
+            "throughputTokensPerSec": 1212.121212121212,
+            "ttftMs": 8122,
+            "totalLatencyMs": 8188,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.385,
+            "lengthAccuracy": 0.11499999999999999,
             "informationAccuracy": null
           },
           "calls": [
@@ -6468,10 +6474,10 @@
               "probe": "speed",
               "effort": "high",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by predicting the next most likely word in a sequence based on vast amounts of training data. When a user inputs a prompt, the system translates these incoming words into numerical representations called tokens. These tokens are processed through billions of mathematical parameters within a transformer neural network, which uses attention mechanisms to analyze the relationships and contextual importance of every word in the sentence. Instead of truly understanding meaning like a",
-              "outputTokens": 82,
-              "elapsedMs": 7838,
-              "ttftMs": 7783,
+              "rawOutput": "thought\n) 155. loop (155) 156. of (156) 157. calculation (157) 158. and (158) 159. selection (159) 160. creates (160) 161. the (161)",
+              "outputTokens": 80,
+              "elapsedMs": 8188,
+              "ttftMs": 8122,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6485,12 +6491,12 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 886.3636363636364,
-            "ttftMs": 8660,
-            "totalLatencyMs": 8748,
+            "throughputTokensPerSec": 411.16751269035535,
+            "ttftMs": 7384,
+            "totalLatencyMs": 7581,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.365,
+            "lengthAccuracy": 0.125,
             "informationAccuracy": null
           },
           "calls": [
@@ -6498,10 +6504,10 @@
               "probe": "speed",
               "effort": "high",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by predicting the most likely next word in a sequence based on patterns learned from vast datasets. When a user enters a prompt, the system translates the characters into numerical values called tokens. These tokens are processed through a neural network that evaluates the relationships between words using mathematical weights. By analyzing the entire context of the input, the model calculates a probability distribution for every possible word",
-              "outputTokens": 78,
-              "elapsedMs": 8748,
-              "ttftMs": 8660,
+              "rawOutput": "\n    120. loop. (Wait, \"in a loop\" -> \"in\" (118) \"a\" (119) \"loop\" (120))\n    Let's recount starting from 114:\n    114. repeating\n    115. this\n    116. iterative\n    117.",
+              "outputTokens": 81,
+              "elapsedMs": 7581,
+              "ttftMs": 7384,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6513,24 +6519,24 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 982.2052643220527,
-          "stdDev": 468.1988871678759,
-          "min": 569.3430656934306,
-          "max": 1490.909090909091,
+          "mean": 683.6987371475278,
+          "stdDev": 457.7029126258341,
+          "min": 411.16751269035535,
+          "max": 1212.121212121212,
           "n": 3
         },
         "ttftMs": {
-          "mean": 8049.666666666667,
-          "stdDev": 529.9644642174919,
-          "min": 7706,
-          "max": 8660,
+          "mean": 7851.666666666667,
+          "stdDev": 406.65259538497145,
+          "min": 7384,
+          "max": 8122,
           "n": 3
         },
         "totalLatencyMs": {
-          "mean": 8143,
-          "stdDev": 523.951333617923,
-          "min": 7838,
-          "max": 8748,
+          "mean": 8001.666666666667,
+          "stdDev": 365.0977038182154,
+          "min": 7581,
+          "max": 8236,
           "n": 3
         },
         "maxSchemaDepth": {
@@ -6548,10 +6554,10 @@
           "n": 1
         },
         "lengthAccuracy": {
-          "mean": 0.2866666666666667,
-          "stdDev": 0.15332427509475902,
-          "min": 0.10999999999999999,
-          "max": 0.385,
+          "mean": 0.12166666666666666,
+          "stdDev": 0.005773502691896263,
+          "min": 0.11499999999999999,
+          "max": 0.125,
           "n": 3
         },
         "informationAccuracy": {
@@ -6565,10 +6571,10 @@
       "review": {
         "provenance": "judged",
         "judgeModel": "claude-opus-4-8",
-        "strengths": "Excellent sustained throughput at ~982 tokens/sec and strong structured-output handling, supporting deep JSON-schema nesting (15 levels) and wide field breadth (192).",
-        "weaknesses": "Very high time to first token (~8 seconds), poor length-instruction adherence (29%), and low factual QA accuracy (14% F1), making it unreliable for correctness-sensitive or interactive tasks.",
-        "bestFor": "Batch generation of complex, deeply-nested structured data where high throughput matters and factual accuracy or precise length control is not critical.",
-        "raw": "{\"strengths\":\"Excellent sustained throughput at ~982 tokens/sec and strong structured-output handling, supporting deep JSON-schema nesting (15 levels) and wide field breadth (192).\",\"weaknesses\":\"Very high time to first token (~8 seconds), poor length-instruction adherence (29%), and low factual QA accuracy (14% F1), making it unreliable for correctness-sensitive or interactive tasks.\",\"bestFor\":\"Batch generation of complex, deeply-nested structured data where high throughput matters and factual accuracy or precise length control is not critical.\"}"
+        "strengths": "Extremely high sustained throughput (~684 tokens/sec) and robust handling of deeply nested (depth 15) and wide (192-field) JSON schemas, making it strong for structured data generation.",
+        "weaknesses": "Very poor instruction-following (12% length accuracy) and factual accuracy (14% F1), plus a high time-to-first-token latency (~7.9s) that hurts interactive responsiveness.",
+        "bestFor": "High-volume, schema-driven output generation where structural conformance and raw speed matter more than factual correctness or precise instruction adherence—not suited for QA or reliable everyday coding assistance.",
+        "raw": "{\"strengths\":\"Extremely high sustained throughput (~684 tokens/sec) and robust handling of deeply nested (depth 15) and wide (192-field) JSON schemas, making it strong for structured data generation.\",\"weaknesses\":\"Very poor instruction-following (12% length accuracy) and factual accuracy (14% F1), plus a high time-to-first-token latency (~7.9s) that hurts interactive responsiveness.\",\"bestFor\":\"High-volume, schema-driven output generation where structural conformance and raw speed matter more than factual correctness or precise instruction adherence—not suited for QA or reliable everyday coding assistance.\"}"
       }
     },
     {
@@ -6578,17 +6584,19 @@
       "modelName": "Gemini 3.1 Flash-Lite",
       "apiModelId": "gemini-3.1-flash-lite",
       "released": "2026",
-      "inputCostPerMTok": 0.1,
-      "outputCostPerMTok": 0.4,
+      "inputCostPerMTok": 0.25,
+      "outputCostPerMTok": 1.5,
       "effortLevels": [
         "low",
         "medium",
         "high"
       ],
+      "generation": "previous",
+      "supersededBy": "google-gemini-3-5-flash-lite",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "effort": "low",
       "provenance": "measured",
-      "measuredAt": "2026-07-12T05:47:26.268Z",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
       "trialsRequested": 3,
       "trials": [
         {
@@ -6596,23 +6604,23 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 251.61290322580646,
-            "ttftMs": 876,
-            "totalLatencyMs": 1806,
+            "throughputTokensPerSec": 192.81045751633988,
+            "ttftMs": 954,
+            "totalLatencyMs": 2178,
             "maxSchemaDepth": 15,
             "maxSchemaBreadth": 192,
-            "lengthAccuracy": 0.965,
-            "informationAccuracy": 0.4247474747474748
+            "lengthAccuracy": 0.98,
+            "informationAccuracy": 0.4365079365079365
           },
           "calls": [
             {
               "probe": "speed",
               "effort": "low",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by functioning as sophisticated statistical prediction engines, transforming vast amounts of human knowledge into mathematical representations. During their extensive training phase, these systems analyze billions of sentences to discern intricate patterns, grammatical structures, and semantic relationships embedded within language. When a user provides a prompt, the model tokenizes the input, converting words or fragments into numerical vectors that its neural network processes. It does not truly understand meaning or intent; instead, it calculates the statistical probability of every possible subsequent token based on the preceding context. By evaluating these weighted possibilities, the model selects the next most likely element in a sequence, effectively constructing coherent responses one piece at a time. This process repeats iteratively, with each new word becoming part of the growing context window, guiding the system toward plausible continuations. The final output is not a retrieval of stored facts but a unique synthesis of learned associations, woven together through layers of computational operations. While the resulting prose often mirrors human reasoning and creativity, it remains fundamentally rooted in the cold precision of probability distributions. Ultimately, these models demonstrate how complex sequences can emerge from simple rules applied to massive datasets, bridging the gap between raw data and fluid expression.",
-              "outputTokens": 234,
-              "elapsedMs": 1806,
-              "ttftMs": 876,
+              "rawOutput": "Large language models operate by transforming human language into complex mathematical representations, mapping words into high-dimensional vectors that encode semantic relationships. These models are trained on vast datasets, learning to predict the most statistically probable next token in a sequence based on the context provided by preceding inputs. When a prompt initiates this process, the model calculates probability distributions across its entire vocabulary, weighing various options through multiple layers of neural network weights. It does not truly understand concepts or possess consciousness; instead, it relies on patterns identified during training to construct coherent, contextually relevant responses. Through an iterative mechanism of self-attention, the system focuses on specific parts of the input to refine its understanding, ensuring that generated text maintains grammatical consistency and thematic alignment with the user's intent. As each new token is produced, it is appended to the growing sequence, which then becomes part of the subsequent context window for future predictions. This rapid, probabilistic computation allows the model to simulate fluid, conversational dialogue, creating the illusion of reasoning. Ultimately, the generation process is a sophisticated statistical game of continuation, where vast computational power meets the intricate, underlying structure of human language to weave seemingly intelligent prose from billions of numeric connections.",
+              "outputTokens": 236,
+              "elapsedMs": 2178,
+              "ttftMs": 954,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6626,9 +6634,9 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 254.88069414316703,
-            "ttftMs": 698,
-            "totalLatencyMs": 1620,
+            "throughputTokensPerSec": 223.86587771203156,
+            "ttftMs": 887,
+            "totalLatencyMs": 1901,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
             "lengthAccuracy": 0.985,
@@ -6639,10 +6647,10 @@
               "probe": "speed",
               "effort": "low",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models function as sophisticated statistical engines that transform human language into complex mathematical representations. At their core, these systems analyze massive datasets to identify intricate patterns and relationships between words, phrases, and concepts. When a user provides a prompt, the model tokenizes the input, breaking it down into smaller, numerical units that it can process efficiently. It then consults its learned internal parameters, which act like a vast map of probability, to determine which word should logically follow the previous sequence. This process occurs iteratively, with the model continuously predicting the next token based on both the original prompt and the text it has just generated. Rather than possessing true understanding or consciousness, the model navigates this high-dimensional space of language, selecting sequences that maximize statistical likelihood according to the patterns it absorbed during training. By calculating these probabilities across countless layers of neural networks, the system creates coherent, contextually relevant responses that mimic human communication. This elegant dance of computation and prediction allows the machine to synthesize diverse information, translate languages, and compose creative narratives, all while remaining firmly grounded in the mathematics of frequency and structure, effectively turning cold data into the fluid, expressive art of modern artificial intelligence.",
-              "outputTokens": 235,
-              "elapsedMs": 1620,
-              "ttftMs": 698,
+              "rawOutput": "Large language models function by transforming vast quantities of human data into mathematical patterns, establishing a sophisticated map of linguistic relationships. When you provide a prompt, the model decomposes your input into smaller units known as tokens, which are essentially numerical representations of words or word fragments. These tokens serve as the foundation for the model’s internal calculations. Using an architecture built on the transformer mechanism, the system applies complex probability distributions to predict which token should follow the previous sequence. It does not possess consciousness, opinions, or genuine understanding in the biological sense; instead, it operates through immense computational processing that weighs countless possible continuations based on the patterns it learned during training. Each successive word is chosen by calculating the highest likelihood of coherence, constantly refining its output to match the stylistic and contextual expectations established by your original request. This iterative process of prediction and selection happens rapidly, allowing the model to weave together coherent sentences, paragraphs, and long documents that mimic human reasoning. The elegance of this system lies in its ability to synthesize information from billions of parameters, creating the illusion of thought while merely executing precise statistical operations to generate fluent language one token at a time.",
+              "outputTokens": 227,
+              "elapsedMs": 1901,
+              "ttftMs": 887,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6656,12 +6664,12 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 262.74065685164214,
-            "ttftMs": 870,
-            "totalLatencyMs": 1753,
+            "throughputTokensPerSec": 229.83870967741936,
+            "ttftMs": 868,
+            "totalLatencyMs": 1860,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.965,
+            "lengthAccuracy": 0.99,
             "informationAccuracy": null
           },
           "calls": [
@@ -6669,10 +6677,10 @@
               "probe": "speed",
               "effort": "low",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "At the core of a large language model lies a complex neural network trained on vast amounts of human text to understand patterns, structures, and semantic relationships between words. When a user provides a prompt, the model processes this input by converting characters into numerical vectors, mapping their meaning into a high-dimensional space. Through layers of self-attention mechanisms, the system weighs the significance of different words, determining context and intent before predicting the subsequent token. It does not think in the traditional sense but rather calculates probabilities for the next possible word based on the statistical associations learned during its rigorous training phase. This generation happens iteratively, with each newly produced word added to the sequence, thereby becoming part of the updated context for the next calculation. By constantly balancing strict adherence to learned patterns with a degree of probabilistic variation, the model stitches together coherent sentences that appear fluid and responsive. This intricate dance of matrix multiplication and statistical inference transforms raw data into language that mimics human expression, allowing the system to draft essays, solve problems, or engage in conversation. Ultimately, the output is a reflection of colossal datasets compressed into a mathematical framework designed to predict the most plausible continuation of any given idea.",
-              "outputTokens": 232,
-              "elapsedMs": 1753,
-              "ttftMs": 870,
+              "rawOutput": "At its core, a large language model functions as an intricate statistical engine, processing vast quantities of human text to map the complex relationships between words. When a user inputs a prompt, the model tokenizes this sequence, breaking the language into numerical representations that computers can interpret. It then navigates a high-dimensional mathematical space, calculated during its extensive training phase, where it has learned the probabilities of different sequences appearing together. The system does not truly think or understand concepts like a human mind; instead, it predicts the most statistically likely next token based on the patterns it observed in its training data. By iteratively generating these predictions and feeding them back into its own input, the model constructs coherent, contextually relevant responses one piece at a time. This process involves sophisticated attention mechanisms that weigh the importance of different words in a sentence, allowing the model to maintain focus and coherence across longer passages. Ultimately, what appears as fluent conversation or insightful writing is the result of billions of nuanced calculations, transforming a simple series of input tokens into an output that mimics the structure and variability of language, effectively bridging the gap between raw machine computation and expressive human communication.",
+              "outputTokens": 228,
+              "elapsedMs": 1860,
+              "ttftMs": 868,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6684,24 +6692,24 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 256.4114180735385,
-          "stdDev": 5.719620791851833,
-          "min": 251.61290322580646,
-          "max": 262.74065685164214,
+          "mean": 215.50501496859692,
+          "stdDev": 19.879660054614533,
+          "min": 192.81045751633988,
+          "max": 229.83870967741936,
           "n": 3
         },
         "ttftMs": {
-          "mean": 814.6666666666666,
-          "stdDev": 101.08082574520913,
-          "min": 698,
-          "max": 876,
+          "mean": 903,
+          "stdDev": 45.17742799230607,
+          "min": 868,
+          "max": 954,
           "n": 3
         },
         "totalLatencyMs": {
-          "mean": 1726.3333333333333,
-          "stdDev": 95.82449234581593,
-          "min": 1620,
-          "max": 1806,
+          "mean": 1979.6666666666667,
+          "stdDev": 172.98073110417047,
+          "min": 1860,
+          "max": 2178,
           "n": 3
         },
         "maxSchemaDepth": {
@@ -6719,27 +6727,27 @@
           "n": 1
         },
         "lengthAccuracy": {
-          "mean": 0.9716666666666667,
-          "stdDev": 0.011547005383792525,
-          "min": 0.965,
-          "max": 0.985,
+          "mean": 0.985,
+          "stdDev": 0.0050000000000000044,
+          "min": 0.98,
+          "max": 0.99,
           "n": 3
         },
         "informationAccuracy": {
-          "mean": 0.4247474747474748,
+          "mean": 0.4365079365079365,
           "stdDev": 0,
-          "min": 0.4247474747474748,
-          "max": 0.4247474747474748,
+          "min": 0.4365079365079365,
+          "max": 0.4365079365079365,
           "n": 1
         }
       },
       "review": {
         "provenance": "judged",
         "judgeModel": "claude-opus-4-8",
-        "strengths": "Very fast with high throughput (256 tokens/sec) and low latency, plus excellent length-instruction adherence (97%) and strong structured-output handling, supporting deep JSON nesting (15 levels) and wide field breadth (192).",
-        "weaknesses": "Poor factual accuracy (42% QA F1) makes it unreliable for knowledge-intensive or correctness-critical tasks, and the sub-second time-to-first-token (815ms) is modest for a lite tier.",
-        "bestFor": "High-volume, latency-sensitive tasks like schema-constrained data formatting, template filling, and structured transformations where speed and format compliance matter more than factual precision.",
-        "raw": "{\"strengths\":\"Very fast with high throughput (256 tokens/sec) and low latency, plus excellent length-instruction adherence (97%) and strong structured-output handling, supporting deep JSON nesting (15 levels) and wide field breadth (192).\",\"weaknesses\":\"Poor factual accuracy (42% QA F1) makes it unreliable for knowledge-intensive or correctness-critical tasks, and the sub-second time-to-first-token (815ms) is modest for a lite tier.\",\"bestFor\":\"High-volume, latency-sensitive tasks like schema-constrained data formatting, template filling, and structured transformations where speed and format compliance matter more than factual precision.\"}"
+        "strengths": "Very fast with high sustained throughput (215.5 tok/s) and low total response time (~2s), and it excels at structural tasks—handling deep JSON nesting (depth 15), wide schemas (192 fields), and following length instructions with 99% accuracy.",
+        "weaknesses": "Factual reliability is poor (QA F1 of only 44%), so its answers to knowledge-based questions are frequently wrong, and time-to-first-token (~900ms) is somewhat slow for an otherwise fast model.",
+        "bestFor": "Well-suited for high-throughput structured-output tasks like JSON generation, formatting, schema-driven transformations, and length-constrained text where correctness of format matters more than factual recall.",
+        "raw": "{\"strengths\":\"Very fast with high sustained throughput (215.5 tok/s) and low total response time (~2s), and it excels at structural tasks—handling deep JSON nesting (depth 15), wide schemas (192 fields), and following length instructions with 99% accuracy.\",\"weaknesses\":\"Factual reliability is poor (QA F1 of only 44%), so its answers to knowledge-based questions are frequently wrong, and time-to-first-token (~900ms) is somewhat slow for an otherwise fast model.\",\"bestFor\":\"Well-suited for high-throughput structured-output tasks like JSON generation, formatting, schema-driven transformations, and length-constrained text where correctness of format matters more than factual recall.\"}"
       }
     },
     {
@@ -6749,17 +6757,19 @@
       "modelName": "Gemini 3.1 Flash-Lite",
       "apiModelId": "gemini-3.1-flash-lite",
       "released": "2026",
-      "inputCostPerMTok": 0.1,
-      "outputCostPerMTok": 0.4,
+      "inputCostPerMTok": 0.25,
+      "outputCostPerMTok": 1.5,
       "effortLevels": [
         "low",
         "medium",
         "high"
       ],
+      "generation": "previous",
+      "supersededBy": "google-gemini-3-5-flash-lite",
       "source": "https://ai.google.dev/gemini-api/docs/pricing",
       "effort": "medium",
       "provenance": "measured",
-      "measuredAt": "2026-07-12T05:47:26.268Z",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
       "trialsRequested": 3,
       "trials": [
         {
@@ -6767,180 +6777,9 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 1011.9047619047619,
-            "ttftMs": 4848,
-            "totalLatencyMs": 4932,
-            "maxSchemaDepth": 15,
-            "maxSchemaBreadth": 192,
-            "lengthAccuracy": 0.37,
-            "informationAccuracy": 0.13030303030303028
-          },
-          "calls": [
-            {
-              "probe": "speed",
-              "effort": "medium",
-              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by leveraging deep learning architectures, specifically transformers, to predict subsequent elements in a sequence. These complex systems undergo extensive training on vast datasets, learning the intricate statistical patterns and linguistic relationships that define human communication. When a user provides an input prompt, the model tokenizes this sequence into numerical representations. Within the multidimensional space of the model, these vectors undergo a series of transformations through layers of attention mechanisms.",
-              "outputTokens": 85,
-              "elapsedMs": 4932,
-              "ttftMs": 4848,
-              "schemaAxis": null,
-              "schemaValue": null,
-              "schemaConforms": null,
-              "informationQuestionId": null,
-              "error": null
-            }
-          ]
-        },
-        {
-          "trial": 2,
-          "ok": true,
-          "error": null,
-          "metrics": {
-            "throughputTokensPerSec": 562.5,
-            "ttftMs": 4693,
-            "totalLatencyMs": 4837,
-            "maxSchemaDepth": null,
-            "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.365,
-            "informationAccuracy": null
-          },
-          "calls": [
-            {
-              "probe": "speed",
-              "effort": "medium",
-              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by predicting the next word in a sequence based on vast amounts of previously analyzed data. These systems utilize neural networks, specifically transformer architectures, which identify complex patterns and statistical relationships within human language. During the training phase, the model consumes billions of sentences, learning how words correlate through attention mechanisms that weigh the importance of different segments of context simultaneously. When a user provides a prompt, the",
-              "outputTokens": 81,
-              "elapsedMs": 4837,
-              "ttftMs": 4693,
-              "schemaAxis": null,
-              "schemaValue": null,
-              "schemaConforms": null,
-              "informationQuestionId": null,
-              "error": null
-            }
-          ]
-        },
-        {
-          "trial": 3,
-          "ok": true,
-          "error": null,
-          "metrics": {
-            "throughputTokensPerSec": 616.5413533834586,
-            "ttftMs": 4546,
-            "totalLatencyMs": 4679,
-            "maxSchemaDepth": null,
-            "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.38,
-            "informationAccuracy": null
-          },
-          "calls": [
-            {
-              "probe": "speed",
-              "effort": "medium",
-              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by analyzing vast datasets to discern patterns within human language. These complex systems utilize neural networks to process input prompts through billions of parameters, transforming linguistic data into numerical representations. By calculating the probability distribution for the next possible token in a sequence, the model selects the most likely candidate based on its training history. This process repeats iteratively, allowing the system to construct coherent sentences and paragraphs word by word",
-              "outputTokens": 82,
-              "elapsedMs": 4679,
-              "ttftMs": 4546,
-              "schemaAxis": null,
-              "schemaValue": null,
-              "schemaConforms": null,
-              "informationQuestionId": null,
-              "error": null
-            }
-          ]
-        }
-      ],
-      "stats": {
-        "throughputTokensPerSec": {
-          "mean": 730.3153717627401,
-          "stdDev": 245.35597699933004,
-          "min": 562.5,
-          "max": 1011.9047619047619,
-          "n": 3
-        },
-        "ttftMs": {
-          "mean": 4695.666666666667,
-          "stdDev": 151.01765901156503,
-          "min": 4546,
-          "max": 4848,
-          "n": 3
-        },
-        "totalLatencyMs": {
-          "mean": 4816,
-          "stdDev": 127.80062597655773,
-          "min": 4679,
-          "max": 4932,
-          "n": 3
-        },
-        "maxSchemaDepth": {
-          "mean": 15,
-          "stdDev": 0,
-          "min": 15,
-          "max": 15,
-          "n": 1
-        },
-        "maxSchemaBreadth": {
-          "mean": 192,
-          "stdDev": 0,
-          "min": 192,
-          "max": 192,
-          "n": 1
-        },
-        "lengthAccuracy": {
-          "mean": 0.37166666666666665,
-          "stdDev": 0.00763762615825974,
-          "min": 0.365,
-          "max": 0.38,
-          "n": 3
-        },
-        "informationAccuracy": {
-          "mean": 0.13030303030303028,
-          "stdDev": 0,
-          "min": 0.13030303030303028,
-          "max": 0.13030303030303028,
-          "n": 1
-        }
-      },
-      "review": {
-        "provenance": "judged",
-        "judgeModel": "claude-opus-4-8",
-        "strengths": "Very high sustained throughput (730 tokens/sec) and robust structured-output handling, comfortably managing deeply nested (depth 15) and wide (192-field) JSON schemas.",
-        "weaknesses": "Slow time to first token (~4.7s), poor length-instruction adherence (37%), and very low factual accuracy (13% QA F1), with sample outputs that are truncated or incomplete.",
-        "bestFor": "High-volume, schema-driven generation tasks where structural correctness and raw throughput matter more than factual precision or strict length control—such as populating structured templates or synthetic data scaffolding, not fact-critical Q&A.",
-        "raw": "{\"strengths\":\"Very high sustained throughput (730 tokens/sec) and robust structured-output handling, comfortably managing deeply nested (depth 15) and wide (192-field) JSON schemas.\",\"weaknesses\":\"Slow time to first token (~4.7s), poor length-instruction adherence (37%), and very low factual accuracy (13% QA F1), with sample outputs that are truncated or incomplete.\",\"bestFor\":\"High-volume, schema-driven generation tasks where structural correctness and raw throughput matter more than factual precision or strict length control—such as populating structured templates or synthetic data scaffolding, not fact-critical Q&A.\"}"
-      }
-    },
-    {
-      "id": "google-gemini-3-1-flash-lite",
-      "provider": "google",
-      "tier": "small",
-      "modelName": "Gemini 3.1 Flash-Lite",
-      "apiModelId": "gemini-3.1-flash-lite",
-      "released": "2026",
-      "inputCostPerMTok": 0.1,
-      "outputCostPerMTok": 0.4,
-      "effortLevels": [
-        "low",
-        "medium",
-        "high"
-      ],
-      "source": "https://ai.google.dev/gemini-api/docs/pricing",
-      "effort": "high",
-      "provenance": "measured",
-      "measuredAt": "2026-07-12T05:47:26.268Z",
-      "trialsRequested": 3,
-      "trials": [
-        {
-          "trial": 1,
-          "ok": true,
-          "error": null,
-          "metrics": {
-            "throughputTokensPerSec": 440.86021505376345,
-            "ttftMs": 4992,
-            "totalLatencyMs": 5178,
+            "throughputTokensPerSec": 846.1538461538462,
+            "ttftMs": 6037,
+            "totalLatencyMs": 6128,
             "maxSchemaDepth": 15,
             "maxSchemaBreadth": 192,
             "lengthAccuracy": 0.33999999999999997,
@@ -6949,12 +6788,12 @@
           "calls": [
             {
               "probe": "speed",
-              "effort": "high",
+              "effort": "medium",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models function as sophisticated statistical engines designed to predict the next sequence of elements, known as tokens, in a given context. During their intensive training phase, these models analyze vast repositories of human language, internalizing patterns, syntax, grammar, and nuanced relationships between words. This learning process constructs a high-dimensional mathematical representation of knowledge where every concept occupies a specific location. When a user provides a prompt,",
-              "outputTokens": 82,
-              "elapsedMs": 5178,
-              "ttftMs": 4992,
+              "rawOutput": "Large language models generate text by navigating a complex mathematical space constructed during an extensive training phase on vast datasets. These models transform input sequences into high-dimensional numerical vectors, which capture nuanced semantic relationships and contextual patterns. Within the neural network architecture, attention mechanisms weigh the significance of various tokens, allowing the model to focus on relevant information while maintaining coherence across long sequences. When generating output, the",
+              "outputTokens": 77,
+              "elapsedMs": 6128,
+              "ttftMs": 6037,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6968,23 +6807,23 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 726.4150943396227,
-            "ttftMs": 5104,
-            "totalLatencyMs": 5210,
+            "throughputTokensPerSec": 3391.304347826087,
+            "ttftMs": 6070,
+            "totalLatencyMs": 6093,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.35,
+            "lengthAccuracy": 0.345,
             "informationAccuracy": null
           },
           "calls": [
             {
               "probe": "speed",
-              "effort": "high",
+              "effort": "medium",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models function as sophisticated statistical engines that predict sequences based on probability distributions learned during extensive training. When a user inputs a prompt, the model tokenizes this text into numerical representations. These tokens then navigate a complex neural network architecture, specifically transformers, which utilize attention mechanisms to weigh the importance of different words relative to one another within the context. By analyzing billions of parameters derived from vast",
-              "outputTokens": 77,
-              "elapsedMs": 5210,
-              "ttftMs": 5104,
+              "rawOutput": "Large language models operate by processing sequences of input tokens through intricate neural networks trained on vast amounts of data. At the core of this technology lies the transformer architecture, which utilizes self-attention mechanisms to weigh the importance of different words in a given context. When a user provides a prompt, the model tokenizes the text into numerical representations. These vectors flow through countless layers of weights and biases,",
+              "outputTokens": 78,
+              "elapsedMs": 6093,
+              "ttftMs": 6070,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -6998,23 +6837,23 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 26666.666666666668,
-            "ttftMs": 4876,
-            "totalLatencyMs": 4879,
+            "throughputTokensPerSec": 1025,
+            "ttftMs": 5936,
+            "totalLatencyMs": 6016,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
-            "lengthAccuracy": 0.37,
+            "lengthAccuracy": 0.355,
             "informationAccuracy": null
           },
           "calls": [
             {
               "probe": "speed",
-              "effort": "high",
+              "effort": "medium",
               "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
-              "rawOutput": "Large language models generate text by analyzing vast datasets to discern the intricate patterns and statistical relationships inherent in human language. They utilize a complex architecture known as a transformer, which employs an attention mechanism to weigh the importance of different words within a sequence. When a user provides a prompt, the model calculates the probability distribution of the next possible token based on the context it has already processed. This iterative process continues,",
-              "outputTokens": 80,
-              "elapsedMs": 4879,
-              "ttftMs": 4876,
+              "rawOutput": "Large language models function through complex mathematical probability, processing vast datasets to understand the underlying structures of human communication. At their core, these systems utilize neural networks that transform words into high-dimensional numerical vectors, allowing them to map relationships between concepts with incredible precision. When a user provides a prompt, the model tokenizes the input, breaking it down into smaller units that it analyzes against its training data. By calculating the",
+              "outputTokens": 82,
+              "elapsedMs": 6016,
+              "ttftMs": 5936,
               "schemaAxis": null,
               "schemaValue": null,
               "schemaConforms": null,
@@ -7026,24 +6865,24 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 9277.980658686685,
-          "stdDev": 15059.720655123723,
-          "min": 440.86021505376345,
-          "max": 26666.666666666668,
+          "mean": 1754.1527313266445,
+          "stdDev": 1420.6320946119174,
+          "min": 846.1538461538462,
+          "max": 3391.304347826087,
           "n": 3
         },
         "ttftMs": {
-          "mean": 4990.666666666667,
-          "stdDev": 114.0058478032304,
-          "min": 4876,
-          "max": 5104,
+          "mean": 6014.333333333333,
+          "stdDev": 69.81642595645621,
+          "min": 5936,
+          "max": 6070,
           "n": 3
         },
         "totalLatencyMs": {
-          "mean": 5089,
-          "stdDev": 182.56779562672054,
-          "min": 4879,
-          "max": 5210,
+          "mean": 6079,
+          "stdDev": 57.29746940310715,
+          "min": 6016,
+          "max": 6128,
           "n": 3
         },
         "maxSchemaDepth": {
@@ -7061,10 +6900,10 @@
           "n": 1
         },
         "lengthAccuracy": {
-          "mean": 0.35333333333333333,
-          "stdDev": 0.01527525231651948,
+          "mean": 0.3466666666666667,
+          "stdDev": 0.00763762615825974,
           "min": 0.33999999999999997,
-          "max": 0.37,
+          "max": 0.355,
           "n": 3
         },
         "informationAccuracy": {
@@ -7078,10 +6917,183 @@
       "review": {
         "provenance": "judged",
         "judgeModel": "claude-opus-4-8",
-        "strengths": "Exceptional raw throughput at ~9278 tokens/sec and robust handling of complex structured output, supporting deep JSON nesting (15 levels) and wide field breadth (192 fields).",
-        "weaknesses": "Very high time to first token (~5 seconds) makes it feel unresponsive, and both length-instruction accuracy (35%) and factual QA F1 (31%) are poor, indicating unreliable adherence to constraints and weak factual accuracy.",
-        "bestFor": "High-volume batch generation of large, deeply nested structured data (like JSON payloads) where latency is not critical and factual precision or strict length control are not required.",
-        "raw": "{\"strengths\":\"Exceptional raw throughput at ~9278 tokens/sec and robust handling of complex structured output, supporting deep JSON nesting (15 levels) and wide field breadth (192 fields).\",\"weaknesses\":\"Very high time to first token (~5 seconds) makes it feel unresponsive, and both length-instruction accuracy (35%) and factual QA F1 (31%) are poor, indicating unreliable adherence to constraints and weak factual accuracy.\",\"bestFor\":\"High-volume batch generation of large, deeply nested structured data (like JSON payloads) where latency is not critical and factual precision or strict length control are not required.\"}"
+        "strengths": "Exceptionally high throughput at 1754 tokens/sec and strong structural handling, reliably producing deeply nested (15 levels) and wide (192 fields) JSON schemas. Well-suited for generating large, complex structured payloads quickly.",
+        "weaknesses": "Poor factual accuracy (31% F1) and weak instruction-following (35% length compliance), plus a slow 6-second time to first token that undercuts its raw speed for short responses. Sample outputs show it drifting into repetitive or truncated, low-quality content.",
+        "bestFor": "High-volume generation of structured/schema-conformant data where correctness of facts is not critical, such as templating, test-fixture generation, or bulk JSON scaffolding—but not for factual Q&A or instruction-sensitive tasks.",
+        "raw": "{\"strengths\":\"Exceptionally high throughput at 1754 tokens/sec and strong structural handling, reliably producing deeply nested (15 levels) and wide (192 fields) JSON schemas. Well-suited for generating large, complex structured payloads quickly.\",\"weaknesses\":\"Poor factual accuracy (31% F1) and weak instruction-following (35% length compliance), plus a slow 6-second time to first token that undercuts its raw speed for short responses. Sample outputs show it drifting into repetitive or truncated, low-quality content.\",\"bestFor\":\"High-volume generation of structured/schema-conformant data where correctness of facts is not critical, such as templating, test-fixture generation, or bulk JSON scaffolding—but not for factual Q&A or instruction-sensitive tasks.\"}"
+      }
+    },
+    {
+      "id": "google-gemini-3-1-flash-lite",
+      "provider": "google",
+      "tier": "small",
+      "modelName": "Gemini 3.1 Flash-Lite",
+      "apiModelId": "gemini-3.1-flash-lite",
+      "released": "2026",
+      "inputCostPerMTok": 0.25,
+      "outputCostPerMTok": 1.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "previous",
+      "supersededBy": "google-gemini-3-5-flash-lite",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "high",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 1640,
+            "ttftMs": 5851,
+            "totalLatencyMs": 5901,
+            "maxSchemaDepth": 15,
+            "maxSchemaBreadth": 192,
+            "lengthAccuracy": 0.355,
+            "informationAccuracy": 0.34848484848484845
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models function through a sophisticated statistical process that transforms vast amounts of ingested text into coherent responses. During their training phase, these models analyze billions of sentences to learn patterns, structures, and factual relationships, effectively mapping the intricate nuances of human language within a high-dimensional vector space. When a user provides a prompt, the model tokenizes the input, converting words into numerical representations that allow it to process the",
+              "outputTokens": 82,
+              "elapsedMs": 5901,
+              "ttftMs": 5851,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 1538.4615384615386,
+            "ttftMs": 6258,
+            "totalLatencyMs": 6310,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.33999999999999997,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models operate by transforming human language into vast numerical matrices, processing these inputs through intricate neural networks. During training, these models ingest immense datasets, learning statistical associations between words, phrases, and concepts. When a user provides a prompt, the model tokenizes the input, converting text into numerical identifiers that feed into the transformer architecture. The core mechanism relies on attention layers, which allow the system to",
+              "outputTokens": 80,
+              "elapsedMs": 6310,
+              "ttftMs": 6258,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 690.2654867256637,
+            "ttftMs": 6432,
+            "totalLatencyMs": 6545,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.32999999999999996,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models function by processing vast datasets to learn the underlying statistical patterns of human language. During training, these systems ingest billions of words, identifying relationships between characters, tokens, and phrases. They do not comprehend meaning in the human sense; rather, they construct a complex multi-dimensional map of linguistic associations. When a user provides a prompt, the model analyzes the input and converts it into",
+              "outputTokens": 78,
+              "elapsedMs": 6545,
+              "ttftMs": 6432,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 1289.5756750624007,
+          "stdDev": 521.4950058975262,
+          "min": 690.2654867256637,
+          "max": 1640,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 6180.333333333333,
+          "stdDev": 298.18506557729097,
+          "min": 5851,
+          "max": 6432,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 6252,
+          "stdDev": 325.8941545962431,
+          "min": 5901,
+          "max": 6545,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 192,
+          "stdDev": 0,
+          "min": 192,
+          "max": 192,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.3416666666666666,
+          "stdDev": 0.012583057392117928,
+          "min": 0.32999999999999996,
+          "max": 0.355,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.34848484848484845,
+          "stdDev": 0,
+          "min": 0.34848484848484845,
+          "max": 0.34848484848484845,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Extremely high sustained throughput (~1290 tokens/sec) and strong structured-output capability, handling deeply nested JSON (depth 15) and wide schemas (192 fields) reliably.",
+        "weaknesses": "Slow time to first token (~6.2s) and poor accuracy, with only 34% length-instruction adherence and 35% QA F1, making it unreliable for factual or instruction-sensitive tasks.",
+        "bestFor": "High-volume structured data generation and schema-heavy transformation workloads where JSON validity and raw throughput matter more than factual accuracy or precise instruction-following.",
+        "raw": "{\"strengths\":\"Extremely high sustained throughput (~1290 tokens/sec) and strong structured-output capability, handling deeply nested JSON (depth 15) and wide schemas (192 fields) reliably.\",\"weaknesses\":\"Slow time to first token (~6.2s) and poor accuracy, with only 34% length-instruction adherence and 35% QA F1, making it unreliable for factual or instruction-sensitive tasks.\",\"bestFor\":\"High-volume structured data generation and schema-heavy transformation workloads where JSON validity and raw throughput matter more than factual accuracy or precise instruction-following.\"}"
       }
     },
     {
@@ -8105,6 +8117,1142 @@
         "weaknesses": "Extremely slow time to first token (~35.7 seconds) makes it feel unresponsive, and low information-accuracy F1 (36%) means it's unreliable for factual QA.",
         "bestFor": "Batch or offline generation of large, deeply-structured JSON outputs where latency is tolerable and factual precision isn't critical, such as schema-driven data scaffolding or template filling.",
         "raw": "{\"strengths\":\"Excellent sustained throughput (272.7 tokens/sec) and perfect length-instruction adherence (100%), plus strong structured-output handling with deep JSON nesting (48 levels) and wide field breadth (192).\",\"weaknesses\":\"Extremely slow time to first token (~35.7 seconds) makes it feel unresponsive, and low information-accuracy F1 (36%) means it's unreliable for factual QA.\",\"bestFor\":\"Batch or offline generation of large, deeply-structured JSON outputs where latency is tolerable and factual precision isn't critical, such as schema-driven data scaffolding or template filling.\"}"
+      }
+    },
+    {
+      "id": "bedrock-claude-sonnet-5",
+      "provider": "bedrock",
+      "tier": "mid",
+      "modelName": "Claude Sonnet 5 (Bedrock)",
+      "apiModelId": "claude-sonnet-5",
+      "released": "2026-06",
+      "inputCostPerMTok": 3,
+      "outputCostPerMTok": 15,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "source": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock",
+      "effort": "low",
+      "provenance": "error",
+      "measuredAt": "2026-07-20T05:57:44.784Z",
+      "trialsRequested": 1,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": false,
+          "error": "Error: 403 {\"type\":\"error\",\"request_id\":\"req_qncv7ke5swvl555ihbmgacxywthxlhus6wdludpmeqr57mif6sgq\",\"error\":{\"type\":\"permission_error\",\"message\":\"anthropic.claude-sonnet-5 is not available for this account. You can explore other available models on Amazon Bedrock. For additional access options, contact AWS Sales at https://aws.amazon.com/contact-us/sales-support/\"}}",
+          "metrics": {
+            "throughputTokensPerSec": null,
+            "ttftMs": null,
+            "totalLatencyMs": null,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": null,
+            "informationAccuracy": null
+          },
+          "calls": []
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "max": 0,
+          "n": 0
+        },
+        "ttftMs": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "max": 0,
+          "n": 0
+        },
+        "totalLatencyMs": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "max": 0,
+          "n": 0
+        },
+        "maxSchemaDepth": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "max": 0,
+          "n": 0
+        },
+        "maxSchemaBreadth": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "max": 0,
+          "n": 0
+        },
+        "lengthAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "max": 0,
+          "n": 0
+        },
+        "informationAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "max": 0,
+          "n": 0
+        }
+      },
+      "review": {
+        "provenance": "skipped",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "",
+        "weaknesses": "",
+        "bestFor": "",
+        "raw": ""
+      }
+    },
+    {
+      "id": "google-gemini-3-6-flash",
+      "provider": "google",
+      "tier": "mid",
+      "modelName": "Gemini 3.6 Flash",
+      "apiModelId": "gemini-3.6-flash",
+      "released": "2026-07",
+      "inputCostPerMTok": 1.5,
+      "outputCostPerMTok": 7.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "current",
+      "supersedes": "google-gemini-3-5-flash",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "low",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 346.32034632034635,
+            "ttftMs": 9292,
+            "totalLatencyMs": 9523,
+            "maxSchemaDepth": 15,
+            "maxSchemaBreadth": 192,
+            "lengthAccuracy": 0.355,
+            "informationAccuracy": 0.45202020202020204
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "low",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by anticipating the most likely sequence of words based on vast patterns learned during training. Rather than possessing a humanlike understanding of language, these artificial intelligence systems operate on probability and statistical relationships embedded within vast datasets. When a user provides a prompt, the model converts the input into mathematical representations called tokens, which can be individual words, syllables, or even single characters. Passing these tokens",
+              "outputTokens": 80,
+              "elapsedMs": 9523,
+              "ttftMs": 9292,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 589.5522388059702,
+            "ttftMs": 8699,
+            "totalLatencyMs": 8833,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.36,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "low",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by anticipating the most likely sequence of words based on intricate patterns learned from vast collections of human language. At the core of this process lies a complex mathematical architecture known as a transformer, which breaks input text down into smaller numerical representations called tokens. Rather than understanding context in a human sense, the model evaluates these tokens simultaneously, using self-attention mechanisms to weigh the relationships between",
+              "outputTokens": 79,
+              "elapsedMs": 8833,
+              "ttftMs": 8699,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 592.5925925925926,
+            "ttftMs": 9243,
+            "totalLatencyMs": 9378,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.36,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "low",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text through sophisticated statistical pattern recognition, transforming vast amounts of human language into mathematical representations called vectors. When given a prompt, the model processes the input by breaking it down into smaller units known as tokens, which can be words or fragments of words. Using its deep neural network architecture, specifically the transformer mechanism, the model analyzes the relationships between all the tokens in the sequence simultaneously. It",
+              "outputTokens": 80,
+              "elapsedMs": 9378,
+              "ttftMs": 9243,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 509.48839257296976,
+          "stdDev": 141.31584987612194,
+          "min": 346.32034632034635,
+          "max": 592.5925925925926,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 9078,
+          "stdDev": 329.1367496953204,
+          "min": 8699,
+          "max": 9292,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 9244.666666666666,
+          "stdDev": 363.81084828978555,
+          "min": 8833,
+          "max": 9523,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 192,
+          "stdDev": 0,
+          "min": 192,
+          "max": 192,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.35833333333333334,
+          "stdDev": 0.002886751345948131,
+          "min": 0.355,
+          "max": 0.36,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.45202020202020204,
+          "stdDev": 0,
+          "min": 0.45202020202020204,
+          "max": 0.45202020202020204,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Very high sustained throughput (~510 tokens/sec) and strong structured-output capability, handling deeply nested JSON (depth 15) and wide schemas (192 fields) reliably. Well suited for generating large, complex structured payloads quickly.",
+        "weaknesses": "Slow time to first token (~9 seconds) hurts interactivity, and both length-instruction adherence (36%) and QA accuracy (45%) are poor, making it unreliable for precise or factual tasks.",
+        "bestFor": "Batch or non-interactive generation of large, deeply structured JSON where raw throughput matters more than latency, factual precision, or strict adherence to formatting instructions.",
+        "raw": "{\"strengths\":\"Very high sustained throughput (~510 tokens/sec) and strong structured-output capability, handling deeply nested JSON (depth 15) and wide schemas (192 fields) reliably. Well suited for generating large, complex structured payloads quickly.\",\"weaknesses\":\"Slow time to first token (~9 seconds) hurts interactivity, and both length-instruction adherence (36%) and QA accuracy (45%) are poor, making it unreliable for precise or factual tasks.\",\"bestFor\":\"Batch or non-interactive generation of large, deeply structured JSON where raw throughput matters more than latency, factual precision, or strict adherence to formatting instructions.\"}"
+      }
+    },
+    {
+      "id": "google-gemini-3-6-flash",
+      "provider": "google",
+      "tier": "mid",
+      "modelName": "Gemini 3.6 Flash",
+      "apiModelId": "gemini-3.6-flash",
+      "released": "2026-07",
+      "inputCostPerMTok": 1.5,
+      "outputCostPerMTok": 7.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "current",
+      "supersedes": "google-gemini-3-5-flash",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "medium",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 672.4137931034483,
+            "ttftMs": 9520,
+            "totalLatencyMs": 9636,
+            "maxSchemaDepth": 15,
+            "maxSchemaBreadth": 192,
+            "lengthAccuracy": 0.35,
+            "informationAccuracy": 0.3867521367521367
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text through a sophisticated process of pattern recognition and probability prediction rather than true comprehension. When a user inputs a prompt, the model breaks the text down into smaller units called tokens, which can be individual words or subword fragments. These tokens are converted into numerical representations known as embeddings, allowing the underlying neural network to analyze complex relationships between concepts. Built upon the transformer architecture,",
+              "outputTokens": 78,
+              "elapsedMs": 9636,
+              "ttftMs": 9520,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 401.01522842639594,
+            "ttftMs": 9777,
+            "totalLatencyMs": 9974,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.355,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by continuously predicting the most likely next token based on patterns learned from vast collections of written material. When a user provides a prompt, the model converts the incoming text into numerical representations. It then processes these values through billions of interconnected artificial neurons, assessing relationships between words, grammar, and context. Rather than understanding concepts like a human, the model relies on statistical probabilities to determine",
+              "outputTokens": 79,
+              "elapsedMs": 9974,
+              "ttftMs": 9777,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 553.956834532374,
+            "ttftMs": 9079,
+            "totalLatencyMs": 9218,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.32999999999999996,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by anticipating the most likely sequence of words through complex statistical patterns learned during extensive training. When a user provides a prompt, the system breaks the input into smaller units called tokens, which represent words, subwords, or punctuation marks. These tokens are converted into numerical representations that pass through deep neural network layers, utilizing a mathematical mechanism known as self-attention. This",
+              "outputTokens": 77,
+              "elapsedMs": 9218,
+              "ttftMs": 9079,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 542.4619520207394,
+          "stdDev": 136.063935229576,
+          "min": 401.01522842639594,
+          "max": 672.4137931034483,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 9458.666666666666,
+          "stdDev": 353.01888523609233,
+          "min": 9079,
+          "max": 9777,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 9609.333333333334,
+          "stdDev": 378.70481028544293,
+          "min": 9218,
+          "max": 9974,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 192,
+          "stdDev": 0,
+          "min": 192,
+          "max": 192,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.345,
+          "stdDev": 0.013228756555322964,
+          "min": 0.32999999999999996,
+          "max": 0.355,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.3867521367521367,
+          "stdDev": 0,
+          "min": 0.3867521367521367,
+          "max": 0.3867521367521367,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Very high sustained throughput (542 tokens/sec) and strong structured-output capability, handling deeply nested JSON (depth 15) and wide schemas (192 fields) reliably. Once generation starts, total response time is fast.",
+        "weaknesses": "Extremely slow time to first token (~9.5s) makes it feel unresponsive, and accuracy is poor—35% length-instruction adherence and only 39% QA F1 indicate weak factual reliability and instruction-following.",
+        "bestFor": "Batch or throughput-oriented tasks that emit large, deeply-nested structured JSON where latency to first token doesn't matter and factual precision or strict instruction-following is not critical.",
+        "raw": "{\"strengths\":\"Very high sustained throughput (542 tokens/sec) and strong structured-output capability, handling deeply nested JSON (depth 15) and wide schemas (192 fields) reliably. Once generation starts, total response time is fast.\",\"weaknesses\":\"Extremely slow time to first token (~9.5s) makes it feel unresponsive, and accuracy is poor—35% length-instruction adherence and only 39% QA F1 indicate weak factual reliability and instruction-following.\",\"bestFor\":\"Batch or throughput-oriented tasks that emit large, deeply-nested structured JSON where latency to first token doesn't matter and factual precision or strict instruction-following is not critical.\"}"
+      }
+    },
+    {
+      "id": "google-gemini-3-6-flash",
+      "provider": "google",
+      "tier": "mid",
+      "modelName": "Gemini 3.6 Flash",
+      "apiModelId": "gemini-3.6-flash",
+      "released": "2026-07",
+      "inputCostPerMTok": 1.5,
+      "outputCostPerMTok": 7.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "current",
+      "supersedes": "google-gemini-3-5-flash",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "high",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 427.77777777777777,
+            "ttftMs": 9323,
+            "totalLatencyMs": 9503,
+            "maxSchemaDepth": 15,
+            "maxSchemaBreadth": 192,
+            "lengthAccuracy": 0.355,
+            "informationAccuracy": 0.39141414141414144
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by analyzing patterns within massive datasets of human writing and using statistical probabilities to predict the most likely next word in a sequence. When given a prompt, the model converts the input text into numerical representations called tokens, which can be whole words or smaller character fragments. Through complex neural network architectures known as transformers, the system processes these tokens simultaneously, using attention mechanisms to weigh",
+              "outputTokens": 77,
+              "elapsedMs": 9503,
+              "ttftMs": 9323,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 443.2432432432432,
+            "ttftMs": 10186,
+            "totalLatencyMs": 10371,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.375,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text through a complex process of statistical prediction, converting written human language into rich numerical representations. When presented with a prompt, the system breaks the input down into smaller foundational units known as tokens. Using vast artificial neural networks structured on transformer architecture, the model analyzes all of these tokens at once. Specialized attention mechanisms enable the algorithm to weigh the relative importance and subtle relationships existing between every word. Rather",
+              "outputTokens": 82,
+              "elapsedMs": 10371,
+              "ttftMs": 10186,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 395,
+            "ttftMs": 8898,
+            "totalLatencyMs": 9098,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.35,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models create text by predicting the most likely next word in a sequence based on vast patterns learned during training. When given a prompt, the system breaks the input down into smaller units called tokens, converting words, subwords, or characters into numerical representations that the neural network can process. Through layers of mathematical transformations, particularly an attention mechanism, the model analyzes the context and determines how every part",
+              "outputTokens": 79,
+              "elapsedMs": 9098,
+              "ttftMs": 8898,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 422.00700700700696,
+          "stdDev": 24.633898922486267,
+          "min": 395,
+          "max": 443.2432432432432,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 9469,
+          "stdDev": 656.2949032256764,
+          "min": 8898,
+          "max": 10186,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 9657.333333333334,
+          "stdDev": 650.3816828088975,
+          "min": 9098,
+          "max": 10371,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 192,
+          "stdDev": 0,
+          "min": 192,
+          "max": 192,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.36000000000000004,
+          "stdDev": 0.013228756555322966,
+          "min": 0.35,
+          "max": 0.375,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.39141414141414144,
+          "stdDev": 0,
+          "min": 0.39141414141414144,
+          "max": 0.39141414141414144,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Very high sustained throughput (422 tokens/sec) and strong handling of complex, deeply nested JSON schemas (depth 15, breadth 192), making it reliable for structured output generation.",
+        "weaknesses": "Poor length-instruction adherence (36%) and low information-accuracy F1 (39%) mean it struggles with factual correctness and following precise formatting constraints, plus a slow ~9.5s time to first token hurts interactivity.",
+        "bestFor": "Best for high-volume batch generation of well-defined structured/JSON data where schema validity matters more than factual precision or strict instruction-following, and where latency is not a concern.",
+        "raw": "{\"strengths\":\"Very high sustained throughput (422 tokens/sec) and strong handling of complex, deeply nested JSON schemas (depth 15, breadth 192), making it reliable for structured output generation.\",\"weaknesses\":\"Poor length-instruction adherence (36%) and low information-accuracy F1 (39%) mean it struggles with factual correctness and following precise formatting constraints, plus a slow ~9.5s time to first token hurts interactivity.\",\"bestFor\":\"Best for high-volume batch generation of well-defined structured/JSON data where schema validity matters more than factual precision or strict instruction-following, and where latency is not a concern.\"}"
+      }
+    },
+    {
+      "id": "google-gemini-3-5-flash-lite",
+      "provider": "google",
+      "tier": "small",
+      "modelName": "Gemini 3.5 Flash-Lite",
+      "apiModelId": "gemini-3.5-flash-lite",
+      "released": "2026-07",
+      "inputCostPerMTok": 0.3,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "current",
+      "supersedes": "google-gemini-3-1-flash-lite",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "low",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 506.57894736842104,
+            "ttftMs": 5443,
+            "totalLatencyMs": 5595,
+            "maxSchemaDepth": 15,
+            "maxSchemaBreadth": 191,
+            "lengthAccuracy": 0.355,
+            "informationAccuracy": 0.47474747474747475
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "low",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text through a sophisticated statistical dance of probability and pattern recognition rooted in vast quantities of human data. When a user provides a prompt, the system first breaks the input down into smaller pieces known as tokens, which might be words, parts of words, or even punctuation marks. These tokens are then converted into numerical representations that capture their semantic meanings and contextual relationships within a high",
+              "outputTokens": 77,
+              "elapsedMs": 5595,
+              "ttftMs": 5443,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 318.3673469387755,
+            "ttftMs": 5285,
+            "totalLatencyMs": 5530,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.365,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "low",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by predicting the most statistically probable next token based on patterns learned from vast amounts of human data during their extensive training process. When a user inputs a prompt, the system first tokenizes the input, breaking words down into smaller numerical fragments that its neural network can mathematically process through layers of attention mechanisms. These mechanisms allow the model to weigh the contextual importance of different words in",
+              "outputTokens": 78,
+              "elapsedMs": 5530,
+              "ttftMs": 5285,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 585.7142857142857,
+            "ttftMs": 5543,
+            "totalLatencyMs": 5683,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.385,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "low",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by predicting the most statistically probable next token based on patterns learned from vast amounts of human data during their extensive training process. When a user provides a prompt, the system breaks the input down into smaller pieces called tokens, which are then processed through a complex neural network architecture known as the transformer. This architecture uses attention mechanisms to weigh the context and relationships between different words, allowing the model to",
+              "outputTokens": 82,
+              "elapsedMs": 5683,
+              "ttftMs": 5543,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 470.220193340494,
+          "stdDev": 137.331954271417,
+          "min": 318.3673469387755,
+          "max": 585.7142857142857,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 5423.666666666667,
+          "stdDev": 130.082025404486,
+          "min": 5285,
+          "max": 5543,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 5602.666666666667,
+          "stdDev": 76.78758580222024,
+          "min": 5530,
+          "max": 5683,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 191,
+          "stdDev": 0,
+          "min": 191,
+          "max": 191,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.36833333333333335,
+          "stdDev": 0.01527525231651948,
+          "min": 0.355,
+          "max": 0.385,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.47474747474747475,
+          "stdDev": 0,
+          "min": 0.47474747474747475,
+          "max": 0.47474747474747475,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Very high sustained throughput (470 tokens/sec) and it reliably handles deeply nested (15 levels) and broad (191 fields) JSON schemas, making it strong for structured output generation.",
+        "weaknesses": "Slow time to first token (~5.4s), poor length-instruction adherence (37%), and low factual accuracy (47% F1) make it unreliable for precise or fact-heavy tasks.",
+        "bestFor": "Best for high-volume structured data generation and schema-driven output where throughput and JSON reliability matter more than factual precision or strict formatting instructions.",
+        "raw": "{\"strengths\":\"Very high sustained throughput (470 tokens/sec) and it reliably handles deeply nested (15 levels) and broad (191 fields) JSON schemas, making it strong for structured output generation.\",\"weaknesses\":\"Slow time to first token (~5.4s), poor length-instruction adherence (37%), and low factual accuracy (47% F1) make it unreliable for precise or fact-heavy tasks.\",\"bestFor\":\"Best for high-volume structured data generation and schema-driven output where throughput and JSON reliability matter more than factual precision or strict formatting instructions.\"}"
+      }
+    },
+    {
+      "id": "google-gemini-3-5-flash-lite",
+      "provider": "google",
+      "tier": "small",
+      "modelName": "Gemini 3.5 Flash-Lite",
+      "apiModelId": "gemini-3.5-flash-lite",
+      "released": "2026-07",
+      "inputCostPerMTok": 0.3,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "current",
+      "supersedes": "google-gemini-3-1-flash-lite",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "medium",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 880.4347826086956,
+            "ttftMs": 5267,
+            "totalLatencyMs": 5359,
+            "maxSchemaDepth": 15,
+            "maxSchemaBreadth": 192,
+            "lengthAccuracy": 0.375,
+            "informationAccuracy": 0.3611111111111111
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by predicting the most probable next token based on patterns learned from vast amounts of human data during their extensive training process. When a user inputs a prompt, the system tokenizes the input, breaking words into smaller subword units that the neural network can mathematically process through complex layers of attention mechanisms. These mechanisms allow the model to weigh the contextual importance of different words in relation to one another",
+              "outputTokens": 81,
+              "elapsedMs": 5359,
+              "ttftMs": 5267,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 482.3529411764706,
+            "ttftMs": 5378,
+            "totalLatencyMs": 5548,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.37,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text through a complex process of statistical prediction rooted in vast amounts of training data. When a user provides a prompt, the model tokenizes the input, breaking words down into smaller fragments or numbers that its neural network can process. It then evaluates the context of these tokens, passing the information through multiple layers of attention mechanisms. These mechanisms allow the system to weigh the relationships between different words, determining",
+              "outputTokens": 82,
+              "elapsedMs": 5548,
+              "ttftMs": 5378,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 901.0989010989011,
+            "ttftMs": 4511,
+            "totalLatencyMs": 4602,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.37,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "medium",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text through a continuous process of statistical prediction rather than conscious thought or genuine understanding. When a user provides a prompt, the system breaks the input down into smaller pieces known as tokens, which might represent words, parts of words, or punctuation marks. These tokens are then converted into numerical vectors and processed through a massive neural network architecture called a transformer. Within this complex web of interconnected nodes, the",
+              "outputTokens": 82,
+              "elapsedMs": 4602,
+              "ttftMs": 4511,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 754.6288749613558,
+          "stdDev": 236.02412914163605,
+          "min": 482.3529411764706,
+          "max": 901.0989010989011,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 5052,
+          "stdDev": 471.7955065491828,
+          "min": 4511,
+          "max": 5378,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 5169.666666666667,
+          "stdDev": 500.61395639088346,
+          "min": 4602,
+          "max": 5548,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 192,
+          "stdDev": 0,
+          "min": 192,
+          "max": 192,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.37166666666666665,
+          "stdDev": 0.002886751345948131,
+          "min": 0.37,
+          "max": 0.375,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.3611111111111111,
+          "stdDev": 0,
+          "min": 0.3611111111111111,
+          "max": 0.3611111111111111,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Very high sustained throughput (~755 tokens/sec) and handles deeply nested (15 levels) and wide (192 fields) JSON schemas reliably, making it well-suited for structured output generation.",
+        "weaknesses": "Slow time to first token (~5 seconds) hurts interactivity, and both length-instruction adherence (37%) and factual QA accuracy (36%) are poor, so it struggles with precise instructions and reliable information.",
+        "bestFor": "Best for high-volume, batch-style generation of complex structured/JSON data where raw throughput and schema handling matter more than factual accuracy or low latency.",
+        "raw": "{\"strengths\": \"Very high sustained throughput (~755 tokens/sec) and handles deeply nested (15 levels) and wide (192 fields) JSON schemas reliably, making it well-suited for structured output generation.\", \"weaknesses\": \"Slow time to first token (~5 seconds) hurts interactivity, and both length-instruction adherence (37%) and factual QA accuracy (36%) are poor, so it struggles with precise instructions and reliable information.\", \"bestFor\": \"Best for high-volume, batch-style generation of complex structured/JSON data where raw throughput and schema handling matter more than factual accuracy or low latency.\"}"
+      }
+    },
+    {
+      "id": "google-gemini-3-5-flash-lite",
+      "provider": "google",
+      "tier": "small",
+      "modelName": "Gemini 3.5 Flash-Lite",
+      "apiModelId": "gemini-3.5-flash-lite",
+      "released": "2026-07",
+      "inputCostPerMTok": 0.3,
+      "outputCostPerMTok": 2.5,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "generation": "current",
+      "supersedes": "google-gemini-3-1-flash-lite",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "effort": "high",
+      "provenance": "measured",
+      "measuredAt": "2026-07-27T04:37:01.015Z",
+      "trialsRequested": 3,
+      "trials": [
+        {
+          "trial": 1,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 515.9235668789809,
+            "ttftMs": 5359,
+            "totalLatencyMs": 5516,
+            "maxSchemaDepth": 15,
+            "maxSchemaBreadth": 192,
+            "lengthAccuracy": 0.37,
+            "informationAccuracy": 0.3611111111111111
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text through a sophisticated statistical process grounded in vast amounts of training data. When a user provides a prompt, the system first breaks the input down into smaller units called tokens, which might be words, parts of words, or punctuation marks. These tokens are converted into numerical representations that capture their semantic meanings and contextual relationships within a vast mathematical space. The core of the model relies on a neural",
+              "outputTokens": 81,
+              "elapsedMs": 5516,
+              "ttftMs": 5359,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 2,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 950.6172839506173,
+            "ttftMs": 5677,
+            "totalLatencyMs": 5758,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.355,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": "Large language models generate text by transforming human prompts into numerical representations that capture semantic meaning and contextual nuance. When a user enters a query, the system first breaks the input down into smaller pieces called tokens, which are then mapped to high dimensional vectors within a vast embedding space. Through numerous layers of self attention mechanisms, the neural network evaluates the relationships between these tokens, weighing how words influence one",
+              "outputTokens": 77,
+              "elapsedMs": 5758,
+              "ttftMs": 5677,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "trial": 3,
+          "ok": true,
+          "error": null,
+          "metrics": {
+            "throughputTokensPerSec": 724.7706422018349,
+            "ttftMs": 5500,
+            "totalLatencyMs": 5609,
+            "maxSchemaDepth": null,
+            "maxSchemaBreadth": null,
+            "lengthAccuracy": 0.21499999999999997,
+            "informationAccuracy": null
+          },
+          "calls": [
+            {
+              "probe": "speed",
+              "effort": "high",
+              "prompt": "Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.",
+              "rawOutput": " wait, let's keep track manually)\n    Let's draft the full text and count every single word precisely.\n\n7.  **Drafting full text for precise counting:**\n    Large (1) language (2) models (3) generate (4) text (5) by (6) turning (7) vast (8) datasets (9) into (1",
+              "outputTokens": 79,
+              "elapsedMs": 5609,
+              "ttftMs": 5500,
+              "schemaAxis": null,
+              "schemaValue": null,
+              "schemaConforms": null,
+              "informationQuestionId": null,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "throughputTokensPerSec": {
+          "mean": 730.4371643438111,
+          "stdDev": 217.4022516449131,
+          "min": 515.9235668789809,
+          "max": 950.6172839506173,
+          "n": 3
+        },
+        "ttftMs": {
+          "mean": 5512,
+          "stdDev": 159.339260698674,
+          "min": 5359,
+          "max": 5677,
+          "n": 3
+        },
+        "totalLatencyMs": {
+          "mean": 5627.666666666667,
+          "stdDev": 122.07511348892261,
+          "min": 5516,
+          "max": 5758,
+          "n": 3
+        },
+        "maxSchemaDepth": {
+          "mean": 15,
+          "stdDev": 0,
+          "min": 15,
+          "max": 15,
+          "n": 1
+        },
+        "maxSchemaBreadth": {
+          "mean": 192,
+          "stdDev": 0,
+          "min": 192,
+          "max": 192,
+          "n": 1
+        },
+        "lengthAccuracy": {
+          "mean": 0.3133333333333333,
+          "stdDev": 0.08548879068821441,
+          "min": 0.21499999999999997,
+          "max": 0.37,
+          "n": 3
+        },
+        "informationAccuracy": {
+          "mean": 0.3611111111111111,
+          "stdDev": 0,
+          "min": 0.3611111111111111,
+          "max": 0.3611111111111111,
+          "n": 1
+        }
+      },
+      "review": {
+        "provenance": "judged",
+        "judgeModel": "claude-opus-4-8",
+        "strengths": "Very high sustained throughput (730 tokens/sec) and excellent structural capacity, handling deep JSON-schema nesting (depth 15) and wide field breadth (192) reliably. Well suited for generating large, complex structured outputs at speed.",
+        "weaknesses": "Slow time to first token (~5.5 seconds) hurts interactivity, and both length-instruction accuracy (31%) and information-accuracy QA F1 (36%) are poor, indicating unreliable factual answers and instruction-following.",
+        "bestFor": "Best for high-volume, throughput-oriented generation of complex structured data (JSON/schema-driven output) where raw speed and structural fidelity matter more than factual precision or strict adherence to length constraints.",
+        "raw": "{\"strengths\":\"Very high sustained throughput (730 tokens/sec) and excellent structural capacity, handling deep JSON-schema nesting (depth 15) and wide field breadth (192) reliably. Well suited for generating large, complex structured outputs at speed.\",\"weaknesses\":\"Slow time to first token (~5.5 seconds) hurts interactivity, and both length-instruction accuracy (31%) and information-accuracy QA F1 (36%) are poor, indicating unreliable factual answers and instruction-following.\",\"bestFor\":\"Best for high-volume, throughput-oriented generation of complex structured data (JSON/schema-driven output) where raw speed and structural fidelity matter more than factual precision or strict adherence to length constraints.\"}"
       }
     }
   ],

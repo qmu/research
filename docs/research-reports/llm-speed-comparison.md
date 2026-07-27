@@ -1,6 +1,6 @@
 ---
 title: LLM response speed
-description: A reproducible speed comparison of 19 large language models across 4 providers and 47 model×effort configurations, covering sustained generation throughput, time-to-first-token, and total response latency, over 3 trials. Projected from the shared LLM comparison sweep.
+description: A reproducible speed comparison of 22 large language models across 5 providers and 54 model×effort configurations, covering sustained generation throughput, time-to-first-token, and total response latency, over 3 trials. Projected from the shared LLM comparison sweep.
 ---
 
 # LLM response speed
@@ -15,7 +15,7 @@ This report helps narrow model choices by the measured constraints that matter f
 
 ### Target Models
 
-The report covers **47 model×effort configurations** across 19 models and 4 providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.
+The report covers **54 model×effort configurations** across 22 models and 5 providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.
 
 ### Target Metrics
 
@@ -24,33 +24,32 @@ This topic covers sustained generation throughput, time-to-first-token, and tota
 ## 3. Scope and Constraints
 
 - **3 trials** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
-- **Point-in-time.** Measured behavior reflects the models and APIs at `2026-07-12T05:47:26.268Z`.
+- **Point-in-time.** Measured behavior reflects the models and APIs at `2026-07-27T04:37:01.015Z`.
 - This topic tests narrow behaviors only (sustained generation throughput, time-to-first-token, and total response latency); it does not measure general capability or reasoning quality.
 - **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
+- **This run includes non-measured configurations.** `n/a (fixtured)` and `n/a (error)` cells are not live measurements.
 
 ## 4. Verification Results
 
-This run measured **47 of 47 configurations** across 4 providers and 19 models, over 3 trials per configuration×probe.
+This run measured **53 of 54 configurations** across 5 providers and 22 models, over 3 trials per configuration×probe.
 
 | Aspect | Best (configuration) | Median | Worst |
 | ------ | -------------------- | ------ | ----- |
-| Sustained throughput during generation | 9278.0 tok/s — Gemini 3.1 Flash-Lite [high] | 274.5 tok/s | 47.8 tok/s |
-| Time to first token | 0 ms — Claude Fable 5 [max] | 5594 ms | 37966 ms |
-| Total response time | 1726 ms — Gemini 3.1 Flash-Lite [low] | 7943 ms | 38918 ms |
+| Sustained throughput during generation | 2951.7 tok/s — GPT-5.4 mini [high] | 373.7 tok/s | 47.8 tok/s |
+| Time to first token | 0 ms — Claude Fable 5 [max] | 6014 ms | 37966 ms |
+| Total response time | 1751 ms — GPT-5.4 nano [none] | 7750 ms | 38918 ms |
 
 Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+This round includes a controlled former→new generational comparison: paired previous- and current-generation models were swept under identical conditions. The per-metric deltas and mechanically-derived net verdict are in section 7, Verification Data.
 
 ## 5. Analysis
 
-Highest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [high]** at 9278 ± 17042 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
+Highest measured of the 53 measured configuration(s): **GPT-5.4 mini [high]** at 2952 ± 3461 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
 
-Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
+Lowest measured of the 53 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
 
-Lowest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [low]** at 1726 ± 108 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
+Lowest measured of the 53 measured configuration(s): **GPT-5.4 nano [none]** at 1751 ± 154 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
 
 ## 6. Reproduction
 
@@ -116,18 +115,25 @@ The projection creates no external resources. Real runs write local `.real` Mark
 | Google | Gemini 3.1 Pro | flagship | low | $2.00 / $12.00 | 266 ± 5 tok/s (95% CI, n=3) | 14977 ± 45 ms (95% CI, n=3) | 15276 ± 43 ms (95% CI, n=3) |
 | Google | Gemini 3.1 Pro | flagship | medium | $2.00 / $12.00 | 302 ± 45 tok/s (95% CI, n=3) | 15376 ± 903 ms (95% CI, n=3) | 15646 ± 864 ms (95% CI, n=3) |
 | Google | Gemini 3.1 Pro | flagship | high | $2.00 / $12.00 | 274 ± 16 tok/s (95% CI, n=3) | 15497 ± 979 ms (95% CI, n=3) | 15782 ± 988 ms (95% CI, n=3) |
-| Google | Gemini 3.5 Flash | mid | low | $0.30 / $2.50 | 717 ± 419 tok/s (95% CI, n=3) | 7707 ± 202 ms (95% CI, n=3) | 7857 ± 283 ms (95% CI, n=3) |
-| Google | Gemini 3.5 Flash | mid | medium | $0.30 / $2.50 | 579 ± 159 tok/s (95% CI, n=3) | 8118 ± 798 ms (95% CI, n=3) | 8261 ± 833 ms (95% CI, n=3) |
-| Google | Gemini 3.5 Flash | mid | high | $0.30 / $2.50 | 982 ± 530 tok/s (95% CI, n=3) | 8050 ± 600 ms (95% CI, n=3) | 8143 ± 593 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Flash-Lite | small | low | $0.10 / $0.40 | 256 ± 6 tok/s (95% CI, n=3) | 815 ± 114 ms (95% CI, n=3) | 1726 ± 108 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Flash-Lite | small | medium | $0.10 / $0.40 | 730 ± 278 tok/s (95% CI, n=3) | 4696 ± 171 ms (95% CI, n=3) | 4816 ± 145 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Flash-Lite | small | high | $0.10 / $0.40 | 9278 ± 17042 tok/s (95% CI, n=3) | 4991 ± 129 ms (95% CI, n=3) | 5089 ± 207 ms (95% CI, n=3) |
+| Google | Gemini 3.5 Flash | mid | low | $1.50 / $9.00 | 490 ± 204 tok/s (95% CI, n=3) | 7520 ± 661 ms (95% CI, n=3) | 7699 ± 600 ms (95% CI, n=3) |
+| Google | Gemini 3.5 Flash | mid | medium | $1.50 / $9.00 | 449 ± 87 tok/s (95% CI, n=3) | 7333 ± 351 ms (95% CI, n=3) | 7511 ± 381 ms (95% CI, n=3) |
+| Google | Gemini 3.5 Flash | mid | high | $1.50 / $9.00 | 684 ± 518 tok/s (95% CI, n=3) | 7852 ± 460 ms (95% CI, n=3) | 8002 ± 413 ms (95% CI, n=3) |
+| Google | Gemini 3.1 Flash-Lite | small | low | $0.25 / $1.50 | 216 ± 22 tok/s (95% CI, n=3) | 903 ± 51 ms (95% CI, n=3) | 1980 ± 196 ms (95% CI, n=3) |
+| Google | Gemini 3.1 Flash-Lite | small | medium | $0.25 / $1.50 | 1754 ± 1608 tok/s (95% CI, n=3) | 6014 ± 79 ms (95% CI, n=3) | 6079 ± 65 ms (95% CI, n=3) |
+| Google | Gemini 3.1 Flash-Lite | small | high | $0.25 / $1.50 | 1290 ± 590 tok/s (95% CI, n=3) | 6180 ± 337 ms (95% CI, n=3) | 6252 ± 369 ms (95% CI, n=3) |
 | xAI | Grok 4.3 | frontier | none | $1.25 / $2.50 | 108 ± 13 tok/s (95% CI, n=3) | 524 ± 27 ms (95% CI, n=3) | 2382 ± 186 ms (95% CI, n=3) |
 | xAI | Grok 4.3 | frontier | medium | $1.25 / $2.50 | 258 ± 18 tok/s (95% CI, n=3) | 19640 ± 5470 ms (95% CI, n=3) | 20490 ± 5423 ms (95% CI, n=3) |
 | xAI | Grok 4.3 | frontier | high | $1.25 / $2.50 | 250 ± 7 tok/s (95% CI, n=3) | 23565 ± 5250 ms (95% CI, n=3) | 24423 ± 5203 ms (95% CI, n=3) |
 | xAI | Grok 4.20 Reasoning | flagship | n/a | $1.25 / $2.50 | 229 ± 37 tok/s (95% CI, n=3) | 37966 ± 16419 ms (95% CI, n=3) | 38918 ± 16237 ms (95% CI, n=3) |
 | xAI | Grok 4.20 Non-Reasoning | mid | n/a | $1.25 / $2.50 | 100 ± 2 tok/s (95% CI, n=3) | 435 ± 40 ms (95% CI, n=3) | 2919 ± 123 ms (95% CI, n=3) |
 | xAI | Grok Build 0.1 | small | n/a | $1.00 / $2.00 | 273 ± 4 tok/s (95% CI, n=3) | 35660 ± 6588 ms (95% CI, n=3) | 36444 ± 6613 ms (95% CI, n=3) |
+| AWS Bedrock | Claude Sonnet 5 (Bedrock) | mid | low | $3.00 / $15.00 | n/a (error) | n/a (error) | n/a (error) |
+| Google | Gemini 3.6 Flash | mid | low | $1.50 / $7.50 | 509 ± 160 tok/s (95% CI, n=3) | 9078 ± 372 ms (95% CI, n=3) | 9245 ± 412 ms (95% CI, n=3) |
+| Google | Gemini 3.6 Flash | mid | medium | $1.50 / $7.50 | 542 ± 154 tok/s (95% CI, n=3) | 9459 ± 399 ms (95% CI, n=3) | 9609 ± 429 ms (95% CI, n=3) |
+| Google | Gemini 3.6 Flash | mid | high | $1.50 / $7.50 | 422 ± 28 tok/s (95% CI, n=3) | 9469 ± 743 ms (95% CI, n=3) | 9657 ± 736 ms (95% CI, n=3) |
+| Google | Gemini 3.5 Flash-Lite | small | low | $0.30 / $2.50 | 470 ± 155 tok/s (95% CI, n=3) | 5424 ± 147 ms (95% CI, n=3) | 5603 ± 87 ms (95% CI, n=3) |
+| Google | Gemini 3.5 Flash-Lite | small | medium | $0.30 / $2.50 | 755 ± 267 tok/s (95% CI, n=3) | 5052 ± 534 ms (95% CI, n=3) | 5170 ± 566 ms (95% CI, n=3) |
+| Google | Gemini 3.5 Flash-Lite | small | high | $0.30 / $2.50 | 730 ± 246 tok/s (95% CI, n=3) | 5512 ± 180 ms (95% CI, n=3) | 5628 ± 138 ms (95% CI, n=3) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. `n/a (fixtured)` means the deterministic fixture client produced the cell; `n/a (error)` means every trial for that configuration failed.
 
@@ -172,20 +178,27 @@ Each detail table reports observed min-max and contributing trial count for one 
 | Gemini 3.1 Pro [low] | 266 ± 5 tok/s (95% CI, n=3) | 261.6–270.3 | 3 |
 | Gemini 3.1 Pro [medium] | 302 ± 45 tok/s (95% CI, n=3) | 266.4–344.7 | 3 |
 | Gemini 3.1 Pro [high] | 274 ± 16 tok/s (95% CI, n=3) | 260.9–288.9 | 3 |
-| Gemini 3.5 Flash [low] | 717 ± 419 tok/s (95% CI, n=3) | 290.3–950.6 | 3 |
-| Gemini 3.5 Flash [medium] | 579 ± 159 tok/s (95% CI, n=3) | 427.8–705.4 | 3 |
-| Gemini 3.5 Flash [high] | 982 ± 530 tok/s (95% CI, n=3) | 569.3–1490.9 | 3 |
-| Gemini 3.1 Flash-Lite [low] | 256 ± 6 tok/s (95% CI, n=3) | 251.6–262.7 | 3 |
-| Gemini 3.1 Flash-Lite [medium] | 730 ± 278 tok/s (95% CI, n=3) | 562.5–1011.9 | 3 |
-| Gemini 3.1 Flash-Lite [high] | 9278 ± 17042 tok/s (95% CI, n=3) | 440.9–26666.7 | 3 |
+| Gemini 3.5 Flash [low] | 490 ± 204 tok/s (95% CI, n=3) | 283.1–609.0 | 3 |
+| Gemini 3.5 Flash [medium] | 449 ± 87 tok/s (95% CI, n=3) | 363.2–512.7 | 3 |
+| Gemini 3.5 Flash [high] | 684 ± 518 tok/s (95% CI, n=3) | 411.2–1212.1 | 3 |
+| Gemini 3.1 Flash-Lite [low] | 216 ± 22 tok/s (95% CI, n=3) | 192.8–229.8 | 3 |
+| Gemini 3.1 Flash-Lite [medium] | 1754 ± 1608 tok/s (95% CI, n=3) | 846.2–3391.3 | 3 |
+| Gemini 3.1 Flash-Lite [high] | 1290 ± 590 tok/s (95% CI, n=3) | 690.3–1640.0 | 3 |
 | Grok 4.3 [none] | 108 ± 13 tok/s (95% CI, n=3) | 98.7–120.0 | 3 |
 | Grok 4.3 [medium] | 258 ± 18 tok/s (95% CI, n=3) | 247.1–275.5 | 3 |
 | Grok 4.3 [high] | 250 ± 7 tok/s (95% CI, n=3) | 244.8–256.4 | 3 |
 | Grok 4.20 Reasoning [n/a] | 229 ± 37 tok/s (95% CI, n=3) | 192.2–253.3 | 3 |
 | Grok 4.20 Non-Reasoning [n/a] | 100 ± 2 tok/s (95% CI, n=3) | 98.9–102.2 | 3 |
 | Grok Build 0.1 [n/a] | 273 ± 4 tok/s (95% CI, n=3) | 269.8–277.2 | 3 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 509 ± 160 tok/s (95% CI, n=3) | 346.3–592.6 | 3 |
+| Gemini 3.6 Flash [medium] | 542 ± 154 tok/s (95% CI, n=3) | 401.0–672.4 | 3 |
+| Gemini 3.6 Flash [high] | 422 ± 28 tok/s (95% CI, n=3) | 395.0–443.2 | 3 |
+| Gemini 3.5 Flash-Lite [low] | 470 ± 155 tok/s (95% CI, n=3) | 318.4–585.7 | 3 |
+| Gemini 3.5 Flash-Lite [medium] | 755 ± 267 tok/s (95% CI, n=3) | 482.4–901.1 | 3 |
+| Gemini 3.5 Flash-Lite [high] | 730 ± 246 tok/s (95% CI, n=3) | 515.9–950.6 | 3 |
 
-Highest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [high]** at 9278 ± 17042 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
+Highest measured of the 53 measured configuration(s): **GPT-5.4 mini [high]** at 2952 ± 3461 tok/s (95% CI, n=3). Opposite end of this measurement: GPT-5.5 [none] at 48 ± 4 tok/s (95% CI, n=3).
 
 **Time to first token**
 
@@ -226,20 +239,27 @@ Highest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [h
 | Gemini 3.1 Pro [low] | 14977 ± 45 ms (95% CI, n=3) | 14932–15008 | 3 |
 | Gemini 3.1 Pro [medium] | 15376 ± 903 ms (95% CI, n=3) | 14633–16220 | 3 |
 | Gemini 3.1 Pro [high] | 15497 ± 979 ms (95% CI, n=3) | 14636–16367 | 3 |
-| Gemini 3.5 Flash [low] | 7707 ± 202 ms (95% CI, n=3) | 7501–7813 | 3 |
-| Gemini 3.5 Flash [medium] | 8118 ± 798 ms (95% CI, n=3) | 7307–8591 | 3 |
-| Gemini 3.5 Flash [high] | 8050 ± 600 ms (95% CI, n=3) | 7706–8660 | 3 |
-| Gemini 3.1 Flash-Lite [low] | 815 ± 114 ms (95% CI, n=3) | 698–876 | 3 |
-| Gemini 3.1 Flash-Lite [medium] | 4696 ± 171 ms (95% CI, n=3) | 4546–4848 | 3 |
-| Gemini 3.1 Flash-Lite [high] | 4991 ± 129 ms (95% CI, n=3) | 4876–5104 | 3 |
+| Gemini 3.5 Flash [low] | 7520 ± 661 ms (95% CI, n=3) | 7035–8169 | 3 |
+| Gemini 3.5 Flash [medium] | 7333 ± 351 ms (95% CI, n=3) | 7021–7641 | 3 |
+| Gemini 3.5 Flash [high] | 7852 ± 460 ms (95% CI, n=3) | 7384–8122 | 3 |
+| Gemini 3.1 Flash-Lite [low] | 903 ± 51 ms (95% CI, n=3) | 868–954 | 3 |
+| Gemini 3.1 Flash-Lite [medium] | 6014 ± 79 ms (95% CI, n=3) | 5936–6070 | 3 |
+| Gemini 3.1 Flash-Lite [high] | 6180 ± 337 ms (95% CI, n=3) | 5851–6432 | 3 |
 | Grok 4.3 [none] | 524 ± 27 ms (95% CI, n=3) | 505–551 | 3 |
 | Grok 4.3 [medium] | 19640 ± 5470 ms (95% CI, n=3) | 15124–24739 | 3 |
 | Grok 4.3 [high] | 23565 ± 5250 ms (95% CI, n=3) | 19629–28680 | 3 |
 | Grok 4.20 Reasoning [n/a] | 37966 ± 16419 ms (95% CI, n=3) | 24169–53096 | 3 |
 | Grok 4.20 Non-Reasoning [n/a] | 435 ± 40 ms (95% CI, n=3) | 405–474 | 3 |
 | Grok Build 0.1 [n/a] | 35660 ± 6588 ms (95% CI, n=3) | 28981–39657 | 3 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 9078 ± 372 ms (95% CI, n=3) | 8699–9292 | 3 |
+| Gemini 3.6 Flash [medium] | 9459 ± 399 ms (95% CI, n=3) | 9079–9777 | 3 |
+| Gemini 3.6 Flash [high] | 9469 ± 743 ms (95% CI, n=3) | 8898–10186 | 3 |
+| Gemini 3.5 Flash-Lite [low] | 5424 ± 147 ms (95% CI, n=3) | 5285–5543 | 3 |
+| Gemini 3.5 Flash-Lite [medium] | 5052 ± 534 ms (95% CI, n=3) | 4511–5378 | 3 |
+| Gemini 3.5 Flash-Lite [high] | 5512 ± 180 ms (95% CI, n=3) | 5359–5677 | 3 |
 
-Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
+Lowest measured of the 53 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
 
 **Total response time**
 
@@ -280,20 +300,27 @@ Lowest measured of the 47 measured configuration(s): **Claude Fable 5 [max]** at
 | Gemini 3.1 Pro [low] | 15276 ± 43 ms (95% CI, n=3) | 15234–15307 | 3 |
 | Gemini 3.1 Pro [medium] | 15646 ± 864 ms (95% CI, n=3) | 14937–16455 | 3 |
 | Gemini 3.1 Pro [high] | 15782 ± 988 ms (95% CI, n=3) | 14921–16666 | 3 |
-| Gemini 3.5 Flash [low] | 7857 ± 283 ms (95% CI, n=3) | 7591–8087 | 3 |
-| Gemini 3.5 Flash [medium] | 8261 ± 833 ms (95% CI, n=3) | 7419–8778 | 3 |
-| Gemini 3.5 Flash [high] | 8143 ± 593 ms (95% CI, n=3) | 7838–8748 | 3 |
-| Gemini 3.1 Flash-Lite [low] | 1726 ± 108 ms (95% CI, n=3) | 1620–1806 | 3 |
-| Gemini 3.1 Flash-Lite [medium] | 4816 ± 145 ms (95% CI, n=3) | 4679–4932 | 3 |
-| Gemini 3.1 Flash-Lite [high] | 5089 ± 207 ms (95% CI, n=3) | 4879–5210 | 3 |
+| Gemini 3.5 Flash [low] | 7699 ± 600 ms (95% CI, n=3) | 7307–8302 | 3 |
+| Gemini 3.5 Flash [medium] | 7511 ± 381 ms (95% CI, n=3) | 7179–7853 | 3 |
+| Gemini 3.5 Flash [high] | 8002 ± 413 ms (95% CI, n=3) | 7581–8236 | 3 |
+| Gemini 3.1 Flash-Lite [low] | 1980 ± 196 ms (95% CI, n=3) | 1860–2178 | 3 |
+| Gemini 3.1 Flash-Lite [medium] | 6079 ± 65 ms (95% CI, n=3) | 6016–6128 | 3 |
+| Gemini 3.1 Flash-Lite [high] | 6252 ± 369 ms (95% CI, n=3) | 5901–6545 | 3 |
 | Grok 4.3 [none] | 2382 ± 186 ms (95% CI, n=3) | 2201–2521 | 3 |
 | Grok 4.3 [medium] | 20490 ± 5423 ms (95% CI, n=3) | 15982–25523 | 3 |
 | Grok 4.3 [high] | 24423 ± 5203 ms (95% CI, n=3) | 20529–29495 | 3 |
 | Grok 4.20 Reasoning [n/a] | 38918 ± 16237 ms (95% CI, n=3) | 25329–53921 | 3 |
 | Grok 4.20 Non-Reasoning [n/a] | 2919 ± 123 ms (95% CI, n=3) | 2843–3043 | 3 |
 | Grok Build 0.1 [n/a] | 36444 ± 6613 ms (95% CI, n=3) | 29735–40428 | 3 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 9245 ± 412 ms (95% CI, n=3) | 8833–9523 | 3 |
+| Gemini 3.6 Flash [medium] | 9609 ± 429 ms (95% CI, n=3) | 9218–9974 | 3 |
+| Gemini 3.6 Flash [high] | 9657 ± 736 ms (95% CI, n=3) | 9098–10371 | 3 |
+| Gemini 3.5 Flash-Lite [low] | 5603 ± 87 ms (95% CI, n=3) | 5530–5683 | 3 |
+| Gemini 3.5 Flash-Lite [medium] | 5170 ± 566 ms (95% CI, n=3) | 4602–5548 | 3 |
+| Gemini 3.5 Flash-Lite [high] | 5628 ± 138 ms (95% CI, n=3) | 5516–5758 | 3 |
 
-Lowest measured of the 47 measured configuration(s): **Gemini 3.1 Flash-Lite [low]** at 1726 ± 108 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
+Lowest measured of the 53 measured configuration(s): **GPT-5.4 nano [none]** at 1751 ± 154 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
 
 The projected artifact preserves this topic's prompts, raw trial outputs, token
 counts, timing values, and (for accuracy) schema-conformance results and
@@ -315,12 +342,84 @@ committed alongside this page as a JSON artifact:
 It is projected from the combined comparison record
 `llm-model-comparison.real.data.json` — the same measurements, never re-run.
 
+#### Generational comparison (former → new)
+
+For each provider tier that turned a generation this round, the former and the new model were swept under identical conditions (same tier, same effort ladder — only the model id differs), so these deltas isolate the generational change. A speed or accuracy delta appears only when both generations were `measured` in this frame; cost figures are curated registry facts. The net verdict is a mechanical rule over the per-metric deltas (each metric counts as moved only past a 1% relative threshold): **improved** when at least one metric improved and none regressed, **regressed** in the mirror case, **mixed** when both occur, and **unchanged** when every metric held within the threshold. Cheaper is an improvement; a faster-but-pricier result reads as mixed, never silently netted to improved.
+
+##### Gemini 3.5 Flash → Gemini 3.6 Flash
+
+**Effort `low`.**
+
+| Metric | Former | New | Change | Direction |
+| ------ | ------ | --- | ------ | --------- |
+| Sustained throughput | 490.4 tok/s | 509.5 tok/s | +19.1 tok/s (+4%) | improved |
+| Time to first token | 7520 ms | 9078 ms | +1558 ms (+21%) | regressed |
+| Total response time | 7699 ms | 9245 ms | +1545 ms (+20%) | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+
+_Net verdict: **mixed** — 4 improved, 2 regressed, 3 unchanged of 9 metrics._
+
+**Effort `medium`.**
+
+| Metric | Former | New | Change | Direction |
+| ------ | ------ | --- | ------ | --------- |
+| Sustained throughput | 448.6 tok/s | 542.5 tok/s | +93.9 tok/s (+21%) | improved |
+| Time to first token | 7333 ms | 9459 ms | +2126 ms (+29%) | regressed |
+| Total response time | 7511 ms | 9609 ms | +2098 ms (+28%) | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+
+_Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
+
+**Effort `high`.**
+
+| Metric | Former | New | Change | Direction |
+| ------ | ------ | --- | ------ | --------- |
+| Sustained throughput | 683.7 tok/s | 422.0 tok/s | −261.7 tok/s (−38%) | regressed |
+| Time to first token | 7852 ms | 9469 ms | +1617 ms (+21%) | regressed |
+| Total response time | 8002 ms | 9657 ms | +1656 ms (+21%) | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+
+_Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
+
+##### Gemini 3.1 Flash-Lite → Gemini 3.5 Flash-Lite
+
+**Effort `low`.**
+
+| Metric | Former | New | Change | Direction |
+| ------ | ------ | --- | ------ | --------- |
+| Sustained throughput | 215.5 tok/s | 470.2 tok/s | +254.7 tok/s (+118%) | improved |
+| Time to first token | 903 ms | 5424 ms | +4521 ms (+501%) | regressed |
+| Total response time | 1980 ms | 5603 ms | +3623 ms (+183%) | regressed |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+
+_Net verdict: **mixed** — 2 improved, 5 regressed, 2 unchanged of 9 metrics._
+
+**Effort `medium`.**
+
+| Metric | Former | New | Change | Direction |
+| ------ | ------ | --- | ------ | --------- |
+| Sustained throughput | 1754.2 tok/s | 754.6 tok/s | −999.5 tok/s (−57%) | regressed |
+| Time to first token | 6014 ms | 5052 ms | −962 ms (−16%) | improved |
+| Total response time | 6079 ms | 5170 ms | −909 ms (−15%) | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+
+_Net verdict: **mixed** — 4 improved, 3 regressed, 2 unchanged of 9 metrics._
+
+**Effort `high`.**
+
+| Metric | Former | New | Change | Direction |
+| ------ | ------ | --- | ------ | --------- |
+| Sustained throughput | 1289.6 tok/s | 730.4 tok/s | −559.1 tok/s (−43%) | regressed |
+| Time to first token | 6180 ms | 5512 ms | −668 ms (−11%) | improved |
+| Total response time | 6252 ms | 5628 ms | −624 ms (−10%) | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+
+_Net verdict: **mixed** — 3 improved, 4 regressed, 2 unchanged of 9 metrics._
+
 The projection writes `llm-speed-comparison.data.json` and this Markdown page. The source sweep remains `llm-model-comparison.real.data.json`, so speed and accuracy stay auditable back to the same underlying run.
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-12T05:47:26.268Z](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison)
-- [2026-07-09T11:52:54.627Z](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison)
-- [2026-07-09T11:12:01.332Z](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison)
