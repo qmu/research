@@ -188,6 +188,103 @@ describe("computeGenerationDelta math", () => {
     });
     expect(computeGenerationDelta(previous, current).verdict).toBe("unchanged");
   });
+
+  // A measured change must clear the two models' combined run-to-run spread before
+  // it earns a direction. Re-running an identical scoped sweep hours apart moved
+  // sustained throughput by up to 88% on the same configuration, so a bare
+  // percentage change at this trial count is not evidence of a generational move.
+  it("labels a material change inside the combined spread as indistinguishable", () => {
+    const wide = (mean: number): Aggregate => ({
+      mean,
+      stdDev: 30, // combined spread 60 — wider than the 20-unit gap below
+      min: mean - 60,
+      max: mean + 60,
+      n: 3,
+    });
+    const previous = config({
+      id: "old",
+      modelName: "Old",
+      effort: "low",
+      provenance: "measured",
+      stats: { ...stats(), throughputTokensPerSec: wide(100) },
+    });
+    const current = config({
+      id: "new",
+      modelName: "New",
+      effort: "low",
+      provenance: "measured",
+      supersedes: "old",
+      generation: "current",
+      stats: { ...stats(), throughputTokensPerSec: wide(120) },
+    });
+    const delta = computeGenerationDelta(previous, current);
+    const tp = delta.measuredMetrics.find(
+      (m) => m.key === "throughputTokensPerSec",
+    );
+    // The +20% change is real and still reported; only the DIRECTION is withheld.
+    expect(tp?.absolute).toBe(20);
+    expect(tp?.relative).toBeCloseTo(0.2, 6);
+    expect(tp?.spread).toBe(60);
+    expect(tp?.outcome).toBe("indistinguishable");
+    // Excluded from the tally, and said so rather than silently dropped.
+    expect(delta.verdictReason).toContain("indistinguishable");
+  });
+
+  it("keeps the direction when the change clears the combined spread", () => {
+    const tight = (mean: number): Aggregate => ({
+      mean,
+      stdDev: 2, // combined spread 4 — well under the 20-unit gap
+      min: mean - 4,
+      max: mean + 4,
+      n: 3,
+    });
+    const previous = config({
+      id: "old",
+      modelName: "Old",
+      effort: "low",
+      provenance: "measured",
+      stats: { ...stats(), throughputTokensPerSec: tight(100) },
+    });
+    const current = config({
+      id: "new",
+      modelName: "New",
+      effort: "low",
+      provenance: "measured",
+      supersedes: "old",
+      generation: "current",
+      stats: { ...stats(), throughputTokensPerSec: tight(120) },
+    });
+    const tp = computeGenerationDelta(previous, current).measuredMetrics.find(
+      (m) => m.key === "throughputTokensPerSec",
+    );
+    expect(tp?.outcome).toBe("improved");
+  });
+
+  // Cost is a curated registry fact, not a measurement, so it has no spread and
+  // must never be suppressed by the spread test.
+  it("never withholds a direction from a cost metric", () => {
+    const previous = config({
+      id: "old",
+      modelName: "Old",
+      effort: "low",
+      provenance: "measured",
+      outputCost: 9,
+    });
+    const current = config({
+      id: "new",
+      modelName: "New",
+      effort: "low",
+      provenance: "measured",
+      supersedes: "old",
+      generation: "current",
+      outputCost: 7.5,
+    });
+    const cost = computeGenerationDelta(previous, current).costMetrics.find(
+      (m) => m.key === "outputCostPerMTok",
+    );
+    expect(cost?.spread).toBeNull();
+    expect(cost?.outcome).toBe("improved");
+  });
 });
 
 describe("computeGenerationDelta not-measured guard", () => {

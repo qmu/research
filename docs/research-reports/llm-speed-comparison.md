@@ -24,7 +24,7 @@ This topic covers sustained generation throughput, time-to-first-token, and tota
 ## 3. Scope and Constraints
 
 - **3 trials** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
-- **Point-in-time.** Measured behavior reflects the models and APIs at `2026-07-27T04:37:01.015Z`.
+- **Mixed measurement dates — this table is not a single point in time.** Its 54 configurations were measured across 3 dates: 12 on `2026-07-27`, 1 on `2026-07-20`, 41 on `2026-07-12`. Only the 12 measured on `2026-07-27` were re-run in this round; the rest carry forward from earlier frames, so cross-model comparisons between rows of different dates are not like-for-like. The former→new generational comparison in section 7 is unaffected — it is derived only from pairs where both generations were measured in the same frame.
 - This topic tests narrow behaviors only (sustained generation throughput, time-to-first-token, and total response latency); it does not measure general capability or reasoning quality.
 - **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
 - **This run includes non-measured configurations.** `n/a (fixtured)` and `n/a (error)` cells are not live measurements.
@@ -344,82 +344,82 @@ It is projected from the combined comparison record
 
 #### Generational comparison (former → new)
 
-For each provider tier that turned a generation this round, the former and the new model were swept under identical conditions (same tier, same effort ladder — only the model id differs), so these deltas isolate the generational change. A speed or accuracy delta appears only when both generations were `measured` in this frame; cost figures are curated registry facts. The net verdict is a mechanical rule over the per-metric deltas (each metric counts as moved only past a 1% relative threshold): **improved** when at least one metric improved and none regressed, **regressed** in the mirror case, **mixed** when both occur, and **unchanged** when every metric held within the threshold. Cheaper is an improvement; a faster-but-pricier result reads as mixed, never silently netted to improved.
+For each provider tier that turned a generation this round, the former and the new model were swept under identical conditions (same tier, same effort ladder — only the model id differs), so these deltas isolate the generational change. A speed or accuracy delta appears only when both generations were `measured` in this frame; cost figures are curated registry facts. The net verdict is a mechanical rule over the per-metric deltas (each metric counts as moved only past a 1% relative threshold): **improved** when at least one metric improved and none regressed, **regressed** in the mirror case, **mixed** when both occur, and **unchanged** when every metric held within the threshold. A measured metric is additionally labelled **indistinguishable**, and excluded from the verdict, when the gap between the two means does not clear their combined run-to-run spread (the sum of the two standard deviations, shown in its own column). Each measurement is three trials, and re-running an identical sweep hours apart moved sustained throughput by up to 88% on the same configuration — so at this trial count a bare percentage change is not by itself evidence of a generational direction. Cost figures are registry facts and carry no spread. Cheaper is an improvement; a faster-but-pricier result reads as mixed, never silently netted to improved.
 
 ##### Gemini 3.5 Flash → Gemini 3.6 Flash
 
 **Effort `low`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Sustained throughput | 490.4 tok/s | 509.5 tok/s | +19.1 tok/s (+4%) | improved |
-| Time to first token | 7520 ms | 9078 ms | +1558 ms (+21%) | regressed |
-| Total response time | 7699 ms | 9245 ms | +1545 ms (+20%) | regressed |
-| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
-| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Sustained throughput | 490.4 tok/s | 509.5 tok/s | +19.1 tok/s (+4%) | ±321.4 tok/s | indistinguishable |
+| Time to first token | 7520 ms | 9078 ms | +1558 ms (+21%) | ±914 ms | regressed |
+| Total response time | 7699 ms | 9245 ms | +1545 ms (+20%) | ±894 ms | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
 
-_Net verdict: **mixed** — 4 improved, 2 regressed, 3 unchanged of 9 metrics._
+_Net verdict: **mixed** — 2 improved, 2 regressed, 3 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
 
 **Effort `medium`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Sustained throughput | 448.6 tok/s | 542.5 tok/s | +93.9 tok/s (+21%) | improved |
-| Time to first token | 7333 ms | 9459 ms | +2126 ms (+29%) | regressed |
-| Total response time | 7511 ms | 9609 ms | +2098 ms (+28%) | regressed |
-| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
-| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Sustained throughput | 448.6 tok/s | 542.5 tok/s | +93.9 tok/s (+21%) | ±213.0 tok/s | indistinguishable |
+| Time to first token | 7333 ms | 9459 ms | +2126 ms (+29%) | ±663 ms | regressed |
+| Total response time | 7511 ms | 9609 ms | +2098 ms (+28%) | ±716 ms | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
 
-_Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
+_Net verdict: **mixed** — 2 improved, 3 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 **Effort `high`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Sustained throughput | 683.7 tok/s | 422.0 tok/s | −261.7 tok/s (−38%) | regressed |
-| Time to first token | 7852 ms | 9469 ms | +1617 ms (+21%) | regressed |
-| Total response time | 8002 ms | 9657 ms | +1656 ms (+21%) | regressed |
-| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
-| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Sustained throughput | 683.7 tok/s | 422.0 tok/s | −261.7 tok/s (−38%) | ±482.3 tok/s | indistinguishable |
+| Time to first token | 7852 ms | 9469 ms | +1617 ms (+21%) | ±1063 ms | regressed |
+| Total response time | 8002 ms | 9657 ms | +1656 ms (+21%) | ±1015 ms | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
 
-_Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
+_Net verdict: **mixed** — 3 improved, 2 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 ##### Gemini 3.1 Flash-Lite → Gemini 3.5 Flash-Lite
 
 **Effort `low`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Sustained throughput | 215.5 tok/s | 470.2 tok/s | +254.7 tok/s (+118%) | improved |
-| Time to first token | 903 ms | 5424 ms | +4521 ms (+501%) | regressed |
-| Total response time | 1980 ms | 5603 ms | +3623 ms (+183%) | regressed |
-| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
-| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Sustained throughput | 215.5 tok/s | 470.2 tok/s | +254.7 tok/s (+118%) | ±157.2 tok/s | improved |
+| Time to first token | 903 ms | 5424 ms | +4521 ms (+501%) | ±175 ms | regressed |
+| Total response time | 1980 ms | 5603 ms | +3623 ms (+183%) | ±250 ms | regressed |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
 
 _Net verdict: **mixed** — 2 improved, 5 regressed, 2 unchanged of 9 metrics._
 
 **Effort `medium`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Sustained throughput | 1754.2 tok/s | 754.6 tok/s | −999.5 tok/s (−57%) | regressed |
-| Time to first token | 6014 ms | 5052 ms | −962 ms (−16%) | improved |
-| Total response time | 6079 ms | 5170 ms | −909 ms (−15%) | improved |
-| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
-| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Sustained throughput | 1754.2 tok/s | 754.6 tok/s | −999.5 tok/s (−57%) | ±1656.7 tok/s | indistinguishable |
+| Time to first token | 6014 ms | 5052 ms | −962 ms (−16%) | ±542 ms | improved |
+| Total response time | 6079 ms | 5170 ms | −909 ms (−15%) | ±558 ms | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
 
-_Net verdict: **mixed** — 4 improved, 3 regressed, 2 unchanged of 9 metrics._
+_Net verdict: **mixed** — 4 improved, 2 regressed, 2 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 **Effort `high`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Sustained throughput | 1289.6 tok/s | 730.4 tok/s | −559.1 tok/s (−43%) | regressed |
-| Time to first token | 6180 ms | 5512 ms | −668 ms (−11%) | improved |
-| Total response time | 6252 ms | 5628 ms | −624 ms (−10%) | improved |
-| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
-| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Sustained throughput | 1289.6 tok/s | 730.4 tok/s | −559.1 tok/s (−43%) | ±738.9 tok/s | indistinguishable |
+| Time to first token | 6180 ms | 5512 ms | −668 ms (−11%) | ±458 ms | improved |
+| Total response time | 6252 ms | 5628 ms | −624 ms (−10%) | ±448 ms | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
 
-_Net verdict: **mixed** — 3 improved, 4 regressed, 2 unchanged of 9 metrics._
+_Net verdict: **mixed** — 3 improved, 2 regressed, 2 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
 
 The projection writes `llm-speed-comparison.data.json` and this Markdown page. The source sweep remains `llm-model-comparison.real.data.json`, so speed and accuracy stay auditable back to the same underlying run.

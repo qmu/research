@@ -24,7 +24,7 @@ This topic covers JSON-schema structural limits, length-instruction following, a
 ## 3. Scope and Constraints
 
 - **3 trials** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
-- **Point-in-time.** Measured behavior reflects the models and APIs at `2026-07-27T04:37:01.015Z`.
+- **Mixed measurement dates — this table is not a single point in time.** Its 54 configurations were measured across 3 dates: 12 on `2026-07-27`, 1 on `2026-07-20`, 41 on `2026-07-12`. Only the 12 measured on `2026-07-27` were re-run in this round; the rest carry forward from earlier frames, so cross-model comparisons between rows of different dates are not like-for-like. The former→new generational comparison in section 7 is unaffected — it is derived only from pairs where both generations were measured in the same frame.
 - This topic tests narrow behaviors only (JSON-schema structural limits, length-instruction following, and factual information accuracy); it does not measure general capability or reasoning quality.
 - **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
 - **This run includes non-measured configurations.** `n/a (fixtured)` and `n/a (error)` cells are not live measurements.
@@ -433,88 +433,88 @@ It is projected from the combined comparison record
 
 #### Generational comparison (former → new)
 
-For each provider tier that turned a generation this round, the former and the new model were swept under identical conditions (same tier, same effort ladder — only the model id differs), so these deltas isolate the generational change. A speed or accuracy delta appears only when both generations were `measured` in this frame; cost figures are curated registry facts. The net verdict is a mechanical rule over the per-metric deltas (each metric counts as moved only past a 1% relative threshold): **improved** when at least one metric improved and none regressed, **regressed** in the mirror case, **mixed** when both occur, and **unchanged** when every metric held within the threshold. Cheaper is an improvement; a faster-but-pricier result reads as mixed, never silently netted to improved.
+For each provider tier that turned a generation this round, the former and the new model were swept under identical conditions (same tier, same effort ladder — only the model id differs), so these deltas isolate the generational change. A speed or accuracy delta appears only when both generations were `measured` in this frame; cost figures are curated registry facts. The net verdict is a mechanical rule over the per-metric deltas (each metric counts as moved only past a 1% relative threshold): **improved** when at least one metric improved and none regressed, **regressed** in the mirror case, **mixed** when both occur, and **unchanged** when every metric held within the threshold. A measured metric is additionally labelled **indistinguishable**, and excluded from the verdict, when the gap between the two means does not clear their combined run-to-run spread (the sum of the two standard deviations, shown in its own column). Each measurement is three trials, and re-running an identical sweep hours apart moved sustained throughput by up to 88% on the same configuration — so at this trial count a bare percentage change is not by itself evidence of a generational direction. Cost figures are registry facts and carry no spread. Cheaper is an improvement; a faster-but-pricier result reads as mixed, never silently netted to improved.
 
 ##### Gemini 3.5 Flash → Gemini 3.6 Flash
 
 **Effort `low`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Max schema depth | 15 | 15 | +0 (+0%) | unchanged |
-| Max schema breadth | 192 | 192 | +0 (+0%) | unchanged |
-| Length accuracy | 31% | 36% | +5pp (+15%) | improved |
-| Information accuracy | 30% | 45% | +15pp (+49%) | improved |
-| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
-| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 31% | 36% | +5pp (+15%) | ±8% | indistinguishable |
+| Information accuracy | 30% | 45% | +15pp (+49%) | ±0% | improved |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
 
-_Net verdict: **mixed** — 4 improved, 2 regressed, 3 unchanged of 9 metrics._
+_Net verdict: **mixed** — 2 improved, 2 regressed, 3 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
 
 **Effort `medium`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Max schema depth | 15 | 15 | +0 (+0%) | unchanged |
-| Max schema breadth | 192 | 192 | +0 (+0%) | unchanged |
-| Length accuracy | 19% | 35% | +16pp (+85%) | improved |
-| Information accuracy | 39% | 39% | −0pp (−1%) | regressed |
-| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
-| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 19% | 35% | +16pp (+85%) | ±6% | improved |
+| Information accuracy | 39% | 39% | −0pp (−1%) | ±0% | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
 
-_Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
+_Net verdict: **mixed** — 2 improved, 3 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 **Effort `high`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Max schema depth | 15 | 15 | +0 (+0%) | unchanged |
-| Max schema breadth | 192 | 192 | +0 (+0%) | unchanged |
-| Length accuracy | 12% | 36% | +24pp (+196%) | improved |
-| Information accuracy | 14% | 39% | +25pp (+186%) | improved |
-| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | unchanged |
-| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | improved |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 12% | 36% | +24pp (+196%) | ±2% | improved |
+| Information accuracy | 14% | 39% | +25pp (+186%) | ±0% | improved |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
 
-_Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
+_Net verdict: **mixed** — 3 improved, 2 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 ##### Gemini 3.1 Flash-Lite → Gemini 3.5 Flash-Lite
 
 **Effort `low`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Max schema depth | 15 | 15 | +0 (+0%) | unchanged |
-| Max schema breadth | 192 | 191 | −1 (−1%) | unchanged |
-| Length accuracy | 99% | 37% | −62pp (−63%) | regressed |
-| Information accuracy | 44% | 47% | +4pp (+9%) | improved |
-| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
-| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 191 | −1 (−1%) | ±0 | unchanged |
+| Length accuracy | 99% | 37% | −62pp (−63%) | ±2% | regressed |
+| Information accuracy | 44% | 47% | +4pp (+9%) | ±0% | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
 
 _Net verdict: **mixed** — 2 improved, 5 regressed, 2 unchanged of 9 metrics._
 
 **Effort `medium`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Max schema depth | 15 | 15 | +0 (+0%) | unchanged |
-| Max schema breadth | 192 | 192 | +0 (+0%) | unchanged |
-| Length accuracy | 35% | 37% | +2pp (+7%) | improved |
-| Information accuracy | 31% | 36% | +5pp (+17%) | improved |
-| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
-| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 35% | 37% | +2pp (+7%) | ±1% | improved |
+| Information accuracy | 31% | 36% | +5pp (+17%) | ±0% | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
 
-_Net verdict: **mixed** — 4 improved, 3 regressed, 2 unchanged of 9 metrics._
+_Net verdict: **mixed** — 4 improved, 2 regressed, 2 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 **Effort `high`.**
 
-| Metric | Former | New | Change | Direction |
-| ------ | ------ | --- | ------ | --------- |
-| Max schema depth | 15 | 15 | +0 (+0%) | unchanged |
-| Max schema breadth | 192 | 192 | +0 (+0%) | unchanged |
-| Length accuracy | 34% | 31% | −3pp (−8%) | regressed |
-| Information accuracy | 35% | 36% | +1pp (+4%) | improved |
-| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | regressed |
-| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | regressed |
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 34% | 31% | −3pp (−8%) | ±10% | indistinguishable |
+| Information accuracy | 35% | 36% | +1pp (+4%) | ±0% | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
 
-_Net verdict: **mixed** — 3 improved, 4 regressed, 2 unchanged of 9 metrics._
+_Net verdict: **mixed** — 3 improved, 2 regressed, 2 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
 
 The projection writes `llm-accuracy-comparison.data.json` and this Markdown page. The source sweep remains `llm-model-comparison.real.data.json`, so speed and accuracy stay auditable back to the same underlying run.

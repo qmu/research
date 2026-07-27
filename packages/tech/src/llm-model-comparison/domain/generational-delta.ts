@@ -130,7 +130,11 @@ const COST_METRICS: ReadonlyArray<
   },
 ];
 
-export type DeltaOutcome = "improved" | "regressed" | "unchanged";
+export type DeltaOutcome =
+  | "improved"
+  | "regressed"
+  | "unchanged"
+  | "indistinguishable";
 
 export type DeltaMetric = Readonly<{
   key: string;
@@ -143,6 +147,9 @@ export type DeltaMetric = Readonly<{
   current: number;
   absolute: number; // current - previous
   relative: number | null; // (current - previous) / previous; null when previous is 0
+  // Combined run-to-run spread of the two measurements (sd_former + sd_new), in
+  // the metric's own unit. `null` for curated cost facts, which have no spread.
+  spread: number | null;
   outcome: DeltaOutcome;
 }>;
 
@@ -151,6 +158,7 @@ export type Verdict =
   | "regressed"
   | "mixed"
   | "unchanged"
+  | "indistinguishable"
   | "not-measured";
 
 export type GenerationDelta = Readonly<{
@@ -222,10 +230,23 @@ const outcomeOf = (
   spec: DeltaMetricSpec,
   previous: number,
   current: number,
+  spread: number | null,
 ): DeltaOutcome => {
   const absolute = current - previous;
   const relative = previous === 0 ? null : absolute / previous;
+  // Materiality first: a metric that did not move stays `unchanged`. Two
+  // generations landing on the same value (a saturated metric, say) is a finding
+  // in its own right, and the spread test must not erase it.
   if (!material(absolute, relative)) return "unchanged";
+  // Then the spread test, applied only to a change that claims to have moved: a
+  // measured metric earns a direction only when the gap between the two means
+  // clears their combined run-to-run spread. Re-running an identical scoped sweep
+  // hours apart moved sustained throughput by up to 88% on the same
+  // configuration, so at this trial count a bare percentage is not evidence of a
+  // generational direction. Cost facts carry no spread and skip this test.
+  if (spread !== null && Math.abs(absolute) <= spread) {
+    return "indistinguishable";
+  }
   const currentIsBetter =
     spec.better === "higher" ? current > previous : current < previous;
   return currentIsBetter ? "improved" : "regressed";
@@ -235,6 +256,7 @@ const buildMetric = (
   spec: DeltaMetricSpec,
   previous: number,
   current: number,
+  spread: number | null = null,
 ): DeltaMetric => {
   const absolute = current - previous;
   return {
@@ -248,7 +270,8 @@ const buildMetric = (
     current,
     absolute,
     relative: previous === 0 ? null : absolute / previous,
-    outcome: outcomeOf(spec, previous, current),
+    spread,
+    outcome: outcomeOf(spec, previous, current, spread),
   };
 };
 
@@ -258,14 +281,26 @@ const verdictOver = (metrics: ReadonlyArray<DeltaMetric>): Verdict => {
   if (improved > 0 && regressed === 0) return "improved";
   if (regressed > 0 && improved === 0) return "regressed";
   if (improved > 0 && regressed > 0) return "mixed";
-  return "unchanged";
+  // Nothing moved. Distinguish "every metric genuinely held steady" from "every
+  // metric that moved was swamped by its own spread" — reporting the latter as
+  // `unchanged` would assert a stability the data cannot support.
+  const indistinguishable = metrics.filter(
+    (m) => m.outcome === "indistinguishable",
+  ).length;
+  return indistinguishable > 0 ? "indistinguishable" : "unchanged";
 };
 
 const countsSentence = (metrics: ReadonlyArray<DeltaMetric>): string => {
   const improved = metrics.filter((m) => m.outcome === "improved").length;
   const regressed = metrics.filter((m) => m.outcome === "regressed").length;
-  const unchanged = metrics.length - improved - regressed;
-  return `${improved} improved, ${regressed} regressed, ${unchanged} unchanged of ${metrics.length} metrics`;
+  const indistinguishable = metrics.filter(
+    (m) => m.outcome === "indistinguishable",
+  ).length;
+  const unchanged = metrics.length - improved - regressed - indistinguishable;
+  const base = `${improved} improved, ${regressed} regressed, ${unchanged} unchanged of ${metrics.length} metrics`;
+  return indistinguishable === 0
+    ? base
+    : `${base}; ${indistinguishable} indistinguishable from run-to-run spread and excluded`;
 };
 
 const costDeltasFor = (
@@ -285,6 +320,7 @@ const measuredDeltasFor = (
       spec,
       previous.stats[spec.statKey].mean,
       current.stats[spec.statKey].mean,
+      previous.stats[spec.statKey].stdDev + current.stats[spec.statKey].stdDev,
     ),
   );
 
@@ -415,9 +451,19 @@ const formatChange = (metric: DeltaMetric): string => {
     : `${abs} (${signed(metric.relative * 100, 0)}%)`;
 };
 
-const metricRow = (metric: DeltaMetric): string =>
-  `| ${escapeCell(metric.title)} | ${formatValue(metric, metric.previous)} | ` +
-  `${formatValue(metric, metric.current)} | ${formatChange(metric)} | ${metric.outcome} |`;
+const metricRow = (metric: DeltaMetric): string => {
+  // Show the spread that the change had to clear, so a reader can see why a
+  // direction was or was not assigned rather than taking the label on trust.
+  const spreadCell =
+    metric.spread === null
+      ? "—"
+      : `±${formatValue(metric, metric.spread).replace(/^[+-]/, "")}`;
+  return (
+    `| ${escapeCell(metric.title)} | ${formatValue(metric, metric.previous)} | ` +
+    `${formatValue(metric, metric.current)} | ${formatChange(metric)} | ` +
+    `${spreadCell} | ${metric.outcome} |`
+  );
+};
 
 export type DeltaRenderOptions = Readonly<{
   // Which measured metric groups to render as rows. Cost rows are always shown
@@ -448,8 +494,8 @@ export const renderGenerationDeltaSection = (
   const pairHead = `${top}#`;
 
   const header =
-    "| Metric | Former | New | Change | Direction |\n" +
-    "| ------ | ------ | --- | ------ | --------- |";
+    "| Metric | Former | New | Change | Run-to-run spread | Direction |\n" +
+    "| ------ | ------ | --- | ------ | ----------------- | --------- |";
 
   const renderDelta = (delta: GenerationDelta): string => {
     const shownMeasured = delta.measuredMetrics.filter((m) =>
@@ -501,6 +547,14 @@ export const renderGenerationDeltaSection = (
     "moved only past a 1% relative threshold): **improved** when at least one metric " +
     "improved and none regressed, **regressed** in the mirror case, **mixed** when " +
     "both occur, and **unchanged** when every metric held within the threshold. " +
+    "A measured metric is additionally labelled **indistinguishable**, and excluded " +
+    "from the verdict, when the gap between the two means does not clear their " +
+    "combined run-to-run spread (the sum of the two standard deviations, shown in " +
+    "its own column). Each measurement is three trials, and re-running an identical " +
+    "sweep hours apart moved sustained throughput by up to 88% on the same " +
+    "configuration — so at this trial count a bare percentage change is not by " +
+    "itself evidence of a generational direction. Cost figures are registry facts " +
+    "and carry no spread. " +
     "Cheaper is an improvement; a faster-but-pricier result reads as mixed, never " +
     "silently netted to improved.";
 
