@@ -9,6 +9,7 @@ assignee: a@qmu.jp
 tickets: []
 stories: []
 concerns: []
+actual_hours: 0.33
 ---
 
 # Image generation benchmark
@@ -55,3 +56,4 @@ keyless and deterministic).
 - 2026-07-13 — remaining: owner-triggered first real trial (guideline step 3) and the qmu-co-jp reflection on the next /ship
 - 2026-07-17 — first real trial executed (owner-approved, ~$0.90 estimate / ≈$1.10 actual incl. insights+JP translations, ceiling $20): 3/3 rows measured; dated frame 2026-07-17T00-53-39-901Z committed with design-validation review; registry price drift fixed (gpt-image-1.5 $0.04→$0.034) and xAI Images dialect fixed in the ACL (no `size` arg, b64_json, MIME sniffing); latency discriminated (Grok 4976ms < Gemini 6526ms < GPT Image 11689ms) while adherence/text-accuracy saturated at 100% → manifest v2 flagged; monthly cadence confirmed — 20260717000605-image-generation-first-real-trial.md
 - 2026-07-17 — archive/composition gap closed (was user-visible: published article said 0/3 measured while the real trial sat in its frame): current pages of a topic with a measured dated frame now render FROM that frame (EN/JP/data), keyless fixture render preserved as gitignored *.fixture.* side files; research:archive prefers .real outputs; published image-generation pages regenerated to 3/3 measured
+- 2026-07-23 — run recorded (+0.33h) — run-20260723-224446

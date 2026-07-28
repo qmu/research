@@ -17,6 +17,7 @@ tickets:
   - 20260714024005-agent-vm-japanese-translation-and-publish.md
 stories: []
 concerns: []
+actual_hours: 0.2
 ---
 
 # Periodic Research Target: Compare Agent VM Solutions (Lambda MicroVMs etc)
@@ -227,3 +228,4 @@ owner-approved trial.
 - 2026-07-22 — real cold-start/warm-reuse/fixed-task cost probe spend APPROVED by the developer (a@qmu.jp) in the /mission planning session; recorded in tickets #024001/#024004/#024005 (remaining gate is environmental credentials only — FLY_API_TOKEN+FLY_APP_NAME for the Fly.io probe / an LLM key for the pipeline translation; the `--real` path self-reports missing credentials and records unreachable rows). Wrote the mission's `## Experience` section (observable measured/unreachable rows per provider + the published EN/JP survey with 推移/history). `drive_authorized` remains unstamped: it needs a linked strategy, and the strategy-granularity decision is pending with the developer — mission.md
 - 2026-07-22 — strategy created — periodically-benchmark-agent-vm-sandbox-execution-platforms — strategy.md
 - 2026-07-22 — mission replanned — real cost probe authorized (spend approved 2026-07-22); strategy linked; drive-ready — mission.md
+- 2026-07-23 — run recorded (+0.2h) — run-20260723-224446

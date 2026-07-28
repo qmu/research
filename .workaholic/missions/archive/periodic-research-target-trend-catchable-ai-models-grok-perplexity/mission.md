@@ -2,7 +2,7 @@
 type: Mission
 title: Periodic Research Target: Trend-Catchable AI Models (Grok, Perplexity)
 slug: periodic-research-target-trend-catchable-ai-models-grok-perplexity
-status: active
+status: achieved
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -155,3 +155,4 @@ Observable outcomes the deliverable must show:
 - 2026-07-22 — strategy created — benchmark-how-well-ai-systems-keep-up-with-real-world-change — mission.md
 - 2026-07-22 — mission replanned — publish drive authorized (spend-free: site.ts registration + dated survey article + JP translation); drive-ready for /monitor — mission.md
 - 2026-07-22 — ticket archived — publish acceptance (item 4) recovered onto current main: stranded real trial (fixture:false 2026-07-17 frame, Grok Agent Tools measured row), published EN/JP pages, and site.ts/topic.ts/snapshot.ts registration lifted from the orphan trend desk; --fixture recomposes the real page byte-identically; npm test/build/lint exit 0 — 20260714010002-trend-recency-publish-topic.md
+- 2026-07-23 — mission achieved — mission.md
