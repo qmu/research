@@ -104,3 +104,4 @@ within the $15 ceiling committed as a dated frame.
 - 2026-07-23 — run recorded (+0.47h) — run-20260723-224446
 - 2026-07-27 — real head-to-head sweep run and published — 12/12 measured, merged to 54 configs, EN/JP recomposed — 20260723153003-gemini-headtohead-real-sweep.md
 - 2026-07-27 — acceptance correction — tick-acceptance ticked two items sharing one ticket marker; the qmu-co-jp publish item was reverted to unchecked (not done) — mission.md
+- 2026-07-28 — story reported — work-20260723-152406.md
