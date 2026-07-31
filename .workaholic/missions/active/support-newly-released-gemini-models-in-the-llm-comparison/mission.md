@@ -2,12 +2,11 @@
 type: Mission
 title: Support newly released Gemini models in the LLM comparison
 slug: support-newly-released-gemini-models-in-the-llm-comparison
-status: active
+status: approved
 created_at: 2026-07-23T15:24:14+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
 strategy: keep-the-llm-speed-and-accuracy-comparison-current-as-providers-release-new-models
-drive_authorized: true
 predicted_hours:
 actual_hours: 0.47
 tickets: []
@@ -105,3 +104,6 @@ within the $15 ceiling committed as a dated frame.
 - 2026-07-27 — real head-to-head sweep run and published — 12/12 measured, merged to 54 configs, EN/JP recomposed — 20260723153003-gemini-headtohead-real-sweep.md
 - 2026-07-27 — acceptance correction — tick-acceptance ticked two items sharing one ticket marker; the qmu-co-jp publish item was reverted to unchecked (not done) — mission.md
 - 2026-07-28 — story reported — work-20260723-152406.md
+- 2026-07-31 — concern deferred (stuck) — 20260731110930-the-real-comparison-record-is-machine.md
+- 2026-07-31 — concern deferred (stuck) — 20260731110930-generational-verdicts-rest-on-three-trials.md
+- 2026-07-31 — concern deferred (stuck) — 20260731110930-the-published-table-mixes-measurement-dates.md

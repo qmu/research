@@ -1,11 +1,13 @@
 ---
-type: Strategy
-title: Keep the LLM speed and accuracy comparison current as providers release new models
-slug: keep-the-llm-speed-and-accuracy-comparison-current-as-providers-release-new-models
-status: active
+type: Feedback
+title: Strategy (retired): Keep the LLM speed and accuracy comparison current as providers release new models
+kind: insight
+source: discussion
 created_at: 2026-07-23T15:24:21+09:00
 author: a@qmu.jp
+supersedes:
 ---
+
 
 # Keep the LLM speed and accuracy comparison current as providers release new models
 

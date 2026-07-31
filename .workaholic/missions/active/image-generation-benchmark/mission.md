@@ -2,7 +2,7 @@
 type: Mission
 title: Image generation benchmark
 slug: image-generation-benchmark
-status: active
+status: draft
 created_at: 2026-07-13T11:58:23+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp

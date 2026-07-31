@@ -1,11 +1,13 @@
 ---
-type: Strategy
-title: Periodically benchmark agent VM / sandbox execution platforms
-slug: periodically-benchmark-agent-vm-sandbox-execution-platforms
-status: active
+type: Feedback
+title: Strategy (retired): Periodically benchmark agent VM / sandbox execution platforms
+kind: insight
+source: discussion
 created_at: 2026-07-22T12:19:08+09:00
 author: a@qmu.jp
+supersedes:
 ---
+
 
 # Periodically benchmark agent VM / sandbox execution platforms
 

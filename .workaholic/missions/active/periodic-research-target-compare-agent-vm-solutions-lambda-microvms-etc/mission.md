@@ -2,12 +2,11 @@
 type: Mission
 title: Periodic Research Target: Compare Agent VM Solutions (Lambda MicroVMs etc)
 slug: periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc
-status: active
+status: approved
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
 strategy: periodically-benchmark-agent-vm-sandbox-execution-platforms
-drive_authorized: true
 tickets:
   - 20260714005157-kickoff-propose-periodic-research.md
   - 20260714024001-agent-vm-real-coldstart-cost-probe.md

@@ -1,11 +1,13 @@
 ---
-type: Strategy
-title: Benchmark how well AI systems keep up with real-world change
-slug: benchmark-how-well-ai-systems-keep-up-with-real-world-change
-status: active
+type: Feedback
+title: Strategy (retired): Benchmark how well AI systems keep up with real-world change
+kind: insight
+source: discussion
 created_at: 2026-07-22T11:25:42+09:00
 author: a@qmu.jp
+supersedes:
 ---
+
 
 # Benchmark how well AI systems keep up with real-world change
 

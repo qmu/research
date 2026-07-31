@@ -1,11 +1,13 @@
 ---
-type: Strategy
-title: Periodically benchmark speech AI capabilities (TTS, STT, STS)
-slug: periodically-benchmark-speech-ai-capabilities-tts-stt-sts
-status: active
+type: Feedback
+title: Strategy (retired): Periodically benchmark speech AI capabilities (TTS, STT, STS)
+kind: insight
+source: discussion
 created_at: 2026-07-22T12:18:56+09:00
 author: a@qmu.jp
+supersedes:
 ---
+
 
 # Periodically benchmark speech AI capabilities (TTS, STT, STS)
 

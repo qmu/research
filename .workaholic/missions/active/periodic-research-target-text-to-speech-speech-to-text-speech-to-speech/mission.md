@@ -2,12 +2,11 @@
 type: Mission
 title: Periodic Research Target: Text-to-Speech, Speech-to-Text, Speech-to-Speech
 slug: periodic-research-target-text-to-speech-speech-to-text-speech-to-speech
-status: active
+status: approved
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
 strategy: periodically-benchmark-speech-ai-capabilities-tts-stt-sts
-drive_authorized: true
 tickets: []
 stories: []
 concerns: []

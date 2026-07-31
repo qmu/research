@@ -1,11 +1,13 @@
 ---
-type: Strategy
-title: Periodically benchmark computer-use / browser-agent capabilities
-slug: periodically-benchmark-computer-use-browser-agent-capabilities
-status: active
+type: Feedback
+title: Strategy (retired): Periodically benchmark computer-use / browser-agent capabilities
+kind: insight
+source: discussion
 created_at: 2026-07-22T12:19:12+09:00
 author: a@qmu.jp
+supersedes:
 ---
+
 
 # Periodically benchmark computer-use / browser-agent capabilities
 

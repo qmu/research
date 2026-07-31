@@ -1,11 +1,13 @@
 ---
-type: Strategy
-title: Periodically benchmark deep-research / autonomous-research APIs
-slug: periodically-benchmark-deep-research-autonomous-research-apis
-status: active
+type: Feedback
+title: Strategy (retired): Periodically benchmark deep-research / autonomous-research APIs
+kind: insight
+source: discussion
 created_at: 2026-07-22T12:20:17+09:00
 author: a@qmu.jp
+supersedes:
 ---
+
 
 # Periodically benchmark deep-research / autonomous-research APIs
 
