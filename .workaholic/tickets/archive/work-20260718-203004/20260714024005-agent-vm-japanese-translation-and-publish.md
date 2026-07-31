@@ -104,3 +104,12 @@ The English current article translated here is still the keyless fixture page;
 when the first real cold-start trial (#024004) lands a measured page, re-running
 `research:translate-report` refreshes this JP page from that measured frame
 (English → translate → Japanese, never forked).
+
+### Spend approval (2026-07-22)
+
+Spend approved by the developer (a@qmu.jp) 2026-07-22 in the /mission planning
+session. Remaining gate is environmental credentials only — FLY_API_TOKEN +
+FLY_APP_NAME for the Fly.io probe (024001/024004) and an LLM API key for the
+pipeline translation (024005). The `--real` path self-reports missing
+credentials and records unreachable rows, so the drive proceeds and measures
+whatever providers are reachable.

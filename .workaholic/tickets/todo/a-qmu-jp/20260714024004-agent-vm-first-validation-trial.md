@@ -94,3 +94,12 @@ cost data — this trial's Quality Gate (metrics *discriminate between providers
 cost verified within the $8 ceiling) cannot be satisfied and the cadence cannot
 yet be validated. No boot, no spend, zero orphaned resources. Unblocks the
 moment #024001 has a bootable provider token.
+
+### Spend approval (2026-07-22)
+
+Spend approved by the developer (a@qmu.jp) 2026-07-22 in the /mission planning
+session. Remaining gate is environmental credentials only — FLY_API_TOKEN +
+FLY_APP_NAME for the Fly.io probe (024001/024004) and an LLM API key for the
+pipeline translation (024005). The `--real` path self-reports missing
+credentials and records unreachable rows, so the drive proceeds and measures
+whatever providers are reachable.

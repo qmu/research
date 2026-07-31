@@ -19,22 +19,29 @@ The subjects are the 4 text flagships in the curated registry (`packages/tech/sr
 
 ### Target Metrics
 
-Measured metrics are render validity (well-formed XML rooted at `<svg>` / total, higher is better), prompt fidelity (satisfied rubric constraints / total, judged by the fixed `fixture-judge` vision judge over the `fixture-raster`-rasterized drawing, higher is better), path complexity (drawable elements + path commands, descriptive), animation presence (animated prompts carrying a SMIL/CSS animation / total, higher is better), and generation latency (ms, lower is better). Token cost is derived from measured output tokens × catalog price (reference).
+Measured metrics are render validity (well-formed XML rooted at `<svg>` / total, higher is better), prompt fidelity (satisfied rubric constraints / total, judged by the fixed `claude-sonnet-5` vision judge over the `resvg-js@2`-rasterized drawing, higher is better), path complexity (drawable elements + path commands, descriptive), animation presence (animated prompts carrying a SMIL/CSS animation / total, higher is better), and generation latency (ms, lower is better). Token cost is derived from measured output tokens × catalog price (reference).
 
 ## 3. Scope and Constraints
 
 - **Mechanical, not aesthetic.** Source-level scores read only what the SVG source reveals; prompt fidelity rasterizes the drawing and has the fixed vision judge answer versioned yes/no rubric constraints — a checklist, never a taste score.
-- **The fidelity instrument is fixed and versioned.** Judge model (`fixture-judge`), rasterizer engine (`fixture-raster`), and rubric all belong to manifest version `svg-v2`; swapping any of them is a version bump, never a silent change. The judge reads a still frame, so fidelity grades what is drawn — motion stays the source-level animation-presence metric.
+- **The fidelity instrument is fixed and versioned.** Judge model (`claude-sonnet-5`), rasterizer engine (`resvg-js@2`), and rubric all belong to manifest version `svg-v2`; swapping any of them is a version bump, never a silent change. The judge reads a still frame, so fidelity grades what is drawn — motion stays the source-level animation-presence metric.
 - **An unrenderable SVG scores fidelity 0** (no judge read); render validity remains the dependency-free structural parse so the keyless path never needs the native rasterizer.
 - Prompt manifest version `svg-v2`: 5 prompts (3 static, 2 animated), each with a fidelity rubric. History connects same-manifest-version points only.
 - The fixture path is keyless and deterministic (fixture generator, fixture rasterizer, fixture judge); real model numbers appear only after an owner runs the real path within the approved cost ceiling (run `--estimate` first).
-- Point-in-time: measured behavior reflects the models and APIs at `2026-01-01T00:00:00.000Z`; catalog prices are as of each row's last-verified date.
+- Point-in-time: measured behavior reflects the models and APIs at `2026-07-18T11:29:34.171Z`; catalog prices are as of each row's last-verified date.
 
 ## 4. Verification Results
 
-This run has **0 measured** of 4 model rows (non-measured rows are `fixtured` harness checks or `error` rows, never faked numbers).
+This run has **4 measured** of 4 model rows (non-measured rows are `fixtured` harness checks or `error` rows, never faked numbers).
 
-There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
+| Metric | Best (model) | Median | Worst |
+| ------ | ------------ | ------ | ----- |
+| Render validity | 100.0% — Claude Opus 4.8 | 100.0% | 60.0% |
+| Prompt fidelity | 100.0% — Claude Opus 4.8 | 80.0% | 46.7% |
+| Animation presence | 100.0% — Claude Opus 4.8 | 100.0% | 100.0% |
+| Generation latency | 3461 ms — Claude Opus 4.8 | 8107 ms | 26003 ms |
+
+"Best"/"Worst" follow each metric's own direction (higher validity, fidelity, and animation presence are better, lower latency is better). Prompt fidelity is the fixed vision judge's rubric score over the rasterized drawing; animation presence is measured over the animated prompts only. Token cost and path complexity are reference columns in the model table. The full per-model and per-prompt records are in section 7, Verification Data.
 
 **推移 / Trend across surveys**
 
@@ -42,7 +49,7 @@ This is the first comparable survey in the series, so there is no multi-survey t
 
 ## 5. Analysis
 
-This run has no measured rows; every configuration was fixtured or errored, so no cross-model claim is made. The committed fixture page exists to prove the pipeline, not to compare models.
+Rows with `measured` provenance can be compared on validity, fidelity, animation, latency, and cost; path complexity is descriptive context. The pair of validity and fidelity localizes failures: valid but low-fidelity means the model parses but draws the wrong thing, while high fidelity with low animation presence means it draws well but cannot express motion.
 
 ## 6. Reproduction
 
@@ -75,10 +82,10 @@ No external resources are created. SVG is generated in memory and scored; the ru
 
 | Model | Provider | Provenance | Output $/MTok | Latency (mean±sd) | Render valid (mean±sd) | Fidelity (mean±sd) | Animation (mean±sd) | Path complexity (mean±sd) | Note |
 | ----- | -------- | ---------- | ------------- | ----------------- | ---------------------- | ------------------ | ------------------- | ------------------------- | ---- |
-| Claude Opus 4.8 | anthropic | fixtured | $25.00 | 24 ± 10 (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=2) | 4.6 ± 3.3 (n=5) |  |
-| GPT-5.5 | openai | fixtured | $30.00 | 24 ± 10 (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=2) | 4.6 ± 3.3 (n=5) |  |
-| Gemini 3.1 Pro | google | fixtured | $12.00 | 24 ± 10 (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=2) | 4.6 ± 3.3 (n=5) |  |
-| Grok 4.3 | xai | fixtured | $2.50 | 24 ± 10 (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=2) | 4.6 ± 3.3 (n=5) |  |
+| Claude Opus 4.8 | anthropic | measured | $25.00 | 3461 ± 793 (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=2) | 6.2 ± 2.9 (n=5) |  |
+| GPT-5.5 | openai | measured | $30.00 | 6640 ± 2652 (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=5) | 100.0% ± 0.0% (n=2) | 9.0 ± 9.8 (n=5) |  |
+| Gemini 3.1 Pro | google | measured | $12.00 | 26003 ± 10728 (n=5) | 60.0% ± 54.8% (n=5) | 60.0% ± 54.8% (n=5) | 100.0% ± 0.0% (n=2) | 3.6 ± 2.4 (n=5) |  |
+| Grok 4.3 | xai | measured | $2.50 | 9573 ± 5439 (n=5) | 100.0% ± 0.0% (n=5) | 46.7% ± 50.6% (n=5) | 100.0% ± 0.0% (n=2) | 4.0 ± 2.0 (n=5) |  |
 
 **Prompt manifest (version svg-v2)**
 
@@ -90,8 +97,14 @@ No external resources are created. SVG is generated in memory and scored; the ru
 | animated-loading-spinner | animated | 2 |
 | animated-pulsing-heart | animated | 2 |
 
-Fidelity instrument: judge model `fixture-judge`, rasterizer `fixture-raster`.
+Fidelity instrument: judge model `claude-sonnet-5`, rasterizer `resvg-js@2`.
 
 The complete run record is committed as [`svg-generation-comparison.data.json`](./svg-generation-comparison.data.json): per-call prompts, latencies, SVG byte lengths, output-token counts, the generated SVG source, the judge's per-constraint verdicts, and every score.
 
-Generated: 2026-01-01T00:00:00.000Z
+Generated: 2026-07-18T11:29:34.171Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
+
+- [2026-07-18T11:29:34.171Z](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison)

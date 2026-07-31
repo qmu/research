@@ -1,62 +1,61 @@
 ---
 title: 応答速度
 source_artifact: docs/research-reports/llm-speed-comparison.data.json
-source_commit: 734686c
+source_commit: f97cf8c
 insights_model: source-report
 translated_from: llm-speed-comparison.md
 translation_model: claude-sonnet-5
-generated_at: 2026-07-13T10:07:01.285Z
+generated_at: 2026-07-27T05:28:25.946Z
 trials: 0
 provenance: llm-translation
 ---
 # 応答速度
 
-本稿に示す数値は、**LLM比較の統合スイープ結果を反映したもの**であり、同一の試行、モデル×努力量のマトリクス、統計、および出典情報を、本トピックのプローブに絞り込んだものです。
+ここに示す数値は、**LLM比較の統合スイープ全体からの投影**であり、このトピックのプローブに限定した、同一の試行、モデル×取り組み度合いの行列、統計、および証跡データに基づくものです。
 
 ## 1. 調査の目的
 
-本レポートは、このトピックにおいて重要となる測定済みの制約に基づき、モデル選定の絞り込みを支援するものです。これは一般的なモデルランキングではなく、また別途ベンチマークを再実行するものでもありません。
+本レポートは、このトピックにおいて重要となる測定された制約に基づき、モデル選定の絞り込みを支援するものです。これは一般的なモデルランキングではなく、独立したベンチマークを再実行するものでもありません。
 
 ## 2. 測定対象
 
 ### 対象モデル
 
-本レポートは、19のモデルと4つのプロバイダーにまたがる**47のモデル×エフォート構成**を対象としています。厳選されたカタログ情報（プロバイダー、モデル、ティア、価格、エフォート）はモデルレジストリに基づいています。
+本レポートは、22モデル・5プロバイダーにまたがる**54件のモデル×エフォート構成**を対象としています。整備されたカタログ情報（プロバイダー、モデル、ティア、価格、エフォート）はモデルレジストリに基づきます。
 
 ### 対象メトリクス
 
-このトピックでは、持続的な生成スループット、Time to First Token、および総応答レイテンシを対象としています。メトリクスのセルは、n ≥ 2の場合は平均値と95%信頼区間として、n < 2の場合は平均値とサンプル数として報告されます。
+本トピックでは、持続的な生成スループット、最初のトークンまでの時間（time-to-first-token）、および総応答レイテンシを対象とします。メトリクスのセルは、n ≥ 2 の場合は平均値 ± 95%信頼区間として報告され、n < 2 のメトリクスについては平均値とサンプル数を示します。
 
 ## 3. 範囲と制約
 
-- 各構成×probeにつき**3回の試行**。このサンプル数は実行レベルの比較を裏付けるものであり、プロバイダの挙動が安定しているという統計的な主張を裏付けるものではありません。
-- **特定時点の計測。** 測定された挙動は、`2026-07-12T05:47:26.268Z` 時点のモデルおよびAPIを反映したものです。
-- このトピックでは、限定的な挙動（持続的な生成スループット、Time to First Token、および総応答レイテンシ）のみを検証しており、一般的な能力や推論品質を測定するものではありません。
-- **Effortのセマンティクスはプロバイダによって異なる**ため、Effortレベルはプロバイダ間よりもプロバイダ内での比較の方が妥当性が高くなります。
+- 構成×プローブごとに**3回の試行**。このサンプル数はラン単位の比較を裏付けるものであり、プロバイダの挙動が安定しているという統計的な主張を裏付けるものではない。
+- **測定日が混在しており、この表は単一時点のものではない。** 54件の構成は3つの日付にまたがって測定されている：`2026-07-27`が12件、`2026-07-20`が1件、`2026-07-12`が41件。今回のラウンドで再測定されたのは`2026-07-27`に測定された12件のみであり、それ以外は以前のフレームから引き継がれたものであるため、日付の異なる行同士のモデル間比較は同一条件での比較にはならない。セクション7における旧世代→新世代の比較にはこの影響はない — これは両世代が同一フレームで測定されたペアのみから導出されているためである。
+- 本トピックが検証するのは限定的な挙動のみである（持続的な生成スループット、Time To First Token、および総応答レイテンシ）。一般的な能力や推論の質を測定するものではない。
+- **effortの意味付けはプロバイダによって異なる**ため、effortレベルはプロバイダ間よりもプロバイダ内での比較のほうが妥当性が高い。
+- **今回のランには非測定の構成が含まれている。** `n/a (fixtured)`および`n/a (error)`のセルは、実測値ではない。
 
 ## 4. 検証結果
 
-今回の実行では、4プロバイダー・19モデルにわたる**47件中47件の構成**を、構成×プローブごとに3回の試行で測定した。
+今回の実行では、5プロバイダー・22モデルにわたる**54構成中53構成**を、構成×プローブごとに3試行で測定した。
 
 | 観点 | 最良（構成） | 中央値 | 最悪 |
 | ------ | -------------------- | ------ | ----- |
-| 生成中の持続スループット | 9278.0 tok/s — Gemini 3.1 Flash-Lite [high] | 274.5 tok/s | 47.8 tok/s |
-| 初回トークンまでの時間 | 0 ms — Claude Fable 5 [max] | 5594 ms | 37966 ms |
-| 総応答時間 | 1726 ms — Gemini 3.1 Flash-Lite [low] | 7943 ms | 38918 ms |
+| 生成中の持続スループット | 2951.7 tok/s — GPT-5.4 mini [high] | 373.7 tok/s | 47.8 tok/s |
+| 初トークンまでの時間 | 0 ms — Claude Fable 5 [max] | 6014 ms | 37966 ms |
+| 総応答時間 | 1751 ms — GPT-5.4 nano [none] | 7750 ms | 38918 ms |
 
-各値は構成ごとの平均値であり、「最良」「最悪」はそれぞれの観点における方向性（高いほど良い、または低いほど良い）に従っている。構成ごとの完全な表——信頼区間、最小～最大値、出所情報を含むモデル×effortの全セル——はセクション7「検証データ」に記載している。
+値は構成ごとの平均であり、「最良」／「最悪」は各観点固有の方向性（高いほど良い、または低いほど良い）に従う。構成ごとの完全な表——信頼区間、最小～最大、および出所情報を含むすべてのモデル×エフォートのセル——はセクション7「検証データ」に記載する。
 
-**推移 / Trend across surveys**
-
-これは本シリーズにおける最初の比較可能な調査であるため、まだ複数調査にわたる推移をグラフ化することはできない。同一手法による2回目の調査がアーカイブされた時点で、ここに推移グラフが表示される。過去の調査については「検証データ」の下にリンクを掲載している。
+今回のラウンドには、旧世代→新世代の比較を統制した検証が含まれる。前世代モデルと現行世代モデルのペアを、同一条件下で網羅的に測定した。メトリクスごとの差分および機械的に導出された総合判定はセクション7「検証データ」に記載する。
 
 ## 5. 考察
 
-47件の測定構成のうち最高値は、**Gemini 3.1 Flash-Lite [high]** の 9278 ± 17042 tok/s（95% CI、n=3）であった。この測定における対極は、GPT-5.5 [none] の 48 ± 4 tok/s（95% CI、n=3）であった。
+53件の測定構成のうち最高値：**GPT-5.4 mini [high]** が 2952 ± 3461 tok/s（95% CI, n=3）。この測定の対極にあるのは GPT-5.5 [none] で 48 ± 4 tok/s（95% CI, n=3）。
 
-47件の測定構成のうち最低値は、**Claude Fable 5 [max]** の 0 ± 0 ms（95% CI、n=3）であった。この測定における対極は、Grok 4.20 Reasoning [n/a] の 37966 ± 16419 ms（95% CI、n=3）であった。
+53件の測定構成のうち最低値：**Claude Fable 5 [max]** が 0 ± 0 ms（95% CI, n=3）。この測定の対極にあるのは Grok 4.20 Reasoning [n/a] で 37966 ± 16419 ms（95% CI, n=3）。
 
-47件の測定構成のうち最低値は、**Gemini 3.1 Flash-Lite [low]** の 1726 ± 108 ms（95% CI、n=3）であった。この測定における対極は、Grok 4.20 Reasoning [n/a] の 38918 ± 16237 ms（95% CI、n=3）であった。
+53件の測定構成のうち最低値：**GPT-5.4 nano [none]** が 1751 ± 154 ms（95% CI, n=3）。この測定の対極にあるのは Grok 4.20 Reasoning [n/a] で 38918 ± 16237 ms（95% CI, n=3）。
 
 ## 6. 再現方法
 
@@ -70,78 +69,85 @@ npm install
 # キー不要のセルフテスト（コミット済みの比較用フィクスチャを投影）:
 npm run research -- speed --fixture
 
-# 実プロバイダーに対しては、共有スイープを実行してから投影する:
+# 実際のプロバイダーに対しては、共有スイープを実行してから投影する:
 npm run compare
 npm run research -- speed --real
 ```
 
 ### 再現コスト（目安）
 
-フィクスチャの投影はキー不要でコストもかかりません。実測経路は共有の `npm run compare` スイープの分だけ課金されます。プロバイダーを実行する前に `npm run compare -- --estimate` を実行し、呼び出し回数・推定コスト・所要時間の見込みを事前に確認してください。
+フィクスチャ投影はキー不要でコストもかからない。実際の経路では共有の `npm run compare` スイープに課金される。プロバイダー実行の前に `npm run compare -- --estimate` を実行し、呼び出し回数・推定コスト・所要時間（ETA）を事前確認すること。
 
 ### クリーンアップ
 
-投影処理は外部リソースを一切作成しません。実測の実行ではローカルに `.real` のMarkdown／データ成果物が書き出され、共有の比較履歴が更新されます。コミットする前にそれらのファイルを確認してください。
+投影処理は外部リソースを作成しない。実際の実行はローカルの `.real` Markdown/データ成果物を書き込み、共有の比較履歴を更新する。コミット前にそれらのファイルを確認すること。
 
 ## 7. 検証データ
 
-| プロバイダー | モデル | ティア | Effort | コスト（入力 / 出力 per MTok） | スループット (tok/s) | TTFT (ms) | 総レイテンシ (ms) |
+| プロバイダー | モデル | 階層 | Effort | コスト（入力／出力 per MTok） | スループット（tok/s） | TTFT（ms） | 総レイテンシ（ms） |
 | -------- | ----- | ---- | ------ | ------------------------ | --- | --- | --- |
-| Anthropic | Claude Fable 5 | frontier | low | $6.00 / $30.00 | 272 ± 14 tok/s (95% CI, n=3) | 9888 ± 729 ms (95% CI, n=3) | 12820 ± 506 ms (95% CI, n=3) |
-| Anthropic | Claude Fable 5 | frontier | high | $6.00 / $30.00 | 468 ± 372 tok/s (95% CI, n=3) | 12148 ± 11912 ms (95% CI, n=3) | 21810 ± 1100 ms (95% CI, n=3) |
-| Anthropic | Claude Fable 5 | frontier | max | $6.00 / $30.00 | 93 ± 2 tok/s (95% CI, n=3) | 0 ± 0 ms (95% CI, n=3) | 22100 ± 544 ms (95% CI, n=3) |
-| Anthropic | Claude Opus 4.8 | flagship | low | $5.00 / $25.00 | 60 ± 10 tok/s (95% CI, n=3) | 1560 ± 1232 ms (95% CI, n=3) | 7750 ± 1962 ms (95% CI, n=3) |
-| Anthropic | Claude Opus 4.8 | flagship | high | $5.00 / $25.00 | 63 ± 6 tok/s (95% CI, n=3) | 975 ± 81 ms (95% CI, n=3) | 6977 ± 461 ms (95% CI, n=3) |
-| Anthropic | Claude Opus 4.8 | flagship | max | $5.00 / $25.00 | 66 ± 4 tok/s (95% CI, n=3) | 864 ± 212 ms (95% CI, n=3) | 6623 ± 544 ms (95% CI, n=3) |
-| Anthropic | Claude Sonnet 5 | mid | low | $3.00 / $15.00 | 79 ± 3 tok/s (95% CI, n=3) | 1196 ± 561 ms (95% CI, n=3) | 5880 ± 529 ms (95% CI, n=3) |
-| Anthropic | Claude Sonnet 5 | mid | high | $3.00 / $15.00 | 190 ± 225 tok/s (95% CI, n=3) | 2772 ± 2703 ms (95% CI, n=3) | 7338 ± 1136 ms (95% CI, n=3) |
-| Anthropic | Claude Sonnet 5 | mid | max | $3.00 / $15.00 | 124 ± 6 tok/s (95% CI, n=3) | 0 ± 0 ms (95% CI, n=3) | 16526 ± 877 ms (95% CI, n=3) |
-| Anthropic | Claude Haiku 4.5 | small | n/a | $1.00 / $5.00 | 85 ± 11 tok/s (95% CI, n=3) | 853 ± 131 ms (95% CI, n=3) | 3882 ± 649 ms (95% CI, n=3) |
-| OpenAI | GPT-5.5 | flagship | none | $5.00 / $30.00 | 48 ± 4 tok/s (95% CI, n=3) | 1295 ± 797 ms (95% CI, n=3) | 6264 ± 685 ms (95% CI, n=3) |
-| OpenAI | GPT-5.5 | flagship | medium | $5.00 / $30.00 | 534 ± 106 tok/s (95% CI, n=3) | 10768 ± 477 ms (95% CI, n=3) | 12439 ± 474 ms (95% CI, n=3) |
-| OpenAI | GPT-5.5 | flagship | high | $5.00 / $30.00 | 706 ± 73 tok/s (95% CI, n=3) | 12353 ± 2045 ms (95% CI, n=3) | 13931 ± 2101 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 | mid | none | $2.50 / $15.00 | 84 ± 3 tok/s (95% CI, n=3) | 559 ± 120 ms (95% CI, n=3) | 3209 ± 30 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 | mid | medium | $2.50 / $15.00 | 1030 ± 116 tok/s (95% CI, n=3) | 6614 ± 732 ms (95% CI, n=3) | 7608 ± 707 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 | mid | high | $2.50 / $15.00 | 1522 ± 786 tok/s (95% CI, n=3) | 7369 ± 3281 ms (95% CI, n=3) | 8246 ± 3266 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 mini | small | none | $0.50 / $2.00 | 130 ± 17 tok/s (95% CI, n=3) | 567 ± 27 ms (95% CI, n=3) | 2388 ± 325 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 mini | small | medium | $0.50 / $2.00 | 1442 ± 154 tok/s (95% CI, n=3) | 5594 ± 246 ms (95% CI, n=3) | 6450 ± 260 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 mini | small | high | $0.50 / $2.00 | 2952 ± 3461 tok/s (95% CI, n=3) | 7211 ± 3669 ms (95% CI, n=3) | 7943 ± 3262 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 nano | small | none | $0.15 / $0.60 | 182 ± 12 tok/s (95% CI, n=3) | 592 ± 79 ms (95% CI, n=3) | 1751 ± 154 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 nano | small | medium | $0.15 / $0.60 | 927 ± 245 tok/s (95% CI, n=3) | 5618 ± 926 ms (95% CI, n=3) | 6918 ± 794 ms (95% CI, n=3) |
-| OpenAI | GPT-5.4 nano | small | high | $0.15 / $0.60 | 907 ± 78 tok/s (95% CI, n=3) | 6161 ± 364 ms (95% CI, n=3) | 7551 ± 354 ms (95% CI, n=3) |
-| OpenAI | o4-mini | mid | low | $1.10 / $4.40 | 1078 ± 104 tok/s (95% CI, n=3) | 6121 ± 869 ms (95% CI, n=3) | 7380 ± 847 ms (95% CI, n=3) |
-| OpenAI | o4-mini | mid | medium | $1.10 / $4.40 | 1000 ± 823 tok/s (95% CI, n=3) | 4896 ± 5005 ms (95% CI, n=3) | 9089 ± 1797 ms (95% CI, n=3) |
-| OpenAI | o4-mini | mid | high | $1.10 / $4.40 | 184 ± 4 tok/s (95% CI, n=3) | 0 ± 0 ms (95% CI, n=3) | 11146 ± 249 ms (95% CI, n=3) |
-| OpenAI | GPT Realtime | flagship | n/a | $4.00 / $16.00 | 132 ± 4 tok/s (95% CI, n=3) | 1137 ± 656 ms (95% CI, n=3) | 3595 ± 1462 ms (95% CI, n=3) |
-| OpenAI | GPT-5.3 Codex | flagship | low | $1.75 / $14.00 | 574 ± 117 tok/s (95% CI, n=3) | 7582 ± 252 ms (95% CI, n=3) | 9396 ± 674 ms (95% CI, n=3) |
-| OpenAI | GPT-5.3 Codex | flagship | high | $1.75 / $14.00 | 863 ± 422 tok/s (95% CI, n=3) | 11015 ± 4210 ms (95% CI, n=3) | 12711 ± 4083 ms (95% CI, n=3) |
-| OpenAI | GPT-5.3 Codex | flagship | xhigh | $1.75 / $14.00 | 374 ± 732 tok/s (95% CI, n=3) | 10810 ± 11322 ms (95% CI, n=3) | 17586 ± 3612 ms (95% CI, n=3) |
-| OpenAI | GPT-5.1 Codex mini | small | low | $0.25 / $2.00 | 731 ± 535 tok/s (95% CI, n=3) | 3795 ± 3067 ms (95% CI, n=3) | 5090 ± 3057 ms (95% CI, n=3) |
-| OpenAI | GPT-5.1 Codex mini | small | medium | $0.25 / $2.00 | 576 ± 574 tok/s (95% CI, n=3) | 3814 ± 3858 ms (95% CI, n=3) | 8022 ± 2015 ms (95% CI, n=3) |
-| OpenAI | GPT-5.1 Codex mini | small | high | $0.25 / $2.00 | 317 ± 621 tok/s (95% CI, n=3) | 1726 ± 3383 ms (95% CI, n=3) | 8873 ± 2365 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Pro | flagship | low | $2.00 / $12.00 | 266 ± 5 tok/s (95% CI, n=3) | 14977 ± 45 ms (95% CI, n=3) | 15276 ± 43 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Pro | flagship | medium | $2.00 / $12.00 | 302 ± 45 tok/s (95% CI, n=3) | 15376 ± 903 ms (95% CI, n=3) | 15646 ± 864 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Pro | flagship | high | $2.00 / $12.00 | 274 ± 16 tok/s (95% CI, n=3) | 15497 ± 979 ms (95% CI, n=3) | 15782 ± 988 ms (95% CI, n=3) |
-| Google | Gemini 3.5 Flash | mid | low | $0.30 / $2.50 | 717 ± 419 tok/s (95% CI, n=3) | 7707 ± 202 ms (95% CI, n=3) | 7857 ± 283 ms (95% CI, n=3) |
-| Google | Gemini 3.5 Flash | mid | medium | $0.30 / $2.50 | 579 ± 159 tok/s (95% CI, n=3) | 8118 ± 798 ms (95% CI, n=3) | 8261 ± 833 ms (95% CI, n=3) |
-| Google | Gemini 3.5 Flash | mid | high | $0.30 / $2.50 | 982 ± 530 tok/s (95% CI, n=3) | 8050 ± 600 ms (95% CI, n=3) | 8143 ± 593 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Flash-Lite | small | low | $0.10 / $0.40 | 256 ± 6 tok/s (95% CI, n=3) | 815 ± 114 ms (95% CI, n=3) | 1726 ± 108 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Flash-Lite | small | medium | $0.10 / $0.40 | 730 ± 278 tok/s (95% CI, n=3) | 4696 ± 171 ms (95% CI, n=3) | 4816 ± 145 ms (95% CI, n=3) |
-| Google | Gemini 3.1 Flash-Lite | small | high | $0.10 / $0.40 | 9278 ± 17042 tok/s (95% CI, n=3) | 4991 ± 129 ms (95% CI, n=3) | 5089 ± 207 ms (95% CI, n=3) |
-| xAI | Grok 4.3 | frontier | none | $1.25 / $2.50 | 108 ± 13 tok/s (95% CI, n=3) | 524 ± 27 ms (95% CI, n=3) | 2382 ± 186 ms (95% CI, n=3) |
-| xAI | Grok 4.3 | frontier | medium | $1.25 / $2.50 | 258 ± 18 tok/s (95% CI, n=3) | 19640 ± 5470 ms (95% CI, n=3) | 20490 ± 5423 ms (95% CI, n=3) |
-| xAI | Grok 4.3 | frontier | high | $1.25 / $2.50 | 250 ± 7 tok/s (95% CI, n=3) | 23565 ± 5250 ms (95% CI, n=3) | 24423 ± 5203 ms (95% CI, n=3) |
-| xAI | Grok 4.20 Reasoning | flagship | n/a | $1.25 / $2.50 | 229 ± 37 tok/s (95% CI, n=3) | 37966 ± 16419 ms (95% CI, n=3) | 38918 ± 16237 ms (95% CI, n=3) |
-| xAI | Grok 4.20 Non-Reasoning | mid | n/a | $1.25 / $2.50 | 100 ± 2 tok/s (95% CI, n=3) | 435 ± 40 ms (95% CI, n=3) | 2919 ± 123 ms (95% CI, n=3) |
-| xAI | Grok Build 0.1 | small | n/a | $1.00 / $2.00 | 273 ± 4 tok/s (95% CI, n=3) | 35660 ± 6588 ms (95% CI, n=3) | 36444 ± 6613 ms (95% CI, n=3) |
+| Anthropic | Claude Fable 5 | frontier | low | $6.00 / $30.00 | 272 ± 14 tok/s（95% CI, n=3） | 9888 ± 729 ms（95% CI, n=3） | 12820 ± 506 ms（95% CI, n=3） |
+| Anthropic | Claude Fable 5 | frontier | high | $6.00 / $30.00 | 468 ± 372 tok/s（95% CI, n=3） | 12148 ± 11912 ms（95% CI, n=3） | 21810 ± 1100 ms（95% CI, n=3） |
+| Anthropic | Claude Fable 5 | frontier | max | $6.00 / $30.00 | 93 ± 2 tok/s（95% CI, n=3） | 0 ± 0 ms（95% CI, n=3） | 22100 ± 544 ms（95% CI, n=3） |
+| Anthropic | Claude Opus 4.8 | flagship | low | $5.00 / $25.00 | 60 ± 10 tok/s（95% CI, n=3） | 1560 ± 1232 ms（95% CI, n=3） | 7750 ± 1962 ms（95% CI, n=3） |
+| Anthropic | Claude Opus 4.8 | flagship | high | $5.00 / $25.00 | 63 ± 6 tok/s（95% CI, n=3） | 975 ± 81 ms（95% CI, n=3） | 6977 ± 461 ms（95% CI, n=3） |
+| Anthropic | Claude Opus 4.8 | flagship | max | $5.00 / $25.00 | 66 ± 4 tok/s（95% CI, n=3） | 864 ± 212 ms（95% CI, n=3） | 6623 ± 544 ms（95% CI, n=3） |
+| Anthropic | Claude Sonnet 5 | mid | low | $3.00 / $15.00 | 79 ± 3 tok/s（95% CI, n=3） | 1196 ± 561 ms（95% CI, n=3） | 5880 ± 529 ms（95% CI, n=3） |
+| Anthropic | Claude Sonnet 5 | mid | high | $3.00 / $15.00 | 190 ± 225 tok/s（95% CI, n=3） | 2772 ± 2703 ms（95% CI, n=3） | 7338 ± 1136 ms（95% CI, n=3） |
+| Anthropic | Claude Sonnet 5 | mid | max | $3.00 / $15.00 | 124 ± 6 tok/s（95% CI, n=3） | 0 ± 0 ms（95% CI, n=3） | 16526 ± 877 ms（95% CI, n=3） |
+| Anthropic | Claude Haiku 4.5 | small | n/a | $1.00 / $5.00 | 85 ± 11 tok/s（95% CI, n=3） | 853 ± 131 ms（95% CI, n=3） | 3882 ± 649 ms（95% CI, n=3） |
+| OpenAI | GPT-5.5 | flagship | none | $5.00 / $30.00 | 48 ± 4 tok/s（95% CI, n=3） | 1295 ± 797 ms（95% CI, n=3） | 6264 ± 685 ms（95% CI, n=3） |
+| OpenAI | GPT-5.5 | flagship | medium | $5.00 / $30.00 | 534 ± 106 tok/s（95% CI, n=3） | 10768 ± 477 ms（95% CI, n=3） | 12439 ± 474 ms（95% CI, n=3） |
+| OpenAI | GPT-5.5 | flagship | high | $5.00 / $30.00 | 706 ± 73 tok/s（95% CI, n=3） | 12353 ± 2045 ms（95% CI, n=3） | 13931 ± 2101 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 | mid | none | $2.50 / $15.00 | 84 ± 3 tok/s（95% CI, n=3） | 559 ± 120 ms（95% CI, n=3） | 3209 ± 30 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 | mid | medium | $2.50 / $15.00 | 1030 ± 116 tok/s（95% CI, n=3） | 6614 ± 732 ms（95% CI, n=3） | 7608 ± 707 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 | mid | high | $2.50 / $15.00 | 1522 ± 786 tok/s（95% CI, n=3） | 7369 ± 3281 ms（95% CI, n=3） | 8246 ± 3266 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 mini | small | none | $0.50 / $2.00 | 130 ± 17 tok/s（95% CI, n=3） | 567 ± 27 ms（95% CI, n=3） | 2388 ± 325 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 mini | small | medium | $0.50 / $2.00 | 1442 ± 154 tok/s（95% CI, n=3） | 5594 ± 246 ms（95% CI, n=3） | 6450 ± 260 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 mini | small | high | $0.50 / $2.00 | 2952 ± 3461 tok/s（95% CI, n=3） | 7211 ± 3669 ms（95% CI, n=3） | 7943 ± 3262 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 nano | small | none | $0.15 / $0.60 | 182 ± 12 tok/s（95% CI, n=3） | 592 ± 79 ms（95% CI, n=3） | 1751 ± 154 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 nano | small | medium | $0.15 / $0.60 | 927 ± 245 tok/s（95% CI, n=3） | 5618 ± 926 ms（95% CI, n=3） | 6918 ± 794 ms（95% CI, n=3） |
+| OpenAI | GPT-5.4 nano | small | high | $0.15 / $0.60 | 907 ± 78 tok/s（95% CI, n=3） | 6161 ± 364 ms（95% CI, n=3） | 7551 ± 354 ms（95% CI, n=3） |
+| OpenAI | o4-mini | mid | low | $1.10 / $4.40 | 1078 ± 104 tok/s（95% CI, n=3） | 6121 ± 869 ms（95% CI, n=3） | 7380 ± 847 ms（95% CI, n=3） |
+| OpenAI | o4-mini | mid | medium | $1.10 / $4.40 | 1000 ± 823 tok/s（95% CI, n=3） | 4896 ± 5005 ms（95% CI, n=3） | 9089 ± 1797 ms（95% CI, n=3） |
+| OpenAI | o4-mini | mid | high | $1.10 / $4.40 | 184 ± 4 tok/s（95% CI, n=3） | 0 ± 0 ms（95% CI, n=3） | 11146 ± 249 ms（95% CI, n=3） |
+| OpenAI | GPT Realtime | flagship | n/a | $4.00 / $16.00 | 132 ± 4 tok/s（95% CI, n=3） | 1137 ± 656 ms（95% CI, n=3） | 3595 ± 1462 ms（95% CI, n=3） |
+| OpenAI | GPT-5.3 Codex | flagship | low | $1.75 / $14.00 | 574 ± 117 tok/s（95% CI, n=3） | 7582 ± 252 ms（95% CI, n=3） | 9396 ± 674 ms（95% CI, n=3） |
+| OpenAI | GPT-5.3 Codex | flagship | high | $1.75 / $14.00 | 863 ± 422 tok/s（95% CI, n=3） | 11015 ± 4210 ms（95% CI, n=3） | 12711 ± 4083 ms（95% CI, n=3） |
+| OpenAI | GPT-5.3 Codex | flagship | xhigh | $1.75 / $14.00 | 374 ± 732 tok/s（95% CI, n=3） | 10810 ± 11322 ms（95% CI, n=3） | 17586 ± 3612 ms（95% CI, n=3） |
+| OpenAI | GPT-5.1 Codex mini | small | low | $0.25 / $2.00 | 731 ± 535 tok/s（95% CI, n=3） | 3795 ± 3067 ms（95% CI, n=3） | 5090 ± 3057 ms（95% CI, n=3） |
+| OpenAI | GPT-5.1 Codex mini | small | medium | $0.25 / $2.00 | 576 ± 574 tok/s（95% CI, n=3） | 3814 ± 3858 ms（95% CI, n=3） | 8022 ± 2015 ms（95% CI, n=3） |
+| OpenAI | GPT-5.1 Codex mini | small | high | $0.25 / $2.00 | 317 ± 621 tok/s（95% CI, n=3） | 1726 ± 3383 ms（95% CI, n=3） | 8873 ± 2365 ms（95% CI, n=3） |
+| Google | Gemini 3.1 Pro | flagship | low | $2.00 / $12.00 | 266 ± 5 tok/s（95% CI, n=3） | 14977 ± 45 ms（95% CI, n=3） | 15276 ± 43 ms（95% CI, n=3） |
+| Google | Gemini 3.1 Pro | flagship | medium | $2.00 / $12.00 | 302 ± 45 tok/s（95% CI, n=3） | 15376 ± 903 ms（95% CI, n=3） | 15646 ± 864 ms（95% CI, n=3） |
+| Google | Gemini 3.1 Pro | flagship | high | $2.00 / $12.00 | 274 ± 16 tok/s（95% CI, n=3） | 15497 ± 979 ms（95% CI, n=3） | 15782 ± 988 ms（95% CI, n=3） |
+| Google | Gemini 3.5 Flash | mid | low | $1.50 / $9.00 | 490 ± 204 tok/s（95% CI, n=3） | 7520 ± 661 ms（95% CI, n=3） | 7699 ± 600 ms（95% CI, n=3） |
+| Google | Gemini 3.5 Flash | mid | medium | $1.50 / $9.00 | 449 ± 87 tok/s（95% CI, n=3） | 7333 ± 351 ms（95% CI, n=3） | 7511 ± 381 ms（95% CI, n=3） |
+| Google | Gemini 3.5 Flash | mid | high | $1.50 / $9.00 | 684 ± 518 tok/s（95% CI, n=3） | 7852 ± 460 ms（95% CI, n=3） | 8002 ± 413 ms（95% CI, n=3） |
+| Google | Gemini 3.1 Flash-Lite | small | low | $0.25 / $1.50 | 216 ± 22 tok/s（95% CI, n=3） | 903 ± 51 ms（95% CI, n=3） | 1980 ± 196 ms（95% CI, n=3） |
+| Google | Gemini 3.1 Flash-Lite | small | medium | $0.25 / $1.50 | 1754 ± 1608 tok/s（95% CI, n=3） | 6014 ± 79 ms（95% CI, n=3） | 6079 ± 65 ms（95% CI, n=3） |
+| Google | Gemini 3.1 Flash-Lite | small | high | $0.25 / $1.50 | 1290 ± 590 tok/s（95% CI, n=3） | 6180 ± 337 ms（95% CI, n=3） | 6252 ± 369 ms（95% CI, n=3） |
+| xAI | Grok 4.3 | frontier | none | $1.25 / $2.50 | 108 ± 13 tok/s（95% CI, n=3） | 524 ± 27 ms（95% CI, n=3） | 2382 ± 186 ms（95% CI, n=3） |
+| xAI | Grok 4.3 | frontier | medium | $1.25 / $2.50 | 258 ± 18 tok/s（95% CI, n=3） | 19640 ± 5470 ms（95% CI, n=3） | 20490 ± 5423 ms（95% CI, n=3） |
+| xAI | Grok 4.3 | frontier | high | $1.25 / $2.50 | 250 ± 7 tok/s（95% CI, n=3） | 23565 ± 5250 ms（95% CI, n=3） | 24423 ± 5203 ms（95% CI, n=3） |
+| xAI | Grok 4.20 Reasoning | flagship | n/a | $1.25 / $2.50 | 229 ± 37 tok/s（95% CI, n=3） | 37966 ± 16419 ms（95% CI, n=3） | 38918 ± 16237 ms（95% CI, n=3） |
+| xAI | Grok 4.20 Non-Reasoning | mid | n/a | $1.25 / $2.50 | 100 ± 2 tok/s（95% CI, n=3） | 435 ± 40 ms（95% CI, n=3） | 2919 ± 123 ms（95% CI, n=3） |
+| xAI | Grok Build 0.1 | small | n/a | $1.00 / $2.00 | 273 ± 4 tok/s（95% CI, n=3） | 35660 ± 6588 ms（95% CI, n=3） | 36444 ± 6613 ms（95% CI, n=3） |
+| AWS Bedrock | Claude Sonnet 5 (Bedrock) | mid | low | $3.00 / $15.00 | n/a（エラー） | n/a（エラー） | n/a（エラー） |
+| Google | Gemini 3.6 Flash | mid | low | $1.50 / $7.50 | 509 ± 160 tok/s（95% CI, n=3） | 9078 ± 372 ms（95% CI, n=3） | 9245 ± 412 ms（95% CI, n=3） |
+| Google | Gemini 3.6 Flash | mid | medium | $1.50 / $7.50 | 542 ± 154 tok/s（95% CI, n=3） | 9459 ± 399 ms（95% CI, n=3） | 9609 ± 429 ms（95% CI, n=3） |
+| Google | Gemini 3.6 Flash | mid | high | $1.50 / $7.50 | 422 ± 28 tok/s（95% CI, n=3） | 9469 ± 743 ms（95% CI, n=3） | 9657 ± 736 ms（95% CI, n=3） |
+| Google | Gemini 3.5 Flash-Lite | small | low | $0.30 / $2.50 | 470 ± 155 tok/s（95% CI, n=3） | 5424 ± 147 ms（95% CI, n=3） | 5603 ± 87 ms（95% CI, n=3） |
+| Google | Gemini 3.5 Flash-Lite | small | medium | $0.30 / $2.50 | 755 ± 267 tok/s（95% CI, n=3） | 5052 ± 534 ms（95% CI, n=3） | 5170 ± 566 ms（95% CI, n=3） |
+| Google | Gemini 3.5 Flash-Lite | small | high | $0.30 / $2.50 | 730 ± 246 tok/s（95% CI, n=3） | 5512 ± 180 ms（95% CI, n=3） | 5628 ± 138 ms（95% CI, n=3） |
 
-**凡例。** プロバイダー、モデル、ティア、Effort、コストはキュレーションされたカタログデータです。メトリクスの列は実測値です。`n/a (fixtured)` は、決定論的なフィクスチャクライアントがそのセルを生成したことを意味し、`n/a (error)` はその構成のすべての試行が失敗したことを意味します。
+**凡例。** Provider、Model、Tier、Effort、Costはキュレーションされたカタログデータです。メトリクス列は実測値です。`n/a (fixtured)`は決定論的なフィクスチャクライアントがそのセルを生成したことを意味し、`n/a (error)`はその構成のすべての試行が失敗したことを意味します。
 
-各詳細テーブルは、1つの測定対象について観測された最小値・最大値と、寄与した試行回数を報告しています。
+各詳細テーブルは、1つの測定対象について観測されたmin-maxと寄与した試行回数を報告しています。
 
 **生成中の持続スループット**
 
-| 設定 | 平均 ± 95% CI | 最小～最大 | n |
+| 構成 | 平均 ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | 272 ± 14 tok/s (95% CI, n=3) | 262.4–285.6 | 3 |
 | Claude Fable 5 [high] | 468 ± 372 tok/s (95% CI, n=3) | 89.5–676.5 | 3 |
@@ -178,22 +184,29 @@ npm run research -- speed --real
 | Gemini 3.1 Pro [low] | 266 ± 5 tok/s (95% CI, n=3) | 261.6–270.3 | 3 |
 | Gemini 3.1 Pro [medium] | 302 ± 45 tok/s (95% CI, n=3) | 266.4–344.7 | 3 |
 | Gemini 3.1 Pro [high] | 274 ± 16 tok/s (95% CI, n=3) | 260.9–288.9 | 3 |
-| Gemini 3.5 Flash [low] | 717 ± 419 tok/s (95% CI, n=3) | 290.3–950.6 | 3 |
-| Gemini 3.5 Flash [medium] | 579 ± 159 tok/s (95% CI, n=3) | 427.8–705.4 | 3 |
-| Gemini 3.5 Flash [high] | 982 ± 530 tok/s (95% CI, n=3) | 569.3–1490.9 | 3 |
-| Gemini 3.1 Flash-Lite [low] | 256 ± 6 tok/s (95% CI, n=3) | 251.6–262.7 | 3 |
-| Gemini 3.1 Flash-Lite [medium] | 730 ± 278 tok/s (95% CI, n=3) | 562.5–1011.9 | 3 |
-| Gemini 3.1 Flash-Lite [high] | 9278 ± 17042 tok/s (95% CI, n=3) | 440.9–26666.7 | 3 |
+| Gemini 3.5 Flash [low] | 490 ± 204 tok/s (95% CI, n=3) | 283.1–609.0 | 3 |
+| Gemini 3.5 Flash [medium] | 449 ± 87 tok/s (95% CI, n=3) | 363.2–512.7 | 3 |
+| Gemini 3.5 Flash [high] | 684 ± 518 tok/s (95% CI, n=3) | 411.2–1212.1 | 3 |
+| Gemini 3.1 Flash-Lite [low] | 216 ± 22 tok/s (95% CI, n=3) | 192.8–229.8 | 3 |
+| Gemini 3.1 Flash-Lite [medium] | 1754 ± 1608 tok/s (95% CI, n=3) | 846.2–3391.3 | 3 |
+| Gemini 3.1 Flash-Lite [high] | 1290 ± 590 tok/s (95% CI, n=3) | 690.3–1640.0 | 3 |
 | Grok 4.3 [none] | 108 ± 13 tok/s (95% CI, n=3) | 98.7–120.0 | 3 |
 | Grok 4.3 [medium] | 258 ± 18 tok/s (95% CI, n=3) | 247.1–275.5 | 3 |
 | Grok 4.3 [high] | 250 ± 7 tok/s (95% CI, n=3) | 244.8–256.4 | 3 |
 | Grok 4.20 Reasoning [n/a] | 229 ± 37 tok/s (95% CI, n=3) | 192.2–253.3 | 3 |
 | Grok 4.20 Non-Reasoning [n/a] | 100 ± 2 tok/s (95% CI, n=3) | 98.9–102.2 | 3 |
 | Grok Build 0.1 [n/a] | 273 ± 4 tok/s (95% CI, n=3) | 269.8–277.2 | 3 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 509 ± 160 tok/s (95% CI, n=3) | 346.3–592.6 | 3 |
+| Gemini 3.6 Flash [medium] | 542 ± 154 tok/s (95% CI, n=3) | 401.0–672.4 | 3 |
+| Gemini 3.6 Flash [high] | 422 ± 28 tok/s (95% CI, n=3) | 395.0–443.2 | 3 |
+| Gemini 3.5 Flash-Lite [low] | 470 ± 155 tok/s (95% CI, n=3) | 318.4–585.7 | 3 |
+| Gemini 3.5 Flash-Lite [medium] | 755 ± 267 tok/s (95% CI, n=3) | 482.4–901.1 | 3 |
+| Gemini 3.5 Flash-Lite [high] | 730 ± 246 tok/s (95% CI, n=3) | 515.9–950.6 | 3 |
 
-測定した47件の設定のうち、最も高い値を記録したのは **Gemini 3.1 Flash-Lite [high]** で 9278 ± 17042 tok/s (95% CI, n=3) でした。この測定の反対側の端は、GPT-5.5 [none] の 48 ± 4 tok/s (95% CI, n=3) でした。
+測定された53件の構成のうち最高値：**GPT-5.4 mini [high]** で2952 ± 3461 tok/s（95% CI, n=3）。この測定の対極：GPT-5.5 [none]で48 ± 4 tok/s（95% CI, n=3）。
 
-**最初のトークンまでの時間**
+**トークン生成開始までの時間（Time to first token）**
 
 | 設定 | 平均 ± 95% CI | 最小～最大 | n |
 | ------------- | ------------ | ------- | - |
@@ -232,24 +245,31 @@ npm run research -- speed --real
 | Gemini 3.1 Pro [low] | 14977 ± 45 ms (95% CI, n=3) | 14932–15008 | 3 |
 | Gemini 3.1 Pro [medium] | 15376 ± 903 ms (95% CI, n=3) | 14633–16220 | 3 |
 | Gemini 3.1 Pro [high] | 15497 ± 979 ms (95% CI, n=3) | 14636–16367 | 3 |
-| Gemini 3.5 Flash [low] | 7707 ± 202 ms (95% CI, n=3) | 7501–7813 | 3 |
-| Gemini 3.5 Flash [medium] | 8118 ± 798 ms (95% CI, n=3) | 7307–8591 | 3 |
-| Gemini 3.5 Flash [high] | 8050 ± 600 ms (95% CI, n=3) | 7706–8660 | 3 |
-| Gemini 3.1 Flash-Lite [low] | 815 ± 114 ms (95% CI, n=3) | 698–876 | 3 |
-| Gemini 3.1 Flash-Lite [medium] | 4696 ± 171 ms (95% CI, n=3) | 4546–4848 | 3 |
-| Gemini 3.1 Flash-Lite [high] | 4991 ± 129 ms (95% CI, n=3) | 4876–5104 | 3 |
+| Gemini 3.5 Flash [low] | 7520 ± 661 ms (95% CI, n=3) | 7035–8169 | 3 |
+| Gemini 3.5 Flash [medium] | 7333 ± 351 ms (95% CI, n=3) | 7021–7641 | 3 |
+| Gemini 3.5 Flash [high] | 7852 ± 460 ms (95% CI, n=3) | 7384–8122 | 3 |
+| Gemini 3.1 Flash-Lite [low] | 903 ± 51 ms (95% CI, n=3) | 868–954 | 3 |
+| Gemini 3.1 Flash-Lite [medium] | 6014 ± 79 ms (95% CI, n=3) | 5936–6070 | 3 |
+| Gemini 3.1 Flash-Lite [high] | 6180 ± 337 ms (95% CI, n=3) | 5851–6432 | 3 |
 | Grok 4.3 [none] | 524 ± 27 ms (95% CI, n=3) | 505–551 | 3 |
 | Grok 4.3 [medium] | 19640 ± 5470 ms (95% CI, n=3) | 15124–24739 | 3 |
 | Grok 4.3 [high] | 23565 ± 5250 ms (95% CI, n=3) | 19629–28680 | 3 |
 | Grok 4.20 Reasoning [n/a] | 37966 ± 16419 ms (95% CI, n=3) | 24169–53096 | 3 |
 | Grok 4.20 Non-Reasoning [n/a] | 435 ± 40 ms (95% CI, n=3) | 405–474 | 3 |
 | Grok Build 0.1 [n/a] | 35660 ± 6588 ms (95% CI, n=3) | 28981–39657 | 3 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 9078 ± 372 ms (95% CI, n=3) | 8699–9292 | 3 |
+| Gemini 3.6 Flash [medium] | 9459 ± 399 ms (95% CI, n=3) | 9079–9777 | 3 |
+| Gemini 3.6 Flash [high] | 9469 ± 743 ms (95% CI, n=3) | 8898–10186 | 3 |
+| Gemini 3.5 Flash-Lite [low] | 5424 ± 147 ms (95% CI, n=3) | 5285–5543 | 3 |
+| Gemini 3.5 Flash-Lite [medium] | 5052 ± 534 ms (95% CI, n=3) | 4511–5378 | 3 |
+| Gemini 3.5 Flash-Lite [high] | 5512 ± 180 ms (95% CI, n=3) | 5359–5677 | 3 |
 
-測定した47件の設定のうち、最も低い値を記録したのは **Claude Fable 5 [max]** で 0 ± 0 ms (95% CI, n=3) でした。この測定の反対側の端は、Grok 4.20 Reasoning [n/a] の 37966 ± 16419 ms (95% CI, n=3) でした。
+53件の測定対象設定のうち、最も低い測定値は **Claude Fable 5 [max]** の 0 ± 0 ms (95% CI, n=3) でした。この測定の対極にあるのは Grok 4.20 Reasoning [n/a] で、37966 ± 16419 ms (95% CI, n=3) でした。
 
-**総応答時間**
+**合計応答時間**
 
-| 構成 | 平均 ± 95% CI | 最小～最大 | n |
+| 設定 | 平均 ± 95%信頼区間 | 最小–最大 | n |
 | ------------- | ------------ | ------- | - |
 | Claude Fable 5 [low] | 12820 ± 506 ms (95% CI, n=3) | 12449–13317 | 3 |
 | Claude Fable 5 [high] | 21810 ± 1100 ms (95% CI, n=3) | 21013–22893 | 3 |
@@ -286,39 +306,118 @@ npm run research -- speed --real
 | Gemini 3.1 Pro [low] | 15276 ± 43 ms (95% CI, n=3) | 15234–15307 | 3 |
 | Gemini 3.1 Pro [medium] | 15646 ± 864 ms (95% CI, n=3) | 14937–16455 | 3 |
 | Gemini 3.1 Pro [high] | 15782 ± 988 ms (95% CI, n=3) | 14921–16666 | 3 |
-| Gemini 3.5 Flash [low] | 7857 ± 283 ms (95% CI, n=3) | 7591–8087 | 3 |
-| Gemini 3.5 Flash [medium] | 8261 ± 833 ms (95% CI, n=3) | 7419–8778 | 3 |
-| Gemini 3.5 Flash [high] | 8143 ± 593 ms (95% CI, n=3) | 7838–8748 | 3 |
-| Gemini 3.1 Flash-Lite [low] | 1726 ± 108 ms (95% CI, n=3) | 1620–1806 | 3 |
-| Gemini 3.1 Flash-Lite [medium] | 4816 ± 145 ms (95% CI, n=3) | 4679–4932 | 3 |
-| Gemini 3.1 Flash-Lite [high] | 5089 ± 207 ms (95% CI, n=3) | 4879–5210 | 3 |
+| Gemini 3.5 Flash [low] | 7699 ± 600 ms (95% CI, n=3) | 7307–8302 | 3 |
+| Gemini 3.5 Flash [medium] | 7511 ± 381 ms (95% CI, n=3) | 7179–7853 | 3 |
+| Gemini 3.5 Flash [high] | 8002 ± 413 ms (95% CI, n=3) | 7581–8236 | 3 |
+| Gemini 3.1 Flash-Lite [low] | 1980 ± 196 ms (95% CI, n=3) | 1860–2178 | 3 |
+| Gemini 3.1 Flash-Lite [medium] | 6079 ± 65 ms (95% CI, n=3) | 6016–6128 | 3 |
+| Gemini 3.1 Flash-Lite [high] | 6252 ± 369 ms (95% CI, n=3) | 5901–6545 | 3 |
 | Grok 4.3 [none] | 2382 ± 186 ms (95% CI, n=3) | 2201–2521 | 3 |
 | Grok 4.3 [medium] | 20490 ± 5423 ms (95% CI, n=3) | 15982–25523 | 3 |
 | Grok 4.3 [high] | 24423 ± 5203 ms (95% CI, n=3) | 20529–29495 | 3 |
 | Grok 4.20 Reasoning [n/a] | 38918 ± 16237 ms (95% CI, n=3) | 25329–53921 | 3 |
 | Grok 4.20 Non-Reasoning [n/a] | 2919 ± 123 ms (95% CI, n=3) | 2843–3043 | 3 |
 | Grok Build 0.1 [n/a] | 36444 ± 6613 ms (95% CI, n=3) | 29735–40428 | 3 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (エラー) | n/a (エラー) | n/a (エラー) |
+| Gemini 3.6 Flash [low] | 9245 ± 412 ms (95% CI, n=3) | 8833–9523 | 3 |
+| Gemini 3.6 Flash [medium] | 9609 ± 429 ms (95% CI, n=3) | 9218–9974 | 3 |
+| Gemini 3.6 Flash [high] | 9657 ± 736 ms (95% CI, n=3) | 9098–10371 | 3 |
+| Gemini 3.5 Flash-Lite [low] | 5603 ± 87 ms (95% CI, n=3) | 5530–5683 | 3 |
+| Gemini 3.5 Flash-Lite [medium] | 5170 ± 566 ms (95% CI, n=3) | 4602–5548 | 3 |
+| Gemini 3.5 Flash-Lite [high] | 5628 ± 138 ms (95% CI, n=3) | 5516–5758 | 3 |
 
-測定された47個の構成のうち最速だったのは、**Gemini 3.1 Flash-Lite [low]** の 1726 ± 108 ms (95% CI, n=3) だった。この測定の対極にあるのは Grok 4.20 Reasoning [n/a] の 38918 ± 16237 ms (95% CI, n=3) である。
+測定された53件の設定のうち最も低い値: **GPT-5.4 nano [none]**、1751 ± 154 ms (95% CI, n=3)。この測定の対極にあるのは Grok 4.20 Reasoning [n/a] の 38918 ± 16237 ms (95% CI, n=3)。
 
-このトピック向けに投影されたアーティファクトには、プロンプト、生の試行出力、トークン数、タイミング値、そして（正確性のために）スキーマ準拠結果とプロバイダーの拒否メッセージが保存されている。このページは、プロバイダーへの再実行を行うことなく、そのアーティファクトから再生成できる。
+投影されたアーティファクトには、このトピックのプロンプト、試行の生出力、トークン数、タイミング値、そして（正確性のための）スキーマ適合結果とプロバイダの拒否メッセージが保存されている。このページはプロバイダを再実行することなく、そのアーティファクトから再生成できる。
 
-**統一速度プローブ**（ストリーミングによる厳密な長さの生成を、構成ごとに3回繰り返す。1回の呼び出しから、生成ウィンドウにおける持続的な tok/s（トークン生成開始までの時間を除く）に加え、TTFTと合計応答時間が得られる）：
+**統一速度プローブ**（ストリーミングによる厳密な長さの生成を、設定ごとに3回繰り返す。1回の呼び出しで、生成ウィンドウ中の持続tok/s（Time To First Tokenを除く）に加えて、TTFTと総応答時間が得られる）：
 
 ```text
 Write a single flowing passage about how large language models generate text that is exactly 200 words long. Write continuous prose only — no lists, headings, or code. Respond with the passage only — no preamble, no word count, no markdown.
 ```
 
-**完全な生データ記録。** すべての構成、試行、およびこのトピックの呼び出しは、このページとともにJSONアーティファクトとしてコミットされている：
+**完全な生データ記録。** すべての設定、試行、そしてこのトピックの呼び出しは、このページとともにJSONアーティファクトとしてコミットされている：
 [`llm-speed-comparison.data.json`](./llm-speed-comparison.data.json)。
-これは、結合された比較記録 `llm-model-comparison.real.data.json` から投影されたものであり、同一の測定結果であって再実行されたものではない。
+これは統合比較記録である `llm-model-comparison.real.data.json` から投影されたものであり——同一の測定結果であって、再実行されたものではない。
 
-この投影処理により `llm-speed-comparison.data.json` と本Markdownページが書き出される。元となるスイープは `llm-model-comparison.real.data.json` のままであり、速度と正確性は同一の基礎データの実行にまで遡って監査可能な状態が保たれている。
+#### 世代間比較（旧 → 新）
 
-**過去の調査 / Past surveys in this series**
+今回世代交代のあった各プロバイダ階層について、旧モデルと新モデルは同一条件下（同一階層、同一のエフォート段階——モデルIDのみが異なる）で計測されており、これらの差分は世代間の変化のみを切り分ける。速度または精度の差分は、両世代がこのフレームで`measured`（実測済み）であった場合にのみ表示される。コスト数値はキュレーションされたレジストリの事実である。総合判定は、各メトリクスの差分に対する機械的なルールである（各メトリクスは1%の相対閾値を超えて動いた場合にのみ「変化した」とカウントされる）：少なくとも1つのメトリクスが改善し、かつ悪化がない場合は**改善**、その逆の場合は**悪化**、両方が発生した場合は**混在**、すべてのメトリクスが閾値内に収まった場合は**変化なし**。実測されたメトリクスは、2つの平均値の差が両者の実行間ばらつきの合算（2つの標準偏差の和、専用の列に表示）を上回らない場合、追加で**判別不能**というラベルが付けられ、総合判定から除外される。各測定は3回の試行であり、同一のスイープを数時間空けて再実行しただけで、同一設定において持続スループットが最大88%変動した——そのため、この試行回数では単なるパーセンテージの変化それ自体は世代間の方向性を示す証拠にはならない。コスト数値はレジストリの事実であり、ばらつきを伴わない。安価であることは改善である。高速だが高価な結果は「混在」として読み取られ、無条件に「改善」へと相殺されることはない。
 
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
+##### Gemini 3.5 Flash → Gemini 3.6 Flash
 
-- [2026-07-12T05:47:26.268Z](./history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja)
-- [2026-07-09T11:52:54.627Z](./history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.ja)
-- [2026-07-09T11:12:01.332Z](./history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.ja)
+**エフォート `low`。**
+
+| メトリクス | 旧 | 新 | 変化 | 実行間ばらつき | 方向 |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| 持続スループット | 490.4 tok/s | 509.5 tok/s | +19.1 tok/s (+4%) | ±321.4 tok/s | 判別不能 |
+| Time to first token | 7520 ms | 9078 ms | +1558 ms (+21%) | ±914 ms | 悪化 |
+| 総応答時間 | 7699 ms | 9245 ms | +1545 ms (+20%) | ±894 ms | 悪化 |
+| 入力コスト | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | 変化なし |
+| 出力コスト | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | 改善 |
+
+_総合判定: **混在** — 9メトリクス中、改善2、悪化2、変化なし3；実行間ばらつきにより判別不能として除外されたもの2。_
+
+**エフォート `medium`。**
+
+| メトリクス | 旧 | 新 | 変化 | 実行間ばらつき | 方向性 |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| 持続スループット | 448.6 tok/s | 542.5 tok/s | +93.9 tok/s (+21%) | ±213.0 tok/s | 区別不能 |
+| 最初のトークンまでの時間 | 7333 ms | 9459 ms | +2126 ms (+29%) | ±663 ms | 悪化 |
+| 総応答時間 | 7511 ms | 9609 ms | +2098 ms (+28%) | ±716 ms | 悪化 |
+| 入力コスト | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | 変化なし |
+| 出力コスト | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | 改善 |
+
+_総合判定: **まちまち** — 9メトリクス中、改善2件、悪化3件、変化なし3件；実行間ばらつきの範囲内で区別不能なため除外1件。_
+
+**Effort `high`。**
+
+| メトリクス | 旧 | 新 | 変化 | 実行間ばらつき | 方向性 |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| 持続スループット | 683.7 tok/s | 422.0 tok/s | −261.7 tok/s (−38%) | ±482.3 tok/s | 区別不能 |
+| 最初のトークンまでの時間 | 7852 ms | 9469 ms | +1617 ms (+21%) | ±1063 ms | 悪化 |
+| 総応答時間 | 8002 ms | 9657 ms | +1656 ms (+21%) | ±1015 ms | 悪化 |
+| 入力コスト | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | 変化なし |
+| 出力コスト | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | 改善 |
+
+_総合判定: **まちまち** — 9メトリクス中、改善3件、悪化2件、変化なし3件；実行間ばらつきの範囲内で区別不能なため除外1件。_
+
+##### Gemini 3.1 Flash-Lite → Gemini 3.5 Flash-Lite
+
+**Effort `low`。**
+
+| メトリクス | 旧 | 新 | 変化 | 実行間ばらつき | 方向性 |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| 持続スループット | 215.5 tok/s | 470.2 tok/s | +254.7 tok/s (+118%) | ±157.2 tok/s | 改善 |
+| 最初のトークンまでの時間 | 903 ms | 5424 ms | +4521 ms (+501%) | ±175 ms | 悪化 |
+| 総応答時間 | 1980 ms | 5603 ms | +3623 ms (+183%) | ±250 ms | 悪化 |
+| 入力コスト | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | 悪化 |
+| 出力コスト | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | 悪化 |
+
+_総合判定: **まちまち** — 9メトリクス中、改善2件、悪化5件、変化なし2件。_
+
+**Effort `medium`。**
+
+| メトリクス | 旧 | 新 | 変化 | 実行間ばらつき | 方向性 |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| 持続スループット | 1754.2 tok/s | 754.6 tok/s | −999.5 tok/s (−57%) | ±1656.7 tok/s | 区別不能 |
+| 最初のトークンまでの時間 | 6014 ms | 5052 ms | −962 ms (−16%) | ±542 ms | 改善 |
+| 総応答時間 | 6079 ms | 5170 ms | −909 ms (−15%) | ±558 ms | 改善 |
+| 入力コスト | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | 悪化 |
+| 出力コスト | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | 悪化 |
+
+_総合判定: **まちまち** — 9メトリクス中、改善4件、悪化2件、変化なし2件；実行間ばらつきの範囲内で区別不能なため除外1件。_
+
+**Effort `high`。**
+
+| メトリクス | 旧 | 新 | 変化 | 実行間ばらつき | 方向性 |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| 持続スループット | 1289.6 tok/s | 730.4 tok/s | −559.1 tok/s (−43%) | ±738.9 tok/s | 区別不能 |
+| 最初のトークンまでの時間 | 6180 ms | 5512 ms | −668 ms (−11%) | ±458 ms | 改善 |
+| 総応答時間 | 6252 ms | 5628 ms | −624 ms (−10%) | ±448 ms | 改善 |
+| 入力コスト | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | 悪化 |
+| 出力コスト | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | 悪化 |
+
+_総合判定: **まちまち** — 9メトリクス中、改善3件、悪化2件、変化なし2件；実行間ばらつきの範囲内で区別不能なため除外2件。_
+
+この試算は `llm-speed-comparison.data.json` と本Markdownページを出力します。元となるスイープデータは `llm-model-comparison.real.data.json` のままであり、速度と精度は同一の実行結果に遡って検証可能な状態を保っています。

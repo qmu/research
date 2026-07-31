@@ -1,10 +1,15 @@
-import type { ComputerUseClient, TaskAttempt } from "../vendors/llm/types";
+import type {
+  AgentPolicy,
+  ComputerUseClient,
+  TaskAttempt,
+} from "../vendors/llm/types";
 import {
-  createAnthropicComputerUseClient,
-  createGoogleComputerUseClient,
-  createOpenAiComputerUseClient,
+  createAnthropicComputerUsePolicy,
+  createGoogleComputerUsePolicy,
+  createOpenAiComputerUsePolicy,
 } from "../vendors/llm/computer-use";
 import { createFixtureComputerUseClient } from "../vendors/llm/fixture";
+import { openPlaywrightHarness } from "./vendors/playwright-harness";
 import { TASK_SUITE } from "./domain/manifest";
 import {
   aggregateRunStats,
@@ -38,11 +43,42 @@ const INPUT_TOKENS_PER_TURN = 1_800;
 const OUTPUT_TOKENS_PER_TURN = 200;
 const COST_CEILING_USD = 40;
 
-const clientFor = (
+// A live client plus its teardown. The fixture path has nothing to close; the
+// real path holds a Playwright browser + local site server that must be released
+// whether the attempts succeed or throw.
+type ClientHandle = Readonly<{
+  client: ComputerUseClient;
+  close: () => Promise<void>;
+}>;
+
+const providerPolicyFor = (
+  card: ComputerUseModelCard,
+  key: string,
+): AgentPolicy => {
+  if (card.provider === "anthropic") {
+    return createAnthropicComputerUsePolicy(
+      card.apiModelId,
+      key,
+      card.toolVersion,
+    );
+  }
+  if (card.provider === "openai") {
+    return createOpenAiComputerUsePolicy(card.apiModelId, key);
+  }
+  return createGoogleComputerUsePolicy(card.apiModelId, key);
+};
+
+const openClientFor = async (
   card: ComputerUseModelCard,
   fixture: boolean,
-): ComputerUseClient => {
-  if (fixture) return createFixtureComputerUseClient(card.apiModelId);
+): Promise<ClientHandle> => {
+  if (fixture) {
+    return {
+      client: createFixtureComputerUseClient(card.apiModelId),
+      // Nothing to release on the keyless path.
+      close: () => Promise.resolve(),
+    };
+  }
   const keyEnv = {
     anthropic: "ANTHROPIC_API_KEY",
     openai: "OPENAI_API_KEY",
@@ -52,17 +88,8 @@ const clientFor = (
   if (!key) {
     throw new Error(`${keyEnv} is required for a real ${card.provider} run.`);
   }
-  if (card.provider === "anthropic") {
-    return createAnthropicComputerUseClient(
-      card.apiModelId,
-      key,
-      card.toolVersion,
-    );
-  }
-  if (card.provider === "openai") {
-    return createOpenAiComputerUseClient(card.apiModelId, key);
-  }
-  return createGoogleComputerUseClient(card.apiModelId, key);
+  // The real path drives the provider's think seam through the fixed harness.
+  return openPlaywrightHarness({ policy: providerPolicyFor(card, key) });
 };
 
 const scoreAttempt = (
@@ -145,22 +172,28 @@ export const runComputerUse = async (
   const runs: ComputerUseModelRun[] = [];
   for (const card of selectedCards(options.modelIds)) {
     try {
-      const client = clientFor(card, options.fixture);
-      const calls: ComputerUseCallRecord[] = [];
-      for (let repetition = 0; repetition < trials; repetition += 1) {
-        for (const task of TASK_SUITE.tasks) {
-          calls.push(await attemptOnce(client, task, repetition, card));
+      const handle = await openClientFor(card, options.fixture);
+      try {
+        const calls: ComputerUseCallRecord[] = [];
+        for (let repetition = 0; repetition < trials; repetition += 1) {
+          for (const task of TASK_SUITE.tasks) {
+            calls.push(
+              await attemptOnce(handle.client, task, repetition, card),
+            );
+          }
         }
+        runs.push(
+          aggregate(
+            card,
+            options.fixture ? "fixtured" : "measured",
+            generatedAt,
+            trials,
+            calls,
+          ),
+        );
+      } finally {
+        await handle.close();
       }
-      runs.push(
-        aggregate(
-          card,
-          options.fixture ? "fixtured" : "measured",
-          generatedAt,
-          trials,
-          calls,
-        ),
-      );
     } catch (error) {
       runs.push(
         aggregate(card, "error", generatedAt, trials, [], String(error)),

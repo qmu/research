@@ -22,6 +22,11 @@ export type CatalogRow = Readonly<{
   inputCostPerMTok: number;
   outputCostPerMTok: number;
   effortLevels: ReadonlyArray<string>;
+  // Generational-pairing label, e.g. "current (supersedes Gemini 3.5 Flash)" or
+  // "previous (→ Gemini 3.6 Flash)". `—` when the card is outside any active
+  // pairing. Derived from the registry's machine-readable pairing metadata so the
+  // catalog and the generational-delta insight stay coherent.
+  generation: string;
   source: string;
 }>;
 
@@ -33,11 +38,29 @@ export type FoundationModelsCatalog = Readonly<{
 
 const apiSurfaceOf = (card: ModelCard): string => card.api ?? "chat";
 
+/** The generational-pairing label for a card, resolving the paired card's id to
+ * its product name via the registry (falling back to the raw id). `—` when the
+ * card is outside any active former→new pairing. */
+const generationLabel = (
+  card: ModelCard,
+  nameById: ReadonlyMap<string, string>,
+): string => {
+  const nameOf = (id: string): string => nameById.get(id) ?? id;
+  if (card.generation === "current" && card.supersedes !== undefined) {
+    return `current (supersedes ${nameOf(card.supersedes)})`;
+  }
+  if (card.generation === "previous" && card.supersededBy !== undefined) {
+    return `previous (→ ${nameOf(card.supersededBy)})`;
+  }
+  return "—";
+};
+
 /** Project the curated registry into catalog rows (pure). */
 export const buildCatalogRows = (
   models: ReadonlyArray<ModelCard>,
-): ReadonlyArray<CatalogRow> =>
-  models.map((card) => ({
+): ReadonlyArray<CatalogRow> => {
+  const nameById = new Map(models.map((card) => [card.id, card.modelName]));
+  return models.map((card) => ({
     provider: providerDisplayName(card.provider),
     modelName: card.modelName,
     apiModelId: card.apiModelId,
@@ -47,8 +70,10 @@ export const buildCatalogRows = (
     inputCostPerMTok: card.inputCostPerMTok,
     outputCostPerMTok: card.outputCostPerMTok,
     effortLevels: card.effortLevels,
+    generation: generationLabel(card, nameById),
     source: card.source,
   }));
+};
 
 export const buildFoundationModelsCatalog = (
   models: ReadonlyArray<ModelCard>,
@@ -65,13 +90,13 @@ const usd = (n: number): string => `$${n.toFixed(2)}`;
 
 const catalogTable = (rows: ReadonlyArray<CatalogRow>): string => {
   const header =
-    "| Provider | Model | API model id | Tier | API surface | Released | Input $/MTok | Output $/MTok | Effort levels |\n" +
-    "| -------- | ----- | ------------ | ---- | ----------- | -------- | ------------ | ------------- | ------------- |";
+    "| Provider | Model | API model id | Tier | API surface | Released | Input $/MTok | Output $/MTok | Effort levels | Generation |\n" +
+    "| -------- | ----- | ------------ | ---- | ----------- | -------- | ------------ | ------------- | ------------- | ---------- |";
   const rowsMd = rows.map(
     (row) =>
       `| ${escapeCell(row.provider)} | ${escapeCell(row.modelName)} | \`${escapeCell(row.apiModelId)}\` | ` +
       `${escapeCell(row.tier)} | ${escapeCell(row.apiSurface)} | ${escapeCell(row.released)} | ` +
-      `${usd(row.inputCostPerMTok)} | ${usd(row.outputCostPerMTok)} | ${escapeCell(row.effortLevels.join(", ") || "n/a")} |`,
+      `${usd(row.inputCostPerMTok)} | ${usd(row.outputCostPerMTok)} | ${escapeCell(row.effortLevels.join(", ") || "n/a")} | ${escapeCell(row.generation)} |`,
   );
   return `${header}\n${rowsMd.join("\n")}`;
 };
@@ -146,7 +171,7 @@ npm run research -- foundation-models --fixture
 
 ${catalogTable(catalog.rows)}
 
-**Legend.** Every column is curated catalog data (provenance: \`catalog\`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; \`n/a\` means the model exposes no user-selectable effort control.
+**Legend.** Every column is curated catalog data (provenance: \`catalog\`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; \`n/a\` means the model exposes no user-selectable effort control. "Generation" marks a controlled former→new pairing: \`current (supersedes …)\` is the latest tier and \`previous (→ …)\` the retained prior generation it replaced; \`—\` means the model is outside any active pairing.
 
 **Sources**
 

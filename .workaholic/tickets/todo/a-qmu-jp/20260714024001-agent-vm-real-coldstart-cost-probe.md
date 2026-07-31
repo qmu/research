@@ -170,3 +170,12 @@ Cloudflare account/token). No monetary spend authorized. Reason recorded:
 **no reachable VM provider — FLY_API_TOKEN/FLY_APP_NAME (and now DAYTONA_API_KEY)
 absent this run.** The keyless adapter above is the productive work this drive;
 `--real` still records every provider `unreachable` with zero boots/spend.
+
+### Spend approval (2026-07-22)
+
+Spend approved by the developer (a@qmu.jp) 2026-07-22 in the /mission planning
+session. Remaining gate is environmental credentials only — FLY_API_TOKEN +
+FLY_APP_NAME for the Fly.io probe (024001/024004) and an LLM API key for the
+pipeline translation (024005). The `--real` path self-reports missing
+credentials and records unreachable rows, so the drive proceeds and measures
+whatever providers are reachable.
