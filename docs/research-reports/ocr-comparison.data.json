@@ -1113,6 +1113,66 @@
       "error": "No VisionClient adapter is registered for this provider/API surface."
     },
     {
+      "id": "google-gemini-3-6-flash",
+      "modelName": "Gemini 3.6 Flash",
+      "provider": "google",
+      "apiModelId": "gemini-3.6-flash",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
+      "id": "google-gemini-3-5-flash-lite",
+      "modelName": "Gemini 3.5 Flash-Lite",
+      "provider": "google",
+      "apiModelId": "gemini-3.5-flash-lite",
+      "provenance": "out-of-scope",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "trialsRequested": 1,
+      "stats": {
+        "characterErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "wordErrorRate": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        },
+        "fieldAccuracy": {
+          "mean": 0,
+          "stdDev": 0,
+          "n": 0
+        }
+      },
+      "documentScores": [],
+      "calls": [],
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "error": "No VisionClient adapter is registered for this provider/API surface."
+    },
+    {
       "id": "google-gemini-3-5-flash",
       "modelName": "Gemini 3.5 Flash",
       "provider": "google",

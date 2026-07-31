@@ -1,6 +1,6 @@
 ---
 title: LLM output accuracy
-description: A reproducible accuracy comparison of 19 large language models across 4 providers and 47 model×effort configurations, covering JSON-schema structural limits, length-instruction following, and factual information accuracy, over 3 trials. Projected from the shared LLM comparison sweep.
+description: A reproducible accuracy comparison of 22 large language models across 5 providers and 54 model×effort configurations, covering JSON-schema structural limits, length-instruction following, and factual information accuracy, over 3 trials. Projected from the shared LLM comparison sweep.
 ---
 
 # LLM output accuracy
@@ -15,7 +15,7 @@ This report helps narrow model choices by the measured constraints that matter f
 
 ### Target Models
 
-The report covers **47 model×effort configurations** across 19 models and 4 providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.
+The report covers **54 model×effort configurations** across 22 models and 5 providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.
 
 ### Target Metrics
 
@@ -24,36 +24,35 @@ This topic covers JSON-schema structural limits, length-instruction following, a
 ## 3. Scope and Constraints
 
 - **3 trials** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
-- **Point-in-time.** Measured behavior reflects the models and APIs at `2026-07-12T05:47:26.268Z`.
+- **Mixed measurement dates — this table is not a single point in time.** Its 54 configurations were measured across 3 dates: 12 on `2026-07-27`, 1 on `2026-07-20`, 41 on `2026-07-12`. Only the 12 measured on `2026-07-27` were re-run in this round; the rest carry forward from earlier frames, so cross-model comparisons between rows of different dates are not like-for-like. The former→new generational comparison in section 7 is unaffected — it is derived only from pairs where both generations were measured in the same frame.
 - This topic tests narrow behaviors only (JSON-schema structural limits, length-instruction following, and factual information accuracy); it does not measure general capability or reasoning quality.
 - **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
+- **This run includes non-measured configurations.** `n/a (fixtured)` and `n/a (error)` cells are not live measurements.
 
 ## 4. Verification Results
 
-This run measured **47 of 47 configurations** across 4 providers and 19 models, over 3 trials per configuration×probe.
+This run measured **53 of 54 configurations** across 5 providers and 22 models, over 3 trials per configuration×probe.
 
 | Aspect | Best (configuration) | Median | Worst |
 | ------ | -------------------- | ------ | ----- |
 | Maximum schema nesting depth accepted | 48 — Grok 4.3 [none] | 15 | 0 |
 | Maximum schema field breadth accepted | 192 — GPT-5.5 [none] | 192 | 0 |
-| Length instruction accuracy | 100% — GPT-5.5 [medium] | 95% | 0% |
-| Information accuracy | 62% — Claude Fable 5 [low] | 37% | 0% |
+| Length instruction accuracy | 100% — GPT-5.5 [medium] | 90% | 0% |
+| Information accuracy | 62% — Claude Fable 5 [low] | 39% | 0% |
 
 Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
+This round includes a controlled former→new generational comparison: paired previous- and current-generation models were swept under identical conditions. The per-metric deltas and mechanically-derived net verdict are in section 7, Verification Data.
 
 ## 5. Analysis
 
-Highest measured of the 47 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+Highest measured of the 53 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
 
-Highest measured of the 47 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+Highest measured of the 53 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
 
-Highest measured of the 47 measured configuration(s): **GPT-5.5 [medium]** at 100% ± 0pp (95% CI, n=3). Opposite end of this measurement: o4-mini [high] at 0% ± 0pp (95% CI, n=3).
+Highest measured of the 53 measured configuration(s): **GPT-5.5 [medium]** at 100% ± 0pp (95% CI, n=3). Opposite end of this measurement: o4-mini [high] at 0% ± 0pp (95% CI, n=3).
 
-Highest measured of the 47 measured configuration(s): **Claude Fable 5 [low]** at 62% (n=1). Opposite end of this measurement: GPT-5.3 Codex [xhigh] at 0% (n=1).
+Highest measured of the 53 measured configuration(s): **Claude Fable 5 [low]** at 62% (n=1). Opposite end of this measurement: GPT-5.3 Codex [xhigh] at 0% (n=1).
 
 ## 6. Reproduction
 
@@ -119,18 +118,25 @@ The projection creates no external resources. Real runs write local `.real` Mark
 | Google | Gemini 3.1 Pro | flagship | low | $2.00 / $12.00 | 15 (n=1) | 192 (n=1) | 36% ± 1pp (95% CI, n=3) | 31% (n=1) |
 | Google | Gemini 3.1 Pro | flagship | medium | $2.00 / $12.00 | 15 (n=1) | 191 (n=1) | 36% ± 1pp (95% CI, n=3) | 37% (n=1) |
 | Google | Gemini 3.1 Pro | flagship | high | $2.00 / $12.00 | 15 (n=1) | 192 (n=1) | 36% ± 1pp (95% CI, n=3) | 36% (n=1) |
-| Google | Gemini 3.5 Flash | mid | low | $0.30 / $2.50 | 15 (n=1) | 192 (n=1) | 28% ± 15pp (95% CI, n=3) | 30% (n=1) |
-| Google | Gemini 3.5 Flash | mid | medium | $0.30 / $2.50 | 15 (n=1) | 192 (n=1) | 16% ± 3pp (95% CI, n=3) | 30% (n=1) |
-| Google | Gemini 3.5 Flash | mid | high | $0.30 / $2.50 | 15 (n=1) | 192 (n=1) | 29% ± 17pp (95% CI, n=3) | 14% (n=1) |
-| Google | Gemini 3.1 Flash-Lite | small | low | $0.10 / $0.40 | 15 (n=1) | 192 (n=1) | 97% ± 1pp (95% CI, n=3) | 42% (n=1) |
-| Google | Gemini 3.1 Flash-Lite | small | medium | $0.10 / $0.40 | 15 (n=1) | 192 (n=1) | 37% ± 1pp (95% CI, n=3) | 13% (n=1) |
-| Google | Gemini 3.1 Flash-Lite | small | high | $0.10 / $0.40 | 15 (n=1) | 192 (n=1) | 35% ± 2pp (95% CI, n=3) | 31% (n=1) |
+| Google | Gemini 3.5 Flash | mid | low | $1.50 / $9.00 | 15 (n=1) | 192 (n=1) | 31% ± 9pp (95% CI, n=3) | 30% (n=1) |
+| Google | Gemini 3.5 Flash | mid | medium | $1.50 / $9.00 | 15 (n=1) | 192 (n=1) | 19% ± 5pp (95% CI, n=3) | 39% (n=1) |
+| Google | Gemini 3.5 Flash | mid | high | $1.50 / $9.00 | 15 (n=1) | 192 (n=1) | 12% ± 1pp (95% CI, n=3) | 14% (n=1) |
+| Google | Gemini 3.1 Flash-Lite | small | low | $0.25 / $1.50 | 15 (n=1) | 192 (n=1) | 99% ± 1pp (95% CI, n=3) | 44% (n=1) |
+| Google | Gemini 3.1 Flash-Lite | small | medium | $0.25 / $1.50 | 15 (n=1) | 192 (n=1) | 35% ± 1pp (95% CI, n=3) | 31% (n=1) |
+| Google | Gemini 3.1 Flash-Lite | small | high | $0.25 / $1.50 | 15 (n=1) | 192 (n=1) | 34% ± 1pp (95% CI, n=3) | 35% (n=1) |
 | xAI | Grok 4.3 | frontier | none | $1.25 / $2.50 | 48 (n=1) | 192 (n=1) | 89% ± 2pp (95% CI, n=3) | 28% (n=1) |
 | xAI | Grok 4.3 | frontier | medium | $1.25 / $2.50 | 47 (n=1) | 192 (n=1) | 97% ± 6pp (95% CI, n=3) | 35% (n=1) |
 | xAI | Grok 4.3 | frontier | high | $1.25 / $2.50 | 36 (n=1) | 192 (n=1) | 100% ± 0pp (95% CI, n=3) | 39% (n=1) |
 | xAI | Grok 4.20 Reasoning | flagship | n/a | $1.25 / $2.50 | 32 (n=1) | 192 (n=1) | 98% ± 3pp (95% CI, n=3) | 36% (n=1) |
 | xAI | Grok 4.20 Non-Reasoning | mid | n/a | $1.25 / $2.50 | 48 (n=1) | 192 (n=1) | 80% ± 4pp (95% CI, n=3) | 39% (n=1) |
 | xAI | Grok Build 0.1 | small | n/a | $1.00 / $2.00 | 48 (n=1) | 192 (n=1) | 100% ± 0pp (95% CI, n=3) | 36% (n=1) |
+| AWS Bedrock | Claude Sonnet 5 (Bedrock) | mid | low | $3.00 / $15.00 | n/a (error) | n/a (error) | n/a (error) | n/a (error) |
+| Google | Gemini 3.6 Flash | mid | low | $1.50 / $7.50 | 15 (n=1) | 192 (n=1) | 36% ± 0pp (95% CI, n=3) | 45% (n=1) |
+| Google | Gemini 3.6 Flash | mid | medium | $1.50 / $7.50 | 15 (n=1) | 192 (n=1) | 35% ± 1pp (95% CI, n=3) | 39% (n=1) |
+| Google | Gemini 3.6 Flash | mid | high | $1.50 / $7.50 | 15 (n=1) | 192 (n=1) | 36% ± 1pp (95% CI, n=3) | 39% (n=1) |
+| Google | Gemini 3.5 Flash-Lite | small | low | $0.30 / $2.50 | 15 (n=1) | 191 (n=1) | 37% ± 2pp (95% CI, n=3) | 47% (n=1) |
+| Google | Gemini 3.5 Flash-Lite | small | medium | $0.30 / $2.50 | 15 (n=1) | 192 (n=1) | 37% ± 0pp (95% CI, n=3) | 36% (n=1) |
+| Google | Gemini 3.5 Flash-Lite | small | high | $0.30 / $2.50 | 15 (n=1) | 192 (n=1) | 31% ± 10pp (95% CI, n=3) | 36% (n=1) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. `n/a (fixtured)` means the deterministic fixture client produced the cell; `n/a (error)` means every trial for that configuration failed.
 
@@ -187,8 +193,15 @@ Each detail table reports observed min-max and contributing trial count for one 
 | Grok 4.20 Reasoning [n/a] | 32 (n=1) | 32–32 | 1 |
 | Grok 4.20 Non-Reasoning [n/a] | 48 (n=1) | 48–48 | 1 |
 | Grok Build 0.1 [n/a] | 48 (n=1) | 48–48 | 1 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 15 (n=1) | 15–15 | 1 |
+| Gemini 3.6 Flash [medium] | 15 (n=1) | 15–15 | 1 |
+| Gemini 3.6 Flash [high] | 15 (n=1) | 15–15 | 1 |
+| Gemini 3.5 Flash-Lite [low] | 15 (n=1) | 15–15 | 1 |
+| Gemini 3.5 Flash-Lite [medium] | 15 (n=1) | 15–15 | 1 |
+| Gemini 3.5 Flash-Lite [high] | 15 (n=1) | 15–15 | 1 |
 
-Highest measured of the 47 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+Highest measured of the 53 measured configuration(s): **Grok 4.3 [none]** at 48 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
 
 **Maximum schema field breadth accepted**
 
@@ -241,8 +254,15 @@ Highest measured of the 47 measured configuration(s): **Grok 4.3 [none]** at 48 
 | Grok 4.20 Reasoning [n/a] | 192 (n=1) | 192–192 | 1 |
 | Grok 4.20 Non-Reasoning [n/a] | 192 (n=1) | 192–192 | 1 |
 | Grok Build 0.1 [n/a] | 192 (n=1) | 192–192 | 1 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 192 (n=1) | 192–192 | 1 |
+| Gemini 3.6 Flash [medium] | 192 (n=1) | 192–192 | 1 |
+| Gemini 3.6 Flash [high] | 192 (n=1) | 192–192 | 1 |
+| Gemini 3.5 Flash-Lite [low] | 191 (n=1) | 191–191 | 1 |
+| Gemini 3.5 Flash-Lite [medium] | 192 (n=1) | 192–192 | 1 |
+| Gemini 3.5 Flash-Lite [high] | 192 (n=1) | 192–192 | 1 |
 
-Highest measured of the 47 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
+Highest measured of the 53 measured configuration(s): **GPT-5.5 [none]** at 192 (n=1). Opposite end of this measurement: GPT Realtime [n/a] at 0 (n=1).
 
 **Length instruction accuracy**
 
@@ -283,20 +303,27 @@ Highest measured of the 47 measured configuration(s): **GPT-5.5 [none]** at 192 
 | Gemini 3.1 Pro [low] | 36% ± 1pp (95% CI, n=3) | 0.345–0.365 | 3 |
 | Gemini 3.1 Pro [medium] | 36% ± 1pp (95% CI, n=3) | 0.355–0.370 | 3 |
 | Gemini 3.1 Pro [high] | 36% ± 1pp (95% CI, n=3) | 0.350–0.360 | 3 |
-| Gemini 3.5 Flash [low] | 28% ± 15pp (95% CI, n=3) | 0.120–0.355 | 3 |
-| Gemini 3.5 Flash [medium] | 16% ± 3pp (95% CI, n=3) | 0.130–0.180 | 3 |
-| Gemini 3.5 Flash [high] | 29% ± 17pp (95% CI, n=3) | 0.110–0.385 | 3 |
-| Gemini 3.1 Flash-Lite [low] | 97% ± 1pp (95% CI, n=3) | 0.965–0.985 | 3 |
-| Gemini 3.1 Flash-Lite [medium] | 37% ± 1pp (95% CI, n=3) | 0.365–0.380 | 3 |
-| Gemini 3.1 Flash-Lite [high] | 35% ± 2pp (95% CI, n=3) | 0.340–0.370 | 3 |
+| Gemini 3.5 Flash [low] | 31% ± 9pp (95% CI, n=3) | 0.225–0.365 | 3 |
+| Gemini 3.5 Flash [medium] | 19% ± 5pp (95% CI, n=3) | 0.145–0.235 | 3 |
+| Gemini 3.5 Flash [high] | 12% ± 1pp (95% CI, n=3) | 0.115–0.125 | 3 |
+| Gemini 3.1 Flash-Lite [low] | 99% ± 1pp (95% CI, n=3) | 0.980–0.990 | 3 |
+| Gemini 3.1 Flash-Lite [medium] | 35% ± 1pp (95% CI, n=3) | 0.340–0.355 | 3 |
+| Gemini 3.1 Flash-Lite [high] | 34% ± 1pp (95% CI, n=3) | 0.330–0.355 | 3 |
 | Grok 4.3 [none] | 89% ± 2pp (95% CI, n=3) | 0.885–0.910 | 3 |
 | Grok 4.3 [medium] | 97% ± 6pp (95% CI, n=3) | 0.905–1.000 | 3 |
 | Grok 4.3 [high] | 100% ± 0pp (95% CI, n=3) | 1.000–1.000 | 3 |
 | Grok 4.20 Reasoning [n/a] | 98% ± 3pp (95% CI, n=3) | 0.950–0.995 | 3 |
 | Grok 4.20 Non-Reasoning [n/a] | 80% ± 4pp (95% CI, n=3) | 0.770–0.835 | 3 |
 | Grok Build 0.1 [n/a] | 100% ± 0pp (95% CI, n=3) | 1.000–1.000 | 3 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 36% ± 0pp (95% CI, n=3) | 0.355–0.360 | 3 |
+| Gemini 3.6 Flash [medium] | 35% ± 1pp (95% CI, n=3) | 0.330–0.355 | 3 |
+| Gemini 3.6 Flash [high] | 36% ± 1pp (95% CI, n=3) | 0.350–0.375 | 3 |
+| Gemini 3.5 Flash-Lite [low] | 37% ± 2pp (95% CI, n=3) | 0.355–0.385 | 3 |
+| Gemini 3.5 Flash-Lite [medium] | 37% ± 0pp (95% CI, n=3) | 0.370–0.375 | 3 |
+| Gemini 3.5 Flash-Lite [high] | 31% ± 10pp (95% CI, n=3) | 0.215–0.370 | 3 |
 
-Highest measured of the 47 measured configuration(s): **GPT-5.5 [medium]** at 100% ± 0pp (95% CI, n=3). Opposite end of this measurement: o4-mini [high] at 0% ± 0pp (95% CI, n=3).
+Highest measured of the 53 measured configuration(s): **GPT-5.5 [medium]** at 100% ± 0pp (95% CI, n=3). Opposite end of this measurement: o4-mini [high] at 0% ± 0pp (95% CI, n=3).
 
 **Information accuracy**
 
@@ -338,19 +365,26 @@ Highest measured of the 47 measured configuration(s): **GPT-5.5 [medium]** at 10
 | Gemini 3.1 Pro [medium] | 37% (n=1) | 0.375–0.375 | 1 |
 | Gemini 3.1 Pro [high] | 36% (n=1) | 0.364–0.364 | 1 |
 | Gemini 3.5 Flash [low] | 30% (n=1) | 0.303–0.303 | 1 |
-| Gemini 3.5 Flash [medium] | 30% (n=1) | 0.303–0.303 | 1 |
+| Gemini 3.5 Flash [medium] | 39% (n=1) | 0.391–0.391 | 1 |
 | Gemini 3.5 Flash [high] | 14% (n=1) | 0.137–0.137 | 1 |
-| Gemini 3.1 Flash-Lite [low] | 42% (n=1) | 0.425–0.425 | 1 |
-| Gemini 3.1 Flash-Lite [medium] | 13% (n=1) | 0.130–0.130 | 1 |
-| Gemini 3.1 Flash-Lite [high] | 31% (n=1) | 0.308–0.308 | 1 |
+| Gemini 3.1 Flash-Lite [low] | 44% (n=1) | 0.437–0.437 | 1 |
+| Gemini 3.1 Flash-Lite [medium] | 31% (n=1) | 0.308–0.308 | 1 |
+| Gemini 3.1 Flash-Lite [high] | 35% (n=1) | 0.348–0.348 | 1 |
 | Grok 4.3 [none] | 28% (n=1) | 0.280–0.280 | 1 |
 | Grok 4.3 [medium] | 35% (n=1) | 0.345–0.345 | 1 |
 | Grok 4.3 [high] | 39% (n=1) | 0.391–0.391 | 1 |
 | Grok 4.20 Reasoning [n/a] | 36% (n=1) | 0.361–0.361 | 1 |
 | Grok 4.20 Non-Reasoning [n/a] | 39% (n=1) | 0.393–0.393 | 1 |
 | Grok Build 0.1 [n/a] | 36% (n=1) | 0.361–0.361 | 1 |
+| Claude Sonnet 5 (Bedrock) [low] | n/a (error) | n/a (error) | n/a (error) |
+| Gemini 3.6 Flash [low] | 45% (n=1) | 0.452–0.452 | 1 |
+| Gemini 3.6 Flash [medium] | 39% (n=1) | 0.387–0.387 | 1 |
+| Gemini 3.6 Flash [high] | 39% (n=1) | 0.391–0.391 | 1 |
+| Gemini 3.5 Flash-Lite [low] | 47% (n=1) | 0.475–0.475 | 1 |
+| Gemini 3.5 Flash-Lite [medium] | 36% (n=1) | 0.361–0.361 | 1 |
+| Gemini 3.5 Flash-Lite [high] | 36% (n=1) | 0.361–0.361 | 1 |
 
-Highest measured of the 47 measured configuration(s): **Claude Fable 5 [low]** at 62% (n=1). Opposite end of this measurement: GPT-5.3 Codex [xhigh] at 0% (n=1).
+Highest measured of the 53 measured configuration(s): **Claude Fable 5 [low]** at 62% (n=1). Opposite end of this measurement: GPT-5.3 Codex [xhigh] at 0% (n=1).
 
 The projected artifact preserves this topic's prompts, raw trial outputs, token
 counts, timing values, and (for accuracy) schema-conformance results and
@@ -397,12 +431,90 @@ committed alongside this page as a JSON artifact:
 It is projected from the combined comparison record
 `llm-model-comparison.real.data.json` — the same measurements, never re-run.
 
+#### Generational comparison (former → new)
+
+For each provider tier that turned a generation this round, the former and the new model were swept under identical conditions (same tier, same effort ladder — only the model id differs), so these deltas isolate the generational change. A speed or accuracy delta appears only when both generations were `measured` in this frame; cost figures are curated registry facts. The net verdict is a mechanical rule over the per-metric deltas (each metric counts as moved only past a 1% relative threshold): **improved** when at least one metric improved and none regressed, **regressed** in the mirror case, **mixed** when both occur, and **unchanged** when every metric held within the threshold. A measured metric is additionally labelled **indistinguishable**, and excluded from the verdict, when the gap between the two means does not clear their combined run-to-run spread (the sum of the two standard deviations, shown in its own column). Each measurement is three trials, and re-running an identical sweep hours apart moved sustained throughput by up to 88% on the same configuration — so at this trial count a bare percentage change is not by itself evidence of a generational direction. Cost figures are registry facts and carry no spread. Cheaper is an improvement; a faster-but-pricier result reads as mixed, never silently netted to improved.
+
+##### Gemini 3.5 Flash → Gemini 3.6 Flash
+
+**Effort `low`.**
+
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 31% | 36% | +5pp (+15%) | ±8% | indistinguishable |
+| Information accuracy | 30% | 45% | +15pp (+49%) | ±0% | improved |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
+
+_Net verdict: **mixed** — 2 improved, 2 regressed, 3 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
+
+**Effort `medium`.**
+
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 19% | 35% | +16pp (+85%) | ±6% | improved |
+| Information accuracy | 39% | 39% | −0pp (−1%) | ±0% | regressed |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
+
+_Net verdict: **mixed** — 2 improved, 3 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
+
+**Effort `high`.**
+
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 12% | 36% | +24pp (+196%) | ±2% | improved |
+| Information accuracy | 14% | 39% | +25pp (+186%) | ±0% | improved |
+| Input cost | $1.50 | $1.50 | +0.00 $/MTok (+0%) | — | unchanged |
+| Output cost | $9.00 | $7.50 | −1.50 $/MTok (−17%) | — | improved |
+
+_Net verdict: **mixed** — 3 improved, 2 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
+
+##### Gemini 3.1 Flash-Lite → Gemini 3.5 Flash-Lite
+
+**Effort `low`.**
+
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 191 | −1 (−1%) | ±0 | unchanged |
+| Length accuracy | 99% | 37% | −62pp (−63%) | ±2% | regressed |
+| Information accuracy | 44% | 47% | +4pp (+9%) | ±0% | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
+
+_Net verdict: **mixed** — 2 improved, 5 regressed, 2 unchanged of 9 metrics._
+
+**Effort `medium`.**
+
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 35% | 37% | +2pp (+7%) | ±1% | improved |
+| Information accuracy | 31% | 36% | +5pp (+17%) | ±0% | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
+
+_Net verdict: **mixed** — 4 improved, 2 regressed, 2 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
+
+**Effort `high`.**
+
+| Metric | Former | New | Change | Run-to-run spread | Direction |
+| ------ | ------ | --- | ------ | ----------------- | --------- |
+| Max schema depth | 15 | 15 | +0 (+0%) | ±0 | unchanged |
+| Max schema breadth | 192 | 192 | +0 (+0%) | ±0 | unchanged |
+| Length accuracy | 34% | 31% | −3pp (−8%) | ±10% | indistinguishable |
+| Information accuracy | 35% | 36% | +1pp (+4%) | ±0% | improved |
+| Input cost | $0.25 | $0.30 | +0.05 $/MTok (+20%) | — | regressed |
+| Output cost | $1.50 | $2.50 | +1.00 $/MTok (+67%) | — | regressed |
+
+_Net verdict: **mixed** — 3 improved, 2 regressed, 2 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
+
 The projection writes `llm-accuracy-comparison.data.json` and this Markdown page. The source sweep remains `llm-model-comparison.real.data.json`, so speed and accuracy stay auditable back to the same underlying run.
-
-**過去の調査 / Past surveys in this series**
-
-Earlier dated surveys of this topic, newest first — each a complete article for its run.
-
-- [2026-07-12T05:47:26.268Z](./history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison)
-- [2026-07-09T12:21:25.966Z](./history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison)
-- [2026-07-09T11:14:36.434Z](./history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison)
