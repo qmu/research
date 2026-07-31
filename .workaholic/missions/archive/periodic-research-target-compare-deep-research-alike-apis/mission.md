@@ -2,7 +2,7 @@
 type: Mission
 title: "Periodic Research Target: Compare Deep Research-alike APIs"
 slug: periodic-research-target-compare-deep-research-alike-apis
-status: active
+status: achieved
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -125,3 +125,4 @@ corporate `qmu-co-jp` copy is untouched here — it flows through `/ship`.
 - 2026-07-22 — mission replanned — proposal approved at Floor tier (≈$32); post-approval queue emitted; strategy linked; drive-ready — mission.md
 - 2026-07-22 — recovered stranded real trial + topic onto current main (orphan work-20260718; frame 2026-07-19, fixture:false); re-registered topic in site.ts/snapshot.ts + regenerated indexes; ticked acceptance 3-7; superseded 5 re-run tickets; npm test/build/lint green — mission.md
 - 2026-07-22 — story reported — work-20260722-112122.md
+- 2026-07-23 — mission achieved — mission.md

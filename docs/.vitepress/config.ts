@@ -82,6 +82,15 @@ export default defineConfig({
   },
   vite: {
     // Allow the Cloudflare tunnel host to reach the dev server.
-    server: { allowedHosts: ["research.qmu.dev"] },
+    server: {
+      // Bind all interfaces so a container can publish the port to the host.
+      host: true,
+      allowedHosts: ["research.qmu.dev"],
+      // When served through the Cloudflare tunnel, HMR must ride wss:443.
+      // Gated on HMR_TUNNEL, so plain local dev is unaffected.
+      ...(process.env.HMR_TUNNEL
+        ? { hmr: { protocol: "wss", clientPort: 443, host: "research.qmu.dev" } }
+        : {}),
+    },
   },
 });
