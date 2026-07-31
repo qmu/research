@@ -1,0 +1,36 @@
+# Build context exclusions for workloads/docker/Dockerfile.
+#
+# The Dockerfile's `COPY . .` takes the repository root as its context. Without
+# this file that context was 6.2 GB — 5.7 GB of it `.worktrees/` — and a build
+# filled the disk before it could commit a layer. It also copied real provider
+# credentials into an image layer, where they persist even if a later stage
+# removes them.
+
+# Working trees for topic desks: gitignored, each carrying its own node_modules.
+.worktrees/
+
+# Dependencies are installed inside the image from the copied manifests; a host
+# install is the wrong libc anyway (host glibc, image alpine/musl).
+node_modules/
+**/node_modules/
+
+# Credentials. `packages/tech/.env` holds live provider API keys — an image layer
+# is not a place to put them, and nothing in the image needs them at build time.
+.env
+.env.*
+!.env.example
+.env.worktree
+
+# Version-control and editor state.
+.git/
+.gitignore
+
+# Build output and caches — regenerated inside the image when needed.
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+**/dist/
+**/.cache/
+*.log
+
+# Local scratch that has no meaning inside a container.
+.claude/
