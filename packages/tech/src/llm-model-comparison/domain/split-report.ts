@@ -12,6 +12,52 @@ import {
   buildBatchedInformationAccuracyPrompt,
 } from "./information-accuracy";
 import { providerDisplayName } from "./provider";
+import { renderGenerationDeltaSection } from "./generational-delta";
+
+/**
+ * The "point-in-time" claim, told honestly.
+ *
+ * A scoped sweep (`--models <subset>`) re-measures only the rows it names and
+ * merges them into the standing record, so a published frame routinely mixes
+ * vintages — a row measured today sits in the same table as one measured weeks
+ * ago. Stamping the whole page with the render date overstates the freshness of
+ * every row that was carried forward, and the reader has no way to see it: the
+ * `provenance` field says a cell was `measured`, never *when*.
+ *
+ * So report the actual composition. One date renders as the simple claim; more
+ * than one names each date with its share, newest first.
+ */
+const vintageBullet = (
+  configs: ReadonlyArray<ConfigRun>,
+  generatedAt: string,
+): string => {
+  const dayOf = (iso: string): string => iso.slice(0, 10);
+  const counts = new Map<string, number>();
+  for (const run of configs) {
+    const day = dayOf(run.measuredAt);
+    counts.set(day, (counts.get(day) ?? 0) + 1);
+  }
+  const days = [...counts.entries()].sort((a, b) => b[0].localeCompare(a[0]));
+  if (days.length <= 1) {
+    return `**Point-in-time.** Measured behavior reflects the models and APIs at \`${escapeCell(
+      generatedAt,
+    )}\`.`;
+  }
+  const breakdown = days
+    .map(([day, n]) => `${n} on \`${escapeCell(day)}\``)
+    .join(", ");
+  const [newestDay, newestCount] = days[0] ?? ["", 0];
+  return (
+    `**Mixed measurement dates — this table is not a single point in time.** ` +
+    `Its ${configs.length} configurations were measured across ${days.length} ` +
+    `dates: ${breakdown}. Only the ${newestCount} measured on ` +
+    `\`${escapeCell(newestDay)}\` were re-run in this round; the rest carry ` +
+    `forward from earlier frames, so cross-model comparisons between rows of ` +
+    `different dates are not like-for-like. The former→new generational ` +
+    `comparison in section 7 is unaffected — it is derived only from pairs where ` +
+    `both generations were measured in the same frame.`
+  );
+};
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
 
 /**
@@ -299,6 +345,25 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
     .filter((sentence) => sentence !== "")
     .join("\n\n");
 
+  // Generational former→new deltas for this topic's metrics (plus curated cost),
+  // read from the registry pairing metadata. Empty string when the sweep carries
+  // no pairing, so an unpaired run's page stays byte-stable.
+  // Nested one level below section 7 (H4, with per-pair blocks at H5) rather than
+  // as an H3. `article-outline` compares each published page's H3 sequence for
+  // EXACT equality against one shared list, so an H3 here would have to be added
+  // to that shared list — breaking every other topic's page, which carries only
+  // the five standard H3s. The section is content *of* section 7, so nesting it
+  // deeper keeps the cross-topic outline invariant intact instead of weakening it
+  // for one topic's optional section.
+  const generationDelta = renderGenerationDeltaSection(configs, {
+    displayGroups: [artifact.group],
+    headingLevel: 4,
+  });
+  const hasGenerationDelta = generationDelta !== "";
+  const generationDeltaSummary = hasGenerationDelta
+    ? "\n\nThis round includes a controlled former→new generational comparison: paired previous- and current-generation models were swept under identical conditions. The per-metric deltas and mechanically-derived net verdict are in section 7, Verification Data."
+    : "";
+
   return renderEnglishResearchArticle({
     title: artifact.title,
     description: `A reproducible ${artifact.group} comparison of ${models} large language models across ${providers} providers and ${configs.length} model×effort configurations, covering ${coveredSummary}, over ${trialCount}. Projected from the shared LLM comparison sweep.`,
@@ -309,7 +374,7 @@ export const renderSplitReport = (artifact: SplitArtifact): string => {
     targetModels: `The report covers **${configs.length} model×effort configurations** across ${models} models and ${providers} providers. Curated catalog facts (provider, model, tier, price, effort) come from the model registry.`,
     targetMetrics: `This topic covers ${coveredSummary}. Metric cells are reported as mean ± 95% confidence interval when n ≥ 2; metrics with n < 2 show the mean and sample count.`,
     scopeAndConstraints: `- **${trialCount}** per configuration×probe. This sample supports a run-level comparison, not a statistical claim about stable provider behavior.
-- **Point-in-time.** Measured behavior reflects the models and APIs at \`${escapeCell(artifact.generatedAt)}\`.
+- ${vintageBullet(configs, artifact.generatedAt)}
 - This topic tests narrow behaviors only (${coveredSummary}); it does not measure general capability or reasoning quality.
 - **Effort semantics vary by provider**, so effort levels are more comparable within a provider than across providers.
 ${
@@ -321,7 +386,7 @@ ${
 
 ${overviewTable(aspects, measuredRuns)}
 
-Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.`,
+Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.${generationDeltaSummary}`,
     analysis:
       analysis === ""
         ? "This run has no measured values for this topic; every configuration was fixtured or errored."
@@ -351,7 +416,7 @@ Each detail table reports observed min-max and contributing trial count for one 
 ${aspectSections}
 
 ${transparencySection(artifact)}
-
+${hasGenerationDelta ? `\n${generationDelta}\n` : ""}
 The projection writes \`${artifact.artifactPath}\` and this Markdown page. The source sweep remains \`${artifact.sourceArtifact}\`, so speed and accuracy stay auditable back to the same underlying run.`,
   });
 };

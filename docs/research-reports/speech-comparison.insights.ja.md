@@ -1,54 +1,69 @@
 ---
 title: 音声 (TTS/STT/STS)
 source_artifact: docs/research-reports/speech-comparison.data.json
+source_commit: f2d16c0
 insights_model: source-report
 translated_from: speech-comparison.md
-translation_model: hand-authored
-generated_at: 2026-01-01T00:00:00.000Z
+translation_model: claude-sonnet-5
+generated_at: 2026-07-18T15:25:18.526Z
 trials: 0
-provenance: hand-translation
+provenance: llm-translation
 ---
 # 音声 (TTS/STT/STS)
 
-このレポートは、音声APIを**機械的に検証可能な**挙動のみで比較します——固定された音声認識（STT）ジャッジが合成音声を書き起こし、参照テキストとの単語精度を算出する方式であり、自然さ（MOS）などの主観的な聴取評価はスコアに一切含まれません。
+本レポートは、**機械的に検証可能な**挙動のみに基づいて音声APIを比較する — 固定の音声認識ジャッジが合成音声を読み取り、基準テキストと照合して単語正解率を算出する。自然さ（MOS）やその他の主観的な聴取評価はスコアに一切反映されない。
 
 ## 1. 調査の目的
 
-本調査の目的は、音声合成（TTS）・音声認識（STT）・音声対話（STS）にまたがってどのような音声APIが存在し、それぞれの単価がいくらで、呼び出しがどれほど高速に返り、音声がどれほど正確に書き起こされるか——つまり、統合方式の選定を左右する特性を記録することである。
+目的は、テキスト読み上げ（text-to-speech）、音声認識（speech-to-text）、音声対音声（speech-to-speech）の各分野にどのような音声APIが存在するか、それぞれの単位あたりのコストはどれくらいか、呼び出しに対するレスポンス速度はどの程度か、そして音声の書き起こし精度はどれほどかという、統合方式の選定を左右する特性を記録することにある。
 
 ## 2. 測定対象
 
 ### 対象モデル
 
-対象は、選定済みレジストリ（`packages/tech/src/speech/models.ts`）に含まれる音声モデルであり、音声合成および音声認識のAPIが、それぞれ引用元および最終確認日と共に掲載されている。音声対話（STS）はリアルタイム対応の能力として第7節にカタログ化している。
+対象は、厳選されたレジストリ（`packages/tech/src/speech/models.ts`）に含まれる音声モデルである：テキスト読み上げ（text-to-speech）および音声認識（speech-to-text）APIであり、それぞれに出典と最終確認日が付されている。音声対音声（speech-to-speech）はリアルタイム機能として（第7節で）分類されている。
 
-- **Anthropic** は対象外である：音声APIを提供していない（Claude はテキスト／画像の入力のみを受け付け、テキストを返す。2026-07-14時点で確認済み）。
+- **Anthropic**は対象外である：音声APIを提供していない（Claudeはテキスト／画像入力のみを受け付け、テキストを返す）（2026-07-14確認）。
 
 ### 対象メトリクス
 
-測定対象のメトリクスは、呼び出しレイテンシ（ms、低いほど良い）、音声合成の明瞭度（固定STTジャッジによる書き起こしと合成元テキストとの単語精度、高いほど良い）、音声認識の単語精度（参照テキストに対する 1 − 単語誤り率、高いほど良い）である。1文字あたり・1分あたりの価格は選定済みカタログデータ（参考情報）であり、実測値ではない。
+測定するメトリクスは、呼び出しレイテンシ（ms、低いほど良い）、テキスト読み上げの明瞭性（固定のSTT判定器による書き起こしと合成対象テキストとの単語正解率、高いほど良い）、および音声認識の単語正解率（1 − 参照書き起こしに対する単語誤り率、高いほど良い）である。文字単価および分単価は、参考として掲載されたカタログデータであり、測定値ではない。
 
 ## 3. 範囲と制約
 
-- **機械的採点のみ。** 品質は参照テキストに対する単語精度であり、本計測器は自然さや声質を採点しない。STTジャッジ（`fixture-judge`）の差し替えは通常の更新ではなく、計測器の変更に相当する。
-- マニフェストのバージョンは`1`：音声合成の発話3件、音声認識の参照クリップ3件。履歴は同一マニフェストバージョンの地点同士のみを接続する。
-- **音声バイナリはコミットされない。** アーティファクトにはバイト長、タイミング、書き起こし、スコアが記録され、このページを再生成するのに十分な情報が含まれるが、音声そのものは含まれない。実際の音声認識実行は、参照クリップを `SPEECH_AUDIO_DIR` から読み込む（マニフェストに引用したパブリックドメインの出典を参照）。
-- フィクスチャ経路はキー不要かつ決定論的である。この最初の計測器では実経路に OpenAI アダプタのみを配線している（他プロバイダーは初回実測トライアルで対応する）。実際の数値は、オーナーが承認済み上限内で実経路を実行した場合にのみ現れる（まず `--estimate` を実行すること）。
-- 特定時点のもの：計測された挙動は `2026-01-01T00:00:00.000Z` 時点のAPIを反映している。カタログ価格は各行の最終確認日時点のものである。
+- **機械的な採点のみ。** 品質は参照テキストに対する単語一致率であり、本計測器が自然さや音声品質を採点することは一切ない。STT判定器（`whisper-1`）の差し替えは、通常の更新ではなく計測器自体の変更にあたる。
+- マニフェストバージョン `1`：3件のテキスト読み上げ（text-to-speech）発話および3件の音声認識（speech-to-text）参照クリップ。履歴は同一マニフェストバージョンの地点同士のみを接続する。
+- **音声バイナリはコミットされない。** アーティファクトが記録するのはバイト長、タイミング、書き起こし、スコアであり、これは本ページを再生成するのに十分な情報だが、音声そのものは含まれない。実際の音声認識実行では、`SPEECH_AUDIO_DIR` から参照クリップを読み込む（マニフェストが引用するパブリックドメインの出典を参照）。
+- フィクスチャ経路はキー不要かつ決定的であり、この最初の計測器では実経路の配線がOpenAIアダプタのみに施されている（他プロバイダは最初の実トライアルの際に追加される）。実数値は、オーナーが承認された上限内で実経路を実行した後にのみ現れる（まず `--estimate` を実行すること）。
+- 時点情報：計測された挙動は `2026-07-18T15:09:30.905Z` 時点のAPIを反映しており、カタログ価格は各行の最終確認日時点のものである。
 
 ## 4. 検証結果
 
-今回の実行では、10件の対象行のうち **0件を測定** した（非測定行は `fixtured` によるハーネスチェック、または `error` 行であり、数値を捏造することは一切ない）。
+今回の実行では、対象10行のうち**2行を測定済み**（未測定の行は `fixtured` によるハーネスチェックまたは `error` 行であり、数値を捏造することは一切ない）。
 
-**音声合成（TTS）** — 今回は測定済みの行なし。コミット済みのフィクスチャページがハーネスを証明している。第7節を参照。
+**音声合成（Text-to-speech）**
 
-**音声認識（STT）** — 今回は測定済みの行なし。コミット済みのフィクスチャページがハーネスを証明している。第7節を参照。
+| メトリクス | 最良（モデル） | 中央値 | 最悪 |
+| ------ | ------------ | ------ | ----- |
+| 合成レイテンシ | 1679 ms — OpenAI TTS-1 | 1679 ms | 1679 ms |
+| 明瞭度 | 100.0% — OpenAI TTS-1 | 100.0% | 100.0% |
 
-**音声対話（STS）** — カタログ化した4プロバイダーのうち4件がリアルタイム双方向APIを提供している。往復レイテンシは後続のトライアルで測定する。能力の一覧表は第7節に記載している。「最良」「最悪」は各メトリクスの方向（レイテンシは低いほど、明瞭度と単語精度は高いほど良い）に従う。
+**音声認識（Speech-to-text）**
+
+| メトリクス | 最良（モデル） | 中央値 | 最悪 |
+| ------ | ------------ | ------ | ----- |
+| 文字起こしレイテンシ | 1124 ms — OpenAI Whisper | 1124 ms | 1124 ms |
+| 単語正解率 | 95.8% — OpenAI Whisper | 95.8% | 95.8% |
+
+**音声対音声（Speech-to-speech）** — カタログ化された4のプロバイダーのうち4がリアルタイム双方向APIを提供しており、往復レイテンシは後続の試行で測定される。全機能一覧は7節に記載している。「最良」「最悪」は各メトリクスの方向性（レイテンシは低いほど良く、明瞭度と単語正解率は高いほど良い）に従う。
+
+**推移 / Trend across surveys**
+
+This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
 
 ## 5. 考察
 
-今回の実行では測定済みの行が存在せず、すべての対象がフィクスチャまたはエラーとなったため、モデル間の比較に関する主張は行わない。コミットされたフィクスチャページは、パイプラインの動作を証明するために存在するものであり、プロバイダーを比較するためのものではない。
+`measured` の来歴を持つ行は、レイテンシと単語正解率について能力ごとに比較可能である。価格はカタログの参考情報にすぎない。text-to-speech の明瞭度と speech-to-text の単語正解率を対比することで、誤差がどこで生じているか——合成の明瞭さか、それとも認識の精度か——を特定できる。
 
 ## 6. 再現方法
 
@@ -62,49 +77,49 @@ npm install
 # キー不要のセルフテスト（決定論的なフィクスチャクライアント）:
 npm run research -- speech --fixture
 
-# コストプレビュー、その後オーナー限定の実実行（OpenAI アダプタ配線済み）:
+# コストの見積り、その後オーナー限定の実実行（OpenAIアダプター接続済み）:
 npm run research -- speech --estimate
 SPEECH_AUDIO_DIR=./audio OPENAI_API_KEY=... npm run research -- speech --real
 ```
 
 ### 再現コスト（目安）
 
-フィクスチャ経路はキー不要でコストもかからない。実トライアルでは、音声合成は文字数に応じて課金され、加えて合成クリップごとに1回のSTTジャッジ読み取りが発生する。音声認識は音声の分数に応じて課金される（対象ごとのカタログ価格を参照）。合意された上限は1トライアルあたり$10であり、`--estimate` を先に実行する必要がある。
+フィクスチャ経路はキー不要でコストもかからない。実トライアルではテキスト読み上げ（text-to-speech）は文字数課金に加え、合成された各クリップに対する1回分のSTTジャッジ読み取りが発生し、音声認識（speech-to-text）は音声の分あたりで課金される（対象ごとのカタログ価格を参照）。合意された上限は1トライアルあたり$10であり、`--estimate` を先に実行する必要がある。
 
 ### クリーンアップ
 
-外部リソースは作成されない。合成音声および参照音声は採点のためにメモリ上に保持され、その後破棄される。実行時にはローカルのMarkdown/JSON成果物のみが書き出されるため、コミット前にそれらを確認すること。
+外部リソースは作成されない。合成音声と参照音声はスコアリングのためにメモリ上に保持され、その後破棄される。実行時にはローカルのMarkdown/JSON成果物のみが書き出されるため、コミット前にそれらを確認すること。
 
 ## 7. 検証データ
 
-**対象ごとの結果**
+**科目ごとの結果**
 
-| 対象 | プロバイダー | 能力 | 由来 | 価格 | ストリーミング | レイテンシ（平均±標準偏差） | 明瞭度 | 単語精度 | 備考 |
-| ----- | -------- | ---- | ---- | ----- | --------- | ----------------- | ----- | ------- | ---- |
-| OpenAI TTS-1 | openai | tts | fixtured | 15 USD/1M chars | yes | 130 ± 8 (n=3) | 100.0% ± 0.0% (n=3) | 未測定 |  |
-| ElevenLabs Multilingual v2 | elevenlabs | tts | fixtured | 100 USD/1M chars | yes | 130 ± 8 (n=3) | 100.0% ± 0.0% (n=3) | 未測定 |  |
-| Google Cloud Neural2 | google | tts | fixtured | 16 USD/1M chars | yes | 130 ± 8 (n=3) | 100.0% ± 0.0% (n=3) | 未測定 |  |
-| Amazon Polly Neural | amazon | tts | fixtured | 16 USD/1M chars | yes | 130 ± 8 (n=3) | 100.0% ± 0.0% (n=3) | 未測定 |  |
-| Deepgram Aura-2 | deepgram | tts | fixtured | 30 USD/1M chars | yes | 130 ± 8 (n=3) | 100.0% ± 0.0% (n=3) | 未測定 |  |
-| OpenAI Whisper | openai | stt | fixtured | 0.006 USD/audio-minute | no | 120 ± 2 (n=3) | 未測定 | 100.0% ± 0.0% (n=3) |  |
-| Deepgram Nova-3 | deepgram | stt | fixtured | 0.0077 USD/audio-minute | yes | 120 ± 2 (n=3) | 未測定 | 100.0% ± 0.0% (n=3) |  |
-| AssemblyAI Universal | assemblyai | stt | fixtured | 0.0035 USD/audio-minute | yes | 120 ± 2 (n=3) | 未測定 | 100.0% ± 0.0% (n=3) |  |
-| Google Cloud Speech-to-Text (Chirp) | google | stt | fixtured | 0.016 USD/audio-minute | yes | 120 ± 2 (n=3) | 未測定 | 100.0% ± 0.0% (n=3) |  |
-| Amazon Transcribe | amazon | stt | fixtured | 0.006 USD/audio-minute | yes | 120 ± 2 (n=3) | 未測定 | 100.0% ± 0.0% (n=3) |  |
+| Subject | Provider | Capability | Provenance | Price | Streaming | Latency (mean±sd) | Intelligibility | Word accuracy | Note |
+| ------- | -------- | ---------- | ---------- | ----- | --------- | ----------------- | --------------- | ------------- | ---- |
+| OpenAI TTS-1 | openai | tts | measured | 15 USD/1M chars | yes | 1679 ± 632 (n=9) | 100.0% ± 0.0% (n=9) | not measured |  |
+| ElevenLabs Multilingual v2 | elevenlabs | tts | error | 100 USD/1M chars | yes | not measured | not measured | not measured | Error: ELEVENLABS_API_KEY is required for a real elevenlabs run. |
+| Google Cloud Neural2 | google | tts | error | 16 USD/1M chars | yes | not measured | not measured | not measured | Error: Google TTS Neural2 failed: 401 {   "error": {     "code": 401,     "message": "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication",     "status": "UNAUTHENTICATED",     "details": [       {         "@type": "type.googleapis.com/google.rpc.ErrorInfo",         "reason": "CREDENTIALS_MISSING",         "domain": "googleapis.com",         "metadata": {           "method": "google.cloud.texttospeech.v1.TextToSpeech.SynthesizeSpeech",           "service": "texttospeech.googleapis.com"         }       }     ]   } } |
+| Amazon Polly Neural | amazon | tts | error | 16 USD/1M chars | yes | not measured | not measured | not measured | Error: real adapter for provider 'amazon' is not wired yet (Amazon needs AWS SigV4 + the Transcribe async-S3 design decision; tracked as a follow-up); run --fixture or select a wired provider. |
+| Deepgram Aura-2 | deepgram | tts | error | 30 USD/1M chars | yes | not measured | not measured | not measured | Error: DEEPGRAM_API_KEY is required for a real deepgram run. |
+| OpenAI Whisper | openai | stt | measured | 0.006 USD/audio-minute | no | 1124 ± 588 (n=9) | not measured | 95.8% ± 6.3% (n=9) |  |
+| Deepgram Nova-3 | deepgram | stt | error | 0.0077 USD/audio-minute | yes | not measured | not measured | not measured | Error: DEEPGRAM_API_KEY is required for a real deepgram run. |
+| AssemblyAI Universal | assemblyai | stt | error | 0.0035 USD/audio-minute | yes | not measured | not measured | not measured | Error: ASSEMBLYAI_API_KEY is required for a real assemblyai run. |
+| Google Cloud Speech-to-Text (Chirp) | google | stt | error | 0.016 USD/audio-minute | yes | not measured | not measured | not measured | Error: Google STT chirp failed: 401 {   "error": {     "code": 401,     "message": "API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication",     "status": "UNAUTHENTICATED",     "details": [       {         "@type": "type.googleapis.com/google.rpc.ErrorInfo",         "reason": "CREDENTIALS_MISSING",         "domain": "googleapis.com",         "metadata": {           "method": "google.cloud.speech.v1.Speech.Recognize",           "service": "speech.googleapis.com"         }       }     ]   } } |
+| Amazon Transcribe | amazon | stt | error | 0.006 USD/audio-minute | yes | not measured | not measured | not measured | Error: real adapter for provider 'amazon' is not wired yet (Amazon needs AWS SigV4 + the Transcribe async-S3 design decision; tracked as a follow-up); run --fixture or select a wired provider. |
 
-**音声対話（STS）の対応状況（カタログ）**
+**Speech-to-speech機能（カタログ）**
 
-| プロバイダー | API | モデルID | 双方向リアルタイム | 確認日 | 出典 |
+| Provider | API | Model id | Duplex realtime | Verified | Source |
 | -------- | --- | -------- | --------------- | -------- | ------ |
 | OpenAI | Realtime API (GPT Realtime, GA) | gpt-realtime | yes | 2026-07-14 | https://developers.openai.com/api/docs/models/gpt-realtime |
 | Google | Gemini Live API (2.5 Flash Native Audio) | gemini-2.5-flash-native-audio-preview-12-2025 | yes | 2026-07-14 | https://ai.google.dev/gemini-api/docs/live |
 | AWS | Bedrock Nova Sonic (legacy; Nova 2 Sonic successor) | amazon.nova-sonic-v1:0 | yes | 2026-07-14 | https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-sonic.html |
 | xAI | Grok Voice Agent API | grok-voice-latest | yes | 2026-07-14 | https://docs.x.ai/developers/model-capabilities/audio/voice-agent |
 
-**発話マニフェスト（バージョン 1）**
+**発話マニフェスト（version 1）**
 
-| 発話ID | 種類 | テキスト／参照 |
-| --------- | ---- | ------------- |
+| Utterance id | Kind | Text / reference |
+| ------------ | ---- | ---------------- |
 | tts-pangram | tts | The quick brown fox jumps over the lazy dog |
 | tts-clarity | tts | She sells seashells by the seashore on a sunny day |
 | tts-common | tts | Please remember to bring your umbrella and jacket tomorrow |
@@ -112,8 +127,15 @@ SPEECH_AUDIO_DIR=./audio OPENAI_API_KEY=... npm run research -- speech --real
 | stt-glue | stt | Glue the sheet to the dark blue background |
 | stt-depth | stt | It is easy to tell the depth of a well |
 
-**ジャッジの由来。** すべての音声合成出力は `fixture-judge` によって読み取られ、各呼び出しの書き起こしとスコアは、アーティファクト内に逐語的に保存されています。
+**Judgeの証跡。** すべてのtext-to-speech出力は`whisper-1`によって読み上げられ、各呼び出しの文字起こしとスコアはアーティファクト内にそのまま保存されている。
 
-完全な実行記録は [`speech-comparison.data.json`](./speech-comparison.data.json) としてコミットされています。呼び出しごとのレイテンシ、音声バイト長、書き起こし、スコアが含まれます。
+完全な実行記録は[`speech-comparison.data.json`](./speech-comparison.data.json)としてコミットされている：呼び出しごとのレイテンシ、音声バイト長、文字起こし、スコアを含む。
 
-生成日時: 2026-01-01T00:00:00.000Z
+生成日時: 2026-07-18T15:09:30.905Z
+
+**過去の調査 / Past surveys in this series**
+
+Earlier dated surveys of this topic, newest first — each a complete article for its run.
+
+- [2026-07-19T02:22:34.606Z](./history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja)
+- [2026-07-18T15:09:30.905Z](./history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja)

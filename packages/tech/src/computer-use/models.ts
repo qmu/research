@@ -73,4 +73,5 @@ export const NON_SUBJECT_PROVIDERS: ReadonlyArray<NonSubjectProvider> = [
 /** The fixed actuation + observation layer every subject is driven through, so
  * the only variable across subjects is the model/tool. Named here because the
  * report states it and history connects same-harness points only. */
-export const HARNESS = "Playwright (repo Playwright MCP plugin)";
+export const HARNESS =
+  "Playwright (`playwright` npm package, headless Chromium, local fixture server)";

@@ -235,6 +235,7 @@ export type ComputerUseActionKind =
   | "navigate"
   | "click"
   | "type"
+  | "select"
   | "scroll"
   | "key"
   | "wait"
@@ -279,4 +280,80 @@ export type TaskAttempt = Readonly<{
 export type ComputerUseClient = Readonly<{
   model: string;
   attemptTask: (task: ComputerUseTaskInput) => Promise<TaskAttempt>;
+}>;
+
+// ── Computer-use harness policy seam ─────────────────────────────────────────
+// "One fixed harness, only the model varies": the Playwright harness owns
+// everything shared — serving the pinned site, navigating, actuating, observing,
+// and deciding success through the domain predicate. A subject supplies only an
+// `AgentPolicy`: the think step that turns one observation into the next command.
+// The keyless oracle policy plugs into the SAME seam, so the harness loop is
+// proven end to end with no model and no spend.
+
+// What the harness shows the policy each step. `pageText` and `axSnapshot` are the
+// textual views a model reasons over; `screenshotBase64` is the pixel view a
+// coordinate-based computer-use tool consumes; `lastError` is set when the prior
+// command failed to actuate (the recovery signal the recovery-rate metric reads).
+export type HarnessObservation = Readonly<{
+  stepIndex: number;
+  url: string;
+  pageText: string;
+  axSnapshot: string;
+  screenshotBase64?: string;
+  viewport: Readonly<{ width: number; height: number }>;
+  lastError?: string;
+}>;
+
+// The normalized command vocabulary the harness actuates. `finish` ends the loop
+// (the harness then reads the final page and evaluates the task predicate). Every
+// non-`finish` kind is also a `ComputerUseActionKind`, so an actuated command
+// records straight into the trajectory. A command may address the page by CSS
+// selector (the oracle path) or by pixel coordinate (the provider tools) — the
+// harness supports both.
+export type HarnessCommandKind =
+  | "navigate"
+  | "click"
+  | "type"
+  | "select"
+  | "scroll"
+  | "key"
+  | "wait"
+  | "submit"
+  | "finish";
+
+export type HarnessCommand = Readonly<{
+  kind: HarnessCommandKind;
+  /** CSS selector the command targets (selector-based actuation). */
+  selector?: string;
+  /** Pixel coordinate the command targets (coordinate-based actuation). */
+  point?: Readonly<{ x: number; y: number }>;
+  /** Text to type (`type`) or the URL to open (`navigate`). */
+  text?: string;
+  /** Key name for a `key` press (e.g. "Enter"). */
+  key?: string;
+}>;
+
+// One think step's result: the command to actuate plus the usage the domain
+// scores. The harness owns wall-clock timing, so a policy reports only tokens.
+// `recovered` marks a step taken to recover from a prior failed command.
+export type PolicyStep = Readonly<{
+  command: HarnessCommand;
+  inputTokens: number;
+  outputTokens: number;
+  recovered: boolean;
+}>;
+
+// One in-flight attempt's think stream. `next` is called once per harness step
+// with the current observation; a provider brain keeps its conversation state in
+// this closure, so a fresh `begin` starts a clean attempt.
+export type PolicyAttempt = Readonly<{
+  next: (observation: HarnessObservation) => Promise<PolicyStep>;
+}>;
+
+// The provider-neutral think seam. `begin` sets up per-attempt state (a fresh
+// provider conversation, or a fresh oracle script cursor) and returns the think
+// stream the harness drives.
+export type AgentPolicy = Readonly<{
+  model: string;
+  begin: (task: ComputerUseTaskInput) => PolicyAttempt;
 }>;

@@ -2,7 +2,7 @@
 type: Mission
 title: Image generation benchmark
 slug: image-generation-benchmark
-status: active
+status: draft
 created_at: 2026-07-13T11:58:23+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -10,6 +10,7 @@ drive_authorized: true
 tickets: []
 stories: []
 concerns: []
+actual_hours: 0.33
 ---
 
 # Image generation benchmark
@@ -65,3 +66,4 @@ A reader of the published EN/JP image-generation pages sees, per API-accessible 
 - 2026-07-17 — archive/composition gap closed (was user-visible: published article said 0/3 measured while the real trial sat in its frame): current pages of a topic with a measured dated frame now render FROM that frame (EN/JP/data), keyless fixture render preserved as gitignored *.fixture.* side files; research:archive prefers .real outputs; published image-generation pages regenerated to 3/3 measured
 - 2026-07-18 — manifest v2 + image persistence + asset-carrying publish built KEYLESS and green (commit cd2094a): `ImagePrompt.category`, version 1→2 with v1 kept as `mechanical` and one rubric-constrained prompt per practical category (presentation-slide/photo/character/infographic/meeting-document); real runs persist practical-category images into the dated frame's images/ with imagePath+sha256+bytes recorded (mechanical probes discarded, per-image byte budget documented); §7 inline gallery with an on-disk existence guard; archive moves *.real.images→frame images/, composition mirrors frame images beside current pages, imageAssetPublishPlan + qmu-ticket + publish-research.sh carry image dirs to qmu-co-jp both languages. Per-package bare exit codes green (build/lint/test 84 files 593 tests), fixture byte-stable, make drift stable. PENDING: the paid v2 real trial is owner-gated — `--estimate` ~$1.47 generation (3×13×1) well under the $20 ceiling — minted as 20260718205443-image-generation-v2-real-trial.md; the two v2 Acceptance items stay unticked until a real run persists images and the pages render them. Build ticket 20260718194643 archived under work-20260718-203003.
 - 2026-07-18 — manifest v2 first real trial executed (owner-authorized "go all the actual runs"; estimate ~$1.47 generation / ~$3.5 all-in, actual ≈$1.1–1.3, ceiling $20): trial 2026-07-18T15:04:12.341Z, judge claude-sonnet-5, **2/3 measured, 1 error** — GPT Image 1.5 (adherence 95.5%, text 100%, 18085ms) and Grok Imagine (100%/100%, 5346ms) measured with 5 practical images each persisted; Gemini 2.5 Flash Image an honest `error` row (`returned no image` — regressed since v1, real run not repeated per cost gate, Google-ACL empty-response hardening left as follow-up). v2 adherence now discriminates (GPT 95.5% vs Grok 100%) where v1 saturated. Dated frame history/image-generation/2026-07-18T15-04-12-341Z committed (bare v2 EN/JP + data + 10 images with imagePath/sha256/bytes + design-validation review); EN/JP current pages recomposed from the frame render the images inline; all 40 image refs resolve; per-package bare exit codes green (tech test 84 files/591 pass, build 0, lint 0). Two GPT PNGs exceed the 512 KiB budget (persisted as evidence, ~4.6MB frame). Both v2 Acceptance items ticked; qmu-co-jp asset carry runs on the next /ship. Commit 88154cf; ticket 20260718205443 archived under work-20260718-203003.
+- 2026-07-23 — run recorded (+0.33h) — run-20260723-224446

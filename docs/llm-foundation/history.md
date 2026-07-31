@@ -19,10 +19,6 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 - 2026-07-09T11:54:54.587Z: [English](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models) · [Japanese](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja) · [data.json](../research-reports/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.data.json)
 - 2026-07-09T11:02:05.370Z: [English](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models) · [Japanese](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja) · [data.json](../research-reports/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.data.json)
 
-### Agent SDKの比較
-
-まだ日付別フレームは保存されていない。
-
 ### 応答速度
 
 - 2026-07-12T05:47:26.268Z: [English](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison) · [Japanese](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja) · [data.json](../research-reports/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.data.json)
@@ -39,34 +35,47 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 - 2026-07-09T11:08:12.753Z: [English](../research-reports/history/availability/2026-07-09T11-08-12-753Z/llm-availability) · [Japanese](../research-reports/history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja) · [data.json](../research-reports/history/availability/2026-07-09T11-08-12-753Z/llm-availability.data.json)
 
-### OCR能力
+### トークン計測
 
-- 2026-07-09T11:03:48.277Z: [English](../research-reports/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison) · [Japanese](../research-reports/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja) · [data.json](../research-reports/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.data.json)
+- 2026-07-17T03:02:34.699Z: [English](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison) · [Japanese](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja) · [data.json](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.data.json)
 
 ### ベクトルDBの比較
 
 - 2026-07-09T11:02:46.726Z: [English](../research-reports/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark) · [Japanese](../research-reports/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja) · [data.json](../research-reports/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.data.json)
 
+### OCR能力
+
+- 2026-07-09T11:03:48.277Z: [English](../research-reports/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison) · [Japanese](../research-reports/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja) · [data.json](../research-reports/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.data.json)
+
 ### 画像生成
 
 - 2026-07-17T00:53:39.901Z: [English](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison) · [Japanese](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja) · [data.json](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.data.json)
 
+### SVG生成
+
+- 2026-07-18T11:29:34.171Z: [English](../research-reports/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison) · [Japanese](../research-reports/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.ja) · [data.json](../research-reports/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.data.json)
+
 ### 音声 (TTS/STT/STS)
+
+- 2026-07-19T02:22:34.606Z: [English](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison) · [Japanese](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja) · [data.json](../research-reports/history/speech/2026-07-19T02-22-34-606Z/speech-comparison.data.json)
+- 2026-07-18T15:09:30.905Z: [English](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison) · [Japanese](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja) · [data.json](../research-reports/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.data.json)
+
+### Agent SDKの比較
 
 まだ日付別フレームは保存されていない。
 
 ### コンピュータ操作
 
-まだ日付別フレームは保存されていない。
-
-### SVG生成
-
-まだ日付別フレームは保存されていない。
+- 2026-07-18T15:08:10.261Z: [English](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison) · [Japanese](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja) · [data.json](../research-reports/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.data.json)
 
 ### エージェントVM/サンドボックス
 
 まだ日付別フレームは保存されていない。
 
-### トークン計測
+### ディープリサーチAPI
 
-- 2026-07-17T03:02:34.699Z: [English](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison) · [Japanese](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja) · [data.json](../research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.data.json)
+- 2026-07-19T02:12:52.868Z: [English](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison) · [Japanese](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja) · [data.json](../research-reports/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.data.json)
+
+### トレンド追随
+
+- 2026-07-17T01:34:36.857Z: [English](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison) · [Japanese](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja) · [data.json](../research-reports/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.data.json)

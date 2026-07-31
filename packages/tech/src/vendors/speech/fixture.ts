@@ -1,5 +1,7 @@
 import type {
   AudioClip,
+  SpeechToSpeechClient,
+  SpeechToSpeechRoundTrip,
   SpeechToTextClient,
   SynthesizedSpeech,
   TextToSpeechClient,
@@ -54,4 +56,20 @@ export const createFixtureSpeechToTextClient = (
     const text = decodeFixtureAudio(audio);
     return Promise.resolve({ text, elapsedMs: fixtureLatencyMs(text), model });
   },
+});
+
+/** Keyless, deterministic speech-to-speech client. The round-trip latency is a
+ * stable stand-in derived from the prompt length (never a real clock), so the
+ * fixture path stays byte-stable, and the first-audio byte length is a fixed
+ * deterministic value. */
+export const createFixtureSpeechToSpeechClient = (
+  model: string,
+): SpeechToSpeechClient => ({
+  model,
+  roundTrip: (prompt): Promise<SpeechToSpeechRoundTrip> =>
+    Promise.resolve({
+      firstAudioLatencyMs: 120 + prompt.length,
+      firstAudioByteLength: 640,
+      model,
+    }),
 });

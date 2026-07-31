@@ -111,3 +111,12 @@ Skipped this drive — externally blocked, not faked complete:
 The keyless framework is already merged (`42bb286`); the publish wiring landed
 this drive (#024002), so once tokens appear the path is
 `npm run agent-vm:estimate` (must be ≤ $8) → owner-approved `agent-vm:real`.
+
+### Spend approval (2026-07-22)
+
+Spend approved by the developer (a@qmu.jp) 2026-07-22 in the /mission planning
+session. Remaining gate is environmental credentials only — FLY_API_TOKEN +
+FLY_APP_NAME for the Fly.io probe (024001/024004) and an LLM API key for the
+pipeline translation (024005). The `--real` path self-reports missing
+credentials and records unreachable rows, so the drive proceeds and measures
+whatever providers are reachable.

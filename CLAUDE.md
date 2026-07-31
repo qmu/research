@@ -34,6 +34,49 @@ site (`../qmu-co-jp`) as a one-directional Markdown copy.
 Run `make help`. Common: `make install`, `make build`, `make test`, `make lint`,
 `make docs`, `make publish`.
 
+## Orchestration (control-master operation)
+
+Since 2026-07-18, this repository orchestrates its own missions the way the
+strategy HQ does. The session on the primary checkout
+(`~/projects/research`, branch `main`) is the **control master**; it does not
+edit files itself.
+
+- **All writes happen on topic desks.** A desk is a worktree of this repository
+  at `.worktrees/<topic>/` (already gitignored). One desk per session — never
+  send two agents to the same desk. Branches are always cut with the **literal**
+  name `work-YYYYMMDD-HHMMSS`; a guard rejects variable expansion in branch
+  names. Desk conventions live in
+  [.workaholic/desk-rules.md](.workaholic/desk-rules.md).
+- **Parallel-first.** When independent work is visible (multiple desks to
+  drive, drafting, investigation), fan it out to background agents at once
+  instead of serializing. The control master keeps only the gates:
+  AskUserQuestion for dispositions, PR merge approval, and integration of
+  results.
+- **Desk liveness is judged only by the launch ledger.** A subagent's Edit
+  writes have no process, so `ps` shows nothing and md5 looks static between
+  edits; neither proves a desk is unattended. A desk is free only when the
+  ledger shows zero agents sent to it. To recover a stalled agent, either
+  resume it or launch a replacement — never both.
+- **Never verify through `make`.** `make test` and `make lint`
+  (`Makefile:20-24`) run `@for p in $(PACKAGES); do (cd $$p && npm test);
+  done` — the loop's exit status is the **last** iteration's, so a failure in
+  `packages/tech` (first in `PACKAGES`) is structurally masked, and
+  `packages/industry` has zero test files with `--passWithNoTests`, making
+  `make test` close to a constant green. The defect is filed and unfixed.
+  Verify per package directly (`cd packages/tech && npm test`) with bare,
+  unmasked exit codes — no `| tail`, no `|| true`. The one honest make target
+  is `make drift` (single script, real exit code).
+- **PRs are never self-merged.** Agents drive to commit + ticket archive only.
+  PR creation and readiness judgment happen via /report; merge, deploy, and
+  verification happen via /ship, after the developer names the PR number. Do
+  not close work with a raw `gh pr create` plus an ad-hoc merge request.
+- **Shell traps in this environment.** `noclobber` is set (use `>|` to
+  overwrite); `cp` and `rm` are aliased (`cp -i`, trash-move) — use `/bin/cp`
+  and `/bin/rm` deliberately; `diff` is aliased to nvim — use `/usr/bin/diff`;
+  the shared scratchpad needs unique filenames; and `commit.sh` both drops
+  unlisted new files and disables `add -u` when files are listed — stage
+  everything first, run it with `--skip-staging`, then verify the commit stat.
+
 ## Deploy
 
 This repository has two delivery surfaces:
@@ -56,13 +99,15 @@ This repository has two delivery surfaces:
    source/destination plan from `npm run research:site -- copy-plan` and copies
    Japanese Markdown into
    `../qmu-co-jp/docs/llm-foundation-research/<name>.md`. The corporate site
-   (Astro) renders the copies; commit and deploy `qmu-co-jp` separately. See
+   (Cloudflare Workers, built from `packages/site`) renders the copies; commit
+   and deploy `qmu-co-jp` separately. See
    `docs/adr/0003-*` for the boundary.
 
 ### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
 
 Publishing does not edit `qmu-co-jp` directly — that repo has its own writing
-conventions (である体), docker Astro build, and `/ship` deploy. Instead, this
+conventions (である体), a Cloudflare Workers build (Wrangler, `packages/site`),
+and `/ship` deploy. Instead, this
 repo's `/ship` generates a **publish ticket** into the sibling `qmu-co-jp` repo,
 and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
 
@@ -79,8 +124,9 @@ and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
 4. Write a ticket into that worktree's `.workaholic/tickets/todo/` using
    `npm run research:site -- qmu-ticket` as the ordered payload. The ticket tells
    qmu-co-jp to copy/delete Markdown, update navigation and JP/EN indexes in the
-   same order, verify with the docker Astro build, then commit and deploy via
-   that repo's own `/ship` (`scripts/deploy.sh`).
+   same order, verify with the site build (`npm run build` in `packages/site`),
+   then commit and deploy via that repo's own `/ship` (`scripts/deploy.sh`, which
+   runs `npm run deploy` = build + `wrangler deploy` to Cloudflare Workers).
 5. **Tell the user to run `/drive` in `qmu-co-jp`** to apply the ticket.
 
 CI must be green before merge to `main` (type-check, tests, lint, dependency
