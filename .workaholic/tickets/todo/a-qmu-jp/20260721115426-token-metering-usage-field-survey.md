@@ -8,6 +8,7 @@ commit_hash:
 category: Added
 depends_on:
 mission:
+claim: work-20260801-120859
 ---
 
 # Expand token-metering with a usage-field survey (actual consumed input+output from API responses)
