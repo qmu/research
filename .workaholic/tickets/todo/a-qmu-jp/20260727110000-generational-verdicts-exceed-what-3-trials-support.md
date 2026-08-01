@@ -8,6 +8,7 @@ commit_hash:
 category: Changed
 depends_on:
 mission:
+claim: work-20260801-120846
 ---
 
 # Per-effort generational verdicts claim more precision than 3 trials support — measured run-to-run noise exceeds the deltas being reported
