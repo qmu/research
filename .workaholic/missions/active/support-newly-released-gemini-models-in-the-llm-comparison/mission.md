@@ -2,7 +2,7 @@
 type: Mission
 title: Support newly released Gemini models in the LLM comparison
 slug: support-newly-released-gemini-models-in-the-llm-comparison
-status: approved
+status: active
 created_at: 2026-07-23T15:24:14+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
