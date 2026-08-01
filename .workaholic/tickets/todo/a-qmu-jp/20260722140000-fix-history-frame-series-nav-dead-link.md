@@ -8,6 +8,7 @@ commit_hash:
 category: Changed
 mission:
 depends_on:
+claim: work-20260801-120810
 ---
 
 # Fix history-frame series-nav dead link blocking VitePress build for recovered topics
