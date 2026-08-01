@@ -30,7 +30,7 @@ The measured metrics are character error rate (CER), word error rate (WER), and 
 
 ## 4. Verification Results
 
-This run has **0 measured** of 29 model rows (non-measured rows are `fixtured` harness checks or `out-of-scope` integration gaps).
+This run has **0 measured** of 30 model rows (non-measured rows are `fixtured` harness checks or `out-of-scope` integration gaps).
 
 There are no measured values to summarize; the committed fixture page proves the harness end to end. The per-model table is in section 7, Verification Data.
 
@@ -70,6 +70,7 @@ The OCR fixture and real paths create no external cloud resources. They render l
 | Model | Provider | Provenance | Measured at | CER | WER | Field accuracy | Note |
 | ----- | -------- | ---------- | ----------- | --- | --- | -------------- | ---- |
 | Claude Fable 5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
+| Claude Opus 5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
 | Claude Opus 4.8 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
 | Claude Sonnet 5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
 | Claude Haiku 4.5 | Anthropic | fixtured | 2026-01-01T00:00:00.000Z | 0.0% ± 0.0pp (n=2) | 0.0% ± 0.0pp (n=2) | 100.0% ± 0.0pp (n=2) |  |
