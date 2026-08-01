@@ -7,6 +7,7 @@ effort: 0.5h
 commit_hash:
 category: Changed
 depends_on:
+claim: work-20260801-120832
 ---
 
 # Guard the article exporter against overwriting downstream-authored prose
