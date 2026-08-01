@@ -89,3 +89,25 @@ fixture render. The paid measurement is the follow-up ticket's gate.
 - [ ] Keyless fixture render is byte-stable; `npm test`, `npm run build`, and
       `npm run lint` in `packages/tech` each exit 0 (bare exit codes, no `| tail`,
       no `|| true`).
+
+
+## Final Report (2026-08-01)
+
+Added `anthropic-claude-opus-5` as the current Anthropic flagship, paired to the
+Opus 4.8 it supersedes through the registry metadata the Gemini round
+introduced (`generation` / `supersedes` / `supersededBy`). No renderer change was
+needed: the generational-delta section picked the pair up on its own and now
+emits `Claude Opus 4.8 -> Claude Opus 5` per effort level.
+
+Corrected Claude Fable 5 from 6/30 to the published 10/50 per MTok. That value
+had been wrong since the row was written, understating the frontier tier's cost
+by roughly 40% in every report quoting it. Recorded Sonnet 5's introductory
+pricing (2/10 through 2026-08-31) as a comment while keeping the list rate as the
+registry value, because the list rate is what stays comparable across dated
+frames once the window closes.
+
+The reference catalog needed no change: it consumes `ModelCard` rather than
+carrying its own copy of the prices.
+
+Gates: `npm test` 692 passed / 2 skipped exit 0, `npm run build` exit 0,
+`npm run lint` exit 0, keyless fixture re-rendered byte-stable.
