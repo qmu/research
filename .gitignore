@@ -28,6 +28,9 @@ docs/research-reports/*.real.md
 docs/research-reports/*.real.data.json
 docs/research-reports/*.fixture.md
 docs/research-reports/*.fixture.data.json
+# Real-run generated images land here transiently before being moved into the
+# committed dated frame's images/ directory by research:archive.
+docs/research-reports/*.real.images/
 
 # Regenerable artifact-to-draft skeletons for the canonical LLM foundation IA.
 docs/llm-foundation/_generated/

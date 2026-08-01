@@ -1099,7 +1099,53 @@ export type ResearchHistoryFrame = Readonly<{
   sourcePath?: string;
   japanesePath?: string;
   dataPath?: string;
+  /** Repo-relative `images/` directory committed with the frame, when the
+   * frame's articles embed generated images (manifest-v2 image-generation).
+   * Absent for text-only frames. */
+  imagesDir?: string;
 }>;
+
+/** The directory name generated images live in, beside the article they are
+ * embedded from — the same relative reference resolves inside a dated frame and
+ * on the current published page composed from it. */
+export const IMAGE_ASSET_DIR_NAME = "images";
+
+export type ImageAssetCopy = Readonly<{
+  sourceDir: string;
+  japaneseDestDir: string;
+  englishDestDir: string;
+}>;
+
+/**
+ * The image-asset directories the publish flow must carry to qmu-co-jp so the
+ * inline pictures resolve there: the current pages' shared `images/` dir (when
+ * any frame ships images) plus every dated frame's own `images/` dir, mirrored
+ * under both the Japanese and English qmu-co-jp sections exactly like the
+ * frame Markdown. Pure: the caller supplies the frames it read from disk, so an
+ * all-text history yields an empty plan.
+ */
+export const imageAssetPublishPlan = (
+  frames: ReadonlyArray<ResearchHistoryFrame>,
+): ReadonlyArray<ImageAssetCopy> => {
+  const copies: ImageAssetCopy[] = [];
+  if (frames.some((frame) => frame.imagesDir !== undefined)) {
+    copies.push({
+      sourceDir: `docs/research-reports/${IMAGE_ASSET_DIR_NAME}`,
+      japaneseDestDir: `docs/llm-foundation-research/${IMAGE_ASSET_DIR_NAME}`,
+      englishDestDir: `docs/en/llm-foundation-research/${IMAGE_ASSET_DIR_NAME}`,
+    });
+  }
+  for (const frame of frames) {
+    if (frame.imagesDir === undefined) continue;
+    const mirror = frame.imagesDir.replace(/^docs\/research-reports\//, "");
+    copies.push({
+      sourceDir: frame.imagesDir,
+      japaneseDestDir: `docs/llm-foundation-research/${mirror}`,
+      englishDestDir: `docs/en/llm-foundation-research/${mirror}`,
+    });
+  }
+  return copies;
+};
 
 const sourceHistoryLink = (path: string): string => {
   const relative = path.replace(/^docs\/research-reports\//, "");
@@ -1282,6 +1328,7 @@ export const renderQmuTicketPayload = (
 ): string => {
   const framePlan = framePublishPlan(frames);
   const englishFramePlan = englishFramePublishPlan(frames);
+  const imageAssets = imageAssetPublishPlan(frames);
   return [
     "# Reflect LLMs Research reports",
     "",
@@ -1334,6 +1381,17 @@ export const renderQmuTicketPayload = (
             (entry) =>
               `- docs/${entry.sourceSlug}.md -> docs/en/llm-foundation-research/${entry.destinationSlug}.md`,
           ),
+          "",
+        ]),
+    ...(imageAssets.length === 0
+      ? []
+      : [
+          `Image assets (${imageAssets.length} director${imageAssets.length === 1 ? "y" : "ies"}): copy each directory below WHOLE (all files) so the inline pictures embedded by the reports resolve. The reports reference images by the relative path \`${IMAGE_ASSET_DIR_NAME}/<file>\`, so each language section needs its own copy:`,
+          "",
+          ...imageAssets.flatMap((copy) => [
+            `- ${copy.sourceDir}/ -> ${copy.japaneseDestDir}/`,
+            `- ${copy.sourceDir}/ -> ${copy.englishDestDir}/`,
+          ]),
           "",
         ]),
     "Update both qmu-co-jp index/table-of-contents entries from the same order.",

@@ -10,10 +10,12 @@ import {
 import { dirname, resolve } from "node:path";
 import {
   findPublishedResearchTopic,
+  IMAGE_ASSET_DIR_NAME,
   publishedResearchTopics,
   type ResearchHistoryFrame,
   type ResearchSiteTopic,
 } from "./domain/site";
+import { copyImageDir } from "../image-generation/domain/image-store";
 import {
   appendRelatedBlock,
   buildRelatedBlock,
@@ -91,12 +93,14 @@ export const readHistoryFrames = async (
       const sourcePath = `${directory}/${topic.artifactBase}.md`;
       const japanesePath = `${directory}/${topic.artifactBase}.ja.md`;
       const dataPath = `${directory}/${topic.artifactBase}.data.json`;
+      const imagesDir = `${directory}/${IMAGE_ASSET_DIR_NAME}`;
       const frame: {
         topicId: string;
         generatedAt: string;
         sourcePath?: string;
         japanesePath?: string;
         dataPath?: string;
+        imagesDir?: string;
       } = {
         topicId: topic.id,
         generatedAt: generatedAtFromStamp(entry.name),
@@ -106,6 +110,7 @@ export const readHistoryFrames = async (
       if (await exists(resolve(root, japanesePath)))
         frame.japanesePath = japanesePath;
       if (await exists(resolve(root, dataPath))) frame.dataPath = dataPath;
+      if (await exists(resolve(root, imagesDir))) frame.imagesDir = imagesDir;
 
       if (
         frame.sourcePath !== undefined ||
@@ -273,6 +278,15 @@ export const composeCurrentPagesFromLatestMeasuredFrame = async (
       currentDataPath,
       await readFile(resolve(root, frame.dataPath), "utf8"),
       "utf8",
+    );
+  }
+  // Mirror the frame's committed images beside the current pages, so the
+  // `images/<file>` references the frame article carries resolve at the current
+  // level too. A text-only frame has no images dir; the copy is a no-op then.
+  if (frame.imagesDir !== undefined) {
+    await copyImageDir(
+      resolve(root, frame.imagesDir),
+      resolve(root, `docs/research-reports/${IMAGE_ASSET_DIR_NAME}`),
     );
   }
   if (frame.japanesePath !== undefined) {

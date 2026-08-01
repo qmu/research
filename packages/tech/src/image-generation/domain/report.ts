@@ -1,6 +1,13 @@
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
+import { IMAGE_BYTE_BUDGET } from "./image-store";
 import { PROMPT_MANIFEST } from "./manifest";
-import type { ImageGenerationResult, ImageGenModelRun, Stat } from "./types";
+import {
+  PRACTICAL_IMAGE_CATEGORIES,
+  type ImageGenerationResult,
+  type ImageGenModelRun,
+  type ImagePromptCategory,
+  type Stat,
+} from "./types";
 
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
@@ -111,12 +118,96 @@ const modelTable = (result: ImageGenerationResult): string => {
 
 const manifestTable = (): string => {
   const header =
-    "| Prompt id | Kind | Rubric size | Expected text |\n| --------- | ---- | ----------- | ------------- |";
+    "| Prompt id | Category | Kind | Rubric size | Expected text |\n| --------- | -------- | ---- | ----------- | ------------- |";
   const rows = PROMPT_MANIFEST.prompts.map(
     (prompt) =>
-      `| ${prompt.id} | ${prompt.kind} | ${prompt.constraints.length} | ${escapeCell(prompt.expectedText ?? "—")} |`,
+      `| ${prompt.id} | ${prompt.category} | ${prompt.kind} | ${prompt.constraints.length} | ${escapeCell(prompt.expectedText ?? "—")} |`,
   );
   return `${header}\n${rows.join("\n")}`;
+};
+
+/** All markdown image references (`![alt](target)`) in a document, ignoring
+ * fenced code blocks. Pure; used by the report gallery's on-disk existence
+ * guard. Exported so a test walks the same refs the reader sees. */
+export const markdownImageRefs = (markdown: string): ReadonlyArray<string> => {
+  const refs: string[] = [];
+  let fenced = false;
+  for (const line of markdown.split("\n")) {
+    if (line.startsWith("```")) {
+      fenced = !fenced;
+      continue;
+    }
+    if (fenced) continue;
+    for (const match of line.matchAll(/!\[[^\]]*\]\(([^)\s]+)[^)]*\)/g)) {
+      const target = match[1];
+      if (target !== undefined) refs.push(target);
+    }
+  }
+  return refs;
+};
+
+type GalleryEntry = Readonly<{
+  category: ImagePromptCategory;
+  promptId: string;
+  modelName: string;
+  imagePath: string;
+}>;
+
+const galleryEntries = (
+  result: ImageGenerationResult,
+): ReadonlyArray<GalleryEntry> =>
+  result.runs.flatMap((run) =>
+    run.calls.flatMap((call) =>
+      call.imagePath === undefined
+        ? []
+        : [
+            {
+              category: call.category,
+              promptId: call.promptId,
+              modelName: run.modelName,
+              imagePath: call.imagePath,
+            },
+          ],
+    ),
+  );
+
+/**
+ * The inline gallery of persisted images, grouped by practical category then
+ * prompt, embedded in §7 with bold labels only (no headings) so the enforced
+ * 7-section H2/H3 outline stays intact. Empty on the keyless fixture path (no
+ * image is persisted there), so the fixture report has no image references and
+ * stays byte-stable.
+ */
+const gallerySection = (result: ImageGenerationResult): string => {
+  const entries = galleryEntries(result);
+  if (entries.length === 0) return "";
+  const blocks: string[] = [];
+  for (const category of PRACTICAL_IMAGE_CATEGORIES) {
+    const inCategory = entries.filter((entry) => entry.category === category);
+    if (inCategory.length === 0) continue;
+    const byPrompt = new Map<string, GalleryEntry[]>();
+    for (const entry of inCategory) {
+      const list = byPrompt.get(entry.promptId) ?? [];
+      list.push(entry);
+      byPrompt.set(entry.promptId, list);
+    }
+    const promptBlocks = [...byPrompt.entries()].map(([promptId, list]) => {
+      const images = list
+        .map(
+          (entry) =>
+            `![${escapeCell(entry.modelName)} — ${escapeCell(promptId)}](${entry.imagePath})`,
+        )
+        .join("\n\n");
+      return `_${escapeCell(promptId)}_\n\n${images}`;
+    });
+    blocks.push(`**${category}**\n\n${promptBlocks.join("\n\n")}`);
+  }
+  if (blocks.length === 0) return "";
+  return `**Generated images (practical categories)**
+
+The images below are the actual files generated during this run, committed beside this article under \`images/\`. Only practical-category prompts persist an image; the mechanical shape/text probes are scored but not shown.
+
+${blocks.join("\n\n")}`;
 };
 
 const nonSubjectLines = (result: ImageGenerationResult): string =>
@@ -146,8 +237,8 @@ ${nonSubjectLines(result)}`,
     targetMetrics:
       "Measured metrics are generation latency (ms, lower is better), prompt adherence (satisfied rubric constraints / total, higher is better), and text render accuracy (expected tokens found in a vision transcription / expected tokens, higher is better). Per-image cost is curated catalog data (reference), not a measurement.",
     scopeAndConstraints: `- **Judged, but rubric-constrained.** A fixed vision judge (\`${escapeCell(result.judgeModel)}\`) answers deterministic yes/no questions and transcribes rendered text; it never scores beauty or style. Swapping the judge is an instrument change, not a routine update.
-- Prompt manifest version \`${result.manifestVersion}\`: ${PROMPT_MANIFEST.prompts.length} prompts (${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "adherence").length} rubric, ${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "text").length} exact-text). History connects same-manifest-version points only.
-- **Image binaries are not committed.** The artifact records byte length, timing, judge answers, and scores — enough to regenerate this page — never the images themselves.
+- Prompt manifest version \`${result.manifestVersion}\`: ${PROMPT_MANIFEST.prompts.length} prompts (${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "adherence").length} rubric, ${PROMPT_MANIFEST.prompts.filter((p) => p.kind === "text").length} exact-text) across ${new Set(PROMPT_MANIFEST.prompts.map((p) => p.category)).size} categories — the \`mechanical\` shape/text probes plus the practical categories (${PRACTICAL_IMAGE_CATEGORIES.join(", ")}). History connects same-manifest-version points only.
+- **Images are committed for practical categories only, size-capped.** Each practical-category image is persisted next to this article under \`images/\` with its byte length and SHA-256 recorded in the artifact; the mechanical probes record byte length, timing, judge answers, and scores but no image. To bound how much each monthly frame adds to the repository, images request each provider's smallest supported size and target a per-image budget of ${Math.round(IMAGE_BYTE_BUDGET / 1024)} KiB.
 - The fixture path is keyless and deterministic; real model numbers appear only after an owner runs the real path within the approved cost ceiling (run \`--estimate\` first).
 - Point-in-time: measured behavior reflects the models and APIs at \`${result.generatedAt}\`; catalog prices are as of each row's last-verified date.`,
     verificationResults: overviewSection(result),
@@ -169,7 +260,7 @@ npm run research -- image-generation --real
     reproductionCost:
       "The fixture path is keyless and costless. A real trial bills each provider per generated image (see the per-model catalog prices) plus one vision-judge read per image; the agreed ceiling is $20 per trial and `--estimate` must run first.",
     cleanup:
-      "No external resources are created. Generated images are held in memory for judging and discarded; the run writes only the local Markdown/JSON artifacts — review them before committing.",
+      "No external resources are created. Practical-category images are judged and then written into the local dated frame under `images/` (size-capped, committed as the qualitative exhibit); mechanical probe images are judged and discarded. The run writes the local Markdown/JSON artifacts and those images — review them before committing.",
     verificationData: `**Per-model results**
 
 ${modelTable(result)}
@@ -177,6 +268,7 @@ ${modelTable(result)}
 **Prompt manifest (version ${result.manifestVersion})**
 
 ${manifestTable()}
+${gallerySection(result) === "" ? "" : `\n${gallerySection(result)}\n`}
 
 **Judge provenance.** Every image was read by \`${escapeCell(result.judgeModel)}\`; each call's rubric answers and transcriptions are preserved verbatim in the artifact.
 

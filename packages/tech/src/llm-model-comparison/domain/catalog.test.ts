@@ -49,6 +49,62 @@ describe("buildCatalogRows", () => {
   it("is verifiable against the real registry: one row per model card", () => {
     expect(buildCatalogRows(MODELS).length).toBe(MODELS.length);
   });
+
+  it("labels the generational pairing from the registry metadata", () => {
+    const paired: ReadonlyArray<ModelCard> = [
+      {
+        id: "google-gemini-3-6-flash",
+        provider: "google",
+        tier: "mid",
+        modelName: "Gemini 3.6 Flash",
+        apiModelId: "gemini-3.6-flash",
+        released: "2026-07",
+        inputCostPerMTok: 1.5,
+        outputCostPerMTok: 7.5,
+        effortLevels: ["low", "medium", "high"],
+        generation: "current",
+        supersedes: "google-gemini-3-5-flash",
+        source: "https://ai.google.dev/gemini-api/docs/pricing",
+      },
+      {
+        id: "google-gemini-3-5-flash",
+        provider: "google",
+        tier: "mid",
+        modelName: "Gemini 3.5 Flash",
+        apiModelId: "gemini-3.5-flash",
+        released: "2026",
+        inputCostPerMTok: 1.5,
+        outputCostPerMTok: 9,
+        effortLevels: ["low", "medium", "high"],
+        generation: "previous",
+        supersededBy: "google-gemini-3-6-flash",
+        source: "https://ai.google.dev/gemini-api/docs/pricing",
+      },
+    ];
+    const rows = buildCatalogRows(paired);
+    expect(rows[0]?.generation).toBe("current (supersedes Gemini 3.5 Flash)");
+    expect(rows[1]?.generation).toBe("previous (→ Gemini 3.6 Flash)");
+  });
+
+  it("marks a model outside any pairing with an em dash", () => {
+    expect(buildCatalogRows(sample)[0]?.generation).toBe("—");
+  });
+});
+
+describe("the real registry carries the newly released Gemini pairing", () => {
+  it("has both new-generation Gemini cards paired to their predecessors", () => {
+    const byId = new Map(MODELS.map((card) => [card.id, card]));
+    const flash = byId.get("google-gemini-3-6-flash");
+    const flashLite = byId.get("google-gemini-3-5-flash-lite");
+    expect(flash?.apiModelId).toBe("gemini-3.6-flash");
+    expect(flash?.supersedes).toBe("google-gemini-3-5-flash");
+    expect(flashLite?.apiModelId).toBe("gemini-3.5-flash-lite");
+    expect(flashLite?.supersedes).toBe("google-gemini-3-1-flash-lite");
+    // The predecessors are retained and paired back, under identical effort.
+    const prevFlash = byId.get("google-gemini-3-5-flash");
+    expect(prevFlash?.supersededBy).toBe("google-gemini-3-6-flash");
+    expect(prevFlash?.effortLevels).toEqual(flash?.effortLevels);
+  });
 });
 
 describe("buildFoundationModelsCatalog", () => {

@@ -1,3 +1,4 @@
+import { createDaytonaProvisioner } from "./daytona";
 import { createFlyMachinesProvisioner } from "./fly";
 import type { SandboxProvisioner, SandboxProvisionerFactory } from "./types";
 
@@ -34,6 +35,16 @@ export const SANDBOX_ADAPTERS: ReadonlyArray<SandboxAdapterSpec> = [
         appName: value(env, "FLY_APP_NAME"),
         image: value(env, "FLY_IMAGE") || "docker.io/library/alpine:latest",
         region: env.FLY_REGION,
+      }),
+  },
+  {
+    providerId: "daytona",
+    envVars: ["DAYTONA_API_KEY"],
+    build: (env) =>
+      createDaytonaProvisioner({
+        token: value(env, "DAYTONA_API_KEY"),
+        snapshot: env.DAYTONA_SNAPSHOT,
+        target: env.DAYTONA_TARGET,
       }),
   },
 ];

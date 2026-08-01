@@ -2,12 +2,11 @@
 type: Mission
 title: Periodic Research Target: Computer Use via Playwright
 slug: periodic-research-target-computer-use-via-playwright
-status: active
+status: approved
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
 strategy: periodically-benchmark-computer-use-browser-agent-capabilities
-drive_authorized: true
 tickets:
   - 20260714005201-kickoff-propose-periodic-research.md
   - 20260714010000-computer-use-via-playwright-topic.md

@@ -14,6 +14,12 @@ import { createOpenAiImageGenerationClient } from "../vendors/llm/openai";
 import { createXaiImageGenerationClient } from "../vendors/llm/xai";
 import { PROMPT_MANIFEST } from "./domain/manifest";
 import {
+  imageRecordFields,
+  persistGeneratedImage,
+  shouldPersistImage,
+  type PersistImageContext,
+} from "./domain/image-store";
+import {
   scorePromptAdherence,
   scoreTextRenderAccuracy,
   summarizeStat,
@@ -32,6 +38,13 @@ export type ImageGenerationRunOptions = Readonly<{
   fixture: boolean;
   trials: number;
   modelIds?: ReadonlyArray<string>;
+  /**
+   * Absolute `images/` directory to persist each practical-category image into.
+   * Set only by the real-run entrypoint; when absent (the keyless fixture path
+   * and every unit test that does not opt in) no image bytes are written, so the
+   * fixture output stays byte-stable and commits no binaries.
+   */
+  persistImagesDir?: string;
 }>;
 
 const FIXTURE_TIMESTAMP = "2026-01-01T00:00:00.000Z";
@@ -197,23 +210,30 @@ const judgeFor = (fixture: boolean): Judge => {
   );
 };
 
-const byteLengthOfBase64 = (base64: string): number =>
-  Math.floor((base64.replace(/=+$/, "").length * 3) / 4);
-
 const runPromptOnce = async (
   client: ImageGenerationClient,
   judge: Judge,
   prompt: ImagePrompt,
   repetition: number,
+  persist: PersistImageContext | undefined,
 ): Promise<ImageGenCallRecord> => {
   const image = await client.generateImage(prompt.prompt);
+  // sha256 + byte length are recorded for every image (mechanical or not); the
+  // relative imagePath is added only when the image is actually persisted (a
+  // real run of a practical-category prompt).
+  const persisted =
+    persist !== undefined && shouldPersistImage(prompt)
+      ? await persistGeneratedImage(image, prompt, repetition, persist)
+      : undefined;
   const base = {
     promptId: prompt.id,
+    category: prompt.category,
     kind: prompt.kind,
     repetition,
     latencyMs: image.elapsedMs,
-    imageByteLength: byteLengthOfBase64(image.base64),
+    ...imageRecordFields(image.base64),
     imageMimeType: image.mimeType,
+    ...(persisted === undefined ? {} : { imagePath: persisted.imagePath }),
   };
   if (prompt.kind === "adherence") {
     const answers = await judge.rubric(image, prompt);
@@ -288,10 +308,16 @@ export const runImageGeneration = async (
   for (const card of selectedCards(options.modelIds)) {
     try {
       const client = generationClientFor(card, options.fixture);
+      const persist =
+        options.persistImagesDir === undefined
+          ? undefined
+          : { dir: options.persistImagesDir, modelId: card.id };
       const calls: ImageGenCallRecord[] = [];
       for (let repetition = 0; repetition < trials; repetition += 1) {
         for (const prompt of PROMPT_MANIFEST.prompts) {
-          calls.push(await runPromptOnce(client, judge, prompt, repetition));
+          calls.push(
+            await runPromptOnce(client, judge, prompt, repetition, persist),
+          );
         }
       }
       runs.push(
@@ -345,6 +371,6 @@ export const estimateImageGeneration = (
     "image-generation estimate (real run; judge token count is an approximation):",
     ...lines,
     `  total: ~$${total.toFixed(2)} (agreed ceiling: $20/trial — stop for re-approval above it)`,
-    "No persistent provider resources are created; generated images are judged in memory and discarded.",
+    "No persistent provider resources are created. Practical-category images are written into the local dated frame under images/ (size-capped); mechanical probe images are judged and discarded.",
   ].join("\n");
 };

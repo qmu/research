@@ -192,6 +192,13 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     source: "https://developers.openai.com/api/docs/models/gpt-5.1-codex-mini",
   },
   // ── Google ─────────────────────────────────────────────────────────────────
+  // Gemini prices were re-verified against the official pricing page at this
+  // refresh (2026-07): the Flash and Flash-Lite tiers each turned a generation.
+  // The new Gemini 3.6 Flash and Gemini 3.5 Flash-Lite are the CURRENT tier; the
+  // former Gemini 3.5 Flash and Gemini 3.1 Flash-Lite are RETAINED as
+  // previous-generation entries, each paired to its successor so one sweep runs
+  // both under identical conditions (same tier, same low/medium/high ladder). Pro
+  // is unchanged — Gemini 3.5 Pro is announced but not yet GA.
   {
     id: "google-gemini-3-1-pro",
     provider: "google",
@@ -205,15 +212,51 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     source: "https://ai.google.dev/gemini-api/docs/pricing",
   },
   {
+    id: "google-gemini-3-6-flash",
+    provider: "google",
+    tier: "mid",
+    modelName: "Gemini 3.6 Flash",
+    apiModelId: "gemini-3.6-flash",
+    released: "2026-07",
+    inputCostPerMTok: 1.5,
+    outputCostPerMTok: 7.5,
+    effortLevels: ["low", "medium", "high"],
+    // Current Flash tier: same effort ladder as the 3.5 Flash it supersedes, so
+    // the head-to-head varies only the model id.
+    generation: "current",
+    supersedes: "google-gemini-3-5-flash",
+    source: "https://ai.google.dev/gemini-api/docs/pricing",
+  },
+  {
+    id: "google-gemini-3-5-flash-lite",
+    provider: "google",
+    tier: "small",
+    modelName: "Gemini 3.5 Flash-Lite",
+    apiModelId: "gemini-3.5-flash-lite",
+    released: "2026-07",
+    inputCostPerMTok: 0.3,
+    outputCostPerMTok: 2.5,
+    effortLevels: ["low", "medium", "high"],
+    // Current Flash-Lite tier, superseding Gemini 3.1 Flash-Lite.
+    generation: "current",
+    supersedes: "google-gemini-3-1-flash-lite",
+    source: "https://ai.google.dev/gemini-api/docs/pricing",
+  },
+  // Previous generation, retained for this controlled round. Kept at their
+  // web-verified former prices and paired to their successors; the dated frame
+  // preserves them regardless of whether they stay live after this round.
+  {
     id: "google-gemini-3-5-flash",
     provider: "google",
     tier: "mid",
     modelName: "Gemini 3.5 Flash",
     apiModelId: "gemini-3.5-flash",
     released: "2026",
-    inputCostPerMTok: 0.3,
-    outputCostPerMTok: 2.5,
+    inputCostPerMTok: 1.5,
+    outputCostPerMTok: 9,
     effortLevels: ["low", "medium", "high"],
+    generation: "previous",
+    supersededBy: "google-gemini-3-6-flash",
     source: "https://ai.google.dev/gemini-api/docs/pricing",
   },
   {
@@ -223,9 +266,11 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     modelName: "Gemini 3.1 Flash-Lite",
     apiModelId: "gemini-3.1-flash-lite",
     released: "2026",
-    inputCostPerMTok: 0.1,
-    outputCostPerMTok: 0.4,
+    inputCostPerMTok: 0.25,
+    outputCostPerMTok: 1.5,
     effortLevels: ["low", "medium", "high"],
+    generation: "previous",
+    supersededBy: "google-gemini-3-5-flash-lite",
     source: "https://ai.google.dev/gemini-api/docs/pricing",
   },
   // ── xAI (OpenAI-compatible endpoint) ─────────────────────────────────────────

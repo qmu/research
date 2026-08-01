@@ -17,6 +17,7 @@ import {
 } from "./information-accuracy";
 import { isNoEffortLevel } from "./effort";
 import { providerDisplayName } from "./provider";
+import { renderGenerationDeltaSection } from "./generational-delta";
 
 // Render the comparison result page as Markdown — a comprehensive, objective
 // research report, not just a table. Provenance (curated / measured / fixtured /
@@ -584,6 +585,14 @@ export const renderComparisonReport = (
 
   const perTrial = detail === "full" ? `\n${perTrialSection(configs)}\n` : "";
   const historyCharts = historyChartsSection(options.history);
+  // Former→new generational deltas, read from the registry pairing metadata.
+  // Empty (and thus omitted) when the sweep carries no pairing, so a report over
+  // unpaired models — including the golden snapshot — stays byte-stable.
+  const generationSection = renderGenerationDeltaSection(configs, {
+    headingLevel: 2,
+  });
+  const generationBlock =
+    generationSection === "" ? "" : `\n${generationSection}\n`;
 
   return `---
 title: LLM model comparison
@@ -689,7 +698,7 @@ means the deterministic fixture client produced the metric cell because no API k
 was used. \`n/a (error)\` means every trial for that
 configuration failed. Provenance is written in the cell text rather than encoded
 only by color.
-${historyCharts}${aspects}
+${generationBlock}${historyCharts}${aspects}
 ${reviewsSection(configs, detail)}
 ${perTrial}
 ${transparencySection(result)}

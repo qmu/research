@@ -14,3 +14,33 @@ services:
     volumes:
       - ../../:/repo
     command: make test
+
+  # The VitePress preview site, published on 4173 — the port the
+  # `research.qmu.dev` tunnel ingress already points at, so the site is reachable
+  # publicly without touching the tunnel config. Bound to 127.0.0.1 because
+  # cloudflared runs on this host; nothing else needs to reach the port.
+  #
+  # Deliberately NOT built from workloads/docker/Dockerfile. That image is
+  # alpine/musl, and this service shares the host's `docs/node_modules` through
+  # the bind mount — a musl container cannot execute esbuild and rollup binaries
+  # installed against the host's glibc. `node:22-bookworm-slim` matches the host,
+  # so one install serves both. (Installing separately inside the image instead
+  # fails on the other side: the container writes as a subuid under rootless
+  # podman and cannot create files in the bind-mounted repo.)
+  #
+  # `--host 0.0.0.0` pairs with `server.host: true` in docs/.vitepress/config.ts:
+  # a dev server on loopback inside the container cannot be published. HMR_TUNNEL
+  # makes hot reload ride wss:443 (same config) because the browser arrives
+  # through the tunnel, not localhost. CHOKIDAR_USEPOLLING is required for file
+  # watching to fire across a bind mount, without which edits never hot-reload.
+  docs:
+    image: docker.io/library/node:22-bookworm-slim
+    working_dir: /work/docs
+    environment:
+      HMR_TUNNEL: "1"
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ../../:/work
+    ports:
+      - "127.0.0.1:4173:4173"
+    command: npm run dev -- --host 0.0.0.0 --port 4173
