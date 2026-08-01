@@ -8,6 +8,7 @@ commit_hash:
 category:
 depends_on:
 mission:
+claim: work-20260801-120826
 ---
 
 # `make test` / `build` / `lint` return 0 when a non-final package fails — CI called a red `main` green
