@@ -448,3 +448,90 @@ describe("renderGenerationDeltaSection", () => {
     expect(md).toContain("Output cost");
   });
 });
+
+// A direction is only readable against the sample that produced it. Re-running an
+// identical sweep hours apart moved sustained throughput by up to 88% on the same
+// configuration, so "−38% over 3 trials" and "−38% over 30" are different claims
+// and the section must not leave the reader to infer which one it is showing.
+describe("trial counts are stated where verdicts are stated", () => {
+  const pair = (previousN: number, currentN: number) => {
+    const withN = (mean: number, n: number): ProbeStats => ({
+      ...stats(),
+      throughputTokensPerSec: { ...agg(mean, n) },
+    });
+    const previous = config({
+      id: "old",
+      modelName: "Old",
+      effort: "low",
+      provenance: "measured",
+      stats: withN(100, previousN),
+    });
+    const current = config({
+      id: "new",
+      modelName: "New",
+      effort: "low",
+      provenance: "measured",
+      supersedes: "old",
+      generation: "current",
+      stats: withN(130, currentN),
+    });
+    return { previous, current };
+  };
+
+  it("carries each mean's contributing trial count onto the metric", () => {
+    const { previous, current } = pair(3, 3);
+    const delta = computeGenerationDelta(previous, current);
+    const tp = delta.measuredMetrics.find(
+      (m) => m.key === "throughputTokensPerSec",
+    );
+    expect(tp?.previousTrials).toBe(3);
+    expect(tp?.currentTrials).toBe(3);
+  });
+
+  it("renders a Trials column beside the spread", () => {
+    const { previous, current } = pair(3, 3);
+    const markdown = renderGenerationDeltaSection([previous, current]);
+    expect(markdown).toContain("| Run-to-run spread | Trials | Direction |");
+  });
+
+  it("shows both counts when the two generations differ in sample size", () => {
+    // An --only-errored repair can re-measure one side more often than the other,
+    // so a single number would misdescribe the pair.
+    const { previous, current } = pair(3, 5);
+    const delta = computeGenerationDelta(previous, current);
+    const tp = delta.measuredMetrics.find(
+      (m) => m.key === "throughputTokensPerSec",
+    );
+    expect(tp?.previousTrials).toBe(3);
+    expect(tp?.currentTrials).toBe(5);
+    expect(renderGenerationDeltaSection([previous, current])).toContain(
+      "| 3 / 5 |",
+    );
+  });
+
+  it("leaves curated cost facts without a trial count", () => {
+    // Cost is a registry fact, not a measurement — a trial count there would be
+    // a fabricated sample.
+    const { previous, current } = pair(3, 3);
+    const delta = computeGenerationDelta(previous, current);
+    for (const metric of delta.costMetrics) {
+      expect(metric.previousTrials).toBeNull();
+      expect(metric.currentTrials).toBeNull();
+    }
+  });
+
+  it("no longer hardcodes a trial count in the section intro", () => {
+    // The count is derived from the artifact, so it cannot drift from what ran.
+    const { previous, current } = pair(3, 3);
+    expect(renderGenerationDeltaSection([previous, current])).not.toContain(
+      "Each measurement is three trials",
+    );
+  });
+
+  it("records that deltas stay per effort level", () => {
+    const { previous, current } = pair(3, 3);
+    expect(renderGenerationDeltaSection([previous, current])).toContain(
+      "per effort level",
+    );
+  });
+});
