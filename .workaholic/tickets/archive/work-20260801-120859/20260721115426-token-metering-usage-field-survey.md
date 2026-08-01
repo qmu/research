@@ -3,7 +3,7 @@ created_at: 2026-07-21T11:54:26+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [Domain, UX]
-effort:
+effort: 4h
 commit_hash:
 category: Added
 depends_on:
@@ -128,3 +128,71 @@ survey turns this into an explicit, per-subject, evidence-based result.
   builder on that SDK would get.
 - **Plain language.** Follow the terminology standard from
   the plain-language sweep ticket — no coined/mixed-script terms in the new prose.
+
+## Final Report
+
+The keyless scaffold (implementation steps 1–5) is built and covered. **Step 6,
+the real survey, is not run**: it is billable and explicitly proposal-gated, so
+it stays with the owner. That split is the ticket's own instruction — the
+proposal-first gate blocks the spend, not the scaffold.
+
+**What was built**
+
+- `domain/usage-survey.ts` — the axis as pure data plus a pure renderer. Each row
+  carries the dimensions the ticket named: consumed input and output on a
+  non-streaming response, the streaming case with its exact opt-in string, what
+  the reachable SDK layer does to the figures (`preserved` / `aggregated` /
+  `dropped`), the extra fields named as the response names them
+  (cached input, reasoning tokens, search units), and per-row provenance.
+- The subject set spans all three surface kinds the ticket required: the direct
+  provider APIs (OpenAI, Anthropic, Google Gemini, xAI), an **agent-SDK layer**,
+  and the **domain-specific** case (Perplexity, which bills search separately).
+- `TokenMeteringResult` gains `usageSurvey`; the runner emits the fixture survey.
+- The report gains a `#### Usage-field survey` section rendering the table with a
+  note stating plainly that nothing has been surveyed against a real response yet.
+
+**The article-framing fix is the substantive part.** The introduction previously
+opened "This report measures whether the input tokens an LLM API bills for can be
+counted without the provider's tokenizer library" — which read as *the topic* is
+input-only. It now names two capabilities explicitly: **pre-flight prediction**
+(input-only *by necessity*, because output tokens do not exist yet) and
+**post-hoc actual usage** (input *and* output, read off the response). It also
+states how they reinforce each other — reported usage is the ground truth the
+counting axis validates against — so the provider list is not duplicated.
+
+**No fabrication, machine-checked.** Every keyless row is `fixtured` with every
+availability dimension `unknown` and no extra fields, and a test asserts exactly
+that: a keyless row may not claim `reported` for any dimension. Documentation is
+not evidence. This is the property most at risk of being "helpfully" filled in
+from provider docs by a later session.
+
+**A limitation worth stating plainly.** The committed
+`token-metering-comparison.md` did **not** change, and `make drift` stayed
+byte-stable, despite the renderer change. That is not a failure: the current page
+for this topic is composed from the measured history frame
+(`docs/research-reports/history/token-metering/2026-07-17T03-02-34-699Z/`), not
+from the live keyless render. The new section will reach the published page when
+a real run archives a new frame — i.e. at step 6. The renderer output was
+verified directly instead.
+
+### Discovered Insights
+
+- **Insight**: A renderer change to a frame-composed topic is invisible to both
+  the published page and `make drift`.
+  **Context**: `composeCurrentPagesFromLatestMeasuredFrame` restores the current
+  page from the newest measured frame, so the keyless render is computed and then
+  discarded for any topic that has one. `make drift` therefore passes on a
+  renderer change it did not exercise. Unit tests are the only gate on such a
+  change, and "drift is green" must not be read as "the new section works".
+- **Insight**: The two capabilities were conflated in the article's opening
+  sentence, not in the code.
+  **Context**: The domain always modelled input counting honestly; what said
+  "input only" was the framing. A reader took that as the topic's scope rather
+  than the method's limit — which is why the fix is a rewrite of the
+  introduction, not a change to any measurement.
+- **Insight**: Streaming is the dimension a builder gets wrong silently.
+  **Context**: Several providers omit the usage object from a streamed response
+  unless the request opts in, so a meter written and tested against non-streaming
+  responses records zero the moment it switches to streaming — no error, just
+  missing billing data. The survey models the opt-in as a first-class cell with
+  the exact flag string, rather than a footnote.
