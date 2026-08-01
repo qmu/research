@@ -39,7 +39,6 @@ export const main = async (): Promise<void> => {
     process.stdout.write(`${estimateImageGeneration(modelIds, trials)}\n`);
   }
 
-  const result = await runImageGeneration({ fixture, trials, modelIds });
   const canonicalPath =
     process.env.OUTPUT_PATH ??
     resolve(
@@ -49,6 +48,20 @@ export const main = async (): Promise<void> => {
   const reportPath = fixture
     ? canonicalPath
     : canonicalPath.replace(/\.md$/, ".real.md");
+  // Real runs persist each practical-category image into the report's
+  // `.real.images` sibling; the archive step then moves it into the dated
+  // frame's `images/` directory. The keyless fixture path passes no directory,
+  // so it writes no binaries and stays byte-stable.
+  const persistImagesDir = fixture
+    ? undefined
+    : canonicalPath.replace(/\.md$/, ".real.images");
+
+  const result = await runImageGeneration({
+    fixture,
+    trials,
+    modelIds,
+    persistImagesDir,
+  });
   const artifactPath = reportPath.replace(/\.md$/, ".data.json");
   const rendered = {
     ...result,

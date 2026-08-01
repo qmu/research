@@ -10,6 +10,7 @@ import type { ImagePrompt } from "./types";
 const adherencePrompt: ImagePrompt = {
   id: "p",
   kind: "adherence",
+  category: "mechanical",
   prompt: "x",
   constraints: [
     { id: "a", question: "A?" },

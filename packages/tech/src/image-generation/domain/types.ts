@@ -31,9 +31,37 @@ export type PromptConstraint = Readonly<{
 
 export type ImagePromptKind = "adherence" | "text";
 
+/**
+ * The practical use-case a prompt exercises. `mechanical` is the manifest-v1
+ * shape family (abstract shapes / exact-text probes) kept so history stays
+ * comparable; the other five are the manifest-v2 practical categories whose
+ * generated images become the qualitative exhibit on the published pages. Each
+ * category still carries machine-checkable rubric constraints, so scoring stays
+ * objective — the categories add realistic subjects, not opinion scoring.
+ */
+export type ImagePromptCategory =
+  | "mechanical"
+  | "presentation-slide"
+  | "photo"
+  | "character"
+  | "infographic"
+  | "meeting-document";
+
+/** The five practical categories introduced in manifest v2 (order = display
+ * order on the published pages). `mechanical` is intentionally excluded. */
+export const PRACTICAL_IMAGE_CATEGORIES: ReadonlyArray<ImagePromptCategory> = [
+  "presentation-slide",
+  "photo",
+  "character",
+  "infographic",
+  "meeting-document",
+];
+
 export type ImagePrompt = Readonly<{
   id: string;
   kind: ImagePromptKind;
+  /** The practical use-case this prompt exercises (v2). */
+  category: ImagePromptCategory;
   prompt: string;
   /** For `adherence` prompts: the rubric the judge answers. */
   constraints: ReadonlyArray<PromptConstraint>;
@@ -57,15 +85,28 @@ export type Stat = Readonly<{
   n: number;
 }>;
 
-/** One generation + judgement, recorded in full (minus the image binary — the
- * artifact keeps byte length and scores, never the bytes). */
+/** One generation + judgement, recorded in full. The artifact keeps byte
+ * length, sha256, and scores; on a real run a practical-category image is also
+ * persisted next to the frame and its relative path recorded (`imagePath`), so
+ * the page can embed the actual picture. The image bytes themselves are never
+ * inlined into the JSON — the artifact stays a text record that points at the
+ * committed image file. */
 export type ImageGenCallRecord = Readonly<{
   promptId: string;
+  category: ImagePromptCategory;
   kind: ImagePromptKind;
   repetition: number;
   latencyMs: number;
   imageByteLength: number;
   imageMimeType: string;
+  /** Frame-relative path to the persisted image (real runs, practical
+   * categories only), e.g. `images/grok-imagine-image--photo-red-apple--r0.png`.
+   * Absent on the keyless fixture path and for `mechanical` prompts. */
+  imagePath?: string;
+  /** SHA-256 of the generated image bytes (hex). Recorded whenever the image is
+   * persisted, so a committed frame image can be integrity-checked without the
+   * original run. */
+  imageSha256?: string;
   /** Judge rubric answers (adherence prompts). */
   judgeAnswers?: ReadonlyArray<JudgeAnswer>;
   /** Judge transcription of rendered text (text prompts). */

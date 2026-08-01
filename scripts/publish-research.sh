@@ -163,6 +163,22 @@ while read -r slug dest_slug; do
   copied=$((copied + 1))
 done <"$PLAN_FILE"
 
+# Carry the current pages' shared image assets (manifest-v2 image-generation
+# embeds generated images by the relative path images/<file>). Copied whole so
+# the pictures resolve beside the Japanese reports on qmu-co-jp. A text-only
+# publish set has no such directory and this is skipped.
+IMAGES_SRC="$REPORTS_DIR/images"
+if [ -d "$IMAGES_SRC" ]; then
+  IMAGES_DEST="$DEST_DIR/images"
+  if [ "$DRY" -eq 1 ]; then
+    echo "would copy image assets: docs/research-reports/images/ -> docs/llm-foundation-research/images/"
+  else
+    mkdir -p "$IMAGES_DEST"
+    cp -R "$IMAGES_SRC/." "$IMAGES_DEST/"
+    echo "copied image assets: docs/research-reports/images/ -> docs/llm-foundation-research/images/"
+  fi
+fi
+
 if [ "$DRY" -eq 0 ]; then
   echo "Done. $copied per-topic report(s) copied to $QMU_DIR/docs/llm-foundation-research/."
   echo "Review and commit the changes in the qmu-co-jp repository to deploy."
