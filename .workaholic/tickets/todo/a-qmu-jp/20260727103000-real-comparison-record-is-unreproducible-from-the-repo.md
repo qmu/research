@@ -8,6 +8,7 @@ commit_hash:
 category: Changed
 depends_on:
 mission:
+claim: work-20260801-120839
 ---
 
 # The real comparison record is a gitignored machine-local file, so a scoped sweep on a fresh worktree silently replaces the published table instead of merging into it
