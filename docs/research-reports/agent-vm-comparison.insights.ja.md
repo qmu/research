@@ -1,61 +1,68 @@
 ---
 title: エージェントVM/サンドボックス
 source_artifact: docs/research-reports/agent-vm-comparison.data.json
+source_commit: 8da6dbf
+insights_model: source-report
 translated_from: agent-vm-comparison.md
-provenance: authored-fixture-translation
+translation_model: claude-sonnet-5
+generated_at: 2026-07-18T11:33:04.230Z
 trials: 0
+provenance: llm-translation
 ---
-
 # エージェントVM/サンドボックス
 
-このレポートは、AIエージェントが untrusted なコードを実行できるサンドボックス／microVM 基盤を比較する。参照列（分離モデル、価格、機能）は各プロバイダーのドキュメントから選定したカタログ情報であり、コールドスタートとコストの列はライブプローブ、またはセルフテストページではキー不要のフィクスチャが生成する。
+本レポートは、AI エージェントが信頼できないコードを実行できるサンドボックス／マイクロVMプラットフォームを比較するものである。参照列（分離方式、価格、機能）は各プロバイダーのドキュメントから精選したものであり、コールドスタートおよびコスト列はライブプローブ、またはセルフテストページ上のキー不要のフィクスチャによって生成される。
 
 ## 1. 調査の目的
 
-本調査の目的は、どのようなエージェントVM／サンドボックス基盤が存在し、どのようにコードを分離し、いくらかかり、どれだけ速く起動するか——エージェントのコード実行層をどのバックエンドの上に築くかを決める特性——を記録することである。
+目的は、どのエージェントVM／サンドボックスプラットフォームが存在し、それらがコードをどのように隔離し、コストはどれくらいで、どれくらい速く起動するか——すなわち、エージェントのコード実行レイヤーがどのバックエンド上に構築されるかを決定づける特性——を記録することである。
 
 ## 2. 測定対象
 
 ### 対象モデル
 
-対象は、選定済みレジストリ（`packages/tech/src/agent-vm/models.ts`）に含まれる8プロバイダーであり、各行は引用元と最終確認日を持つ。
+対象は、キュレーションされたレジストリ（`packages/tech/src/agent-vm/models.ts`）に含まれる8のプロバイダーであり、それぞれに引用元と最終確認日が付されている。
 
-- **AWS Lambda microVMs**（`aws-lambda-microvm`）: firecracker 分離 — 出典 https://aws.amazon.com/lambda/pricing/（確認 2026-07-14）。
-- **Fly.io Machines**（`fly-machines`）: firecracker 分離 — 出典 https://fly.io/docs/about/pricing/（確認 2026-07-14）。
-- **E2B**（`e2b`）: firecracker 分離 — 出典 https://e2b.dev/docs/pricing（確認 2026-07-14）。
-- **Modal**（`modal`）: gvisor 分離 — 出典 https://modal.com/pricing（確認 2026-07-14）。
-- **Daytona**（`daytona`）: container 分離 — 出典 https://www.daytona.io/pricing（確認 2026-07-14）。
-- **Cloudflare Containers / Sandbox SDK**（`cloudflare-sandbox`）: container 分離 — 出典 https://developers.cloudflare.com/containers/pricing/（確認 2026-07-14）。
-- **Vercel Sandbox**（`vercel-sandbox`）: firecracker 分離 — 出典 https://vercel.com/docs/vercel-sandbox（確認 2026-07-14）。
-- **Northflank Sandboxes**（`northflank`）: kata 分離 — 出典 https://northflank.com/pricing（確認 2026-07-14）。
+- **AWS Lambda microVMs** (`aws-lambda-microvm`): firecracker isolation — 出典 https://aws.amazon.com/lambda/pricing/ （確認日 2026-07-14）。
+- **Fly.io Machines** (`fly-machines`): firecracker isolation — 出典 https://fly.io/docs/about/pricing/ （確認日 2026-07-14）。
+- **E2B** (`e2b`): firecracker isolation — 出典 https://e2b.dev/docs/pricing （確認日 2026-07-14）。
+- **Modal** (`modal`): gvisor isolation — 出典 https://modal.com/pricing （確認日 2026-07-14）。
+- **Daytona** (`daytona`): container isolation — 出典 https://www.daytona.io/pricing （確認日 2026-07-14）。
+- **Cloudflare Containers / Sandbox SDK** (`cloudflare-sandbox`): container isolation — 出典 https://developers.cloudflare.com/containers/pricing/ （確認日 2026-07-14）。
+- **Vercel Sandbox** (`vercel-sandbox`): firecracker isolation — 出典 https://vercel.com/docs/vercel-sandbox （確認日 2026-07-14）。
+- **Northflank Sandboxes** (`northflank`): kata isolation — 出典 https://northflank.com/pricing （確認日 2026-07-14）。
 
 ### 対象メトリクス
 
-参照メトリクス（カタログ選定）: 分離モデル、公表 $/vCPU-hr と $/GB-hr（低いほど良い）、課金粒度、最大実行時間（高いほど良い）、スナップショット/レジューム、ファイルシステム永続性、ネットワークエグレス、GPU 提供の有無。測定メトリクス（プローブ）: コールドスタート p50/p95（ms、低いほど良い）、ウォーム再利用レイテンシ（ms、低いほど良い）、固定タスクの実時間（ms、低いほど良い）、およびそこから導出される固定タスクコスト（USD、低いほど良い）。
+参考メトリクス（キュレーション情報）：分離モデル、公表されている$/vCPU-hrおよび$/GB-hr（低いほど良い）、課金の粒度、最大実行時間（高いほど良い）、スナップショット/再開機能、ファイルシステムの永続性、ネットワーク egress、GPUの利用可否。計測メトリクス（実測値）：コールドスタートp50/p95（ms、低いほど良い）、ウォームリユースのレイテンシー（ms、低いほど良い）、固定タスクの実時間（ms、低いほど良い）、および派生値としての固定タスクコスト（USD、低いほど良い）。
 
 ## 3. 範囲と制約
 
-- **公称の分離であり、監査ではない。** 分離モデルの列は各ベンダーが文書で述べる境界（Firecracker microVM、gVisor、Kata、コンテナ）を記録する。本トピックはその境界のペネトレーションテストを行わない。
-- **価格は選定済みのカタログ情報**（標準ティア）であり、頻繁に変動する——全行が出典と最終確認日を持ち、トライアル時に必ず再確認しなければならない。
-- **コストは計算時間のみ。** 固定タスクコストはタスクの vCPU 秒を公表レートで価格化したものであり、起動ごとの最低課金、アカウント料金、エグレスは注記に留め、数値には織り込まない。
-- フィクスチャ経路はキー不要かつ決定論的である。実際のコールドスタートの数値は、オーナーが認証情報を用いて、承認済みコスト上限の範囲内で実経路を実行した場合にのみ現れる（まず `--estimate` を実行すること）。プローブアダプターのないプロバイダーは、アダプターが実装されるまで `unreachable` のままである。
-- 特定時点のもの: 測定された挙動は `2026-01-01T00:00:00.000Z` 時点の各プラットフォームを反映する。参照値は各行の最終確認日時点のものである。
+- **申告済みの分離方式であり、監査済みではない。** 分離列には各ベンダーが文書で公表している境界（Firecracker microVM、gVisor、Kata、コンテナ）を記録しているが、本トピックはその境界に対する侵入テストは行わない。
+- **価格は標準ティアにおけるキュレーション済みカタログデータ**であり、頻繁に変動する — 各行にはソースと最終確認日が付記されており、トライアル実施時には必ず再確認しなければならない（MUST）。
+- **コストは計算時間のみを対象とする。** 固定タスクのコストは、そのタスクのvCPU秒数を公表レートで価格化したものである。起動ごとの最低課金、アカウント料金、送信データ転送量については注記するにとどまり、数値には織り込まない。
+- フィクスチャ経路はキー不要かつ決定的である。実際のコールドスタート数値は、承認済みのコスト上限内で（まず`--estimate`を実行したうえで）オーナーが認証情報を用いて実経路を実行した場合にのみ得られる。プローブアダプタを持たないプロバイダは、アダプタが実装されるまで`unreachable`のままとなる。
+- 時点情報：計測された挙動は`2026-01-01T00:00:00.000Z`時点のプラットフォームを反映しており、参考値は各行の最終確認日時点のものである。
 
 ## 4. 検証結果
 
-今回の実行では、8件のプロバイダー行のうち **8件をプローブ** した（残りは `unreachable` — プローブアダプター/認証情報が未整備 — または `error` の行であり、数値を捏造することは一切ない）。
+今回の実行では、プロバイダー行8件中**8件をプローブ**済みです（残りは `unreachable` — プローブ用アダプター/認証情報が未整備 — または `error` であり、数値を偽装したことは一度もありません）。
 
 | メトリクス | 最良（プロバイダー） | 中央値 | 最悪 |
-| ---------- | -------------------- | ------ | ---- |
+| ------ | --------------- | ------ | ----- |
 | コールドスタート p50 | 92 ms — E2B | 408 ms | 2856 ms |
 | コールドスタート p95 | 98 ms — E2B | 436 ms | 3052 ms |
 | 固定タスクコスト | $0.000001 — Northflank Sandboxes | $0.000002 | $0.000004 |
 
-「最良」「最悪」は各メトリクス自身の方向に従う（コールドスタートとコストは低いほど良い）。分離モデル、公表レート、機能の列はプロバイダー表の参照情報である。プロバイダーごとの完全な記録は第7節「検証データ」に記載している。
+「最良」「最悪」は各メトリクス固有の方向性に従います（コールドスタートもコストも、値が低いほど良好です）。分離モデル、公表レート、機能列はプロバイダー表内の参考データです。プロバイダーごとの完全な記録は、セクション7「検証データ」に記載しています。
+
+**推移 / Trend across surveys**
+
+本調査はシリーズ内で初めて比較可能な調査であるため、まだ複数回の調査にまたがる推移を図示することはできません。同一手法による2回目の調査がアーカイブされた時点で、ここに推移グラフが表示されるようになります。それ以前の調査については、検証データの項にリンクを記載しています。
 
 ## 5. 考察
 
-`fixtured`/`measured` の provenance を持つ行はコールドスタートとコストで比較できる。分離モデル、価格、機能は参照コンテキストである。コールドスタート p50 が低く p95 が高い場合はテールレイテンシのリスクが局在していることを示し、$/vCPU-hr が安く起動が遅い場合は応答性とコストのトレードオフを示す。
+`fixtured`/`measured` の来歴を持つ行は、コールドスタートとコストで比較可能である。分離性、価格、性能は参考情報として扱う。コールドスタートのp50が低い一方でp95が高い場合、テールレイテンシのリスクが局所化していることを示す。$/vCPU-hrが安価でも起動が遅い場合、応答性をコストと引き換えにしていることになる。
 
 ## 6. 再現方法
 
@@ -69,49 +76,47 @@ npm install
 # キー不要のセルフテスト（決定論的なフィクスチャプロビジョナー）:
 npm run research -- agent-vm --fixture
 
-# コストの事前確認、その後オーナー承認による実行（プロバイダー認証情報が必要）:
+# コストのプレビュー、その後オーナー限定の実実行（プロバイダーの認証情報が必要）:
 npm run research -- agent-vm --estimate
 npm run research -- agent-vm --real
 ```
 
 ### 再現コスト（目安）
 
-フィクスチャ経路はキー不要かつ無償である。実トライアルは、到達可能な各プロバイダーに起動と固定タスクの vCPU 秒分が課金される（参照表のプロバイダーごとの $/vCPU-hr を参照）。合意された範囲は1トライアルあたり $1–$8 であり、まず `--estimate` を実行しなければならない。
+フィクスチャ経路はキー不要かつ無コストである。実トライアルでは、到達可能な各プロバイダーに対して、その起動処理と固定タスクのvCPU秒数分の課金が発生する（プロバイダーごとの$/vCPU-hrは参照テーブルを参照）。合意されている範囲は1トライアルあたり$1〜$8であり、`--estimate`を先に実行する必要がある。
 
 ### クリーンアップ
 
-実アダプターは起動したすべてのサンドボックスを必ず破棄しなければならない（孤児リソースゼロ。RAG のティアダウン保証と同じ）。フィクスチャ経路は何もプロビジョニングしない。実行が書き出すのはローカルの Markdown/JSON アーティファクトのみである——コミット前に内容を確認すること。
+実アダプターは、起動したすべてのサンドボックスを必ず解体しなければならない（RAGのティアダウン保証と同様に、孤立リソースをゼロにする）。フィクスチャ経路は何もプロビジョニングしない。実行によりローカルのMarkdown/JSON成果物のみが書き出されるため、コミット前にレビューすること。
 
 ## 7. 検証データ
 
-**参照カタログ（選定）**
+**リファレンスカタログ（厳選）**
 
-| プロバイダー | 分離 | $/vCPU-hr | $/GB-hr | 課金 | 最大実行時間 | スナップショット | ファイルシステム | エグレス | GPU |
-| ------------ | ---- | --------- | ------- | ---- | ------------ | ---------------- | ---------------- | -------- | --- |
-| AWS Lambda microVMs | firecracker | $0.10000 | $0.01100 | per-100ms | 900s | no | ephemeral | restricted | no |
-| Fly.io Machines | firecracker | $0.02190 | $0.00530 | per-second | unbounded | yes | persistent | open | yes |
-| E2B | firecracker | $0.10000 | $0.01080 | per-second | 86400s | yes | persistent | open | no |
-| Modal | gvisor | $0.13500 | $0.00670 | per-second | 86400s | yes | persistent | open | yes |
-| Daytona | container | $0.05000 | $0.01250 | per-second | unbounded | yes | persistent | open | yes |
-| Cloudflare Containers / Sandbox SDK | container | $0.07200 | $0.00900 | per-second | unbounded | no | ephemeral | open | no |
-| Vercel Sandbox | firecracker | $0.12800 | $0.02120 | per-second | 2700s | no | ephemeral | open | no |
-| Northflank Sandboxes | kata | $0.01667 | $0.00833 | per-second | unbounded | yes | persistent | open | yes |
+| プロバイダー | 分離方式 | $/vCPU-hr | $/GB-hr | 課金方式 | 最大実行時間 | スナップショット | ファイルシステム | エグレス | GPU |
+| -------- | --------- | --------- | ------- | ------- | ----------- | -------- | ---------- | ------ | --- |
+| AWS Lambda microVMs | firecracker | $0.10000 | $0.01100 | 100ms単位 | 900s | なし | 一時的 | 制限あり | なし |
+| Fly.io Machines | firecracker | $0.02190 | $0.00530 | 秒単位 | 無制限 | あり | 永続的 | オープン | あり |
+| E2B | firecracker | $0.10000 | $0.01080 | 秒単位 | 86400s | あり | 永続的 | オープン | なし |
+| Modal | gvisor | $0.13500 | $0.00670 | 秒単位 | 86400s | あり | 永続的 | オープン | あり |
+| Daytona | container | $0.05000 | $0.01250 | 秒単位 | 無制限 | あり | 永続的 | オープン | あり |
+| Cloudflare Containers / Sandbox SDK | container | $0.07200 | $0.00900 | 秒単位 | 無制限 | なし | 一時的 | オープン | なし |
+| Vercel Sandbox | firecracker | $0.12800 | $0.02120 | 秒単位 | 2700s | なし | 一時的 | オープン | なし |
+| Northflank Sandboxes | kata | $0.01667 | $0.00833 | 秒単位 | 無制限 | あり | 永続的 | オープン | あり |
 
-**測定プローブ（固定タスク: ウォームなサンドボックス内で実行する有界のCPUループ（固定反復回数）。実時間はI/Oではなくプラットフォームの計算性能を分離して測る。）**
+**実測プローブ（固定タスク：ウォームなサンドボックス内で実行される、反復回数が固定された有界CPUループ。実時間はI/Oではなくプラットフォームの計算処理を分離して測定する。）**
 
-| プロバイダー | Provenance | Cold p50 | Cold p95 | Cold (mean±sd) | ウォーム再利用 | 固定タスク | タスクコスト | 備考 |
-| ------------ | ---------- | -------- | -------- | -------------- | -------------- | ---------- | ------------ | ---- |
-| AWS Lambda microVMs | fixtured | 612 ms | 654 ms | 614 ± 27 (n=5) | 72 ms | 118 ms | $0.000003 |  |
-| Fly.io Machines | fixtured | 2856 ms | 3052 ms | 2867 ± 126 (n=5) | 336 ms | 118 ms | $0.000001 |  |
-| E2B | fixtured | 92 ms | 98 ms | 92 ± 4 (n=5) | 11 ms | 118 ms | $0.000003 |  |
-| Modal | fixtured | 408 ms | 436 ms | 410 ± 18 (n=5) | 48 ms | 118 ms | $0.000004 |  |
-| Daytona | fixtured | 153 ms | 164 ms | 154 ± 7 (n=5) | 18 ms | 118 ms | $0.000002 |  |
-| Cloudflare Containers / Sandbox SDK | fixtured | 510 ms | 545 ms | 512 ± 23 (n=5) | 60 ms | 118 ms | $0.000002 |  |
-| Vercel Sandbox | fixtured | 255 ms | 273 ms | 256 ± 11 (n=5) | 30 ms | 118 ms | $0.000004 |  |
-| Northflank Sandboxes | fixtured | 1224 ms | 1308 ms | 1229 ± 54 (n=5) | 144 ms | 118 ms | $0.000001 |  |
+| プロバイダー | 出典 | コールド p50 | コールド p95 | コールド（平均±標準偏差） | ウォーム再利用 | 固定タスク | タスクコスト | 備考 |
+| -------- | ---------- | -------- | -------- | -------------- | ---------- | ---------- | --------- | ---- |
+| AWS Lambda microVMs | フィクスチャ由来 | 612 ms | 654 ms | 614 ± 27 (n=5) | 72 ms | 118 ms | $0.000003 |  |
+| Fly.io Machines | フィクスチャ由来 | 2856 ms | 3052 ms | 2867 ± 126 (n=5) | 336 ms | 118 ms | $0.000001 |  |
+| E2B | フィクスチャ由来 | 92 ms | 98 ms | 92 ± 4 (n=5) | 11 ms | 118 ms | $0.000003 |  |
+| Modal | フィクスチャ由来 | 408 ms | 436 ms | 410 ± 18 (n=5) | 48 ms | 118 ms | $0.000004 |  |
+| Daytona | フィクスチャ由来 | 153 ms | 164 ms | 154 ± 7 (n=5) | 18 ms | 118 ms | $0.000002 |  |
+| Cloudflare Containers / Sandbox SDK | フィクスチャ由来 | 510 ms | 545 ms | 512 ± 23 (n=5) | 60 ms | 118 ms | $0.000002 |  |
+| Vercel Sandbox | フィクスチャ由来 | 255 ms | 273 ms | 256 ± 11 (n=5) | 30 ms | 118 ms | $0.000004 |  |
+| Northflank Sandboxes | フィクスチャ由来 | 1224 ms | 1308 ms | 1229 ± 54 (n=5) | 144 ms | 118 ms | $0.000001 |  |
 
-完全な実行記録は [`agent-vm-comparison.data.json`](./agent-vm-comparison.data.json) としてコミットされている: 反復ごとのコールドスタートのサンプル、ウォーム再利用と固定タスクのタイミング、および導出コスト。
+完全な実行記録は[`agent-vm-comparison.data.json`](./agent-vm-comparison.data.json)としてコミットされている：反復ごとのコールドスタートサンプル、ウォーム再利用および固定タスクのタイミング、算出されたコスト。
 
-_この日本語ページはキーレス構築時に手作業で用意した暫定翻訳であり、最初の実トライアルで `research:translate-report` により再生成される。_
-
-Generated: 2026-01-01T00:00:00.000Z
+生成日時：2026-01-01T00:00:00.000Z
