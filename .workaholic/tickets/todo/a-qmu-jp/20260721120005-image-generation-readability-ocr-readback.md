@@ -8,6 +8,7 @@ commit_hash:
 category: Added
 depends_on:
 mission:
+claim: work-20260801-120905
 ---
 
 # Add a qualitative "readability" metric to image-generation — text-document output judged by OCR read-back
