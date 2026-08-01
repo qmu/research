@@ -19,6 +19,9 @@ import {
   archivesToPrune,
   buildHistoryEntry,
   latestArchive,
+  archivesOldestFirst,
+  mayWriteWholeRecord,
+  reconstructRecord,
   selectErrored,
 } from "../llm-model-comparison/domain/history";
 import { renderComparisonReport } from "../llm-model-comparison/domain/report";
@@ -243,6 +246,7 @@ type Args = Readonly<{
   // history/ and (re)render the real report from it. The "generate the report
   // anytime from committed history" path.
   renderLatest: boolean;
+  allowPartialRecord: boolean;
 }>;
 
 const parseList = (
@@ -280,6 +284,11 @@ const parseArgs = (argv: ReadonlyArray<string>): Args => {
     onlyErrored: argv.includes("--only-errored"),
     configs: parseList(argv, "--configs"),
     renderLatest: argv.includes("--render-latest"),
+    // Explicit consent to let a SCOPED run write its partial result out as the
+    // whole record when no base exists. Off by default: the silent version of
+    // this is the defect that would have cut the published tables from 47 rows
+    // to 12.
+    allowPartialRecord: argv.includes("--allow-partial-record"),
   };
 };
 
@@ -329,6 +338,40 @@ const loadPreviousCore = async (
     measuredAt: c.measuredAt ?? parsed.generatedAt,
   }));
   return { ...parsed, configs };
+};
+
+/**
+ * Rebuild the complete record from the COMMITTED archive frames.
+ *
+ * The machine-local `.real.data.json` is gitignored
+ * (`docs/research-reports/*.real.*`), so a fresh worktree has no previous
+ * record — and before this existed, a scoped run in that state produced a
+ * record containing only the configs it measured, which would have taken the
+ * published tables from 47 rows to 12. The frames are committed, so they are
+ * the reproducible base: folding them reconstructs the record without the
+ * untracked file and without re-running a paid sweep.
+ */
+const loadCommittedRecord = async (
+  archiveDir: string,
+): Promise<ComparisonCore | null> => {
+  const names = archivesOldestFirst(
+    (await readdir(archiveDir).catch(() => [])).filter(isLlmArchive),
+  );
+  if (names.length === 0) return null;
+  const frames: ComparisonCore[] = [];
+  for (const name of names) {
+    const core = JSON.parse(
+      gunzipSync(await readFile(join(archiveDir, name))).toString("utf8"),
+    ) as ComparisonCore;
+    frames.push({
+      ...core,
+      configs: core.configs.map((c) => ({
+        ...c,
+        measuredAt: c.measuredAt ?? core.generatedAt,
+      })),
+    });
+  }
+  return reconstructRecord(frames);
 };
 
 const historyPathFor = (historyBasePath: string): string =>
@@ -517,9 +560,13 @@ export const main = async (): Promise<void> => {
       process.exitCode = 1;
       return;
     }
-    const core = JSON.parse(
-      gunzipSync(await readFile(join(archiveDir, latest))).toString("utf8"),
-    ) as ComparisonCore;
+    // Render the record reconstructed from EVERY frame, not just the newest one.
+    // A frame is a snapshot of the configs its run touched, so the newest frame
+    // is not the fullest: rendering it alone produced a 6-row report where the
+    // published table carries 47. Folding the frames is what makes this path's
+    // own promise -- "generate the report anytime from committed history" --
+    // actually true.
+    const core = (await loadCommittedRecord(archiveDir)) as ComparisonCore;
     const rendered: ComparisonResult = {
       ...core,
       artifactPath: basename(artifactPath),
@@ -547,9 +594,44 @@ export const main = async (): Promise<void> => {
     args.configs !== null ||
     args.modelIds !== null ||
     args.efforts !== null;
-  const previous = selectorPresent
-    ? await loadPreviousCore(artifactPath)
-    : null;
+  const archiveDirForRun = join(dirname(canonicalMdPath), "history");
+  let previous = selectorPresent ? await loadPreviousCore(artifactPath) : null;
+  if (selectorPresent && !previous) {
+    // The local record is gitignored, so its absence is the NORMAL state of a
+    // fresh worktree -- not evidence that this is a first run. Fall back to the
+    // committed frames before concluding there is no base.
+    previous = await loadCommittedRecord(archiveDirForRun);
+    if (previous) {
+      process.stdout.write(
+        `no local record at ${artifactPath}; reconstructed a ${previous.configs.length}-config base ` +
+          `from the committed history frames\n`,
+      );
+    }
+  }
+  if (
+    !mayWriteWholeRecord({
+      selectorPresent,
+      hasBase: previous !== null,
+      allowPartialRecord: args.allowPartialRecord,
+    })
+  ) {
+    // Absence of an input that CHANGES THE RESULT must be reported, never
+    // absorbed. Without this, a scoped run with no base wrote its handful of
+    // measured configs out as the complete record and the published tables
+    // silently lost every model the run did not touch.
+    process.stderr.write(
+      `refusing to write a narrowed record: this run is SCOPED (a --models/--configs/--efforts/` +
+        `--only-errored selector is set) but no previous record was found.\n` +
+        `  looked for the local artifact: ${artifactPath}\n` +
+        `  looked for committed frames:   ${archiveDirForRun}\n` +
+        `A scoped run merges into a base; with no base its partial result would BECOME the whole\n` +
+        `record, dropping every configuration this run did not measure.\n` +
+        `Run a full sweep (no selector) to establish a record, or pass --allow-partial-record if a\n` +
+        `partial record is genuinely what you want.\n`,
+    );
+    process.exitCode = 1;
+    return;
+  }
 
   // Resolve the configuration matrix for this run.
   let matrix: ReadonlyArray<Configuration>;
