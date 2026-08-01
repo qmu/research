@@ -1,0 +1,37 @@
+# Ledger of what scripts/publish-research.sh last emitted to qmu-co-jp.
+# <dest-path-relative-to-qmu-co-jp>\t<sha256>. Written by the exporter;
+# committed so the ownership decision is reproducible on any clone.
+# A destination with NO entry here that differs from its source is treated
+# as authored downstream and is skipped -- see the script header.
+docs/llm-foundation-research/agent-sdk-comparison.md	778a5850ce122778c488c6bb62bd7e1c090692d27520e9af55b698ebde65a47d
+docs/llm-foundation-research/computer-use.md	bb73552dcfc0d40851efb0ddc6bc7af997b57acb21dc91a9f24341db57fc9eff
+docs/llm-foundation-research/deep-research-apis.md	d692a37d926d151c34ecdbf115a99351c091ab93f00ec81e318ae5b0d6cbdb3e
+docs/llm-foundation-research/foundation-models.md	505ee965d8c4e160c02a1e78edac1fcc181f0a9e144e8e53e35962f561555755
+docs/llm-foundation-research/history/accuracy/2026-07-09T11-14-36-434Z/llm-accuracy-comparison.ja.md	7fcbc5e1f1b05e5d1b688cd1cef3044b0d69824617f27cb1a5ddf6bd90805e54
+docs/llm-foundation-research/history/accuracy/2026-07-09T12-21-25-966Z/llm-accuracy-comparison.ja.md	5ee537780ae300816e5d318c43e1f22a67908562ab6697aa8dc460bb587af90b
+docs/llm-foundation-research/history/accuracy/2026-07-12T05-47-26-268Z/llm-accuracy-comparison.ja.md	50877666d1cb70ad432ce21d8fc5224967a29573dc70b526a940ba3b9e02709c
+docs/llm-foundation-research/history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja.md	66951ebba98f3f9ed6033c806bd39f4296fbb217fbaa3fadc49c46babaeb0636
+docs/llm-foundation-research/history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja.md	7c758efea904c05a52948d09677e64d08df4c591ba42994ce42d4637344b5ec6
+docs/llm-foundation-research/history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja.md	77454bff869dec703c1ea41daf0e87c9ffea2ef860ef69d0d4bc888625acbc5f
+docs/llm-foundation-research/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja.md	65c8abdb1103dae7ec39c720cd6a04486e93967b55e4a52d28bfde7b78e1451e
+docs/llm-foundation-research/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja.md	9f322774daeeecff193d8fcc41b8da4124aba00aeb8cd77af60fadfc25abe980
+docs/llm-foundation-research/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja.md	d7e6eb707a6f3684d98518a1885e6fdb018c71a32c67fe6cf62c84f9e8b7acc2
+docs/llm-foundation-research/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja.md	4f1a707998c0849b2a5c325abd04352f6da534b3ede0b31efc971f2f35ceec54
+docs/llm-foundation-research/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja.md	3142f71665d5d923cfb839e33dc96c47f16068aba8dfdff9e2dd9838ed0db00e
+docs/llm-foundation-research/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja.md	be24bdfe1dea91da4aa646a123e26bd8df55b82c45f1ceee63617f069279c77f
+docs/llm-foundation-research/history/speech/2026-07-19T02-22-34-606Z/speech-comparison.ja.md	be24bdfe1dea91da4aa646a123e26bd8df55b82c45f1ceee63617f069279c77f
+docs/llm-foundation-research/history/speed/2026-07-09T11-12-01-332Z/llm-speed-comparison.ja.md	0e724fd32937c7c0dfbf3b751de090b69c95464f494005a3dae19806c9b8480f
+docs/llm-foundation-research/history/speed/2026-07-09T11-52-54-627Z/llm-speed-comparison.ja.md	21460b1017bd2087be3f140260455a7927a7974c0744bb76e64361f40b370d54
+docs/llm-foundation-research/history/speed/2026-07-12T05-47-26-268Z/llm-speed-comparison.ja.md	0e684e27964dec41a219b49a95abb67f0f5732af332a734ed9411c2b77edc01d
+docs/llm-foundation-research/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.ja.md	1084d6550dab39132f879687edeb90bbaad4daec9b37da4166c521a0d41ee16c
+docs/llm-foundation-research/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja.md	8f090829182bd5411375cdb9c60ea538af809f7e7c0c17c81d71547406ad890f
+docs/llm-foundation-research/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja.md	c79e15e14dc52d1f2f343c9a164f08e6cf6b04b63f33d430bbfb031b52f73188
+docs/llm-foundation-research/llm-accuracy-comparison.md	d8af59c301ed9f96c314ea2326d277203fc0d5bdbea3d7521f46a5b1f398ed59
+docs/llm-foundation-research/llm-availability.md	c1285b2a9245706e173050879fd3ce1a75359a3ff5134e7fc6b6ae23ec86d63d
+docs/llm-foundation-research/llm-speed-comparison.md	2d9f0e50686329549e286a94dd97508d40cff496d41c75046b4a611867bf15b6
+docs/llm-foundation-research/ocr-comparison.md	b0b80893c27b046447697252a2cc1c72fc0e3fa72c0a1eeb14c19bc1c3e0ee45
+docs/llm-foundation-research/rag-benchmark.md	ee1dcf97ed0333c3c398456722440d8714ccda63f2b69dcf749859c768265b27
+docs/llm-foundation-research/speech-comparison.md	d577187ce4f0867675cd5d60fa2ca697ab3d636124bf19fc4d934331bf0c839c
+docs/llm-foundation-research/svg-generation.md	4e3b00b7605c2ca6f5a77b34fb12a8aa23068e308f8eadd9e44c14af765edc20
+docs/llm-foundation-research/token-metering.md	7bc74901d11e409a066848f02981c151c44df4473b6261ffa10c8d0ae39cb23d
+docs/llm-foundation-research/trend-recency-comparison.md	5f9e5b4c80ef757f8f8156671013622d74fcd29e0a9c2edea02404ce9b3544df

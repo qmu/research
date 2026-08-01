@@ -3,7 +3,7 @@
 
 PACKAGES := packages/tech packages/industry
 
-.PHONY: help install build test lint format docs a11y drift publish
+.PHONY: help install build test lint format docs a11y drift publish-guard publish
 
 help: ## List available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -34,6 +34,9 @@ a11y: ## Check the built preview site against WCAG 2.2 AA (needs `make build`)
 
 drift: ## Regenerate every keyless fixture and fail on drift from committed artifacts
 	@bash scripts/check-fixture-drift.sh
+
+publish-guard: ## Prove the exporter cannot silently overwrite downstream prose
+	@bash scripts/check-publish-guard.sh
 
 publish: ## Copy finished research Markdown to the corporate site
 	@bash scripts/publish-research.sh --all
