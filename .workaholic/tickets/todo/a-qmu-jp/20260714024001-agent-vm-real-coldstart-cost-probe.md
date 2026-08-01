@@ -112,6 +112,65 @@ The keyless framework is already merged (`42bb286`); the publish wiring landed
 this drive (#024002), so once tokens appear the path is
 `npm run agent-vm:estimate` (must be ≤ $8) → owner-approved `agent-vm:real`.
 
+## Blocked (2026-07-18 night drive)
+
+Attempted, still externally blocked — no bootable sandbox provider credential
+is reachable:
+
+- **AWS unreachable**: `aws sts get-caller-identity` returns NoCredentials and
+  the instance-metadata role list returns 404 (no IAM role attached), so the
+  AWS Lambda microVM subject cannot be measured (and has no adapter yet anyway).
+- **No provider tokens**: `packages/tech/.env` holds only LLM keys
+  (OPENAI/ANTHROPIC/GOOGLE/XAI) and Cloudflare (ACCOUNT_ID/API_TOKEN). None of
+  `FLY_API_TOKEN`/`FLY_APP_NAME`, `E2B_*`, `MODAL_*`, `VERCEL_*`, `DAYTONA_*`,
+  `NORTHFLANK_*` are set, so the one landed adapter (Fly Machines) cannot boot.
+- **Cloudflare is present but not a clean CI boot-timer**: the Cloudflare
+  Sandbox SDK is a deployed-Worker + container binding, not a REST create-and-
+  time endpoint like Fly Machines, so it has no `vendors/sandbox` adapter and
+  standing up / tearing down that infra unattended is outside this drive's
+  zero-orphan-resource scope.
+
+Demonstrated the honest real path rather than skipping silently:
+`npm run agent-vm:estimate` = 8 providers × 5 reps, ~$0.0004 compute
+(order-of-magnitude, inside the $8 ceiling), and `--real` (to a scratch
+OUTPUT_PATH) printed the missing-credential guidance and recorded all 8
+providers `provenance: "unreachable"` — no boot, no spend, no fabricated
+numbers, zero orphaned resources. Path stays: land a bootable provider token
+→ `agent-vm:estimate` (≤ $8) → owner-approved `agent-vm:real`.
+
+## Progress (2026-07-19 night drive) — second adapter landed (keyless)
+
+Widened measured-probe coverage per this ticket's "Remaining" list (adapters
+for E2B/Modal/Vercel/etc. as small `SANDBOX_ADAPTERS` entries):
+
+- **Daytona adapter** `vendors/sandbox/daytona.ts` over the documented Daytona
+  REST API (control plane `app.daytona.io/api`: create `POST /sandbox`, poll
+  `GET /sandbox/{id}` until `started`, stop/start for warm reuse, force-delete
+  teardown; toolbox exec `proxy.app.daytona.io/toolbox/{id}/process/execute`).
+  Plain HTTP through an injectable transport (no Daytona SDK dep — no new
+  `docs/dependency-decisions.md` entry needed), so boot/reuse/run/teardown are
+  unit-tested without a live token (7 tests). Registered in `SANDBOX_ADAPTERS`
+  (env `DAYTONA_API_KEY`); `apiReachable` flipped true for `daytona` and the
+  committed fixture artifact regenerated (one line: `apiReachable` false→true;
+  report md byte-stable). E2B was evaluated and deferred: its exec runs through
+  `envd` on the sandbox host, not a clean control-plane REST endpoint, so it
+  does not map to the boot/reuse/run/teardown port without live confirmation.
+- Exact Daytona create-body / toolbox-exec response shapes are documented-but-
+  unverified (same posture as the Fly adapter): confirmed on the first live run,
+  and a wrong shape degrades to an honest `error` row (runner try/catch). Set
+  `DAYTONA_API_KEY` (+ optional `DAYTONA_SNAPSHOT`/`DAYTONA_TARGET`) to boot.
+- 574 tech tests + lint + typecheck green (raw exit 0); fixture-drift byte-clean.
+
+## Blocked (2026-07-19 night drive)
+
+Still externally blocked for a **real run** — no bootable VM-provider credential
+is present this run: `FLY_API_TOKEN`/`FLY_APP_NAME`, `DAYTONA_API_KEY`, `E2B_*`,
+`MODAL_*`, `VERCEL_*`, `NORTHFLANK_*` all unset (`.env` holds only LLM keys +
+Cloudflare account/token). No monetary spend authorized. Reason recorded:
+**no reachable VM provider — FLY_API_TOKEN/FLY_APP_NAME (and now DAYTONA_API_KEY)
+absent this run.** The keyless adapter above is the productive work this drive;
+`--real` still records every provider `unreachable` with zero boots/spend.
+
 ### Spend approval (2026-07-22)
 
 Spend approved by the developer (a@qmu.jp) 2026-07-22 in the /mission planning

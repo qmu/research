@@ -13,6 +13,14 @@ describe("sandbox credential assembly", () => {
     expect(spec?.envVars).toContain("FLY_APP_NAME");
   });
 
+  it("knows the daytona adapter and its env var", () => {
+    const spec = findAdapterSpec("daytona");
+    expect(spec?.envVars).toEqual(["DAYTONA_API_KEY"]);
+    expect(
+      buildRealFactory({ DAYTONA_API_KEY: "k" })("daytona")?.provider,
+    ).toBe("daytona");
+  });
+
   it("returns no adapter for a provider that has none", () => {
     expect(findAdapterSpec("e2b")).toBeUndefined();
     expect(buildRealFactory({})("e2b")).toBeUndefined();
@@ -48,9 +56,17 @@ describe("sandbox credential assembly", () => {
         providerId: "fly-machines",
         missing: ["FLY_API_TOKEN", "FLY_APP_NAME"],
       },
+      {
+        providerId: "daytona",
+        missing: ["DAYTONA_API_KEY"],
+      },
     ]);
     expect(
-      adaptersMissingCredentials({ FLY_API_TOKEN: "t", FLY_APP_NAME: "app" }),
+      adaptersMissingCredentials({
+        FLY_API_TOKEN: "t",
+        FLY_APP_NAME: "app",
+        DAYTONA_API_KEY: "k",
+      }),
     ).toEqual([]);
   });
 });

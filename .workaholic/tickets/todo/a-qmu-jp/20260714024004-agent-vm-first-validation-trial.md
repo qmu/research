@@ -70,6 +70,31 @@ needs (publish wiring #024002, trend composition #024003) is now merged, so the
 first trial's frame will chart as soon as an owner runs
 `research -- agent-vm --estimate` → `--real` with credentials.
 
+## Blocked (2026-07-18 night drive)
+
+Attempted, still blocked on the same root cause as #024001: no bootable sandbox
+provider is reachable (AWS instance role absent; no Fly/E2B/Modal/Vercel/
+Daytona/Northflank tokens; Cloudflare present but deploy-coupled). A `--real`
+run therefore records every provider `unreachable`, which produces **no measured
+cold-start/cost data** — so this trial's Quality Gate (cold-start/cost
+*discriminate between providers*, cost verified against `--estimate` within the
+$8 ceiling) cannot be satisfied and the quarterly cadence cannot yet be
+validated. The estimate was run and recorded (~$0.0004 compute, inside the
+ceiling); no boot occurred, so no spend and zero orphaned resources. Unblocks
+the moment #024001 lands a bootable provider token.
+
+## Blocked (2026-07-19 night drive)
+
+Still blocked on the same root cause as #024001: **no reachable VM provider —
+FLY_API_TOKEN/FLY_APP_NAME (and now DAYTONA_API_KEY) absent this run.** #024001
+gained a second keyless adapter this drive (Daytona), widening the reachable set
+once a token appears, but no VM-provider token is present, so a `--real` run
+still records every provider `unreachable` and produces no measured cold-start/
+cost data — this trial's Quality Gate (metrics *discriminate between providers*,
+cost verified within the $8 ceiling) cannot be satisfied and the cadence cannot
+yet be validated. No boot, no spend, zero orphaned resources. Unblocks the
+moment #024001 has a bootable provider token.
+
 ### Spend approval (2026-07-22)
 
 Spend approved by the developer (a@qmu.jp) 2026-07-22 in the /mission planning

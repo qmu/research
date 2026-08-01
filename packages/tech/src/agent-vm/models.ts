@@ -88,7 +88,7 @@ export const SANDBOX_PROVIDERS: ReadonlyArray<SandboxProviderCard> = [
     filesystemPersistence: "persistent",
     networkEgress: "open",
     gpuAvailable: true,
-    apiReachable: false,
+    apiReachable: true,
     lastVerified: "2026-07-14",
     source: "https://www.daytona.io/pricing",
   },
