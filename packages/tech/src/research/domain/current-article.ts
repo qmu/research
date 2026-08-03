@@ -88,9 +88,13 @@ const capSeries = (
     })
     .slice(0, max);
 
-const TREND_LABEL = "**推移 / Trend across surveys**";
+/** Exported so the committed-frame guard (`history-frames.test.ts`) asserts
+ * against the very constants the renderer emits: a frame is "pure" precisely
+ * when it carries neither label, and renaming a label here must not silently
+ * make that guard vacuous. */
+export const TREND_LABEL = "**推移 / Trend across surveys**";
 
-const RELATED_LABEL = "**過去の調査 / Past surveys in this series**";
+export const RELATED_LABEL = "**過去の調査 / Past surveys in this series**";
 
 /** Distinct measured dates for a metric — a real trend needs at least two. */
 const distinctDates = (

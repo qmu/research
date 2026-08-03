@@ -49,10 +49,6 @@ This run has **4 measured** of 4 family rows (the rest are `unreachable` — mis
 
 Errors compare the self-count's prediction of the provider-reported total (content tokens + fitted wrapper overhead) against that reported total. Per-class error bands, calibration parameters, and per-sample rows are in section 7, Verification Data.
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
 ## 5. Analysis
 
 Families with `measured` provenance can be compared on holdout error: the exact-BPE families test whether the published vocabulary plus the published pre-tokenization pattern reproduce the billed count, and the estimator families test how far a per-class characters-per-token model can be trusted. A max error inside the target band means pre-call cost projection and per-principal attribution can run on the self-count alone; a class outside the band must be metered post-hoc from the response usage field, with the band stating the projection risk.
