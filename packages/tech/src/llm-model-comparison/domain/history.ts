@@ -14,6 +14,7 @@ import type {
   MetricStat,
   Provenance,
 } from "./types";
+import { mergeConfigs } from "./merge";
 
 const metricMethod = (
   provenance: Provenance,
@@ -113,3 +114,79 @@ export const archivesToPrune = (
   const excess = Math.max(0, sorted.length - Math.max(0, keep));
   return sorted.slice(0, excess);
 };
+
+// Every archive filename in chronological order (oldest first). ISO stamps are
+// fixed-width, so a lexicographic sort is chronological.
+export const archivesOldestFirst = (
+  filenames: ReadonlyArray<string>,
+): string[] => [...filenames].sort();
+
+/**
+ * Rebuild the COMPLETE measurement record by folding every committed archive
+ * frame together, oldest to newest.
+ *
+ * This is what makes the record reproducible from the repository. A single
+ * frame is only a snapshot of the configs its run touched: a scoped sweep
+ * archives a narrow frame, so the NEWEST frame is not the fullest one. On
+ * 2026-07-27 the newest committed frame held 6 configs while the published
+ * table needed 47, and the only artifact that could render the article was an
+ * untracked, machine-local `.real.data.json` on one checkout.
+ *
+ * Folding is correct rather than merely convenient, because it reuses the exact
+ * policy an incremental run already applies: `mergeConfigs` carries forward a
+ * config a later run did not touch and never lets a weaker provenance
+ * (`error`/`fixtured`) overwrite a real `measured` cell. Replaying the frames in
+ * order therefore reconstructs the same record the incremental runs built.
+ *
+ * Pure: the caller does the reading and decompressing. Returns null for no
+ * frames at all. The newest frame supplies the record's non-config metadata,
+ * since that is the most recent description of the instrument.
+ */
+export const reconstructRecord = <
+  T extends { configs: ReadonlyArray<ConfigRun> },
+>(
+  framesOldestFirst: ReadonlyArray<T>,
+): T | null => {
+  if (framesOldestFirst.length === 0) return null;
+  const newest = framesOldestFirst[framesOldestFirst.length - 1] as T;
+  const configs = framesOldestFirst.reduce<ConfigRun[]>(
+    (carried, frame) => mergeConfigs(carried, frame.configs),
+    [],
+  );
+  return { ...newest, configs };
+};
+
+/**
+ * Whether projecting `next` configurations over a page that currently carries
+ * `previous` is an implausible narrowing that must be refused.
+ *
+ * Any decrease qualifies. The published speed and accuracy tables are a census
+ * of the matrix, so a projection carrying fewer rows than the page already
+ * shows means the source record lost configurations rather than gained
+ * measurements — which is what a scoped sweep with no base produces. A genuine
+ * removal (a retired model) is rare and deliberate, so it is worth an explicit
+ * flag; a silent 47 -> 12 rewrite of a published article is not.
+ */
+export const isImplausibleNarrowing = (
+  previousCount: number,
+  nextCount: number,
+): boolean => nextCount < previousCount;
+
+/**
+ * Whether a run may write its result out as the complete record.
+ *
+ * "First full run with no record" and "scoped run with no base" were the same
+ * code path, and that is the whole defect: only the former may legitimately
+ * replace the record. A scoped run exists to MERGE into a base, so without one
+ * its partial result silently becomes the census.
+ *
+ * Pure so the decision is machine-checked rather than asserted — the live path
+ * needs provider credentials, so the branch itself is not otherwise reachable
+ * in a test.
+ */
+export const mayWriteWholeRecord = (input: {
+  readonly selectorPresent: boolean;
+  readonly hasBase: boolean;
+  readonly allowPartialRecord: boolean;
+}): boolean =>
+  !input.selectorPresent || input.hasBase || input.allowPartialRecord;

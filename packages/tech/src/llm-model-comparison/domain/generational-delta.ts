@@ -150,6 +150,13 @@ export type DeltaMetric = Readonly<{
   // Combined run-to-run spread of the two measurements (sd_former + sd_new), in
   // the metric's own unit. `null` for curated cost facts, which have no spread.
   spread: number | null;
+  // Trials contributing to each mean. A reader cannot judge a direction without
+  // the sample behind it: the same configuration re-swept hours apart moved
+  // sustained throughput by up to 88%, so "−38%" over 3 trials and "−38%" over
+  // 30 are very different claims. `null` for curated cost facts, which are
+  // registry values rather than measurements.
+  previousTrials: number | null;
+  currentTrials: number | null;
   outcome: DeltaOutcome;
 }>;
 
@@ -257,6 +264,8 @@ const buildMetric = (
   previous: number,
   current: number,
   spread: number | null = null,
+  previousTrials: number | null = null,
+  currentTrials: number | null = null,
 ): DeltaMetric => {
   const absolute = current - previous;
   return {
@@ -271,6 +280,8 @@ const buildMetric = (
     absolute,
     relative: previous === 0 ? null : absolute / previous,
     spread,
+    previousTrials,
+    currentTrials,
     outcome: outcomeOf(spec, previous, current, spread),
   };
 };
@@ -321,6 +332,8 @@ const measuredDeltasFor = (
       previous.stats[spec.statKey].mean,
       current.stats[spec.statKey].mean,
       previous.stats[spec.statKey].stdDev + current.stats[spec.statKey].stdDev,
+      previous.stats[spec.statKey].n,
+      current.stats[spec.statKey].n,
     ),
   );
 
@@ -458,10 +471,19 @@ const metricRow = (metric: DeltaMetric): string => {
     metric.spread === null
       ? "—"
       : `±${formatValue(metric, metric.spread).replace(/^[+-]/, "")}`;
+  // State the sample beside the direction. Without it a reader cannot tell
+  // whether a labelled direction rests on 3 trials or 30, and the whole point
+  // of this section is that at 3 the spread swamps most throughput moves.
+  const trialsCell =
+    metric.previousTrials === null || metric.currentTrials === null
+      ? "—"
+      : metric.previousTrials === metric.currentTrials
+        ? `${metric.currentTrials}`
+        : `${metric.previousTrials} / ${metric.currentTrials}`;
   return (
     `| ${escapeCell(metric.title)} | ${formatValue(metric, metric.previous)} | ` +
     `${formatValue(metric, metric.current)} | ${formatChange(metric)} | ` +
-    `${spreadCell} | ${metric.outcome} |`
+    `${spreadCell} | ${trialsCell} | ${metric.outcome} |`
   );
 };
 
@@ -494,8 +516,8 @@ export const renderGenerationDeltaSection = (
   const pairHead = `${top}#`;
 
   const header =
-    "| Metric | Former | New | Change | Run-to-run spread | Direction |\n" +
-    "| ------ | ------ | --- | ------ | ----------------- | --------- |";
+    "| Metric | Former | New | Change | Run-to-run spread | Trials | Direction |\n" +
+    "| ------ | ------ | --- | ------ | ----------------- | ------ | --------- |";
 
   const renderDelta = (delta: GenerationDelta): string => {
     const shownMeasured = delta.measuredMetrics.filter((m) =>
@@ -550,11 +572,14 @@ export const renderGenerationDeltaSection = (
     "A measured metric is additionally labelled **indistinguishable**, and excluded " +
     "from the verdict, when the gap between the two means does not clear their " +
     "combined run-to-run spread (the sum of the two standard deviations, shown in " +
-    "its own column). Each measurement is three trials, and re-running an identical " +
-    "sweep hours apart moved sustained throughput by up to 88% on the same " +
-    "configuration — so at this trial count a bare percentage change is not by " +
-    "itself evidence of a generational direction. Cost figures are registry facts " +
-    "and carry no spread. " +
+    "its own column). The trials behind each mean are stated in their own column, " +
+    "so a direction can be read against the sample that produced it: re-running an " +
+    "identical sweep hours apart moved sustained throughput by up to 88% on the " +
+    "same configuration, so a bare percentage change is not by itself evidence of " +
+    "a generational direction. Deltas stay **per effort level** rather than being " +
+    "aggregated across the ladder, because low, medium and high are different " +
+    "operating points and averaging them would report a figure no configuration " +
+    "was measured at. Cost figures are registry facts and carry no spread. " +
     "Cheaper is an improvement; a faster-but-pricier result reads as mixed, never " +
     "silently netted to improved.";
 

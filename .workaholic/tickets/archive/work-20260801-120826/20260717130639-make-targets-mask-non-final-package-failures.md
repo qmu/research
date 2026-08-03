@@ -3,11 +3,12 @@ created_at: 2026-07-17T13:06:39+09:00
 author: a@qmu.jp
 type: bugfix
 layer: [Infrastructure, Config]
-effort:
+effort: 2h
 commit_hash:
-category:
+category: Changed
 depends_on:
 mission:
+claim: work-20260801-120826
 ---
 
 # `make test` / `build` / `lint` return 0 when a non-final package fails — CI called a red `main` green
@@ -258,3 +259,79 @@ a semantic merge conflict like `0b09ddc`'s) is masked with no net.
 - The same masking shape (`for … do (cd …) done` as one recipe line) should be
   grepped for anywhere else it may have been copied — `scripts/*.sh` are
   currently `set -euo pipefail` and clean, but the pattern is contagious.
+
+## Final Report
+
+Development completed as planned. All five per-package targets (`install`,
+`build`, `test`, `lint`, `format`) now share one status-accumulating
+`for_each_package` shape, and the regression gate the ticket called "the point of
+this ticket" is wired into `ci.yml` as its **first** step.
+
+**The acceptance test that matters — proven against real history.** Checked out
+`0b09ddc` (the merge of PR #50, on `main`), installed both packages for real,
+and measured raw exit codes:
+
+| what | raw exit |
+| --- | --- |
+| `cd packages/tech && npm test` (ground truth) | **1** — `AssertionError: expected undefined to be true`, exactly the failure the ticket named |
+| `cd packages/industry && npm test` (ground truth) | **0** |
+| `make test`, **original** Makefile, same tree | **0** ← the incident: CI green on a red `main` |
+| `make test`, **this branch's** Makefile, same tree | **2**, and it prints `make: test FAILED in: packages/tech` |
+
+A first attempt at this probe symlinked the current tree's `node_modules` into
+the old checkout; both packages then failed with `TS2688: Cannot find type
+definition file for 'node'`, which made the *last* package fail and so made even
+the **original** Makefile return non-zero — a false pass of the gate. This is
+precisely the trap the ticket's Quality Gate warned about ("an uninstalled
+package fails for the wrong reason and will fake a pass"). The probe was redone
+with genuine `npm install` in both packages.
+
+**The gate was mutation-tested**, not merely observed green. Reinstating the old
+bare-loop recipe makes `scripts/check-make-gate.sh` fail **9** assertions — the
+FIRST-position and MIDDLE-position cases for `test`, `build` and `lint`, plus the
+three "names the failing package" assertions — while the LAST-position cases
+still pass. That asymmetry is the defect's own mechanism reproduced on demand.
+
+**Step 4 (fate of `build-research-tech.yml`): kept, decision recorded in the
+workflow's own header.** It is not yet redundant — its `paths:` filter means it
+does not run for a change that breaks `packages/tech` without touching
+`packages/tech/**`, which is exactly the `0b09ddc` shape. Deleting it in this
+change would have removed the backstop and the evidence at once.
+
+**Step 6 (PR #52): moot.** PR #52 is **MERGED**, and `main` is currently green
+(`cd packages/tech && npm test` exits 0). There is no owner to ambush.
+
+`CLAUDE.md`'s "Never verify through `make`" guidance was updated in the same
+change — it described the defect as "filed and unfixed" and told every developer
+and agent to route around the repository's own runner.
+
+### Discovered Insights
+
+- **Insight**: A status **accumulator** was chosen over `set -e` fail-fast, and
+  the choice is visible in the output.
+  **Context**: For `test`/`lint` a single run should name *every* broken package,
+  not just the first. The recipe collects failures and prints
+  `make: <step> FAILED in: <packages>`, which is what makes a red gate actionable
+  without re-running it package by package. The ticket allowed either shape; this
+  one costs nothing and reports more.
+
+- **Insight**: The gate tests the **recipe shape** against a scratch fixture, not
+  the real suites, via `PACKAGES` / `DOCS_DIR` overrides on the make command line.
+  **Context**: The bug lived in the recipe, not in any package, so a fixture of
+  three trivial `package.json`s (`"test": "exit 1"` / `"exit 0"`) proves it in
+  under a second and can assert first/middle/last position independently.
+  `DOCS_DIR` was introduced solely so `make build`'s separate docs line can be
+  pointed at a no-op instead of running the real VitePress build. Nothing else
+  should override either variable.
+
+- **Insight**: Ordering-independence needs its own assertion, or a reordering
+  "fix" passes.
+  **Context**: Asserting only the FIRST position would be satisfied by simply
+  moving `packages/tech` last — which hides the bug behind luck and re-exposes
+  whichever package is added next. The gate asserts first, middle **and** last,
+  so that shortcut fails.
+
+- **Insight**: `make` returns **2**, not 1, for a failed recipe.
+  **Context**: The assertion helper treats any non-zero as a pass for the failure
+  cases rather than pinning an exact code, since the meaningful property is
+  "non-zero", and make's own code is an implementation detail of GNU make.

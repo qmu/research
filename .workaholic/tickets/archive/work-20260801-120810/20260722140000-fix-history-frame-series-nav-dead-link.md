@@ -3,11 +3,12 @@ created_at: 2026-07-22T14:00:00+09:00
 author: a@qmu.jp
 type: bugfix
 layer: [Domain, Config]
-effort: 2h
+effort: 1h
 commit_hash:
 category: Changed
 mission:
 depends_on:
+claim: work-20260801-120810
 ---
 
 # Fix history-frame series-nav dead link blocking VitePress build for recovered topics
@@ -131,3 +132,68 @@ loop). The `make build` dead-link check is the one the earlier recovery missed
   paused recovery ships catch up on `main` and complete. agent-vm is unaffected.
 - If Option A: the `ignoreDeadLinks` regex is scoped to the frames' series-nav
   self-links only (do not blanket-disable dead-link checking).
+
+## Final Report
+
+Neither Fix Option was implemented as written — both were stale by the time the
+ticket was driven. The residual work was the regression net the ticket's own
+Policies section already demanded, and it immediately found a real violation.
+
+**Option B's code fix is already on `main`.** `stripSurveyBlocks` was added in
+`a55af1a`, reverted in `e0baa92` (to pause the ship, as the ticket records), and
+then **reapplied in `2a22bfc`**, which is an ancestor of `origin/main`. It is
+wired into `archive-runner.ts:118,130` for both markdown frame copies and unit
+tested in `current-article.test.ts`. No committed frame on `main` carries a
+`](./history/` link, and `make build` reports 0 dead links on a clean `main`.
+
+**Option A was deliberately NOT taken.** Adding
+`ignoreDeadLinks: [/\/history\/[^/]+\/[^/]+\/[^/]+$/]` to the VitePress config
+would exempt the entire class of in-frame links — precisely the class in which
+these failures appear — so it would suppress the detection of the next stale
+frame rather than catch it. With the renderer already fixed, the config change
+buys nothing and costs the dead-link net.
+
+**What was implemented** is the Policies requirement: a guard test
+(`packages/tech/src/research/history-frames.test.ts`) asserting that every
+committed `.md` under `docs/research-reports/history/` carries no
+`](./history/` link and neither survey-series block. `TREND_LABEL` /
+`RELATED_LABEL` were exported from `domain/current-article.ts` so the guard
+asserts against the renderer's own constants and cannot go vacuous if a label is
+renamed. A third assertion fails if the walk finds no frames at all, so the
+guard cannot pass by checking nothing.
+
+**The guard found a real stale frame on `main`:**
+`docs/research-reports/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.md`
+carried the 推移 block. It was archived before the strip fix landed. The ticket
+had classified token-metering as SAFE, which was correct about the *build* (the
+block is the first-survey text-only variant, so it carries no link and broke
+nothing) but not about the *archive contract*: a frame archived today carries
+neither block. It was brought into conformance by running the repo's own
+`stripSurveyBlocks` over it, not by hand-editing.
+
+### Discovered Insights
+
+- **Insight**: The archive-time strip governs only frames written after it
+  landed; it silently leaves every earlier frame non-conformant.
+  **Context**: `stripSurveyBlocks` is applied in the `archive-runner` seam, so it
+  is a *write-path* guarantee with no *read-path* counterpart. Between the fix
+  landing and this guard, the repo's committed state and its stated contract had
+  diverged with nothing to report it — the token-metering frame sat
+  non-conformant across several drives. Any write-path normalization in this
+  repo wants a committed-state assertion beside it.
+
+- **Insight**: The three recovery branches (deep-research, speech, computer-use)
+  still carry pre-fix frames, and this guard is what will catch them.
+  **Context**: Their frames were archived before `2a22bfc`, so they carry the
+  blocks *with* links. When those branches catch up on `main`, the guard fails in
+  `npm test` naming the exact file — earlier and far more legibly than a VitePress
+  dead-link error. Re-archiving the frame (or running `stripSurveyBlocks` over
+  it, as done here) is the fix on each branch.
+
+- **Insight**: `check-fixture-drift.sh` refuses to run against a dirty
+  `docs/research-reports`, so it can only be verified after the commit.
+  **Context**: `scripts/check-fixture-drift.sh:15` hard-exits on
+  `git diff --quiet -- docs/research-reports`. Any ticket touching that tree
+  cannot verify drift pre-commit; the honest order is archive, then drift. It
+  regenerates only the *current* pages and never writes under `history/`, so an
+  archived-frame edit cannot itself cause drift.

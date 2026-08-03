@@ -8,6 +8,7 @@ import {
   type ProbeGroup,
 } from "../llm-model-comparison/domain/split";
 import { renderSplitReport } from "../llm-model-comparison/domain/split-report";
+import { isImplausibleNarrowing } from "../llm-model-comparison/domain/history";
 import {
   findPublishedResearchTopic,
   reportFrameSources,
@@ -92,6 +93,31 @@ export const runSplitTopic = async (group: ProbeGroup): Promise<void> => {
     ? resolve(docsReportDir(), `${spec.artifactBase}.fixture.data.json`)
     : resolve(docsReportDir(), `${spec.artifactBase}.data.json`);
   const rendered = { ...artifact, artifactPath: basename(artifactPath) };
+
+  // Refuse an implausible narrowing rather than quietly rewriting the table.
+  // The published speed/accuracy pages are a census of the matrix, so a
+  // projection carrying FEWER configurations than the committed artifact
+  // already holds means the source record lost rows -- the signature of a
+  // scoped sweep that ran without a base. Reported with both counts, because
+  // "it got smaller" is only actionable if you can see by how much.
+  const existing = await readComparison(artifactPath);
+  if (
+    existing !== null &&
+    isImplausibleNarrowing(existing.configs.length, artifact.configs.length) &&
+    !hasArg("--allow-narrowing")
+  ) {
+    process.stderr.write(
+      `research ${group}: refusing to narrow the published projection.\n` +
+        `  committed ${basename(artifactPath)} holds ${existing.configs.length} configuration(s)\n` +
+        `  this projection from ${basename(sourcePath)} holds ${artifact.configs.length}\n` +
+        `The source record is missing configurations the published page already carries. This is\n` +
+        `usually a SCOPED sweep that ran without a previous record -- rebuild the full record\n` +
+        `(npm run compare -- --render-latest reconstructs it from the committed frames) and\n` +
+        `re-project. Pass --allow-narrowing if the rows really are meant to disappear.\n`,
+    );
+    process.exitCode = 1;
+    return;
+  }
 
   await mkdir(dirname(reportPath), { recursive: true });
   await writeFile(reportPath, renderSplitReport(rendered), "utf8");

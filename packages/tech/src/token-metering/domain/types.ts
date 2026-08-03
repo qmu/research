@@ -16,6 +16,8 @@
  */
 
 /** Sample text classes: the three corpora the accuracy target is stated over. */
+import type { UsageSurvey } from "./usage-survey";
+
 export type SampleClass = "english" | "japanese" | "code";
 
 export const SAMPLE_CLASSES: ReadonlyArray<SampleClass> = [
@@ -139,6 +141,9 @@ export type TokenMeteringResult = Readonly<{
   accuracyTargetPct: number;
   families: ReadonlyArray<FamilyMeasurement>;
   edgeProbes: EdgeProbeResults;
+  /** The post-hoc usage-field survey — the topic's SECOND capability, distinct
+   * from the pre-flight counting axis above. See domain/usage-survey.ts. */
+  usageSurvey: UsageSurvey;
   /** Total measured API spend of the benchmark stage, USD. */
   spendUsd: number;
   artifactPath: string;

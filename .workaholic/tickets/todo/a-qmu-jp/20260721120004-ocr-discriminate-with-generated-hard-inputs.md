@@ -8,6 +8,7 @@ commit_hash:
 category: Changed
 depends_on:
 mission:
+claim: work-20260801-120905
 ---
 
 # Make the OCR comparison actually discriminate model capability, using GENERATED hard inputs
