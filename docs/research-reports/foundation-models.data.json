@@ -9,8 +9,8 @@
       "tier": "frontier",
       "apiSurface": "chat",
       "released": "2026-06",
-      "inputCostPerMTok": 6,
-      "outputCostPerMTok": 30,
+      "inputCostPerMTok": 10,
+      "outputCostPerMTok": 50,
       "effortLevels": [
         "low",
         "medium",
@@ -19,6 +19,25 @@
         "max"
       ],
       "generation": "—",
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
+    },
+    {
+      "provider": "Anthropic",
+      "modelName": "Claude Opus 5",
+      "apiModelId": "claude-opus-5",
+      "tier": "flagship",
+      "apiSurface": "chat",
+      "released": "2026-07",
+      "inputCostPerMTok": 5,
+      "outputCostPerMTok": 25,
+      "effortLevels": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "generation": "current (supersedes Claude Opus 4.8)",
       "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
     },
     {
@@ -37,7 +56,7 @@
         "xhigh",
         "max"
       ],
-      "generation": "—",
+      "generation": "previous (→ Claude Opus 5)",
       "source": "https://platform.claude.com/docs/en/about-claude/models/overview"
     },
     {

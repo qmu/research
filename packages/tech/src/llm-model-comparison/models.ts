@@ -35,12 +35,34 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     modelName: "Claude Fable 5",
     apiModelId: "claude-fable-5",
     released: "2026-06",
-    inputCostPerMTok: 6,
-    outputCostPerMTok: 30,
+    // Re-verified against the published catalog 2026-08-01. The registry had
+    // carried 6/30 since this row was written, understating the frontier tier's
+    // cost by roughly 40% in every report that quoted it.
+    inputCostPerMTok: 10,
+    outputCostPerMTok: 50,
     effortLevels: ["low", "medium", "high", "xhigh", "max"],
     source: "https://platform.claude.com/docs/en/about-claude/models/overview",
   },
   {
+    id: "anthropic-claude-opus-5",
+    provider: "anthropic",
+    tier: "flagship",
+    modelName: "Claude Opus 5",
+    apiModelId: "claude-opus-5",
+    released: "2026-07",
+    inputCostPerMTok: 5,
+    outputCostPerMTok: 25,
+    effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    // Current flagship: same tier, price, and effort ladder as the Opus 4.8 it
+    // supersedes, so the head-to-head varies only the model id.
+    generation: "current",
+    supersedes: "anthropic-claude-opus-4-8",
+    source: "https://platform.claude.com/docs/en/about-claude/models/overview",
+  },
+  {
+    // Previous generation, retained for this controlled round and paired to its
+    // successor; the dated frame preserves it regardless of a later round's
+    // decision to drop it from the live registry.
     id: "anthropic-claude-opus-4-8",
     provider: "anthropic",
     tier: "flagship",
@@ -50,6 +72,8 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     inputCostPerMTok: 5,
     outputCostPerMTok: 25,
     effortLevels: ["low", "medium", "high", "xhigh", "max"],
+    generation: "previous",
+    supersededBy: "anthropic-claude-opus-5",
     source: "https://platform.claude.com/docs/en/about-claude/models/overview",
   },
   {
@@ -59,6 +83,10 @@ export const MODELS: ReadonlyArray<ModelCard> = [
     modelName: "Claude Sonnet 5",
     apiModelId: "claude-sonnet-5",
     released: "2026-06",
+    // List price, re-verified 2026-08-01. Introductory pricing of 2/10 applies
+    // through 2026-08-31; the list rate is used here because it is what stays
+    // comparable across dated frames once the window closes, and a frame priced
+    // at the temporary rate would misstate the trend rather than the moment.
     inputCostPerMTok: 3,
     outputCostPerMTok: 15,
     effortLevels: ["low", "medium", "high", "xhigh", "max"],
