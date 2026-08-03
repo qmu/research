@@ -2,7 +2,7 @@
 type: Mission
 title: Periodic Research Target: Computer Use via Playwright
 slug: periodic-research-target-computer-use-via-playwright
-status: approved
+status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp

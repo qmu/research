@@ -1,6 +1,6 @@
 ---
 title: Foundation model catalog
-description: A curated reference catalog of 29 foundation models across 8 providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.
+description: A curated reference catalog of 30 foundation models across 8 providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.
 ---
 
 # Foundation model catalog
@@ -15,7 +15,7 @@ The catalog gives readers one place to verify which providers, model names, API 
 
 ### Target Models
 
-29 foundation models across 8 providers are listed. The single source of truth is the model registry (`packages/tech/src/llm-model-comparison/models.ts`).
+30 foundation models across 8 providers are listed. The single source of truth is the model registry (`packages/tech/src/llm-model-comparison/models.ts`).
 
 ### Target Metrics
 
@@ -29,7 +29,7 @@ Every value is curated catalog data with a cited source, not a live measurement.
 
 | Provider | Models | Tiers | Input $/MTok | Output $/MTok |
 | -------- | ------ | ----- | ------------ | ------------- |
-| Anthropic | 4 | frontier, flagship, mid, small | $1.00–$6.00 | $5.00–$30.00 |
+| Anthropic | 5 | frontier, flagship, mid, small | $1.00–$10.00 | $5.00–$50.00 |
 | OpenAI | 8 | flagship, mid, small | $0.15–$5.00 | $0.60–$30.00 |
 | Google | 5 | flagship, mid, small | $0.25–$2.00 | $1.50–$12.00 |
 | xAI | 4 | frontier, flagship, mid, small | $1.00–$1.25 | $2.00–$2.50 |
@@ -71,8 +71,9 @@ No external resources are created. Re-rendering only rewrites the catalog Markdo
 
 | Provider | Model | API model id | Tier | API surface | Released | Input $/MTok | Output $/MTok | Effort levels | Generation |
 | -------- | ----- | ------------ | ---- | ----------- | -------- | ------------ | ------------- | ------------- | ---------- |
-| Anthropic | Claude Fable 5 | `claude-fable-5` | frontier | chat | 2026-06 | $6.00 | $30.00 | low, medium, high, xhigh, max | — |
-| Anthropic | Claude Opus 4.8 | `claude-opus-4-8` | flagship | chat | 2026 | $5.00 | $25.00 | low, medium, high, xhigh, max | — |
+| Anthropic | Claude Fable 5 | `claude-fable-5` | frontier | chat | 2026-06 | $10.00 | $50.00 | low, medium, high, xhigh, max | — |
+| Anthropic | Claude Opus 5 | `claude-opus-5` | flagship | chat | 2026-07 | $5.00 | $25.00 | low, medium, high, xhigh, max | current (supersedes Claude Opus 4.8) |
+| Anthropic | Claude Opus 4.8 | `claude-opus-4-8` | flagship | chat | 2026 | $5.00 | $25.00 | low, medium, high, xhigh, max | previous (→ Claude Opus 5) |
 | Anthropic | Claude Sonnet 5 | `claude-sonnet-5` | mid | chat | 2026-06 | $3.00 | $15.00 | low, medium, high, xhigh, max | — |
 | Anthropic | Claude Haiku 4.5 | `claude-haiku-4-5-20251001` | small | chat | 2025-10 | $1.00 | $5.00 | n/a | — |
 | OpenAI | GPT-5.5 | `gpt-5.5` | flagship | chat | 2026 | $5.00 | $30.00 | none, low, medium, high | — |
