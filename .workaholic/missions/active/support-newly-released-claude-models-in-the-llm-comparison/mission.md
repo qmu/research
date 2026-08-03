@@ -2,7 +2,7 @@
 type: Mission
 title: Support newly released Claude models in the LLM comparison
 slug: support-newly-released-claude-models-in-the-llm-comparison
-status: approved
+status: active
 created_at: 2026-07-26T18:43:48+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
