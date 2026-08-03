@@ -8,6 +8,7 @@ commit_hash:
 category:
 mission:
 depends_on:
+claim: work-20260803-222350
 ---
 
 # The publish guard's documented "keep the downstream text" remedy hands the file back to the exporter
