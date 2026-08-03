@@ -41,6 +41,11 @@ jobs:
       - name: Accessibility check (WCAG 2.2 AA)
         run: make a11y
 
+      # The exporter shares its destination directory with hand-authored prose on
+      # qmu-co-jp, so a re-run must never silently replace it.
+      - name: Publish ownership guard
+        run: make publish-guard
+
       # Byte-stability of the keyless fixture path is the pipeline mission's
       # load-bearing constraint: regenerating every topic's fixture must
       # byte-match the committed pages/artifacts.

@@ -36,7 +36,7 @@ if [ "$$rc" -ne 0 ]; then echo "make: $(1) FAILED in:$$failed" >&2; fi; \
 exit $$rc
 endef
 
-.PHONY: help install build test lint format docs a11y drift gate publish
+.PHONY: help install build test lint format docs a11y drift gate publish-guard publish
 
 help: ## List available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -70,6 +70,9 @@ drift: ## Regenerate every keyless fixture and fail on drift from committed arti
 
 gate: ## Prove the per-package targets report failures instead of masking them
 	@bash scripts/check-make-gate.sh
+
+publish-guard: ## Prove the exporter cannot silently overwrite downstream prose
+	@bash scripts/check-publish-guard.sh
 
 publish: ## Copy finished research Markdown to the corporate site
 	@bash scripts/publish-research.sh --all
