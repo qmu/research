@@ -4,6 +4,7 @@ import type {
   FamilyMeasurement,
   TokenMeteringResult,
 } from "./types";
+import { renderUsageSurvey } from "./usage-survey";
 
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
@@ -130,7 +131,7 @@ export const renderTokenMeteringReport = (
     title: "Token counting and metering",
     description:
       "A reproducible check of library-independent LLM input-token counting — exact self-implemented BPE where the vocabulary is published, calibrated estimation where it is not — validated against each provider's API-reported counts on a pinned English/Japanese/code sample set.",
-    introduction: `This report measures whether the input tokens an LLM API bills for can be counted **without the provider's tokenizer library**. Where a provider publishes its tokenizer's vocabulary and merge rules (OpenAI's encodings; open-weight models' \`tokenizer.json\`), a self-implemented byte-pair-encoding counter is checked for exactness. Where the tokenizer is unpublished (Anthropic Claude, Google Gemini), a calibrated estimator is fitted against the provider's unbilled count endpoint and its error band is reported — an estimate with a stated band, never false precision. The distinction between the two counting methods, and the billing edge cases around them (Japanese text, output-token pre-estimation, cache/tool billing, image conversion), decide whether per-principal usage metering can be built provider-independently.`,
+    introduction: `This report measures two distinct capabilities for accounting for LLM token usage, which must not be conflated.\n\n**Pre-flight prediction (counting).** Can the **input** tokens an API will bill for be counted **before the call**, **without the provider's tokenizer library**? This axis is input-only *by necessity* — output tokens do not exist until the response is generated — and it is what the counting results below measure. Where a provider publishes its tokenizer's vocabulary and merge rules (OpenAI's encodings; open-weight models' \`tokenizer.json\`), a self-implemented byte-pair-encoding counter is checked for exactness. Where the tokenizer is unpublished (Anthropic Claude, Google Gemini), a calibrated estimator is fitted against the provider's unbilled count endpoint and its error band is reported — an estimate with a stated band, never false precision. The distinction between the two counting methods, and the billing edge cases around them (Japanese text, output-token pre-estimation, cache/tool billing, image conversion), decide whether per-principal usage metering can be built provider-independently.\n\n**Post-hoc actual usage (usage-field survey).** Does the API response report the tokens it **actually consumed** — input *and* output — and on what terms? This axis is answered only after the call, from the response's own usage fields, so it reaches what pre-flight counting structurally cannot. It is surveyed per subject across the direct provider APIs, an agent-SDK layer, and the domain-specific case that bills search separately from tokens, including the subtle streaming case where several providers omit usage unless the request opts in.\n\nThe two axes reinforce each other: reported usage is also the ground truth the counting axis validates against.`,
     purpose:
       "The purpose is to record, for four provider families, how input tokens are counted, under what conditions a library-independent self-count is possible, what accuracy it reaches against the API-reported count on a pinned sample set, and what the price structure applies those counts to — the properties a usage-metering and cost-attribution layer is built on.",
     targetModels: `The subjects are the ${result.families.length} provider families in the curated registry (\`packages/tech/src/token-metering/models.ts\`), one representative model each, with the counting method dictated by what the provider publishes:
@@ -150,6 +151,14 @@ ${sourceLines(result)}`,
         ? "Families with `measured` provenance can be compared on holdout error: the exact-BPE families test whether the published vocabulary plus the published pre-tokenization pattern reproduce the billed count, and the estimator families test how far a per-class characters-per-token model can be trusted. A max error inside the target band means pre-call cost projection and per-principal attribution can run on the self-count alone; a class outside the band must be metered post-hoc from the response usage field, with the band stating the projection risk."
         : "This run is the keyless fixture: counts prove the harness (synthetic vocabulary, fixed rates), so no cross-family accuracy claim is made here. The dated survey frames carry the measured comparison."
     }
+
+#### Usage-field survey — post-hoc actual usage per subject
+
+The counting axis above predicts INPUT before the call. This axis reads what was ACTUALLY consumed — input and output — back off the response, which is the only way output is ever accounted for. Each cell states what a real response was observed to report; a subject not yet surveyed against a real response renders as \`fixtured\` and asserts nothing, rather than inferring availability from documentation.
+
+${renderUsageSurvey(result.usageSurvey)}
+
+Streaming is the case that catches builders: several providers omit the usage object from a streamed response unless the request explicitly opts in, so a meter written against non-streaming responses can silently record zero once it switches to streaming. The opt-in is recorded above as a first-class result. An agent-SDK layer is surveyed separately because a wrapper may drop, rename, or aggregate the provider's figures across a multi-step run, and what a builder on that SDK can actually reach is what matters.
 
 #### Edge case 1 — Japanese text
 
