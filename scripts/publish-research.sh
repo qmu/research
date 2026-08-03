@@ -21,8 +21,21 @@
 #   --dry-run         With copy, print what would be copied without writing.
 #   --force           Overwrite destinations that diverged from this exporter's
 #                     last emit. Destroys downstream-authored prose -- pass it
-#                     only when you have decided the generated text wins.
+#                     only when you have decided the generated text wins. It does
+#                     NOT touch destinations marked downstream-owned.
+#   --force-downstream-owned
+#                     Additionally overwrite destinations marked downstream-owned.
+#                     Separate from --force on purpose: a mark is a standing
+#                     decision, so overriding it is its own deliberate act. The
+#                     mark survives the write; remove it to hand the file back.
 #   -h, --help        Show this help.
+#
+# Also:
+#   publish-research.sh mark-downstream <dest-path>...
+#                     Record destinations as downstream-owned (qmu-co-jp is
+#                     authoritative; never write them). Paths are the
+#                     qmu-co-jp-relative form, e.g.
+#                     docs/llm-foundation-research/image-generation.md.
 #
 # A <slug> is a path relative to the repo's docs/ (e.g.
 # research-reports/llm-speed-comparison.insights.ja). Bare names are resolved
@@ -42,20 +55,40 @@
 #   * Authored downstream        -> QMU-CO-JP is authoritative. The copy must
 #                                   not silently replace it.
 #
-# Enforcement is a ledger of what this exporter last emitted, committed at
-# scripts/publish-ledger.tsv (<dest-relative-path>\t<sha256>). On each copy:
+# Enforcement is a ledger committed at scripts/publish-ledger.tsv, one row per
+# destination: <dest-relative-path>\t<sha256 | downstream>. The hash column
+# carries two DIFFERENT KINDS of fact, and the distinction is the whole point:
 #
+#   a sha256            an OBSERVATION -- "this is the text we last emitted".
+#   the word downstream a DECISION     -- "qmu-co-jp owns this; never write it".
+#
+# On each copy:
+#
+#   marked `downstream`                      -> EXCLUDE, quietly (a standing decision)
 #   destination missing                      -> copy (nothing to lose)
 #   hash matches the ledger                  -> copy (untouched since our emit)
 #   hash differs from the ledger             -> SKIP, loudly (authored downstream)
 #   no ledger entry, but dest == source      -> record and continue (bootstrap)
 #   no ledger entry, and dest != source      -> SKIP, loudly
 #
-# The last row is the conservative bootstrap case: with no record, a differing
-# destination is indistinguishable from downstream-authored prose, so it is
-# treated as authored. Resolve it by reviewing the file and then either running
-# with --force (the generated text wins) or committing the destination's hash
-# into the ledger (the downstream text wins).
+# The second-to-last row is the conservative bootstrap case: with no record, a
+# differing destination is indistinguishable from downstream-authored prose, so
+# it is treated as authored.
+#
+# RESOLVING A LOUD SKIP. Review the file, then pick the side that wins:
+#
+#   the generated text wins  -> re-run with --force.
+#   the downstream text wins -> mark it downstream-owned:
+#                               publish-research.sh mark-downstream <dest-path>
+#
+# DO NOT resolve it by recording the destination's current hash. That writes an
+# observation where a decision belongs: the next run reads "hash matches the
+# ledger", takes the copy branch, and silently overwrites the very prose the
+# operator was protecting. This script told operators to do exactly that until
+# 2026-08-03. The `downstream` mark exists because the decision could not be
+# stated at all -- "no ledger entry", the only state that preserved the text,
+# re-reported itself as an unresolved divergence on every single run, so
+# permanent protection and a permanent warning were the same state.
 #
 # The ledger is committed so the decision is reproducible on any clone: without
 # it a fresh checkout has no record and would report every destination diverged.
@@ -72,14 +105,23 @@ COMMAND=""
 ALL=0
 DRY=0
 FORCE=0
+FORCE_OWNED=0
 SLUGS=""
+# The same positional arguments verbatim. `SLUGS` strips `.md` because a copy
+# slug names a document; a ledger key is a literal path and must not be rewritten.
+RAW_ARGS=""
+
+# The sentinel occupying the hash column when the row states a DECISION rather
+# than an observation. Not a valid sha256, so it cannot collide with a hash.
+DOWNSTREAM_MARK="downstream"
 
 published_report_plan() {
   (cd "$REPO_ROOT/packages/tech" && npm run -s research:site -- copy-plan)
 }
 
 usage() {
-  sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'
+  # Through the "Also:" block (mark-downstream), which is part of the interface.
+  sed -n '2,42p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 # sha256 of a file, bare hex. Both tools ship on this platform; prefer coreutils.
@@ -111,9 +153,14 @@ ledger_record() {
   mv "$_lr_tmp" "$LEDGER"
 }
 
+# True when the ledger states that qmu-co-jp owns this destination.
+ledger_is_downstream_owned() {
+  [ "$(ledger_hash "$1")" = "$DOWNSTREAM_MARK" ]
+}
+
 if [ $# -gt 0 ]; then
   case "$1" in
-    generate | copy) COMMAND="$1"; shift ;;
+    generate | copy | mark-downstream) COMMAND="$1"; shift ;;
     --generate) COMMAND="generate"; shift ;;
     --copy) COMMAND="copy"; shift ;;
   esac
@@ -139,6 +186,9 @@ while [ $# -gt 0 ]; do
     --force)
       FORCE=1
       ;;
+    --force-downstream-owned)
+      FORCE_OWNED=1
+      ;;
     -h | --help)
       usage
       exit 0
@@ -150,6 +200,7 @@ while [ $# -gt 0 ]; do
     *)
       [ -n "$COMMAND" ] || COMMAND="copy"
       SLUGS="$SLUGS ${1%.md}"
+      RAW_ARGS="$RAW_ARGS $1"
       ;;
   esac
   shift
@@ -159,6 +210,23 @@ case "$COMMAND" in
   generate)
     node "$REPO_ROOT/scripts/export-corporate-research.mjs"
     echo "Done. Drafts are under docs/llm-foundation/_generated/."
+    exit 0
+    ;;
+  mark-downstream)
+    # State the decision "qmu-co-jp owns this destination" in committed data.
+    # This is the remedy the skip message points at; it exists as a command so
+    # the instruction is executable rather than a hand-edit of a TSV, which is
+    # the shape of the instruction that got followed wrongly in the first place.
+    [ -n "${RAW_ARGS# }" ] || {
+      echo "Error: mark-downstream needs at least one destination path." >&2
+      echo "  e.g. docs/llm-foundation-research/image-generation.md" >&2
+      exit 1
+    }
+    for dest_path in $RAW_ARGS; do
+      ledger_record "$dest_path" "$DOWNSTREAM_MARK"
+      echo "marked downstream-owned: $dest_path"
+    done
+    echo "Commit ${LEDGER#"$REPO_ROOT"/} -- the decision belongs in the repository."
     exit 0
     ;;
   copy) ;;
@@ -198,6 +266,7 @@ fi
 DEST_DIR="$QMU_DIR/docs/llm-foundation-research"
 copied=0
 skipped=0
+excluded=0
 while read -r slug dest_slug; do
   # A slug is either a docs-relative path (research-reports/... or
   # llm-foundation/...) or a bare name resolved against research-reports first,
@@ -225,6 +294,31 @@ while read -r slug dest_slug; do
   # OWNERSHIP CHECK (see the header). Decide BEFORE writing whether this
   # destination still belongs to the exporter, so downstream-authored prose can
   # never be replaced by a copy nobody asked for.
+  #
+  # The standing decision is read FIRST and short-circuits the hash comparison:
+  # a downstream-owned destination is not a divergence to resolve, so it must
+  # not be reported as one, and its content is irrelevant -- the mark holds
+  # whether the file matches the source, differs from it, or is absent.
+  if ledger_is_downstream_owned "$DEST_REL"; then
+    if [ "$FORCE_OWNED" -eq 0 ]; then
+      echo "downstream-owned (excluded): $DEST_REL"
+      excluded=$((excluded + 1))
+      continue
+    fi
+    if [ "$DRY" -eq 1 ]; then
+      echo "would OVERWRITE downstream-owned (--force-downstream-owned): $REL -> $DEST_REL"
+      continue
+    fi
+    mkdir -p "$(dirname "$DEST")"
+    cp "$SRC" "$DEST"
+    # Deliberately NOT ledger_record: the mark is a decision, and one override
+    # does not revoke it. Recording the emitted hash here would hand ownership
+    # back to the exporter silently -- the exact inversion this design removes.
+    echo "OVERWROTE downstream-owned (--force-downstream-owned, mark kept): $REL -> $DEST_REL" >&2
+    copied=$((copied + 1))
+    continue
+  fi
+
   DIVERGED=0
   DIVERGED_WHY=""
   if [ -f "$DEST" ]; then
@@ -246,9 +340,11 @@ while read -r slug dest_slug; do
   if [ "$DIVERGED" -eq 1 ] && [ "$FORCE" -eq 0 ]; then
     echo "SKIPPED (authored downstream): $DEST_REL" >&2
     echo "  reason: $DIVERGED_WHY" >&2
-    echo "  qmu-co-jp is authoritative for this article. Review it, then either" >&2
-    echo "  re-run with --force to let the generated text win, or record the" >&2
-    echo "  destination's hash in ${LEDGER#"$REPO_ROOT"/} to keep the downstream text." >&2
+    echo "  qmu-co-jp is authoritative for this article. Review it, then decide:" >&2
+    echo "    the generated text wins  -> re-run with --force" >&2
+    echo "    the downstream text wins -> $0 mark-downstream $DEST_REL" >&2
+    echo "  Do NOT record the destination's hash in ${LEDGER#"$REPO_ROOT"/}: that says" >&2
+    echo "  \"the exporter emitted this\", so the next run would overwrite it." >&2
     skipped=$((skipped + 1))
     continue
   fi
@@ -295,6 +391,11 @@ fi
 
 if [ "$DRY" -eq 0 ]; then
   echo "Done. $copied per-topic report(s) copied to $QMU_DIR/docs/llm-foundation-research/."
+  if [ "$excluded" -gt 0 ]; then
+    # Not a warning: these are settled decisions, and reporting them as
+    # unresolved is what made a clean publish run look permanently unclean.
+    echo "$excluded report(s) excluded as downstream-owned (qmu-co-jp writes them)."
+  fi
   if [ "$skipped" -gt 0 ]; then
     echo "$skipped report(s) SKIPPED because qmu-co-jp is authoritative for them (see above)." >&2
   fi
