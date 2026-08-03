@@ -49,6 +49,7 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 
 ### 画像生成
 
+- 2026-07-18T15:04:12.341Z: [English](../research-reports/history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison) · [Japanese](../research-reports/history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison.ja) · [data.json](../research-reports/history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison.data.json)
 - 2026-07-17T00:53:39.901Z: [English](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison) · [Japanese](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja) · [data.json](../research-reports/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.data.json)
 
 ### SVG生成

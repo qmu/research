@@ -1,8 +1,8 @@
-# Ledger of what scripts/publish-research.sh last emitted to qmu-co-jp.
 # <dest-path-relative-to-qmu-co-jp>\t<sha256>. Written by the exporter;
-# committed so the ownership decision is reproducible on any clone.
 # A destination with NO entry here that differs from its source is treated
+# Ledger of what scripts/publish-research.sh last emitted to qmu-co-jp.
 # as authored downstream and is skipped -- see the script header.
+# committed so the ownership decision is reproducible on any clone.
 docs/llm-foundation-research/agent-sdk-comparison.md	778a5850ce122778c488c6bb62bd7e1c090692d27520e9af55b698ebde65a47d
 docs/llm-foundation-research/computer-use.md	bb73552dcfc0d40851efb0ddc6bc7af997b57acb21dc91a9f24341db57fc9eff
 docs/llm-foundation-research/deep-research-apis.md	d692a37d926d151c34ecdbf115a99351c091ab93f00ec81e318ae5b0d6cbdb3e
@@ -16,6 +16,7 @@ docs/llm-foundation-research/history/deep-research/2026-07-19T02-12-52-868Z/deep
 docs/llm-foundation-research/history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja.md	65c8abdb1103dae7ec39c720cd6a04486e93967b55e4a52d28bfde7b78e1451e
 docs/llm-foundation-research/history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja.md	9f322774daeeecff193d8fcc41b8da4124aba00aeb8cd77af60fadfc25abe980
 docs/llm-foundation-research/history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja.md	d7e6eb707a6f3684d98518a1885e6fdb018c71a32c67fe6cf62c84f9e8b7acc2
+docs/llm-foundation-research/history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison.ja.md	ab55381bdde3d3c0015c8d94a6f9025ed2db05f716ed33f4baa983ee1652e33b
 docs/llm-foundation-research/history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja.md	4f1a707998c0849b2a5c325abd04352f6da534b3ede0b31efc971f2f35ceec54
 docs/llm-foundation-research/history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja.md	3142f71665d5d923cfb839e33dc96c47f16068aba8dfdff9e2dd9838ed0db00e
 docs/llm-foundation-research/history/speech/2026-07-18T15-09-30-905Z/speech-comparison.ja.md	be24bdfe1dea91da4aa646a123e26bd8df55b82c45f1ceee63617f069279c77f

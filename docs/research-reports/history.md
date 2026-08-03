@@ -49,6 +49,7 @@ The topic order matches [LLMs Research](./) and
 
 ### Image generation
 
+- 2026-07-18T15:04:12.341Z: [English](./history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison) · [Japanese](./history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison.ja) · [data.json](./history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison.data.json)
 - 2026-07-17T00:53:39.901Z: [English](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison) · [Japanese](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja) · [data.json](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.data.json)
 
 ### SVG generation
