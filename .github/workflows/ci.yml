@@ -17,6 +17,15 @@ jobs:
 
       # CI invokes the same Makefile targets developers run locally, so the
       # inspection logic lives in the repository, not in this workflow.
+
+      # Runs FIRST, and deliberately so: every gate below is a per-package
+      # Makefile target, and this proves those targets still report a failing
+      # package instead of masking it. Without this the steps below can report
+      # success on a tree that fails its own tests — which is exactly what
+      # happened at 0b09ddc, where `main` was red and this workflow was green.
+      - name: Gate self-check (targets must not mask failures)
+        run: make gate
+
       - name: Install
         run: make install
 
