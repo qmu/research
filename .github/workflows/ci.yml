@@ -17,6 +17,15 @@ jobs:
 
       # CI invokes the same Makefile targets developers run locally, so the
       # inspection logic lives in the repository, not in this workflow.
+
+      # Runs FIRST, and deliberately so: every gate below is a per-package
+      # Makefile target, and this proves those targets still report a failing
+      # package instead of masking it. Without this the steps below can report
+      # success on a tree that fails its own tests — which is exactly what
+      # happened at 0b09ddc, where `main` was red and this workflow was green.
+      - name: Gate self-check (targets must not mask failures)
+        run: make gate
+
       - name: Install
         run: make install
 
@@ -31,6 +40,11 @@ jobs:
 
       - name: Accessibility check (WCAG 2.2 AA)
         run: make a11y
+
+      # The exporter shares its destination directory with hand-authored prose on
+      # qmu-co-jp, so a re-run must never silently replace it.
+      - name: Publish ownership guard
+        run: make publish-guard
 
       # Byte-stability of the keyless fixture path is the pipeline mission's
       # load-bearing constraint: regenerating every topic's fixture must
