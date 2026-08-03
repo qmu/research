@@ -1,5 +1,24 @@
 name: build-research-tech
 
+# KEPT DELIBERATELY — decision recorded with the Makefile masking fix
+# (ticket 20260717130639).
+#
+# This workflow duplicates checks that `ci.yml` also runs through `make`, which
+# reads against the repo's "One runner" convention. It is kept anyway, for now:
+#
+#   - It is the ONLY reason the masking defect was ever found. Because it runs
+#     `npm test` directly with `working-directory: packages/tech`, it never went
+#     through the masking loop, so it disagreed with `ci` on the same SHA three
+#     times — including 0b09ddc, where `main` was genuinely red and `ci` green.
+#   - It is NOT yet redundant. Its `paths:` filter means it does not run at all
+#     for a change that breaks `packages/tech` without touching
+#     `packages/tech/**` (a root/tooling/docs change, or a semantic merge
+#     conflict like 0b09ddc's). `ci.yml` is the only gate for those commits.
+#
+# Removing it is a SEPARATE change, and only after a reviewer has seen the fixed
+# `ci.yml` go red on its own. Deleting it in the same commit that fixed the
+# Makefile would have removed the backstop and the evidence at once.
+
 on:
   push:
     branches: [main]

@@ -2,7 +2,7 @@
 type: Mission
 title: Periodic Research Target: SVG Generation and Animation
 slug: periodic-research-target-svg-generation-and-animation
-status: approved
+status: active
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp

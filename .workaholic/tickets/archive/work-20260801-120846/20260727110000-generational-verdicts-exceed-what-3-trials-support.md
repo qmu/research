@@ -3,11 +3,12 @@ created_at: 2026-07-27T11:00:00+09:00
 author: a@qmu.jp
 type: enhancement
 layer: [Domain]
-effort: 4h
+effort: 2h
 commit_hash:
 category: Changed
 depends_on:
 mission:
+claim: work-20260801-120846
 ---
 
 # Per-effort generational verdicts claim more precision than 3 trials support — measured run-to-run noise exceeds the deltas being reported
@@ -119,13 +120,88 @@ the remaining sampling work:
       many metrics were excluded. *(landed `32d5165`)*
 - [x] Fixtures cover wide-dispersion suppression, tight-dispersion retention, and
       the cost-metric exemption. *(landed `32d5165`)*
-- [ ] The trial count is stated where verdicts are stated, so a reader can see the
+- [x] The trial count is stated where verdicts are stated, so a reader can see the
       sample behind a direction rather than inferring it.
-- [ ] Paired generational configurations sample deeply enough to support a
+- [x] Paired generational configurations sample deeply enough to support a
       direction — either a higher `--trials` for those configurations only, or a
       documented decision that the current count is sufficient given the gate.
-- [ ] A decision is recorded on whether per-effort verdicts should exist at all,
+- [x] A decision is recorded on whether per-effort verdicts should exist at all,
       or whether the verdict should aggregate across effort levels for a pair;
       per-effort is where the sample is thinnest, and the gate currently suppresses
       most of those directions rather than the design being reconsidered.
-- [ ] `npm test`, `npm run build`, `npm run lint` in `packages/tech` each exit 0.
+- [x] `npm test`, `npm run build`, `npm run lint` in `packages/tech` each exit 0.
+
+## Final Report
+
+The remaining scope was three items — state the sample, decide on trial depth,
+decide on per-effort verdicts. All three are closed, and the trial-depth decision
+turned out to rest on something the ticket had not anticipated.
+
+**1. The trials are stated where the verdict is stated.** The delta table gains a
+**Trials** column drawn from each metric's own `n` — the count of contributing
+successful trials the aggregate already records. It is **per metric, not per
+run**, because the structural probes execute once while the speed probe repeats:
+a single "3 trials" caption would have been wrong for half the rows. When the two
+generations were sampled differently (an `--only-errored` repair can re-measure
+one side more often) both counts are shown as `3 / 5`. Cost rows show `—`, since a
+trial count on a registry fact would be a fabricated sample. The hardcoded
+sentence "Each measurement is three trials" is gone from the intro — the count is
+now derived from the artifact and cannot drift from what actually ran.
+
+**2. Do NOT raise `--trials` for paired configurations — because it would not
+work.** The gate tests
+
+```
+|mean_new − mean_former|  >  sd_former + sd_new
+```
+
+`sd` is the sample standard deviation, an estimate of how much individual trials
+scatter. **It does not shrink as `n` grows** — only its estimate stabilises. So
+spending on 10 or 30 trials per paired configuration would leave the threshold
+essentially where it is and would **not** convert today's `indistinguishable`
+throughput results into supported directions. The current count of 3 is
+therefore "sufficient given the gate", which is precisely the option this
+ticket's acceptance criterion allowed — but for a sharper reason than "it's good
+enough".
+
+**3. Verdicts stay per effort level.** Aggregating across the ladder was
+considered and rejected: `low`, `medium` and `high` are **different operating
+points**, not repeated samples of one quantity. Averaging them would report a
+figure no configuration was ever measured at, and would bury the actual finding
+— that the noise is concentrated at `high` (±30–88%) while `low` reproduced to
+±1%. Per-effort is where the sample is thinnest, which is exactly why the
+dispersion gate is applied there. Suppressing an unsupportable direction is the
+right outcome; collapsing the axis to manufacture a supportable one is not.
+
+Both decisions are recorded in `docs/adr/0008-generational-verdict-sampling.md`
+rather than in this ticket alone, so they are findable from the code.
+
+**A minted ticket:** `20260801124500-generational-gate-uses-dispersion-not-standard-error.md`.
+Decision 2 exposes that the project currently has **no lever at all** for
+resolving the suppressed directions — raising the sample does nothing, and
+lowering the threshold would restore the original defect. The mismatch is that
+the claim is about the two *means* while the test is about the two
+*distributions' spread*; the matching statistic is the standard error of the
+difference, `sqrt(sd_a²/n_a + sd_b²/n_b)`, which **does** shrink with `n`. That
+was not implemented here because it changes which findings the published article
+asserts — a research-reporting decision with an owner, not a refactor.
+
+### Discovered Insights
+
+- **Insight**: The dispersion gate is conservative in a way that is invisible
+  from its output — it can never be satisfied by spending more.
+  **Context**: A reader (or a future session) seeing five of six throughput
+  directions withheld would reasonably conclude "we need more trials". That
+  conclusion is wrong under this statistic, and nothing in the rendered section
+  said so. The ADR now records it, and the `Trials` column makes the sample
+  visible so the reasoning can be checked.
+- **Insight**: `MetricStat.n` already existed and was never surfaced.
+  **Context**: The aggregate has recorded the contributing trial count per metric
+  all along ("so a reader can tell a 3-trial mean from a 1-trial one", per its own
+  comment) — but only the mean and stdDev reached the delta table. The data
+  needed for the ticket's first criterion required no new capture, only wiring.
+- **Insight**: The fixture path does not exercise this section at all.
+  **Context**: `make drift` stayed byte-stable across a rendering change that adds
+  a table column, because the fixture sweep carries no registry pairing and so
+  produces no generational section. Anything changed in `generational-delta.ts`
+  must be covered by unit tests; the drift gate will not catch it.

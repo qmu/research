@@ -26,6 +26,7 @@ import {
   TOKEN_SAMPLES,
   TOKEN_SAMPLES_VERSION,
 } from "./samples";
+import { FIXTURE_USAGE_SURVEY } from "./domain/usage-survey";
 
 /** One ground-truth reading for one text: the provider-reported token count
  * and what the reading itself cost (0 for unbilled count endpoints). */
@@ -267,6 +268,10 @@ export const runTokenMetering = async (
     accuracyTargetPct: ACCURACY_TARGET_PCT,
     families,
     edgeProbes,
+    // The usage-survey axis is keyless today: every row is a `fixtured`
+    // placeholder. The real survey (proposal-gated, billable) replaces rows
+    // with `measured` ones read off real responses.
+    usageSurvey: FIXTURE_USAGE_SURVEY,
     spendUsd:
       Math.round(
         families.reduce((sum, family) => sum + family.spendUsd, 0) * 10_000,

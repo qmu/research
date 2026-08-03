@@ -57,15 +57,19 @@ edit files itself.
   edits; neither proves a desk is unattended. A desk is free only when the
   ledger shows zero agents sent to it. To recover a stalled agent, either
   resume it or launch a replacement — never both.
-- **Never verify through `make`.** `make test` and `make lint`
-  (`Makefile:20-24`) run `@for p in $(PACKAGES); do (cd $$p && npm test);
-  done` — the loop's exit status is the **last** iteration's, so a failure in
-  `packages/tech` (first in `PACKAGES`) is structurally masked, and
-  `packages/industry` has zero test files with `--passWithNoTests`, making
-  `make test` close to a constant green. The defect is filed and unfixed.
-  Verify per package directly (`cd packages/tech && npm test`) with bare,
-  unmasked exit codes — no `| tail`, no `|| true`. The one honest make target
-  is `make drift` (single script, real exit code).
+- **`make` targets report failures — fixed, and guarded.** `make test`, `build`,
+  `lint`, `install` and `format` used to run `@for p in $(PACKAGES); do (cd $$p
+  && npm test); done`, whose exit status is the **last** iteration's, so a
+  failure in `packages/tech` (first in `PACKAGES`) was structurally masked —
+  `main` was genuinely red at `0b09ddc` while CI reported green. They now share
+  one status-accumulating `for_each_package` shape that runs every package,
+  names each one that failed, and returns non-zero. `make gate`
+  (`scripts/check-make-gate.sh`, run first in `ci.yml`) proves this against a
+  scratch fixture with the failure in first, middle and last position, so the
+  masking cannot return unnoticed.
+  Still prefer bare, unmasked exit codes when verifying — no `| tail`, no
+  `|| true` — and note `packages/industry` has zero test files with
+  `--passWithNoTests`, so its green is weak evidence on its own.
 - **PRs are never self-merged.** Agents drive to commit + ticket archive only.
   PR creation and readiness judgment happen via /report; merge, deploy, and
   verification happen via /ship, after the developer names the PR number. Do
