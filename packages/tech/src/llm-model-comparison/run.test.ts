@@ -131,7 +131,7 @@ describe("runTrial", () => {
     expect(t.calls).toHaveLength(4);
     expect(t.calls[0].probe).toBe("speed");
     expect(t.calls[0].ttftMs).toBe(20);
-    expect(t.metrics.throughputTokensPerSec).toBeCloseTo(300, 6); // 30 / ((120-20)/1000)
+    expect(t.metrics.throughputTokensPerSec).toBeCloseTo(250, 6); // 30 / (120/1000), end to end
     // Always conforms → each axis reaches its cap.
     expect(t.metrics.maxSchemaDepth).toBe(4);
     expect(t.metrics.maxSchemaBreadth).toBe(4);
@@ -147,7 +147,7 @@ describe("runTrial", () => {
     expect(t.ok).toBe(true);
     expect(t.calls).toHaveLength(1);
     expect(t.calls[0].probe).toBe("speed");
-    expect(t.metrics.throughputTokensPerSec).toBeCloseTo(300, 6);
+    expect(t.metrics.throughputTokensPerSec).toBeCloseTo(250, 6);
     expect(t.metrics.maxSchemaDepth).toBeNull();
     expect(t.metrics.maxSchemaBreadth).toBeNull();
     expect(t.metrics.informationAccuracy).toBeNull();

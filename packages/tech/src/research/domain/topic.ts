@@ -87,7 +87,7 @@ export const TOPICS: ReadonlyArray<TopicSpec> = [
   {
     id: "speed",
     title:
-      "LLM response speed: sustained throughput, time-to-first-token, and total latency (projection of the compare sweep)",
+      "LLM response speed: output throughput, time-to-first-token, and total latency (projection of the compare sweep)",
     artifactBase: "llm-speed-comparison",
     modes: ["fixture", "estimate", "real"],
     modeArgv: { fixture: ["--fixture"], estimate: ["--estimate"], real: [] },

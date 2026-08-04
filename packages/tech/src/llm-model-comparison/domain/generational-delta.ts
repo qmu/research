@@ -44,7 +44,7 @@ const STAT_METRICS: ReadonlyArray<
   {
     key: "throughputTokensPerSec",
     statKey: "throughputTokensPerSec",
-    title: "Sustained throughput",
+    title: "Output throughput",
     group: "speed",
     unit: "tok/s",
     kind: "number",
@@ -574,9 +574,13 @@ export const renderGenerationDeltaSection = (
     "combined run-to-run spread (the sum of the two standard deviations, shown in " +
     "its own column). The trials behind each mean are stated in their own column, " +
     "so a direction can be read against the sample that produced it: re-running an " +
-    "identical sweep hours apart moved sustained throughput by up to 88% on the " +
-    "same configuration, so a bare percentage change is not by itself evidence of " +
-    "a generational direction. Deltas stay **per effort level** rather than being " +
+    "identical sweep hours apart moved throughput by up to 88% on the same " +
+    "configuration, so a bare percentage change is not by itself evidence of a " +
+    "generational direction. (That 88% was observed under the retired " +
+    "post-first-token throughput definition, which this metric replaced on " +
+    "2026-08-04; it has not been re-measured under the current end-to-end " +
+    "definition, and is quoted here as the last figure actually observed rather " +
+    "than as a current estimate.) Deltas stay **per effort level** rather than being " +
     "aggregated across the ladder, because low, medium and high are different " +
     "operating points and averaging them would report a figure no configuration " +
     "was measured at. Cost figures are registry facts and carry no spread. " +

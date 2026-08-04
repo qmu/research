@@ -2,7 +2,7 @@ import type { ComparisonResult, ConfigRun, Probe, ProbeStats } from "./types";
 
 /**
  * The per-topic split of the combined LLM comparison into two focused topics:
- * SPEED (sustained throughput, TTFT, total latency) and ACCURACY (schema depth /
+ * SPEED (output throughput, TTFT, total latency) and ACCURACY (schema depth /
  * breadth, length-instruction following, information accuracy).
  *
  * Design decision (recorded per the ticket's "wrapper vs split" question): the
@@ -36,7 +36,7 @@ export type SplitAspect = Readonly<{
 export const ASPECT_META: Readonly<Record<SplitMetricKey, SplitAspect>> = {
   throughputTokensPerSec: {
     key: "throughputTokensPerSec",
-    title: "Sustained throughput during generation",
+    title: "Output throughput over the whole request",
     header: "Throughput (tok/s)",
     kind: "number",
     unit: "tok/s",

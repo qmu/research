@@ -1,4 +1,8 @@
 import { writeFile, readFile, readdir, rm, mkdir } from "node:fs/promises";
+import {
+  recomputeThroughput,
+  type ThroughputDefinition,
+} from "../llm-model-comparison/domain/recompute-throughput";
 import { basename, dirname, join, resolve } from "node:path";
 import { gzipSync, gunzipSync } from "node:zlib";
 import { isDirectRun } from "./direct-run";
@@ -318,6 +322,12 @@ type ComparisonCore = Readonly<{
   estimate: RunEstimate;
   /** Absent on artifacts written before the field existed (= version 1). */
   instrumentVersion?: number;
+  /**
+   * Which throughput definition this record's numbers were produced by.
+   * Absent on every record written before 2026-08-04, which means the retired
+   * post-first-token window. See domain/recompute-throughput.ts.
+   */
+  throughputDefinition?: ThroughputDefinition;
 }>;
 
 // Read the latest artifact for an incremental run, or null when none exists yet
@@ -333,11 +343,16 @@ const loadPreviousCore = async (
     return null;
   }
   const parsed = JSON.parse(text) as ComparisonCore;
-  const configs = parsed.configs.map((c) => ({
+  const stamped = parsed.configs.map((c) => ({
     ...c,
     measuredAt: c.measuredAt ?? parsed.generatedAt,
   }));
-  return { ...parsed, configs };
+  // Same reason as in loadCommittedRecord: the local artifact also stores the
+  // rate already computed, and a scoped run merges INTO it, so without this the
+  // carried-forward rows would keep the retired definition while the rows this
+  // run measured used the current one -- one record, two definitions.
+  const { configs } = recomputeThroughput(stamped, parsed.throughputDefinition);
+  return { ...parsed, configs: [...configs] };
 };
 
 /**
@@ -359,19 +374,36 @@ const loadCommittedRecord = async (
   );
   if (names.length === 0) return null;
   const frames: ComparisonCore[] = [];
+  let unrecomputableTrials = 0;
   for (const name of names) {
     const core = JSON.parse(
       gunzipSync(await readFile(join(archiveDir, name))).toString("utf8"),
     ) as ComparisonCore;
-    frames.push({
-      ...core,
-      configs: core.configs.map((c) => ({
+    // Convert EACH FRAME under ITS OWN declared definition, before folding.
+    // Folding first and converting the result would be wrong the moment the
+    // frames disagree: once a post-2026-08-04 frame declares `end-to-end`, a
+    // single conversion over the folded record would either skip the older
+    // frames' configs or rescale the newer ones twice.
+    const converted = recomputeThroughput(
+      core.configs.map((c) => ({
         ...c,
         measuredAt: c.measuredAt ?? core.generatedAt,
       })),
-    });
+      core.throughputDefinition,
+    );
+    unrecomputableTrials += converted.unrecomputable;
+    frames.push({ ...core, configs: [...converted.configs] });
   }
-  return reconstructRecord(frames);
+  const record = reconstructRecord(frames);
+  if (record === null) return null;
+  if (unrecomputableTrials > 0) {
+    process.stderr.write(
+      `throughput: ${unrecomputableTrials} archived trial(s) could be neither ` +
+        `recomputed nor rescaled and keep their stored rate under the retired ` +
+        `definition; they are not comparable with the rest.\n`,
+    );
+  }
+  return { ...record, throughputDefinition: "end-to-end" };
 };
 
 const historyPathFor = (historyBasePath: string): string =>
@@ -797,6 +829,7 @@ export const main = async (): Promise<void> => {
   // captured verbatim — so a report can be regenerated at any detail level from
   // it without re-running the (costly) sweep.
   const core: ComparisonCore = {
+    throughputDefinition: "end-to-end",
     configs,
     trials: args.trials,
     generatedAt: runTimestamp,

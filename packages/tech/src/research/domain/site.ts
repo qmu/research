@@ -150,7 +150,7 @@ export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
     source: {
       text: "LLM response speed",
       docsPath: "docs/research-reports/llm-speed-comparison.md",
-      summary: "Sustained throughput, time-to-first-token, and total latency.",
+      summary: "Output throughput, time-to-first-token, and total latency.",
     },
     japanese: {
       text: "応答速度",
