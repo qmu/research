@@ -1,4 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { recomputeThroughput } from "../llm-model-comparison/domain/recompute-throughput";
 import { basename, dirname, resolve } from "node:path";
 import { isDirectRun } from "./direct-run";
 import type { ComparisonResult } from "../llm-model-comparison/domain/types";
@@ -47,7 +48,23 @@ const readComparison = async (
   path: string,
 ): Promise<ComparisonResult | null> => {
   try {
-    return JSON.parse(await readFile(path, "utf8")) as ComparisonResult;
+    const parsed = JSON.parse(await readFile(path, "utf8")) as ComparisonResult;
+    // Apply the CURRENT throughput definition, exactly as the comparison
+    // entrypoint does when it loads a record. This projection publishes
+    // llm-speed-comparison.md, so skipping it here republished the retired
+    // post-first-token numbers (Opus 5 low at 576 tok/s rather than 96) even
+    // though the comparison report itself had been corrected -- one artifact,
+    // two definitions, depending on which reader opened it.
+    // See llm-model-comparison/domain/recompute-throughput.ts and ADR 0009.
+    const { configs } = recomputeThroughput(
+      parsed.configs,
+      parsed.throughputDefinition,
+    );
+    return {
+      ...parsed,
+      configs: [...configs],
+      throughputDefinition: "end-to-end",
+    };
   } catch {
     return null;
   }

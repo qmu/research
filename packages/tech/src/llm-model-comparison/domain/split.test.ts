@@ -207,3 +207,34 @@ describe("aspectsForGroup", () => {
     );
   });
 });
+
+describe("projectComparison — throughput definition provenance", () => {
+  // A projection that DROPS the source's throughput declaration is read as
+  // retired-definition data, so the next reader converts it a SECOND time and
+  // shrinks already-correct rates. That is silent corruption of published
+  // numbers, and it is invisible in the output: the figures simply become
+  // wrong. See docs/adr/0009-end-to-end-throughput.md.
+  it("carries the source's throughput definition into the projection", () => {
+    const converted = {
+      ...result,
+      throughputDefinition: "end-to-end" as const,
+    };
+    expect(
+      projectComparison(converted, "speed", "src.data.json")
+        .throughputDefinition,
+    ).toBe("end-to-end");
+    expect(
+      projectComparison(converted, "accuracy", "src.data.json")
+        .throughputDefinition,
+    ).toBe("end-to-end");
+  });
+
+  it("leaves it absent when the source does not declare one", () => {
+    // Absent means the retired definition, which is what pre-2026-08-04
+    // artifacts are; inventing a declaration here would suppress the
+    // conversion those artifacts still need.
+    expect(
+      projectComparison(result, "speed", "src.data.json").throughputDefinition,
+    ).toBeUndefined();
+  });
+});

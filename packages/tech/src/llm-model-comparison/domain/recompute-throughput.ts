@@ -41,7 +41,7 @@
 
 import { endToEndTokensPerSecond } from "./throughput";
 import { summarizeTrials } from "./aggregate";
-import type { ConfigRun, TrialResult } from "./types";
+import type { ConfigRun, ThroughputDefinition, TrialResult } from "./types";
 
 // The speed probe's output-token count for one trial, or null when the frame
 // does not carry it.
@@ -51,12 +51,7 @@ const speedCallOutputTokens = (trial: TrialResult): number | null => {
   return Number.isFinite(speed.outputTokens) ? speed.outputTokens : null;
 };
 
-/**
- * Which definition a stored record's throughput numbers were produced by.
- * Absent on every record written before 2026-08-04, which is why the default is
- * the retired one.
- */
-export type ThroughputDefinition = "post-first-token" | "end-to-end";
+export type { ThroughputDefinition };
 
 export type RecomputeOutcome = Readonly<{
   configs: ReadonlyArray<ConfigRun>;

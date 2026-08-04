@@ -1,4 +1,5 @@
 {
+  "throughputDefinition": "end-to-end",
   "configs": [
     {
       "id": "anthropic-claude-fable-5",
@@ -27,7 +28,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -295,7 +296,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -325,7 +326,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -353,10 +354,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -438,7 +439,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -706,7 +707,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -736,7 +737,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -764,10 +765,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -849,7 +850,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -1117,7 +1118,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -1147,7 +1148,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -1175,10 +1176,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -1262,7 +1263,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -1530,7 +1531,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -1560,7 +1561,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -1588,10 +1589,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -1675,7 +1676,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -1943,7 +1944,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -1973,7 +1974,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -2001,10 +2002,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -2088,7 +2089,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -2356,7 +2357,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -2386,7 +2387,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -2414,10 +2415,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -2501,7 +2502,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -2769,7 +2770,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -2799,7 +2800,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -2827,10 +2828,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -2914,7 +2915,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -3182,7 +3183,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -3212,7 +3213,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -3240,10 +3241,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -3327,7 +3328,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -3595,7 +3596,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -3625,7 +3626,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -3653,10 +3654,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -3738,7 +3739,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -4006,7 +4007,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -4036,7 +4037,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -4064,10 +4065,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -4149,7 +4150,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -4417,7 +4418,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -4447,7 +4448,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -4475,10 +4476,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -4560,7 +4561,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -4828,7 +4829,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -4858,7 +4859,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -4886,10 +4887,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -4967,7 +4968,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -5235,7 +5236,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -5265,7 +5266,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -5293,10 +5294,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -5377,7 +5378,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -5645,7 +5646,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -5675,7 +5676,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -5703,10 +5704,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -5787,7 +5788,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -6055,7 +6056,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -6085,7 +6086,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -6113,10 +6114,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -6197,7 +6198,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -6465,7 +6466,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -6495,7 +6496,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -6523,10 +6524,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -6607,7 +6608,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -6875,7 +6876,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -6905,7 +6906,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -6933,10 +6934,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -7017,7 +7018,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -7285,7 +7286,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -7315,7 +7316,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -7343,10 +7344,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -7427,7 +7428,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -7695,7 +7696,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -7725,7 +7726,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -7753,10 +7754,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -7837,7 +7838,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -8105,7 +8106,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -8135,7 +8136,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -8163,10 +8164,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -8247,7 +8248,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -8515,7 +8516,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -8545,7 +8546,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -8573,10 +8574,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -8657,7 +8658,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -8925,7 +8926,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -8955,7 +8956,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -8983,10 +8984,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -9067,7 +9068,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -9335,7 +9336,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -9365,7 +9366,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -9393,10 +9394,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -9477,7 +9478,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -9745,7 +9746,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -9775,7 +9776,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -9803,10 +9804,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -9887,7 +9888,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -10155,7 +10156,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -10185,7 +10186,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -10213,10 +10214,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -10296,7 +10297,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -10564,7 +10565,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -10594,7 +10595,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -10622,10 +10623,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -10705,7 +10706,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -10973,7 +10974,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -11003,7 +11004,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -11031,10 +11032,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -11114,7 +11115,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -11382,7 +11383,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -11412,7 +11413,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -11440,10 +11441,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -11522,7 +11523,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -11790,7 +11791,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -11820,7 +11821,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -11848,10 +11849,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -11933,7 +11934,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -12201,7 +12202,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -12231,7 +12232,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -12259,10 +12260,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -12344,7 +12345,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -12612,7 +12613,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -12642,7 +12643,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -12670,10 +12671,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -12755,7 +12756,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -13023,7 +13024,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -13053,7 +13054,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -13081,10 +13082,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -13165,7 +13166,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -13433,7 +13434,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -13463,7 +13464,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -13491,10 +13492,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -13575,7 +13576,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -13843,7 +13844,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -13873,7 +13874,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -13901,10 +13902,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -13985,7 +13986,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -14253,7 +14254,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -14283,7 +14284,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -14311,10 +14312,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -14394,7 +14395,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -14662,7 +14663,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -14692,7 +14693,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -14720,10 +14721,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -14803,7 +14804,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -15071,7 +15072,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -15101,7 +15102,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -15129,10 +15130,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -15212,7 +15213,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -15480,7 +15481,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -15510,7 +15511,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -15538,10 +15539,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -15623,7 +15624,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -15891,7 +15892,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -15921,7 +15922,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -15949,10 +15950,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -16034,7 +16035,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -16302,7 +16303,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -16332,7 +16333,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -16360,10 +16361,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -16445,7 +16446,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -16713,7 +16714,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -16743,7 +16744,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -16771,10 +16772,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -16856,7 +16857,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -17124,7 +17125,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -17154,7 +17155,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -17182,10 +17183,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -17267,7 +17268,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -17535,7 +17536,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -17565,7 +17566,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -17593,10 +17594,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -17678,7 +17679,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -17946,7 +17947,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -17976,7 +17977,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -18004,10 +18005,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -18089,7 +18090,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -18357,7 +18358,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -18387,7 +18388,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -18415,10 +18416,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -18500,7 +18501,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -18768,7 +18769,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -18798,7 +18799,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -18826,10 +18827,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -18911,7 +18912,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -19179,7 +19180,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -19209,7 +19210,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -19237,10 +19238,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -19322,7 +19323,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -19590,7 +19591,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -19620,7 +19621,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -19648,10 +19649,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -19733,7 +19734,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -20001,7 +20002,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -20031,7 +20032,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -20059,10 +20060,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -20144,7 +20145,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -20412,7 +20413,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -20442,7 +20443,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -20470,10 +20471,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -20554,7 +20555,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -20822,7 +20823,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -20852,7 +20853,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -20880,10 +20881,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -20964,7 +20965,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -21232,7 +21233,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -21262,7 +21263,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -21290,10 +21291,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -21374,7 +21375,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -21642,7 +21643,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -21672,7 +21673,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -21700,10 +21701,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -21781,7 +21782,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -22049,7 +22050,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -22079,7 +22080,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -22107,10 +22108,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -22188,7 +22189,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -22456,7 +22457,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -22486,7 +22487,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -22514,10 +22515,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -22595,7 +22596,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -22863,7 +22864,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -22893,7 +22894,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -22921,10 +22922,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -23002,7 +23003,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -23270,7 +23271,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -23300,7 +23301,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -23328,10 +23329,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -23409,7 +23410,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -23677,7 +23678,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -23707,7 +23708,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -23735,10 +23736,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -23816,7 +23817,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -24084,7 +24085,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -24114,7 +24115,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -24142,10 +24143,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -24227,7 +24228,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -24495,7 +24496,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -24525,7 +24526,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -24553,10 +24554,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -24638,7 +24639,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -24906,7 +24907,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -24936,7 +24937,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -24964,10 +24965,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -25049,7 +25050,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -25317,7 +25318,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -25347,7 +25348,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -25375,10 +25376,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -25460,7 +25461,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -25728,7 +25729,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -25758,7 +25759,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -25786,10 +25787,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -25871,7 +25872,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -26139,7 +26140,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -26169,7 +26170,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -26197,10 +26198,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -26282,7 +26283,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -26550,7 +26551,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -26580,7 +26581,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -26608,10 +26609,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -26693,7 +26694,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -26961,7 +26962,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -26991,7 +26992,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -27019,10 +27020,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -27104,7 +27105,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -27372,7 +27373,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -27402,7 +27403,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -27430,10 +27431,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -27515,7 +27516,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -27783,7 +27784,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -27813,7 +27814,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -27841,10 +27842,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -27922,7 +27923,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -28190,7 +28191,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -28220,7 +28221,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -28248,10 +28249,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {
@@ -28329,7 +28330,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 166.66666666666666,
+            "throughputTokensPerSec": 162.32073011734028,
             "ttftMs": 40,
             "totalLatencyMs": 1534,
             "maxSchemaDepth": 8,
@@ -28597,7 +28598,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 142.85714285714286,
+            "throughputTokensPerSec": 139.43112102621305,
             "ttftMs": 43,
             "totalLatencyMs": 1793,
             "maxSchemaDepth": null,
@@ -28627,7 +28628,7 @@
           "ok": true,
           "error": null,
           "metrics": {
-            "throughputTokensPerSec": 125,
+            "throughputTokensPerSec": 122.20058422590068,
             "ttftMs": 46,
             "totalLatencyMs": 2054,
             "maxSchemaDepth": null,
@@ -28655,10 +28656,10 @@
       ],
       "stats": {
         "throughputTokensPerSec": {
-          "mean": 144.84126984126985,
-          "stdDev": 20.904074906453843,
-          "min": 125,
-          "max": 166.66666666666666,
+          "mean": 141.31747845648468,
+          "stdDev": 20.126482177808793,
+          "min": 122.20058422590068,
+          "max": 162.32073011734028,
           "n": 3
         },
         "ttftMs": {

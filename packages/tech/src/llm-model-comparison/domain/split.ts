@@ -1,4 +1,10 @@
-import type { ComparisonResult, ConfigRun, Probe, ProbeStats } from "./types";
+import type {
+  ComparisonResult,
+  ConfigRun,
+  Probe,
+  ProbeStats,
+  ThroughputDefinition,
+} from "./types";
 
 /**
  * The per-topic split of the combined LLM comparison into two focused topics:
@@ -163,6 +169,12 @@ export type SplitArtifact = Readonly<{
   artifactPath: string;
   /** Carried from the source comparison; 1 for artifacts predating the field. */
   instrumentVersion: number;
+  /**
+   * Carried from the source comparison. A projection that DROPPED this would be
+   * read as retired-definition data and converted a second time, shrinking
+   * already-correct rates. See docs/adr/0009-end-to-end-throughput.md.
+   */
+  throughputDefinition?: ThroughputDefinition;
 }>;
 
 const filterConfigToGroup = (
@@ -219,6 +231,7 @@ export const projectComparison = (
     ),
     artifactPath: `${spec.artifactBase}.data.json`,
     instrumentVersion: result.instrumentVersion ?? 1,
+    throughputDefinition: result.throughputDefinition,
   };
 };
 
