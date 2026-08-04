@@ -15,6 +15,7 @@ concerns: []
 gate_type:
 gate_target:
 gate_assert:
+claim: work-20260804-165538
 ---
 
 # Support newly released Claude models in the LLM comparison
