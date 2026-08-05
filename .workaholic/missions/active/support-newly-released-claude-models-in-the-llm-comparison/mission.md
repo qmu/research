@@ -104,7 +104,7 @@ sweep within the $15 ceiling committed as a dated frame.
 - [x] Comparison registry updated: `claude-opus-5` added as the current Anthropic flagship with web-verified price/effort/API surface; `claude-opus-4-8` retained as a tagged previous-generation entry paired to its successor (identical tier/config); Claude Fable 5 repriced to the web-verified $10/$50 and every other Anthropic id/price re-verified; Sonnet 5's introductory-pricing window recorded; model reference catalog updated; keyless fixture byte-stable; per-package tests/build/lint green (#20260726184500-claude-comparison-registry-add-opus-5.md)
 - [x] The generational-delta insight built in the Gemini round pairs Opus 5 → Opus 4.8 and renders the per-metric delta and net verdict into the EN report (§4/§7) and the JP insights, with the `not-measured` label on the keyless path (#20260726184500-claude-comparison-registry-add-opus-5.md)
 - [x] Real head-to-head sweep priced with `--estimate` then run within the $15/run ceiling under identical instrument-v2 conditions (only the Claude models differ); committed as a dated frame; EN/JP comparison pages + generational-delta recomposed from the measured frame; provenance honest (#20260726184501-claude-headtohead-real-sweep.md)
-- [x] qmu-co-jp receives the refreshed comparison + generational-delta article through the publish ticket flow on the next `/ship` (#20260726184501-claude-headtohead-real-sweep.md)
+- [ ] qmu-co-jp receives the refreshed comparison + generational-delta article through the publish ticket flow on the next `/ship` (#20260726184501-claude-headtohead-real-sweep.md)
 
 ## Changelog
 
