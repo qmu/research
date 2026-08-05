@@ -150,3 +150,61 @@ band would admit it more readily.
   computable from the committed frame at no further cost.
 - The 2026-08-04 run cost ~$8.84 of the approved $15 ceiling. A re-run is not
   required and would not produce different raw numbers.
+
+## Final Report
+
+Resolved 2026-08-05 on `work-20260804-165538`. Owner chose **end-to-end
+tokens/sec**; recorded as `docs/adr/0009-end-to-end-throughput.md`.
+
+### What changed
+
+Throughput is `outputTokens / totalMs`. The function takes **no**
+time-to-first-token parameter — accepting one is what let an uncaptured
+first-token event change the denominator, so the same configuration read
+~90 tok/s on trials where the event was missed and ~2160 where it was caught.
+Removing the parameter makes that class of error unrepresentable rather than
+guarded against. Renamed "sustained throughput" → "output throughput", because
+"sustained" described the retired window.
+
+Step 2 of this ticket (the `ttftMs == 0` fallback) is also done, and turned out
+to be its own defect rather than a detail of this one: all six adapters
+initialised `ttftMs` to 0 and used 0 as the "not captured" sentinel, so a
+non-measurement entered the mean as a real sample. They now emit `null`.
+
+### Steps
+
+1. **Decide the quantity with the owner** — done, end-to-end. ADR 0009 records
+   the rejected alternatives, including keeping the retired window with a
+   footnote, which was rejected because a metric that cannot support the
+   comparison the page invites is not fixed by a caveat.
+2. **Fix the `ttftMs == 0` fallback** — done, at the adapter layer, with
+   committed frames converted on read.
+3. **Re-render the committed frames and state the changes** — done; 7 of 9
+   generational throughput directions changed, enumerated in the branch story
+   and in ADR 0009's Consequences.
+4. **Record the decision in an ADR** — done, 0009.
+
+### Quality gate
+
+| criterion | status |
+| --------- | ------ |
+| Fixture asserts the reported rate cannot exceed the end-to-end rate | met |
+| An uncaptured first-token time is distinguishable in the artifact | met — `null`, not 0 |
+| Re-rendering yields a throughput direction consistent with total response time, or none | met — Opus 5 `low` is +78% improved against a regressed total time, coherent because Opus 5 emits ~4.5× more tokens in ~2.3× the time |
+| Existing fixtures still cover wide-dispersion suppression and the cost exemption | met — full suite green, 743 passed |
+| `npm test` / `build` / `lint` each exit 0 | met, bare exit codes |
+
+### Notes
+
+- **No re-run was required**, as this ticket's Considerations predicted. The raw
+  per-trial inputs survive in the frames; where they do not, the retired rate
+  rescales exactly because the token count cancels. The $8.84 frame stayed valid.
+- **The conversion had to reach every reader, not just one.** Applying it in the
+  comparison entrypoint alone left `run-split-topic.ts` publishing retired
+  numbers — the EN page read 576 tok/s while the comparison report beside it read
+  96. Artifacts now declare their definition and projections carry that
+  declaration, because a projection that dropped it would be rescaled a second
+  time and silently shrink correct rates.
+- **Still open:** uncaptured first-token times are excluded, not recovered.
+  Opus 5 `max` reports TTFT at n=1. Recovery needs re-measurement, which no
+  committed frame can supply. Tracked in ADR 0009's Open section.
