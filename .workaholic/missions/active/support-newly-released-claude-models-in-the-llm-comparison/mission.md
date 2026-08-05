@@ -117,3 +117,4 @@ sweep within the $15 ceiling committed as a dated frame.
 - 2026-07-26 — drive-authorized — head-to-head spend approved ($15/run ceiling, --estimate first); Opus 5 = current flagship paired to Opus 4.8; Fable 5 price drift $6/$30 → web-verified $10/$50; depends on the Gemini round's pairing + delta renderer landing first — mission.md
 - 2026-07-26 — duration predicted (archive basis 0) — mission.md
 - 2026-08-01 — ticket archived — 20260726184500-claude-comparison-registry-add-opus-5.md
+- 2026-08-05 — ticket archived — 20260804170000-sustained-throughput-excludes-thinking-time.md

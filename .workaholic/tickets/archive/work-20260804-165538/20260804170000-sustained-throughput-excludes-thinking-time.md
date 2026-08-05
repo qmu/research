@@ -5,7 +5,7 @@ type: bugfix
 layer: [Domain]
 effort:
 commit_hash:
-category:
+category: Changed
 mission: support-newly-released-claude-models-in-the-llm-comparison
 depends_on:
 ---
