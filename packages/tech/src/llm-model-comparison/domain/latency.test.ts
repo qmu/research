@@ -20,3 +20,18 @@ describe("normalizeLatency", () => {
     expect(normalizeLatency(900, 800)).toEqual({ ttftMs: 800, totalMs: 800 });
   });
 });
+
+describe("normalizeLatency — a missing first-token time", () => {
+  // Clamping null to 0 is what made "not captured" and "instant" the same
+  // value, and 0 then counted as a real sample in the mean.
+  it("keeps null as null rather than clamping it to zero", () => {
+    expect(normalizeLatency(null, 1000)).toEqual({
+      ttftMs: null,
+      totalMs: 1000,
+    });
+  });
+
+  it("still normalizes the total when the first-token time is missing", () => {
+    expect(normalizeLatency(null, -5)).toEqual({ ttftMs: null, totalMs: 0 });
+  });
+});

@@ -659,7 +659,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 88.93520931040473,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 23028,
             "maxSchemaDepth": 21,
             "maxSchemaBreadth": 72,
@@ -689,7 +689,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 88.83105617002819,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 23055,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -719,7 +719,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 91.68233503447041,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 22338,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -757,7 +757,7 @@
           "stdDev": 0,
           "min": 0,
           "max": 0,
-          "n": 3
+          "n": 0
         },
         "totalLatencyMs": {
           "mean": 22807,
@@ -2199,7 +2199,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 108.52055955913522,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 18872,
             "maxSchemaDepth": 15,
             "maxSchemaBreadth": 72,
@@ -2229,7 +2229,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 98.44260719092482,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 20804,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -2259,7 +2259,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 106.39513740973557,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 19249,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -2297,7 +2297,7 @@
           "stdDev": 0,
           "min": 0,
           "max": 0,
-          "n": 3
+          "n": 0
         },
         "totalLatencyMs": {
           "mean": 19641.666666666668,
@@ -5326,7 +5326,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 199.9609451279047,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 10242,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -5360,11 +5360,11 @@
           "n": 3
         },
         "ttftMs": {
-          "mean": 4896.333333333333,
-          "stdDev": 4422.595655645374,
-          "min": 0,
+          "mean": 7344.5,
+          "stdDev": 1776.9593411217938,
+          "min": 6088,
           "max": 8601,
-          "n": 3
+          "n": 2
         },
         "totalLatencyMs": {
           "mean": 9088.666666666666,
@@ -5437,7 +5437,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 181.54418934491622,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 11281,
             "maxSchemaDepth": 10,
             "maxSchemaBreadth": 1,
@@ -5467,7 +5467,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 188.02791039294894,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 10892,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -5497,7 +5497,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 181.80204172214826,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 11265,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -5535,7 +5535,7 @@
           "stdDev": 0,
           "min": 0,
           "max": 0,
-          "n": 3
+          "n": 0
         },
         "totalLatencyMs": {
           "mean": 11146,
@@ -6250,7 +6250,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 0,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 18047,
             "maxSchemaDepth": 10,
             "maxSchemaBreadth": 192,
@@ -6344,11 +6344,11 @@
           "n": 3
         },
         "ttftMs": {
-          "mean": 10810.333333333334,
-          "stdDev": 10005.59395205169,
-          "min": 0,
+          "mean": 16215.5,
+          "stdDev": 4992.880981958212,
+          "min": 12685,
           "max": 19746,
-          "n": 3
+          "n": 2
         },
         "totalLatencyMs": {
           "mean": 17586.333333333332,
@@ -6624,7 +6624,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 0,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 9729,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -6688,11 +6688,11 @@
           "n": 3
         },
         "ttftMs": {
-          "mean": 3813.6666666666665,
-          "stdDev": 3409.487107078326,
-          "min": 0,
+          "mean": 5720.5,
+          "stdDev": 1197.131780548825,
+          "min": 4874,
           "max": 6567,
-          "n": 3
+          "n": 2
         },
         "totalLatencyMs": {
           "mean": 8021.666666666667,
@@ -6766,7 +6766,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 0,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 10045,
             "maxSchemaDepth": 10,
             "maxSchemaBreadth": 192,
@@ -6796,7 +6796,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 0,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 10115,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -6860,11 +6860,11 @@
           "n": 3
         },
         "ttftMs": {
-          "mean": 1726,
-          "stdDev": 2989.5196938638824,
-          "min": 0,
+          "mean": 5178,
+          "stdDev": 0,
+          "min": 5178,
           "max": 5178,
-          "n": 3
+          "n": 1
         },
         "totalLatencyMs": {
           "mean": 8873.333333333334,
@@ -11619,7 +11619,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 89.97056626982383,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 22763,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -11683,11 +11683,11 @@
           "n": 3
         },
         "ttftMs": {
-          "mean": 10459.333333333334,
-          "stdDev": 9998.326326607536,
-          "min": 0,
+          "mean": 15689,
+          "stdDev": 5986.366009525312,
+          "min": 11456,
           "max": 19922,
-          "n": 3
+          "n": 2
         },
         "totalLatencyMs": {
           "mean": 19882.666666666668,
@@ -11764,7 +11764,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 89.1597736177623,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 22970,
             "maxSchemaDepth": 21,
             "maxSchemaBreadth": 72,
@@ -11794,7 +11794,7 @@
           "error": null,
           "metrics": {
             "throughputTokensPerSec": 92.26056401477611,
-            "ttftMs": 0,
+            "ttftMs": null,
             "totalLatencyMs": 22198,
             "maxSchemaDepth": null,
             "maxSchemaBreadth": null,
@@ -11858,11 +11858,11 @@
           "n": 3
         },
         "ttftMs": {
-          "mean": 7250.333333333333,
-          "stdDev": 12557.945705143551,
-          "min": 0,
+          "mean": 21751,
+          "stdDev": 0,
+          "min": 21751,
           "max": 21751,
-          "n": 3
+          "n": 1
         },
         "totalLatencyMs": {
           "mean": 22622.333333333332,

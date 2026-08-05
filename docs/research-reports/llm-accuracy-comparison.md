@@ -561,7 +561,7 @@ _Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
 | Input cost | $5.00 | $5.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 | Output cost | $25.00 | $25.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 
-_Net verdict: **mixed** — 1 improved, 3 regressed, 3 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
+_Net verdict: **mixed** — 1 improved, 4 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 **Effort `max`.**
 
@@ -574,7 +574,7 @@ _Net verdict: **mixed** — 1 improved, 3 regressed, 3 unchanged of 9 metrics; 2
 | Input cost | $5.00 | $5.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 | Output cost | $25.00 | $25.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 
-_Net verdict: **mixed** — 1 improved, 4 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
+_Net verdict: **mixed** — 1 improved, 5 regressed, 3 unchanged of 9 metrics._
 
 ##### Gemini 3.5 Flash → Gemini 3.6 Flash
 

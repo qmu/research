@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { recomputeThroughput } from "../llm-model-comparison/domain/recompute-throughput";
+import { readMissingTtftAsNull } from "../llm-model-comparison/domain/missing-ttft";
 import { basename, dirname, resolve } from "node:path";
 import { isDirectRun } from "./direct-run";
 import type { ComparisonResult } from "../llm-model-comparison/domain/types";
@@ -60,9 +61,11 @@ const readComparison = async (
       parsed.configs,
       parsed.throughputDefinition,
     );
+    // Same for a stored first-token time of 0, which meant "not captured" and
+    // was averaged as if it were a measurement.
     return {
       ...parsed,
-      configs: [...configs],
+      configs: [...readMissingTtftAsNull(configs).configs],
       throughputDefinition: "end-to-end",
     };
   } catch {

@@ -36,7 +36,7 @@ This run measured **68 of 74 configurations** across 5 providers and 24 models, 
 | Aspect | Best (configuration) | Median | Worst |
 | ------ | -------------------- | ------ | ----- |
 | Output throughput over the whole request | 194.4 tok/s — o4-mini [medium] | 55.9 tok/s | 4.1 tok/s |
-| Time to first token | 0 ms — Claude Fable 5 [max] | 5238 ms | 37966 ms |
+| Time to first token | 0 ms — Claude Fable 5 [max] | 5553 ms | 37966 ms |
 | Total response time | 623 ms — GPT-5.4 nano [low] | 7531 ms | 38918 ms |
 
 Values are per-configuration means; "Best"/"Worst" follow each aspect's own direction (higher-is-better or lower-is-better). The full per-configuration tables — every model×effort cell with confidence intervals, min–max, and provenance — are in section 7, Verification Data.
@@ -47,7 +47,7 @@ This round includes a controlled former→new generational comparison: paired pr
 
 Highest measured of the 68 measured configuration(s): **o4-mini [medium]** at 194 ± 6 tok/s (95% CI, n=3). Opposite end of this measurement: Grok 4.3 [low] at 4 tok/s (n=1).
 
-Lowest measured of the 68 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
+Lowest measured of the 68 measured configuration(s): **Claude Fable 5 [max]** at 0 ms (n=0). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
 
 Lowest measured of the 68 measured configuration(s): **GPT-5.4 nano [low]** at 623 ms (n=1). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 38918 ± 16237 ms (95% CI, n=3).
 
@@ -84,7 +84,7 @@ The projection creates no external resources. Real runs write local `.real` Mark
 | Anthropic | Claude Fable 5 | frontier | medium | $6.00 / $30.00 | 15 tok/s (n=1) | 3434 ms (n=1) | 4418 ms (n=1) |
 | Anthropic | Claude Fable 5 | frontier | high | $10.00 / $50.00 | 86 ± 3 tok/s (95% CI, n=3) | 17777 ± 955 ms (95% CI, n=3) | 20659 ± 1020 ms (95% CI, n=3) |
 | Anthropic | Claude Fable 5 | frontier | xhigh | $6.00 / $30.00 | 12 tok/s (n=1) | 3466 ms (n=1) | 4253 ms (n=1) |
-| Anthropic | Claude Fable 5 | frontier | max | $10.00 / $50.00 | 90 ± 2 tok/s (95% CI, n=3) | 0 ± 0 ms (95% CI, n=3) | 22807 ± 460 ms (95% CI, n=3) |
+| Anthropic | Claude Fable 5 | frontier | max | $10.00 / $50.00 | 90 ± 2 tok/s (95% CI, n=3) | 0 ms (n=0) | 22807 ± 460 ms (95% CI, n=3) |
 | Anthropic | Claude Opus 4.8 | flagship | low | $5.00 / $25.00 | 54 ± 5 tok/s (95% CI, n=3) | 1180 ± 179 ms (95% CI, n=3) | 7058 ± 652 ms (95% CI, n=3) |
 | Anthropic | Claude Opus 4.8 | flagship | medium | $5.00 / $25.00 | 23 tok/s (n=1) | 1176 ms (n=1) | 1935 ms (n=1) |
 | Anthropic | Claude Opus 4.8 | flagship | high | $5.00 / $25.00 | 53 ± 1 tok/s (95% CI, n=3) | 1072 ± 56 ms (95% CI, n=3) | 7141 ± 255 ms (95% CI, n=3) |
@@ -94,7 +94,7 @@ The projection creates no external resources. Real runs write local `.real` Mark
 | Anthropic | Claude Sonnet 5 | mid | medium | $3.00 / $15.00 | 38 tok/s (n=1) | 938 ms (n=1) | 1757 ms (n=1) |
 | Anthropic | Claude Sonnet 5 | mid | high | $3.00 / $15.00 | 58 ± 18 tok/s (95% CI, n=3) | 4568 ± 2883 ms (95% CI, n=3) | 8670 ± 1450 ms (95% CI, n=3) |
 | Anthropic | Claude Sonnet 5 | mid | xhigh | $3.00 / $15.00 | 36 tok/s (n=1) | 961 ms (n=1) | 1589 ms (n=1) |
-| Anthropic | Claude Sonnet 5 | mid | max | $3.00 / $15.00 | 104 ± 6 tok/s (95% CI, n=3) | 0 ± 0 ms (95% CI, n=3) | 19642 ± 1159 ms (95% CI, n=3) |
+| Anthropic | Claude Sonnet 5 | mid | max | $3.00 / $15.00 | 104 ± 6 tok/s (95% CI, n=3) | 0 ms (n=0) | 19642 ± 1159 ms (95% CI, n=3) |
 | Anthropic | Claude Haiku 4.5 | small | n/a | $1.00 / $5.00 | 70 ± 7 tok/s (95% CI, n=3) | 1005 ± 320 ms (95% CI, n=3) | 3816 ± 271 ms (95% CI, n=3) |
 | OpenAI | GPT-5.5 | flagship | none | $5.00 / $30.00 | 38 ± 4 tok/s (95% CI, n=3) | 1295 ± 797 ms (95% CI, n=3) | 6264 ± 685 ms (95% CI, n=3) |
 | OpenAI | GPT-5.5 | flagship | low | $5.00 / $30.00 | 13 tok/s (n=1) | 912 ms (n=1) | 1380 ms (n=1) |
@@ -113,16 +113,16 @@ The projection creates no external resources. Real runs write local `.real` Mark
 | OpenAI | GPT-5.4 nano | small | medium | $0.15 / $0.60 | 171 ± 8 tok/s (95% CI, n=3) | 5618 ± 926 ms (95% CI, n=3) | 6918 ± 794 ms (95% CI, n=3) |
 | OpenAI | GPT-5.4 nano | small | high | $0.15 / $0.60 | 167 ± 3 tok/s (95% CI, n=3) | 6161 ± 364 ms (95% CI, n=3) | 7551 ± 354 ms (95% CI, n=3) |
 | OpenAI | o4-mini | mid | low | $1.10 / $4.40 | 184 ± 7 tok/s (95% CI, n=3) | 6121 ± 869 ms (95% CI, n=3) | 7380 ± 847 ms (95% CI, n=3) |
-| OpenAI | o4-mini | mid | medium | $1.10 / $4.40 | 194 ± 6 tok/s (95% CI, n=3) | 4896 ± 5005 ms (95% CI, n=3) | 9089 ± 1797 ms (95% CI, n=3) |
-| OpenAI | o4-mini | mid | high | $1.10 / $4.40 | 184 ± 4 tok/s (95% CI, n=3) | 0 ± 0 ms (95% CI, n=3) | 11146 ± 249 ms (95% CI, n=3) |
+| OpenAI | o4-mini | mid | medium | $1.10 / $4.40 | 194 ± 6 tok/s (95% CI, n=3) | 7345 ± 2463 ms (95% CI, n=2) | 9089 ± 1797 ms (95% CI, n=3) |
+| OpenAI | o4-mini | mid | high | $1.10 / $4.40 | 184 ± 4 tok/s (95% CI, n=3) | 0 ms (n=0) | 11146 ± 249 ms (95% CI, n=3) |
 | OpenAI | GPT Realtime | flagship | n/a | $4.00 / $16.00 | 91 ± 9 tok/s (95% CI, n=3) | 1137 ± 656 ms (95% CI, n=3) | 3595 ± 1462 ms (95% CI, n=3) |
 | OpenAI | GPT-5.3 Codex | flagship | low | $1.75 / $14.00 | 108 ± 6 tok/s (95% CI, n=3) | 7582 ± 252 ms (95% CI, n=3) | 9396 ± 674 ms (95% CI, n=3) |
 | OpenAI | GPT-5.3 Codex | flagship | medium | $1.75 / $14.00 | 29 tok/s (n=1) | 760 ms (n=1) | 1529 ms (n=1) |
 | OpenAI | GPT-5.3 Codex | flagship | high | $1.75 / $14.00 | 112 ± 11 tok/s (95% CI, n=3) | 11015 ± 4210 ms (95% CI, n=3) | 12711 ± 4083 ms (95% CI, n=3) |
-| OpenAI | GPT-5.3 Codex | flagship | xhigh | $1.75 / $14.00 | 40 ± 78 tok/s (95% CI, n=3) | 10810 ± 11322 ms (95% CI, n=3) | 17586 ± 3612 ms (95% CI, n=3) |
+| OpenAI | GPT-5.3 Codex | flagship | xhigh | $1.75 / $14.00 | 40 ± 78 tok/s (95% CI, n=3) | 16216 ± 6920 ms (95% CI, n=2) | 17586 ± 3612 ms (95% CI, n=3) |
 | OpenAI | GPT-5.1 Codex mini | small | low | $0.25 / $2.00 | 172 ± 43 tok/s (95% CI, n=3) | 3795 ± 3067 ms (95% CI, n=3) | 5090 ± 3057 ms (95% CI, n=3) |
-| OpenAI | GPT-5.1 Codex mini | small | medium | $0.25 / $2.00 | 117 ± 119 tok/s (95% CI, n=3) | 3814 ± 3858 ms (95% CI, n=3) | 8022 ± 2015 ms (95% CI, n=3) |
-| OpenAI | GPT-5.1 Codex mini | small | high | $0.25 / $2.00 | 63 ± 123 tok/s (95% CI, n=3) | 1726 ± 3383 ms (95% CI, n=3) | 8873 ± 2365 ms (95% CI, n=3) |
+| OpenAI | GPT-5.1 Codex mini | small | medium | $0.25 / $2.00 | 117 ± 119 tok/s (95% CI, n=3) | 5721 ± 1659 ms (95% CI, n=2) | 8022 ± 2015 ms (95% CI, n=3) |
+| OpenAI | GPT-5.1 Codex mini | small | high | $0.25 / $2.00 | 63 ± 123 tok/s (95% CI, n=3) | 5178 ms (n=1) | 8873 ± 2365 ms (95% CI, n=3) |
 | Google | Gemini 3.1 Pro | flagship | low | $2.00 / $12.00 | 5 ± 0 tok/s (95% CI, n=3) | 14977 ± 45 ms (95% CI, n=3) | 15276 ± 43 ms (95% CI, n=3) |
 | Google | Gemini 3.1 Pro | flagship | medium | $2.00 / $12.00 | 5 ± 0 tok/s (95% CI, n=3) | 15376 ± 903 ms (95% CI, n=3) | 15646 ± 864 ms (95% CI, n=3) |
 | Google | Gemini 3.1 Pro | flagship | high | $2.00 / $12.00 | 5 ± 0 tok/s (95% CI, n=3) | 15497 ± 979 ms (95% CI, n=3) | 15782 ± 988 ms (95% CI, n=3) |
@@ -152,8 +152,8 @@ The projection creates no external resources. Real runs write local `.real` Mark
 | Google | Gemini 3.5 Flash-Lite | small | medium | $0.30 / $2.50 | 16 ± 2 tok/s (95% CI, n=3) | 5052 ± 534 ms (95% CI, n=3) | 5170 ± 566 ms (95% CI, n=3) |
 | Google | Gemini 3.5 Flash-Lite | small | high | $0.30 / $2.50 | 14 ± 1 tok/s (95% CI, n=3) | 5512 ± 180 ms (95% CI, n=3) | 5628 ± 138 ms (95% CI, n=3) |
 | Anthropic | Claude Opus 5 | flagship | low | $5.00 / $25.00 | 97 ± 8 tok/s (95% CI, n=3) | 13378 ± 3470 ms (95% CI, n=3) | 16046 ± 3430 ms (95% CI, n=3) |
-| Anthropic | Claude Opus 5 | flagship | high | $5.00 / $25.00 | 92 ± 2 tok/s (95% CI, n=3) | 10459 ± 11314 ms (95% CI, n=3) | 19883 ± 4784 ms (95% CI, n=3) |
-| Anthropic | Claude Opus 5 | flagship | max | $5.00 / $25.00 | 91 ± 2 tok/s (95% CI, n=3) | 7250 ± 14211 ms (95% CI, n=3) | 22622 ± 443 ms (95% CI, n=3) |
+| Anthropic | Claude Opus 5 | flagship | high | $5.00 / $25.00 | 92 ± 2 tok/s (95% CI, n=3) | 15689 ± 8297 ms (95% CI, n=2) | 19883 ± 4784 ms (95% CI, n=3) |
+| Anthropic | Claude Opus 5 | flagship | max | $5.00 / $25.00 | 91 ± 2 tok/s (95% CI, n=3) | 21751 ms (n=1) | 22622 ± 443 ms (95% CI, n=3) |
 
 **Legend.** Provider, Model, Tier, Effort, and Cost are curated catalog data. The metric columns are measured values. `n/a (fixtured)` means the deterministic fixture client produced the cell; `n/a (error)` means every trial for that configuration failed.
 
@@ -248,7 +248,7 @@ Highest measured of the 68 measured configuration(s): **o4-mini [medium]** at 19
 | Claude Fable 5 [medium] | 3434 ms (n=1) | 3434–3434 | 1 |
 | Claude Fable 5 [high] | 17777 ± 955 ms (95% CI, n=3) | 17205–18746 | 3 |
 | Claude Fable 5 [xhigh] | 3466 ms (n=1) | 3466–3466 | 1 |
-| Claude Fable 5 [max] | 0 ± 0 ms (95% CI, n=3) | 0–0 | 3 |
+| Claude Fable 5 [max] | 0 ms (n=0) | 0–0 | 0 |
 | Claude Opus 4.8 [low] | 1180 ± 179 ms (95% CI, n=3) | 1071–1361 | 3 |
 | Claude Opus 4.8 [medium] | 1176 ms (n=1) | 1176–1176 | 1 |
 | Claude Opus 4.8 [high] | 1072 ± 56 ms (95% CI, n=3) | 1028–1126 | 3 |
@@ -258,7 +258,7 @@ Highest measured of the 68 measured configuration(s): **o4-mini [medium]** at 19
 | Claude Sonnet 5 [medium] | 938 ms (n=1) | 938–938 | 1 |
 | Claude Sonnet 5 [high] | 4568 ± 2883 ms (95% CI, n=3) | 2151–7229 | 3 |
 | Claude Sonnet 5 [xhigh] | 961 ms (n=1) | 961–961 | 1 |
-| Claude Sonnet 5 [max] | 0 ± 0 ms (95% CI, n=3) | 0–0 | 3 |
+| Claude Sonnet 5 [max] | 0 ms (n=0) | 0–0 | 0 |
 | Claude Haiku 4.5 [n/a] | 1005 ± 320 ms (95% CI, n=3) | 781–1323 | 3 |
 | GPT-5.5 [none] | 1295 ± 797 ms (95% CI, n=3) | 722–2082 | 3 |
 | GPT-5.5 [low] | 912 ms (n=1) | 912–912 | 1 |
@@ -277,16 +277,16 @@ Highest measured of the 68 measured configuration(s): **o4-mini [medium]** at 19
 | GPT-5.4 nano [medium] | 5618 ± 926 ms (95% CI, n=3) | 4877–6496 | 3 |
 | GPT-5.4 nano [high] | 6161 ± 364 ms (95% CI, n=3) | 5821–6461 | 3 |
 | o4-mini [low] | 6121 ± 869 ms (95% CI, n=3) | 5418–6940 | 3 |
-| o4-mini [medium] | 4896 ± 5005 ms (95% CI, n=3) | 0–8601 | 3 |
-| o4-mini [high] | 0 ± 0 ms (95% CI, n=3) | 0–0 | 3 |
+| o4-mini [medium] | 7345 ± 2463 ms (95% CI, n=2) | 6088–8601 | 2 |
+| o4-mini [high] | 0 ms (n=0) | 0–0 | 0 |
 | GPT Realtime [n/a] | 1137 ± 656 ms (95% CI, n=3) | 788–1807 | 3 |
 | GPT-5.3 Codex [low] | 7582 ± 252 ms (95% CI, n=3) | 7329–7749 | 3 |
 | GPT-5.3 Codex [medium] | 760 ms (n=1) | 760–760 | 1 |
 | GPT-5.3 Codex [high] | 11015 ± 4210 ms (95% CI, n=3) | 8341–15264 | 3 |
-| GPT-5.3 Codex [xhigh] | 10810 ± 11322 ms (95% CI, n=3) | 0–19746 | 3 |
+| GPT-5.3 Codex [xhigh] | 16216 ± 6920 ms (95% CI, n=2) | 12685–19746 | 2 |
 | GPT-5.1 Codex mini [low] | 3795 ± 3067 ms (95% CI, n=3) | 697–5729 | 3 |
-| GPT-5.1 Codex mini [medium] | 3814 ± 3858 ms (95% CI, n=3) | 0–6567 | 3 |
-| GPT-5.1 Codex mini [high] | 1726 ± 3383 ms (95% CI, n=3) | 0–5178 | 3 |
+| GPT-5.1 Codex mini [medium] | 5721 ± 1659 ms (95% CI, n=2) | 4874–6567 | 2 |
+| GPT-5.1 Codex mini [high] | 5178 ms (n=1) | 5178–5178 | 1 |
 | Gemini 3.1 Pro [low] | 14977 ± 45 ms (95% CI, n=3) | 14932–15008 | 3 |
 | Gemini 3.1 Pro [medium] | 15376 ± 903 ms (95% CI, n=3) | 14633–16220 | 3 |
 | Gemini 3.1 Pro [high] | 15497 ± 979 ms (95% CI, n=3) | 14636–16367 | 3 |
@@ -316,10 +316,10 @@ Highest measured of the 68 measured configuration(s): **o4-mini [medium]** at 19
 | Gemini 3.5 Flash-Lite [medium] | 5052 ± 534 ms (95% CI, n=3) | 4511–5378 | 3 |
 | Gemini 3.5 Flash-Lite [high] | 5512 ± 180 ms (95% CI, n=3) | 5359–5677 | 3 |
 | Claude Opus 5 [low] | 13378 ± 3470 ms (95% CI, n=3) | 10825–16779 | 3 |
-| Claude Opus 5 [high] | 10459 ± 11314 ms (95% CI, n=3) | 0–19922 | 3 |
-| Claude Opus 5 [max] | 7250 ± 14211 ms (95% CI, n=3) | 0–21751 | 3 |
+| Claude Opus 5 [high] | 15689 ± 8297 ms (95% CI, n=2) | 11456–19922 | 2 |
+| Claude Opus 5 [max] | 21751 ms (n=1) | 21751–21751 | 1 |
 
-Lowest measured of the 68 measured configuration(s): **Claude Fable 5 [max]** at 0 ± 0 ms (95% CI, n=3). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
+Lowest measured of the 68 measured configuration(s): **Claude Fable 5 [max]** at 0 ms (n=0). Opposite end of this measurement: Grok 4.20 Reasoning [n/a] at 37966 ± 16419 ms (95% CI, n=3).
 
 **Total response time**
 
@@ -445,24 +445,24 @@ _Net verdict: **mixed** — 3 improved, 3 regressed, 3 unchanged of 9 metrics._
 | Metric | Former | New | Change | Run-to-run spread | Trials | Direction |
 | ------ | ------ | --- | ------ | ----------------- | ------ | --------- |
 | Output throughput | 53.2 tok/s | 92.3 tok/s | +39.1 tok/s (+73%) | ±3.3 tok/s | 3 | improved |
-| Time to first token | 1072 ms | 10459 ms | +9387 ms (+876%) | ±10048 ms | 3 | indistinguishable |
+| Time to first token | 1072 ms | 15689 ms | +14617 ms (+1364%) | ±6036 ms | 3 / 2 | regressed |
 | Total response time | 7141 ms | 19883 ms | +12741 ms (+178%) | ±4453 ms | 3 | regressed |
 | Input cost | $5.00 | $5.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 | Output cost | $25.00 | $25.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 
-_Net verdict: **mixed** — 1 improved, 3 regressed, 3 unchanged of 9 metrics; 2 indistinguishable from run-to-run spread and excluded._
+_Net verdict: **mixed** — 1 improved, 4 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
 
 **Effort `max`.**
 
 | Metric | Former | New | Change | Run-to-run spread | Trials | Direction |
 | ------ | ------ | --- | ------ | ----------------- | ------ | --------- |
 | Output throughput | 58.5 tok/s | 90.5 tok/s | +32.0 tok/s (+55%) | ±7.1 tok/s | 3 | improved |
-| Time to first token | 890 ms | 7250 ms | +6360 ms (+714%) | ±12693 ms | 3 | indistinguishable |
+| Time to first token | 890 ms | 21751 ms | +20861 ms (+2343%) | ±135 ms | 3 / 1 | regressed |
 | Total response time | 6444 ms | 22622 ms | +16178 ms (+251%) | ±1162 ms | 3 | regressed |
 | Input cost | $5.00 | $5.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 | Output cost | $25.00 | $25.00 | +0.00 $/MTok (+0%) | — | — | unchanged |
 
-_Net verdict: **mixed** — 1 improved, 4 regressed, 3 unchanged of 9 metrics; 1 indistinguishable from run-to-run spread and excluded._
+_Net verdict: **mixed** — 1 improved, 5 regressed, 3 unchanged of 9 metrics._
 
 ##### Gemini 3.5 Flash → Gemini 3.6 Flash
 

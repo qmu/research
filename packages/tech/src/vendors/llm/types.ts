@@ -44,12 +44,20 @@ export type Completion = Readonly<{
 // A completion measured over a *streamed* response, so the moment the first
 // token arrived is captured. `ttftMs` is time-to-first-token (from request start
 // to the first content delta); `elapsedMs` is the total wall-clock to the last
-// token. Sustained generation throughput is derived from these by the domain
-// (tokens over the generation window, `elapsedMs - ttftMs`), and latency is
-// reported as `ttftMs` + total separately — the two are no longer conflated.
+// token. Throughput is derived end to end from `outputTokens / elapsedMs` and no
+// longer involves `ttftMs` at all (docs/adr/0009-end-to-end-throughput.md);
+// latency is reported as `ttftMs` + total separately.
+//
+// `ttftMs` IS NULL WHEN NO CONTENT DELTA WAS OBSERVED. Adapters used to
+// initialise it to 0 and treat 0 as "not captured", which made a missing
+// measurement indistinguishable from a measured value — and 0 then entered the
+// mean as a real sample. Claude Opus 5 at effort `high` reported
+// 10459 ± 10048 ms over trials of 19922, 0 and 11456 ms, where the 0 meant the
+// response emitted only thinking blocks and never a text delta. `null` is
+// excluded from the aggregate; 0 was not.
 export type StreamedCompletion = Completion &
   Readonly<{
-    ttftMs: number;
+    ttftMs: number | null;
   }>;
 
 // A provider-neutral JSON Schema. The domain builds these (see

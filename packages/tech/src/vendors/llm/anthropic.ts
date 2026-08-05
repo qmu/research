@@ -188,10 +188,10 @@ export const createAnthropicCompletionClient = (
           options,
         ) as unknown as Anthropic.Messages.MessageStreamParams,
       );
-      let ttftMs = 0;
+      let ttftMs: number | null = null;
       for await (const event of stream) {
         if (
-          ttftMs === 0 &&
+          ttftMs === null &&
           event.type === "content_block_delta" &&
           event.delta.type === "text_delta"
         ) {

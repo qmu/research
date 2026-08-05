@@ -3,6 +3,7 @@ import {
   recomputeThroughput,
   type ThroughputDefinition,
 } from "../llm-model-comparison/domain/recompute-throughput";
+import { readMissingTtftAsNull } from "../llm-model-comparison/domain/missing-ttft";
 import { basename, dirname, join, resolve } from "node:path";
 import { gzipSync, gunzipSync } from "node:zlib";
 import { isDirectRun } from "./direct-run";
@@ -352,7 +353,7 @@ const loadPreviousCore = async (
   // carried-forward rows would keep the retired definition while the rows this
   // run measured used the current one -- one record, two definitions.
   const { configs } = recomputeThroughput(stamped, parsed.throughputDefinition);
-  return { ...parsed, configs: [...configs] };
+  return { ...parsed, configs: [...readMissingTtftAsNull(configs).configs] };
 };
 
 /**
@@ -375,6 +376,7 @@ const loadCommittedRecord = async (
   if (names.length === 0) return null;
   const frames: ComparisonCore[] = [];
   let unrecomputableTrials = 0;
+  let missingTtftTrials = 0;
   for (const name of names) {
     const core = JSON.parse(
       gunzipSync(await readFile(join(archiveDir, name))).toString("utf8"),
@@ -392,7 +394,9 @@ const loadCommittedRecord = async (
       core.throughputDefinition,
     );
     unrecomputableTrials += converted.unrecomputable;
-    frames.push({ ...core, configs: [...converted.configs] });
+    const ttft = readMissingTtftAsNull(converted.configs);
+    missingTtftTrials += ttft.converted;
+    frames.push({ ...core, configs: [...ttft.configs] });
   }
   const record = reconstructRecord(frames);
   if (record === null) return null;
@@ -401,6 +405,13 @@ const loadCommittedRecord = async (
       `throughput: ${unrecomputableTrials} archived trial(s) could be neither ` +
         `recomputed nor rescaled and keep their stored rate under the retired ` +
         `definition; they are not comparable with the rest.\n`,
+    );
+  }
+  if (missingTtftTrials > 0) {
+    process.stdout.write(
+      `latency: ${missingTtftTrials} archived trial(s) recorded no first-token ` +
+        `time; read as not-captured rather than as 0 ms, so they no longer ` +
+        `count toward the TTFT mean.\n`,
     );
   }
   return { ...record, throughputDefinition: "end-to-end" };
