@@ -5,7 +5,7 @@ type: enhancement
 layer: [Domain]
 effort: 2h
 commit_hash:
-category: Added
+category: Changed
 depends_on: 20260726184500-claude-comparison-registry-add-opus-5.md
 mission: support-newly-released-claude-models-in-the-llm-comparison
 ---
