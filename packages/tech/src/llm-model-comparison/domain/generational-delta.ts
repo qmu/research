@@ -131,10 +131,7 @@ const COST_METRICS: ReadonlyArray<
 ];
 
 export type DeltaOutcome =
-  | "improved"
-  | "regressed"
-  | "unchanged"
-  | "indistinguishable";
+  "improved" | "regressed" | "unchanged" | "indistinguishable";
 
 export type DeltaMetric = Readonly<{
   key: string;

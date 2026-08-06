@@ -85,10 +85,7 @@ export type StructuredCompletion = Readonly<{
 // images/pages so OCR-style callers can keep page ordering without leaking SDK
 // types into the domain/vendors boundary.
 export type VisionMimeType =
-  | "image/png"
-  | "image/jpeg"
-  | "image/webp"
-  | "image/gif";
+  "image/png" | "image/jpeg" | "image/webp" | "image/gif";
 
 export type VisionImageInput = Readonly<{
   base64: string;

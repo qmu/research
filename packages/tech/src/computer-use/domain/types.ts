@@ -27,11 +27,7 @@ export type NonSubjectProvider = Readonly<{
 }>;
 
 export type TaskCategory =
-  | "navigation"
-  | "search"
-  | "form"
-  | "extraction"
-  | "multi-step";
+  "navigation" | "search" | "form" | "extraction" | "multi-step";
 
 /** How the harness decides a task succeeded, declared so it is mechanically
  * checkable and drift-free (no LLM-as-judge). The harness evaluates this against

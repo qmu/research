@@ -14,12 +14,7 @@ import type { Provider } from "./types";
 export type StatusSourceKind = "statuspage-json" | "google-json" | "html";
 
 export type IncidentImpact =
-  | "none"
-  | "minor"
-  | "major"
-  | "critical"
-  | "maintenance"
-  | "unknown";
+  "none" | "minor" | "major" | "critical" | "maintenance" | "unknown";
 
 export const INCIDENT_IMPACTS: ReadonlyArray<IncidentImpact> = [
   "none",

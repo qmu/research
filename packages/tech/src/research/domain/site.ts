@@ -21,9 +21,7 @@ export type ResearchTopicPage = Readonly<{
 }>;
 
 export type MetricDirection =
-  | "lower-is-better"
-  | "higher-is-better"
-  | "reference";
+  "lower-is-better" | "higher-is-better" | "reference";
 
 export type ResearchMetric = Readonly<{
   name: string;

@@ -3,11 +3,7 @@
  * not as a turnkey deep-research product — the `baseline` flag on its card marks
  * that so the comparison reads "turnkey vs. the loop we can build ourselves". */
 export type DeepResearchProvider =
-  | "openai"
-  | "perplexity"
-  | "google"
-  | "xai"
-  | "anthropic";
+  "openai" | "perplexity" | "google" | "xai" | "anthropic";
 
 export type SubjectCard = Readonly<{
   /** Registry id (CLI selector and artifact key). */

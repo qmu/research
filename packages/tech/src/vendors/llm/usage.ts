@@ -16,16 +16,12 @@ const toCount = (value: unknown): number =>
   typeof value === "number" && Number.isFinite(value) && value > 0 ? value : 0;
 
 export type AnthropicUsageShape =
-  | { output_tokens?: unknown }
-  | null
-  | undefined;
+  { output_tokens?: unknown } | null | undefined;
 export const anthropicOutputTokens = (usage: AnthropicUsageShape): number =>
   toCount(usage?.output_tokens);
 
 export type OpenAiUsageShape =
-  | { completion_tokens?: unknown }
-  | null
-  | undefined;
+  { completion_tokens?: unknown } | null | undefined;
 export const openAiOutputTokens = (usage: OpenAiUsageShape): number =>
   toCount(usage?.completion_tokens);
 
@@ -33,16 +29,12 @@ export const openAiOutputTokens = (usage: OpenAiUsageShape): number =>
 // Chat Completions' `completion_tokens` — a separate normalizer so the coding
 // models reached through the Responses adapter measure throughput correctly.
 export type OpenAiResponsesUsageShape =
-  | { output_tokens?: unknown }
-  | null
-  | undefined;
+  { output_tokens?: unknown } | null | undefined;
 export const openAiResponsesOutputTokens = (
   usage: OpenAiResponsesUsageShape,
 ): number => toCount(usage?.output_tokens);
 
 export type GoogleUsageShape =
-  | { candidatesTokenCount?: unknown }
-  | null
-  | undefined;
+  { candidatesTokenCount?: unknown } | null | undefined;
 export const googleOutputTokens = (usage: GoogleUsageShape): number =>
   toCount(usage?.candidatesTokenCount);
