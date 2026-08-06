@@ -5,9 +5,10 @@ type: bugfix
 layer: [Infrastructure]
 effort:
 commit_hash:
-category:
+category: Changed
 mission:
 depends_on:
+claim: work-20260803-222350
 ---
 
 # The publish guard's documented "keep the downstream text" remedy hands the file back to the exporter
@@ -130,3 +131,92 @@ unmasked exit codes.
 - Related: `docs/adr/0003-*` owns the repo boundary; the ownership rule stated in
   the script header is correct and should survive unchanged — only its
   enforcement and its instructions need repair.
+
+## Final Report
+
+Driven 2026-08-03 on `work-20260803-222350` (unit `batch-20260803222350`).
+
+### What the defect was
+
+The ledger recorded exactly one fact per destination — the hash this exporter
+last emitted — and the guard derived ownership from it. "qmu-co-jp owns this
+file" was therefore inexpressible, so the skip message's second remedy ("record
+the destination's hash … to keep the downstream text") named the one action that
+guarantees the opposite: recording the hash satisfies the *copy* branch's
+precondition, and the next run overwrites the protected prose. The only state
+that preserved downstream text was **no entry at all**, which re-reported itself
+as an unresolved divergence forever — permanent protection and a permanent
+warning were the same state.
+
+### What changed
+
+The hash column now carries two kinds of fact, and the distinction is the fix:
+
+| value | kind | meaning |
+| ----- | ---- | ------- |
+| a sha256 | observation | this is the text we last emitted |
+| `downstream` | decision | qmu-co-jp owns this file; never write it |
+
+- The decision is read **first**, short-circuiting the hash comparison, so a
+  marked destination is never classified as a divergence. Its content is
+  irrelevant — the mark holds whether the file matches the source, differs, or
+  is absent.
+- It is reported on stdout as `downstream-owned (excluded)` and counted
+  separately from skips, so a clean publish run emits no misleading "authored
+  downstream" warning.
+- `--force` no longer reaches a marked destination. `--force-downstream-owned`
+  is its own deliberate opt-out and **keeps** the mark, because one override is
+  not a revocation.
+- `mark-downstream <dest-path>…` sets the mark, so the corrected instruction is
+  executable rather than a hand-edit of a TSV — the shape of instruction that
+  got followed wrongly to begin with.
+- The script header (the part that actively misled an operator) and the skip
+  message now describe what the code does, and state explicitly why recording
+  the hash is the wrong remedy.
+
+`image-generation.md` and `agent-vm-comparison.md` are marked. Downstream carries
+the measured 2026-07-17 trial article and hand-edited prose respectively; this
+repo's sources are a keyless `trials: 0` regeneration and an
+`authored-fixture-translation`.
+
+### Acceptance criteria
+
+| # | criterion | evidence |
+| - | --------- | -------- |
+| 1 | ownership expressible in committed data, distinct from a hash | `downstream` sentinel; asserted |
+| 2 | byte-identical across **two consecutive** runs | assertion 9 — see below |
+| 3 | reported as an intentional exclusion, not a divergence | assertion 10 |
+| 4 | `--force` does not silently overwrite; separate opt-out | assertions 11, 13 |
+| 5 | header + skip message match the code | header lines 45-78, skip message |
+| 6 | the two pages stop appearing as skips | real-checkout dry-run: 0 loud skips |
+
+### Verification
+
+`make publish-guard` — 16 assertions, extended from 9, all green.
+
+Assertion 9 is the load-bearing one: **the second run** is what destroyed the
+text under the old remedy, so a single-run check would have passed throughout
+the defect's entire life. Mutation-tested by reintroducing the original defect
+shape (`ledger_record` on the exclusion path, so run 2 sees "hash matches the
+ledger"): assertion 9 fails, as it must. Three further mutations — the mark never
+recognised, `--force` collapsed into the mark's opt-out, and the override
+revoking the mark — each fail exactly the assertion that should catch them, and
+each was checked to have actually applied before its result was read.
+
+Gates, bare unmasked exit codes: `make gate` 0, `make publish-guard` 0,
+`packages/tech` lint 0 / test 0 / build 0, VitePress `npm run build` 0.
+
+Criterion 6 verified with `copy --all --dry-run` against the real
+`../qmu-co-jp`: both pages report `downstream-owned (excluded)` and the whole
+plan yields **0** `SKIPPED (authored downstream)` lines.
+
+### Concerns carried forward
+
+- Reclaiming a destination for the exporter means editing the ledger row by
+  hand; there is no `unmark-downstream`. Deliberate — revoking a decision should
+  not be one flag away — but worth a command if it recurs.
+- `../qmu-co-jp` currently has uncommitted modifications to
+  `llm-accuracy-comparison.md` and `llm-speed-comparison.md` from the 2026-08-01
+  ship session. Untouched by this work (dry-run only), but they are unrecorded
+  divergences someone must resolve — and this ticket's mechanism is now the
+  correct way to resolve them if downstream should win.

@@ -131,6 +131,90 @@ else
   cat "$SCRATCH/out.log" >&2
 fi
 
+# ---------------------------------------------------------------------------
+# 8-12. THE DOWNSTREAM-OWNED MARK.
+#
+# Until 2026-08-03 the script told operators to protect downstream prose by
+# recording the destination's hash in the ledger. That is the copy branch's own
+# precondition, so the NEXT run overwrote the file. These assertions pin the
+# replacement: a standing decision that survives repetition, --force, and
+# --dry-run. Assertion 9 is the one the old remedy fails -- it is the second run
+# that destroyed the text, so a single-run check would have passed throughout.
+# ---------------------------------------------------------------------------
+rm -f "$PUBLISH_LEDGER"
+printf '%s' "$AUTHORED" > "$DEST"
+DEST_REL="docs/llm-foundation-research/token-metering-comparison.insights.ja.md"
+
+mark_downstream() {
+  ( cd "$ROOT" && ./scripts/publish-research.sh mark-downstream "$DEST_REL" ) \
+    > "$SCRATCH/mark.log" 2>&1
+}
+
+if mark_downstream; then
+  if [ "$(awk -F'\t' -v k="$DEST_REL" '$1 == k { print $2 }' "$PUBLISH_LEDGER")" = "downstream" ]; then
+    pass "a destination can be marked downstream-owned in committed data"
+  else
+    fail "mark-downstream did not record the mark"
+  fi
+else
+  fail "mark-downstream failed (exit $?)"
+  cat "$SCRATCH/mark.log" >&2
+fi
+
+# 9. THE POINT: byte-identical across TWO consecutive runs.
+publish || true
+publish || true
+if [ "$(sha256sum "$DEST" | cut -d' ' -f1)" = "$AUTHORED_HASH" ]; then
+  pass "a downstream-owned destination survives two consecutive copy runs"
+else
+  fail "a downstream-owned destination was overwritten -- the mark does not hold"
+  cat "$SCRATCH/out.log" >&2
+fi
+
+# 10. Reported as a settled exclusion, never as a divergence to resolve.
+if grep -q "downstream-owned (excluded)" "$SCRATCH/out.log" \
+  && ! grep -q "SKIPPED (authored downstream)" "$SCRATCH/out.log"; then
+  pass "the exclusion is reported as intentional, not as an unresolved divergence"
+else
+  fail "a downstream-owned destination was reported as a divergence"
+  cat "$SCRATCH/out.log" >&2
+fi
+
+# 11. --force is NOT the opt-out. The generated-text-wins override must not
+#     reach a file whose ownership was handed away by a separate decision.
+publish --force || true
+if [ "$(sha256sum "$DEST" | cut -d' ' -f1)" = "$AUTHORED_HASH" ]; then
+  pass "--force does not overwrite a downstream-owned destination"
+else
+  fail "--force silently overwrote a downstream-owned destination"
+fi
+
+# 12. --dry-run writes nothing and still reports the exclusion.
+publish --dry-run || true
+if [ "$(sha256sum "$DEST" | cut -d' ' -f1)" = "$AUTHORED_HASH" ]; then
+  pass "--dry-run leaves a downstream-owned destination untouched"
+else
+  fail "--dry-run modified a downstream-owned destination"
+fi
+
+# 13. The dedicated opt-out does work -- and does not silently revoke the mark,
+#     which would return the file to the exporter without anyone deciding so.
+if publish --force-downstream-owned; then
+  if cmp -s "$SRC" "$DEST"; then
+    pass "--force-downstream-owned is the explicit override"
+  else
+    fail "--force-downstream-owned did not overwrite"
+  fi
+  if [ "$(awk -F'\t' -v k="$DEST_REL" '$1 == k { print $2 }' "$PUBLISH_LEDGER")" = "downstream" ]; then
+    pass "the mark survives an explicit override"
+  else
+    fail "an override silently revoked the downstream-owned mark"
+  fi
+else
+  fail "--force-downstream-owned failed (exit $?)"
+  cat "$SCRATCH/out.log" >&2
+fi
+
 if [ "$failures" -ne 0 ]; then
   echo "check-publish-guard: $failures assertion(s) failed -- the exporter can clobber downstream prose." >&2
   exit 1

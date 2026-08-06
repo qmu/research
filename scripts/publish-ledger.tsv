@@ -1,9 +1,16 @@
-# <dest-path-relative-to-qmu-co-jp>\t<sha256>. Written by the exporter;
-# A destination with NO entry here that differs from its source is treated
-# Ledger of what scripts/publish-research.sh last emitted to qmu-co-jp.
-# as authored downstream and is skipped -- see the script header.
-# committed so the ownership decision is reproducible on any clone.
+# 01 Ownership ledger for scripts/publish-research.sh. Committed, so the
+# 02   decision is reproducible on any clone.
+# 03 Format: <dest-path-relative-to-qmu-co-jp>\t<sha256 | downstream>
+# 04   a sha256     -- what this exporter last emitted (an observation).
+# 05   "downstream" -- qmu-co-jp owns this file; the exporter never writes it
+# 06                   (a decision). Set it with `publish-research.sh
+# 07                   mark-downstream <dest-path>`, not by hand.
+# 08 A destination with NO entry that differs from its source is treated as
+# 09   authored downstream and is skipped -- see the script header.
+# 10 The lines carry zero-padded numbers because the writer re-sorts this file
+# 11   on every run, and unnumbered prose sorted itself into nonsense.
 docs/llm-foundation-research/agent-sdk-comparison.md	778a5850ce122778c488c6bb62bd7e1c090692d27520e9af55b698ebde65a47d
+docs/llm-foundation-research/agent-vm-comparison.md	downstream
 docs/llm-foundation-research/computer-use.md	bb73552dcfc0d40851efb0ddc6bc7af997b57acb21dc91a9f24341db57fc9eff
 docs/llm-foundation-research/deep-research-apis.md	d692a37d926d151c34ecdbf115a99351c091ab93f00ec81e318ae5b0d6cbdb3e
 docs/llm-foundation-research/foundation-models.md	505ee965d8c4e160c02a1e78edac1fcc181f0a9e144e8e53e35962f561555755
@@ -27,6 +34,7 @@ docs/llm-foundation-research/history/speed/2026-07-12T05-47-26-268Z/llm-speed-co
 docs/llm-foundation-research/history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.ja.md	1084d6550dab39132f879687edeb90bbaad4daec9b37da4166c521a0d41ee16c
 docs/llm-foundation-research/history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja.md	8f090829182bd5411375cdb9c60ea538af809f7e7c0c17c81d71547406ad890f
 docs/llm-foundation-research/history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja.md	c79e15e14dc52d1f2f343c9a164f08e6cf6b04b63f33d430bbfb031b52f73188
+docs/llm-foundation-research/image-generation.md	downstream
 docs/llm-foundation-research/llm-accuracy-comparison.md	d8af59c301ed9f96c314ea2326d277203fc0d5bdbea3d7521f46a5b1f398ed59
 docs/llm-foundation-research/llm-availability.md	c1285b2a9245706e173050879fd3ce1a75359a3ff5134e7fc6b6ae23ec86d63d
 docs/llm-foundation-research/llm-speed-comparison.md	2d9f0e50686329549e286a94dd97508d40cff496d41c75046b4a611867bf15b6
