@@ -18,10 +18,7 @@ export type IsolationModel = "firecracker" | "gvisor" | "kata" | "container";
 
 /** How the provider meters running time (reference). */
 export type BillingGranularity =
-  | "per-second"
-  | "per-100ms"
-  | "per-minute"
-  | "per-hour";
+  "per-second" | "per-100ms" | "per-minute" | "per-hour";
 
 /** Whether the sandbox filesystem survives across invocations (reference). */
 export type FilesystemPersistence = "ephemeral" | "persistent";

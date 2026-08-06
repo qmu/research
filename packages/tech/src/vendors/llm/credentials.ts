@@ -42,9 +42,7 @@ export type GcpAdcCredential = Readonly<{
 }>;
 
 export type Credential =
-  | ApiKeyCredential
-  | AwsSigV4Credential
-  | GcpAdcCredential;
+  ApiKeyCredential | AwsSigV4Credential | GcpAdcCredential;
 
 // --- declarative resolution spec (how a provider's credential comes from env) --
 

@@ -56,9 +56,7 @@ export const geminiFirstAudio = (message: unknown): string | undefined => {
   if (!Array.isArray(parts)) return undefined;
   for (const part of parts) {
     const inline = (part as { inlineData?: unknown } | null)?.inlineData as
-      | { mimeType?: unknown; data?: unknown }
-      | null
-      | undefined;
+      { mimeType?: unknown; data?: unknown } | null | undefined;
     if (
       inline !== null &&
       inline !== undefined &&
@@ -75,9 +73,7 @@ export const geminiFirstAudio = (message: unknown): string | undefined => {
 /** A server-reported error string, or `undefined`. */
 export const geminiServerError = (message: unknown): string | undefined => {
   const error = (message as { error?: unknown } | null)?.error as
-    | { message?: unknown }
-    | null
-    | undefined;
+    { message?: unknown } | null | undefined;
   if (error === null || error === undefined) return undefined;
   return typeof error.message === "string"
     ? error.message

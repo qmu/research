@@ -2,11 +2,7 @@
  * the one provider not in the shared foundation-model catalog — Sonar is a
  * search-native product with no ungrounded twin — so it appears here only. */
 export type TrendProvider =
-  | "anthropic"
-  | "openai"
-  | "google"
-  | "xai"
-  | "perplexity";
+  "anthropic" | "openai" | "google" | "xai" | "perplexity";
 
 /** Whether the subject answers with a live web/search tool enabled (`grounded`)
  * or from parametric memory alone (`ungrounded`). Every grounded subject is

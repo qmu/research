@@ -177,10 +177,7 @@ export type ArchiveBenchmarkResult = Readonly<
 // backend details.
 
 export type HistoryMetricMethod =
-  | "trial-sample-std-dev"
-  | "single-trial"
-  | "run-total"
-  | "error-zero";
+  "trial-sample-std-dev" | "single-trial" | "run-total" | "error-zero";
 
 export type HistoryMetricStat = Readonly<{
   mean: number;

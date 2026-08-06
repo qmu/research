@@ -76,12 +76,7 @@ export type ModelCard = Readonly<{
 // and length accuracy together); "throughput"/"latency"/"length" are the v1
 // probes it replaced, kept so v1 artifacts still type.
 export type Probe =
-  | "speed"
-  | "throughput"
-  | "latency"
-  | "schema"
-  | "length"
-  | "information";
+  "speed" | "throughput" | "latency" | "schema" | "length" | "information";
 
 // One API call made during a trial, captured verbatim. This is the transparency
 // substrate the report surfaces and the JSON run-artifact preserves in full — it
@@ -158,9 +153,7 @@ export type Aggregate = Readonly<{
 // artifact keeps min/max as `Aggregate`; history keeps the interval inputs needed
 // for charts without copying every raw trial.
 export type HistoryMetricMethod =
-  | "trial-sample-std-dev"
-  | "single-trial"
-  | "error-zero";
+  "trial-sample-std-dev" | "single-trial" | "error-zero";
 
 export type MetricStat = Readonly<{
   mean: number;

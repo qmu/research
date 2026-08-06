@@ -26,13 +26,7 @@ const sentence = (value: string): string =>
   value.endsWith(".") ? value : `${value}.`;
 
 type HistoryMetricKey =
-  | "recallAtK"
-  | "ndcgAtK"
-  | "mrr"
-  | "ingestMs"
-  | "p50Ms"
-  | "p95Ms"
-  | "costUsd";
+  "recallAtK" | "ndcgAtK" | "mrr" | "ingestMs" | "p50Ms" | "p95Ms" | "costUsd";
 
 type HistoryMetric = Readonly<{
   key: HistoryMetricKey;

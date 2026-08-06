@@ -124,7 +124,7 @@ const splitLargeSection = (section: string): ReadonlyArray<string> => {
   if (section.length <= TRANSLATION_CHUNK_MAX_CHARS) return [section];
   const units: string[] = [];
   const lines = section.split("\n");
-  for (let index = 0; index < lines.length; ) {
+  for (let index = 0; index < lines.length;) {
     const line = lines[index] ?? "";
     if (line.startsWith("```")) {
       const block: string[] = [line];

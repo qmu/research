@@ -35,11 +35,7 @@ export type UsageAvailability =
 
 /** What an SDK/wrapper layer does to the provider's usage figures. */
 export type SdkUsageHandling =
-  | "preserved"
-  | "aggregated"
-  | "dropped"
-  | "unknown"
-  | "not-applicable";
+  "preserved" | "aggregated" | "dropped" | "unknown" | "not-applicable";
 
 export type UsageProvenance = "measured" | "fixtured";
 
