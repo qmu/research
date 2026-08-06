@@ -19,7 +19,7 @@ Past generated frames are listed in [History](./history).
 **Topics**
 
 - [Foundation model catalog](./foundation-models) — A reference catalog of the compared models: provider, tier, price, effort, and API surface.
-- [LLM response speed](./llm-speed-comparison) — Sustained throughput, time-to-first-token, and total latency.
+- [LLM response speed](./llm-speed-comparison) — Output throughput, time-to-first-token, and total latency.
 - [LLM output accuracy](./llm-accuracy-comparison) — JSON-schema limits, length-instruction following, and information accuracy.
 - [LLM API availability](./llm-availability) — Status-page incident history and derived 30/90-day availability trends.
 - [Token counting and metering](./token-metering-comparison) — Library-independent input-token counting — exact self-implemented BPE where the vocabulary is published, calibrated estimation where it is not — validated against API-reported counts on a pinned English/Japanese/code sample set.

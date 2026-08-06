@@ -17,7 +17,7 @@ import type {
   SchemaAxisParams,
   TrialResult,
 } from "./domain/types";
-import { sustainedTokensPerSecond } from "./domain/throughput";
+import { endToEndTokensPerSecond } from "./domain/throughput";
 import { normalizeLatency } from "./domain/latency";
 import {
   advanceWarmAxis,
@@ -132,10 +132,9 @@ export const runTrial = async (
       error: null,
     });
     const latency = normalizeLatency(sp.ttftMs, sp.elapsedMs);
-    const throughputTokensPerSec = sustainedTokensPerSecond(
+    const throughputTokensPerSec = endToEndTokensPerSecond(
       sp.outputTokens,
       sp.elapsedMs,
-      sp.ttftMs,
     );
     const accuracy = lengthAccuracy(probe.speedTargetWords, wordCount(sp.text));
 

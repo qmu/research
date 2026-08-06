@@ -122,7 +122,7 @@ only by color.
 
 Each table reports the mean ± 95% confidence interval (1.96 × sample standard deviation / √n), observed min–max, and contributing trial count for one measured aspect. A metric with n < 2 is shown as a mean only and labelled with its n.
 
-### Sustained throughput during generation
+### Output throughput over the whole request
 
 | Configuration | Mean ± 95% CI | Min–Max | n |
 | ------------- | ------------ | ------- | - |

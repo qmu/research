@@ -1,7 +1,7 @@
 // Instrument-v2 unified speed probe: ONE streamed generation of an exact word
 // count yields four metrics at once — time-to-first-token (first streamed
-// token), total latency (the call's wall clock), sustained throughput (tokens
-// over the generation window, via `sustainedTokensPerSecond`), and length
+// token), total latency (the call's wall clock), end-to-end throughput (tokens
+// over the whole request, via `endToEndTokensPerSecond`), and length
 // accuracy (word count against the target, via `lengthAccuracy`). v1 measured
 // these on three separate calls with different prompts; the v2 definitions are
 // therefore not comparable with v1's, which `instrumentVersion` records.

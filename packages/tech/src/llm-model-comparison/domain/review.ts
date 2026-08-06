@@ -54,7 +54,7 @@ export const buildReviewPrompt = (subject: ReviewSubject): string => {
     `model "${subject.modelName}" at effort level "${subject.effort}" for ` +
     `everyday development use.\n\n` +
     `Measured behavior (means over the trials):\n` +
-    `- Sustained throughput: ${subject.throughputTokensPerSec.toFixed(1)} tokens/sec\n` +
+    `- Output throughput (end to end): ${subject.throughputTokensPerSec.toFixed(1)} tokens/sec\n` +
     `- Time to first token: ${subject.ttftMs.toFixed(0)} ms\n` +
     `- Total response time: ${subject.totalLatencyMs.toFixed(0)} ms\n` +
     `- Tested max JSON-schema nesting depth: ${subject.maxSchemaDepth.toFixed(0)}\n` +

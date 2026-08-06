@@ -169,7 +169,7 @@ export const createOpenAiResponsesCompletionClient = (
       const stream = (await client.responses.create(
         body as unknown as CreateParams,
       )) as unknown as AsyncIterable<StreamEventLike>;
-      let ttftMs = 0;
+      let ttftMs: number | null = null;
       let text = "";
       let outputTokens = 0;
       for await (const event of stream) {
@@ -177,7 +177,7 @@ export const createOpenAiResponsesCompletionClient = (
           event.type === "response.output_text.delta" &&
           typeof event.delta === "string"
         ) {
-          if (ttftMs === 0) ttftMs = Date.now() - startedAt;
+          if (ttftMs === null) ttftMs = Date.now() - startedAt;
           text += event.delta;
         } else if (event.type === "response.completed" && event.response) {
           // The completed event carries the authoritative final text + usage.

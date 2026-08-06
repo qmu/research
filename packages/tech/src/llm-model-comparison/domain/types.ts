@@ -333,4 +333,14 @@ export type ComparisonResult = Readonly<{
    * Artifacts without the field are version 1.
    */
   instrumentVersion: number;
+  /**
+   * Which throughput definition produced this artifact's numbers. Absent on
+   * every artifact written before 2026-08-04, which means the retired
+   * post-first-token window; readers convert on load rather than migrating the
+   * files. See `recompute-throughput.ts` and docs/adr/0009-end-to-end-throughput.md.
+   */
+  throughputDefinition?: ThroughputDefinition;
 }>;
+
+/** @see ComparisonResult.throughputDefinition */
+export type ThroughputDefinition = "post-first-token" | "end-to-end";

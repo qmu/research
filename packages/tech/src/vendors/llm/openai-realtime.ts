@@ -32,7 +32,7 @@ type Exchange = Readonly<{
   text: string;
   outputTokens: number;
   elapsedMs: number;
-  ttftMs: number;
+  ttftMs: number | null;
 }>;
 
 // Realtime has no effort/reasoning parameter. Keep the event construction
@@ -52,7 +52,7 @@ const runExchange = (
     const startedAt = Date.now();
     const rt = new OpenAIRealtimeWS({ model: apiModelId }, client);
     let text = "";
-    let ttftMs = 0;
+    let ttftMs: number | null = null;
     let settled = false;
 
     const finish = (fn: () => void): void => {
@@ -100,7 +100,7 @@ const runExchange = (
     });
 
     rt.on("response.output_text.delta", (event) => {
-      if (ttftMs === 0) {
+      if (ttftMs === null) {
         ttftMs = Date.now() - startedAt;
       }
       text += event.delta ?? "";

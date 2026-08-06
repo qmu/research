@@ -1,8 +1,14 @@
-import type { ComparisonResult, ConfigRun, Probe, ProbeStats } from "./types";
+import type {
+  ComparisonResult,
+  ConfigRun,
+  Probe,
+  ProbeStats,
+  ThroughputDefinition,
+} from "./types";
 
 /**
  * The per-topic split of the combined LLM comparison into two focused topics:
- * SPEED (sustained throughput, TTFT, total latency) and ACCURACY (schema depth /
+ * SPEED (output throughput, TTFT, total latency) and ACCURACY (schema depth /
  * breadth, length-instruction following, information accuracy).
  *
  * Design decision (recorded per the ticket's "wrapper vs split" question): the
@@ -36,7 +42,7 @@ export type SplitAspect = Readonly<{
 export const ASPECT_META: Readonly<Record<SplitMetricKey, SplitAspect>> = {
   throughputTokensPerSec: {
     key: "throughputTokensPerSec",
-    title: "Sustained throughput during generation",
+    title: "Output throughput over the whole request",
     header: "Throughput (tok/s)",
     kind: "number",
     unit: "tok/s",
@@ -163,6 +169,12 @@ export type SplitArtifact = Readonly<{
   artifactPath: string;
   /** Carried from the source comparison; 1 for artifacts predating the field. */
   instrumentVersion: number;
+  /**
+   * Carried from the source comparison. A projection that DROPPED this would be
+   * read as retired-definition data and converted a second time, shrinking
+   * already-correct rates. See docs/adr/0009-end-to-end-throughput.md.
+   */
+  throughputDefinition?: ThroughputDefinition;
 }>;
 
 const filterConfigToGroup = (
@@ -219,6 +231,7 @@ export const projectComparison = (
     ),
     artifactPath: `${spec.artifactBase}.data.json`,
     instrumentVersion: result.instrumentVersion ?? 1,
+    throughputDefinition: result.throughputDefinition,
   };
 };
 

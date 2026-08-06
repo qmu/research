@@ -91,13 +91,13 @@ export const createOpenAiCompatibleCompletionClient = (
       const stream = await client.chat.completions.create(
         body as unknown as OpenAI.Chat.Completions.ChatCompletionCreateParamsStreaming,
       );
-      let ttftMs = 0;
+      let ttftMs: number | null = null;
       let text = "";
       let outputTokens = 0;
       for await (const chunk of stream) {
         const delta = chunk.choices[0]?.delta?.content;
         if (delta) {
-          if (ttftMs === 0) ttftMs = Date.now() - startedAt;
+          if (ttftMs === null) ttftMs = Date.now() - startedAt;
           text += delta;
         }
         if (chunk.usage) outputTokens = openAiOutputTokens(chunk.usage);

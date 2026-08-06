@@ -81,13 +81,13 @@ export const createGoogleCompletionClient = (
       } as unknown as Parameters<
         typeof client.models.generateContentStream
       >[0]);
-      let ttftMs = 0;
+      let ttftMs: number | null = null;
       let text = "";
       let outputTokens = 0;
       for await (const chunk of stream) {
         const piece = chunk.text ?? "";
         if (piece) {
-          if (ttftMs === 0) ttftMs = Date.now() - startedAt;
+          if (ttftMs === null) ttftMs = Date.now() - startedAt;
           text += piece;
         }
         if (chunk.usageMetadata) {

@@ -123,7 +123,7 @@ type Aspect = Readonly<{
 const ASPECTS: ReadonlyArray<Aspect> = [
   {
     key: "throughputTokensPerSec",
-    title: "Sustained throughput during generation",
+    title: "Output throughput over the whole request",
     digits: 1,
     format: (a) => numberWithCi(a, 0, "tok/s"),
     better: "higher",
