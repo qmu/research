@@ -83,7 +83,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@types/better-sqlite3": "^7.6.13",
     "better-sqlite3": "^12.11.1",
-    "openai": "^6.43.0",
+    "openai": "^7.4.0",
     "playwright": "^1.61.1",
     "sqlite-vec": "^0.1.9"
   }
