@@ -2,7 +2,7 @@
 type: Mission
 title: Periodic Research Target: Computer Use via Playwright
 slug: periodic-research-target-computer-use-via-playwright
-status: active
+status: achieved
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -106,3 +106,4 @@ pages without a key or spend.
 - 2026-07-22 — strategy created — periodically-benchmark-computer-use-browser-agent-capabilities — strategy.md
 - 2026-07-22 — mission replanned — playwright dependency approved; first real trial authorized ($40 ceiling); strategy linked; drive-ready — mission.md
 - 2026-07-22 — recovered the stranded real Playwright harness + first real trial (frame 2026-07-18T15-08-10-261Z, 2/3 measured) from orphan branch work-20260718-203006 onto current main: lifted the harness code + tests + published EN/JP/data + dated frame, brought the playwright dependency, deduped the dependency-decisions entry, archived the trial ticket, and re-ticked Acceptance item 5 — mission.md
+- 2026-08-13 — mission achieved — mission.md

@@ -2,7 +2,7 @@
 type: Mission
 title: Support newly released Claude models in the LLM comparison
 slug: support-newly-released-claude-models-in-the-llm-comparison
-status: active
+status: abandoned
 created_at: 2026-07-26T18:43:48+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -119,3 +119,4 @@ sweep within the $15 ceiling committed as a dated frame.
 - 2026-08-01 — ticket archived — 20260726184500-claude-comparison-registry-add-opus-5.md
 - 2026-08-05 — ticket archived — 20260804170000-sustained-throughput-excludes-thinking-time.md
 - 2026-08-05 — ticket archived — 20260726184501-claude-headtohead-real-sweep.md
+- 2026-08-13 — mission abandoned — mission.md
