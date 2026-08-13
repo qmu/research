@@ -16,4 +16,5 @@
 * [Generational verdicts rest on three trials, which the sampling cannot fully support](20260731110930-generational-verdicts-rest-on-three-trials.md)
 * [The published table mixes measurement dates by construction](20260731110930-the-published-table-mixes-measurement-dates.md)
 * [The real comparison record is machine-local, so a scoped sweep can silently shrink the published table](20260731110930-the-real-comparison-record-is-machine.md)
+* [Resolved: The real comparison record is machine-local, so a scoped sweep can silently shrink the published table](20260813104844-resolved-the-real-comparison-record-is-machine.md)
 <!-- okf:generated:end -->
