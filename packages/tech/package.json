@@ -15,6 +15,7 @@
     "format": "prettier --write .",
     "research": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-research.ts",
     "research:archive": "node --import tsx/esm src/entrypoints/archive-research-report.ts",
+    "check:glossary": "node --import tsx/esm src/entrypoints/check-translation-glossary.ts",
     "research:site": "node --import tsx/esm src/entrypoints/render-research-site.ts",
     "research:translate-report": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/translate-research-report.ts",
     "benchmark": "tsx src/entrypoints/run-llm-benchmark.ts",
