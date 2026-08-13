@@ -6,7 +6,7 @@ layer: [Domain, UX]
 effort:
 commit_hash:
 category: Added
-depends_on:
+depends_on: [20260721120004-ocr-discriminate-with-generated-hard-inputs.md]
 mission:
 claim: work-20260813-042829
 ---
