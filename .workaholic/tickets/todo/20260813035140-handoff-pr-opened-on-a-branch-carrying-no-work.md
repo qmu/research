@@ -38,9 +38,18 @@ found at all is that the next run happened to read the thread while resolving it
 own finish target.
 
 The same run posted a second 🟡 for `batch-20260813025737` / PR #104 one message
-later. Whether that unit's work reached its branch is **not** established by this
-ticket and must be checked as step 1 — the two claims share a session, so one
-failing does not prove the other did.
+later, and **it failed the same way**:
+
+```
+$ git log --oneline origin/main..origin/work-20260813-025737
+099305b Claim a PR-unit
+```
+
+One commit, the claim. That post claimed "three hard classes … render
+deterministically from a versioned manifest", "25 tests", and a branch-safety
+`block` at 1289 added lines — none of which exists on the remote. So the failure
+is not a one-off slip on a single unit: one session lost two units' work and
+announced both as delivered.
 
 ## Policies
 
@@ -71,12 +80,14 @@ so the local convention is to file here and route the fix through `/fb`.
 
 ## Implementation Steps
 
-1. **Reproduce and localize first.** Confirm the branch history above with
-   `git log --oneline origin/work-20260813-024220` and the PR's own commit list,
-   and check whether PR #104's branch `work-20260813-025737` has the same shape.
-   Establish which step actually dropped the work: an uncommitted worktree, a
-   commit that was never pushed, or a `create-or-update.sh` call that ran before
-   the work commit. Do not adopt the hypothesis in step 2 before this is answered.
+1. **Localize which step dropped the work.** Both branches are confirmed above to
+   carry only their `Claim` commit, so the question left is *where* it was lost:
+   an uncommitted worktree, a commit that was never pushed, or a
+   `create-or-update.sh` call that ran before any work commit. The 1289-added-lines
+   figure in the #104 post is the strongest clue — the run had a real diff in hand
+   and a `scan-branch-safety.sh` verdict over it, which places the loss at or after
+   the commit seam, not before it. Do not adopt the hypothesis in step 2 before
+   this is answered.
 2. **Hypothesis to test, not to implement directly:** the route step has no
    published-work precondition. A candidate fix is for `create-or-update.sh` to
    count the head's commits that are not `Claim`/`Resume`/`Refresh heartbeat`
