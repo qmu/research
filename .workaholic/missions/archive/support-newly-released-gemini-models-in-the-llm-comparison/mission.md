@@ -2,7 +2,7 @@
 type: Mission
 title: Support newly released Gemini models in the LLM comparison
 slug: support-newly-released-gemini-models-in-the-llm-comparison
-status: active
+status: abandoned
 created_at: 2026-07-23T15:24:14+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -108,3 +108,4 @@ within the $15 ceiling committed as a dated frame.
 - 2026-07-31 — concern deferred (stuck) — 20260731110930-generational-verdicts-rest-on-three-trials.md
 - 2026-07-31 — concern deferred (stuck) — 20260731110930-the-published-table-mixes-measurement-dates.md
 - 2026-08-13 — concern resolved (unstuck) — 20260731110930-the-real-comparison-record-is-machine.md
+- 2026-08-13 — mission abandoned — mission.md

@@ -2,7 +2,7 @@
 type: Mission
 title: Periodic Research Target: Text-to-Speech, Speech-to-Text, Speech-to-Speech
 slug: periodic-research-target-text-to-speech-speech-to-text-speech-to-speech
-status: active
+status: achieved
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -131,3 +131,4 @@ verifiable against the artifact or the rendered pages:
 - 2026-07-22 — developer approved the paid speech trial ($10/trial ceiling) 2026-07-22; tickets 013701/013702 moved icebox→todo/a-qmu-jp with the spend approval recorded in each (remaining gate is environmental provider keys only); wrote the observable ## Experience section. Strategy link + drive_authorized deferred pending the developer's strategy-granularity decision — mission.md
 - 2026-07-22 — strategy created — periodically-benchmark-speech-ai-capabilities-tts-stt-sts — strategy.md
 - 2026-07-22 — mission replanned — first real trial ($10 ceiling) + STS latency authorized; strategy linked; drive-ready — mission.md
+- 2026-08-13 — mission achieved — mission.md
