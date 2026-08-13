@@ -107,4 +107,5 @@ within the $15 ceiling committed as a dated frame.
 - 2026-07-31 — concern deferred (stuck) — 20260731110930-the-real-comparison-record-is-machine.md
 - 2026-07-31 — concern deferred (stuck) — 20260731110930-generational-verdicts-rest-on-three-trials.md
 - 2026-07-31 — concern deferred (stuck) — 20260731110930-the-published-table-mixes-measurement-dates.md
+- 2026-08-13 — concern resolved (unstuck) — 20260731110930-the-real-comparison-record-is-machine.md
 - 2026-08-13 — mission abandoned — mission.md

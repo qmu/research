@@ -14,4 +14,5 @@
 * [Add the post-hoc usage-field survey axis to token-metering](work-20260801-120859.md)
 * [Handoff: OCR hard-input corpus and image-generation readability](work-20260801-120905.md)
 * [Handoff: OSS Foundational Research section](work-20260801-120912.md)
+* [.claude/hooks/session-start.sh — byte-for-byte canonical copy from workaholic 1.0.166, etc](work-20260813-054427.md)
 <!-- okf:generated:end -->
