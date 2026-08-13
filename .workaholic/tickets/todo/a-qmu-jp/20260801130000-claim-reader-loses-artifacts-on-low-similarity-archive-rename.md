@@ -8,6 +8,7 @@ commit_hash:
 category:
 mission:
 depends_on:
+claim: work-20260813-041649
 ---
 
 # A claimed ticket is re-offered as claimable when its archive rename falls below git's similarity threshold — the double-pick the claim protocol exists to prevent

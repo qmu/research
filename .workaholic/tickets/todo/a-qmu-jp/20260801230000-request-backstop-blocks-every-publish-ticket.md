@@ -8,6 +8,7 @@ commit_hash:
 category:
 mission:
 depends_on:
+claim: work-20260813-041649
 ---
 
 # `/request` can never deliver this repository's publish ticket — its backstop substring-matches a repo name that is also a directory name on both sides

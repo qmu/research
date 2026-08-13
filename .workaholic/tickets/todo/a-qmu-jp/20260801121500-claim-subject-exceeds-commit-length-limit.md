@@ -8,6 +8,7 @@ commit_hash:
 category:
 mission:
 depends_on:
+claim: work-20260813-041649
 ---
 
 # `claim.sh` cannot claim any mission whose slug exceeds 44 characters — `/drive` structurally cannot take the longest-named missions
