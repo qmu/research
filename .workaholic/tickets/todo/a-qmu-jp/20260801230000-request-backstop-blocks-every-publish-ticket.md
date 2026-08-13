@@ -124,3 +124,53 @@ Fixture-driven test over `submit-request.sh` covering the four bodies in criteri
 
 The new fixture test, plus `make gate`, `packages/tech` lint and tests, and the
 VitePress docs build — all with bare, unmasked exit codes.
+
+## Final Report
+
+Verified resolved upstream, twice over. No change was needed in this repository,
+and none was made.
+
+**The surface is gone.** `/request` — the command whose `submit-request.sh`
+backstop this ticket reports — was **retired on 2026-08-05**. It wrote a ticket
+file into the target repository's tree, and the rule it existed to satisfy now
+forbids that outright: `rules/general.md` reads "Never modify another repository
+… To raise work against a different repository, use `/fb <the ask> to
+<owner/name>` — it opens the ask as a GitHub **issue** on the target, writing
+into no checkout of it at all. That is the only sanctioned way", and it names the
+retirement in the same line. No `submit-request.sh` exists anywhere in the
+installed plugin (v1.0.176), and `/request` is not among its commands.
+
+**And the backstop defect itself was fixed, not merely dropped.** The successor
+route carries the same protection, and
+`skills/feedback/reference/crossing.md` records the exact repair this ticket
+asked for (lines 127-144): the check "matches a reference, not a substring and
+not a word, and that is a usability requirement", noting that under the plain
+substring match "a repository whose basename is an ordinary English word could
+not" get an ask through — which is this ticket's `research` case stated
+generically. A bare name now refuses only where it reads as a reference: inside
+backticks, or in an URL form. Absolute paths are refused exactly as before, and
+the verbatim human confirmation is unchanged. The record cites
+`qmu/workaholic#384`, where the same publish plan was refused on two lines that
+named no repository at all.
+
+So the publish ticket this repository could not deliver on 2026-08-01 is
+deliverable now, by a different and better route: `/ship` generates the publish
+ticket into the sibling `qmu-co-jp` worktree directly (this repository's own
+`CLAUDE.md` documents that flow), and anything genuinely needing to cross a
+repository boundary goes as a `/fb` issue.
+
+### Discovered Insights
+
+- **Insight**: A guard that matches a plain substring of a repository name is
+  unsound whenever that name is an ordinary word, and the failure is
+  *asymmetric*: it never lets a bad ask through, it only blocks good ones, so it
+  produces no incident and quietly makes a whole route unusable.
+  **Context**: `research` appears in path fragments, prose, and directory names
+  on both sides of the boundary. The fix is to match the shape of a reference —
+  backticked, or an URL form — not the presence of characters.
+- **Insight**: This ticket was closed by two independent upstream changes: the
+  command was retired *and* the check was corrected on its successor. Verifying
+  only the first would have left the wrong conclusion recorded — that the
+  protection was dropped rather than fixed.
+  **Context**: When a ticket's surface disappears, check whether its *substance*
+  moved before recording it as moot.

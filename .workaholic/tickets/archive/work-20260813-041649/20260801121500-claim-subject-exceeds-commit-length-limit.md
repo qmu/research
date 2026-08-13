@@ -118,3 +118,49 @@ plugin is fixed.
   as before (no regression in the common path).
 - `/drive` in this repository can claim
   `periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc`.
+
+## Final Report
+
+Verified fixed upstream. No change was needed in this repository, and none was made.
+
+The defect was real and is gone. `claim.sh` no longer builds its subject as
+`Claim <unit-id>`: since 2026-08-01 the unit id rides a `Unit:` trailer and the
+subject is the fixed, 15-character `Claim a PR-unit`
+(`skills/drive/scripts/claim.sh`, step 6). The header comment there names this
+ticket's own symptom as the reason — "four of five active missions, each refused
+as an unexplained `commit_failed`" — and the opaque refusal is fixed too:
+`commit_failed` now carries a `detail` field lifted from the commit seam's own
+output, so a rejected subject names itself instead of sending a live run to look
+at the commit machinery.
+
+Reproduced against the installed plugin (v1.0.176) with the canonical checker:
+
+```
+$ check-subject.sh "Claim periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc"
+subject is 77 characters (limit 50)          # rc=1 — the old shape still fails
+$ check-subject.sh "Claim a PR-unit"
+                                             # rc=0 — the shape claim.sh uses now
+```
+
+The 44-character boundary the ticket derived is exact: a 44-character slug passes
+`Claim <slug>` and a 45-character one is refused. That arithmetic is now moot,
+because no slug reaches the subject at all.
+
+Live corroboration from the run that verified this: every claim this session made
+— including the batch that carried this ticket — committed with subject
+`Claim a PR-unit` and a `Unit: batch-…` trailer, and succeeded.
+
+### Discovered Insights
+
+- **Insight**: A long identifier constrained by a commit-subject policy is a
+  design smell with a standard fix — move the identifier to a trailer, where
+  length is unconstrained and a script can read it back exactly, and leave the
+  subject a fixed human sentence.
+  **Context**: The subject is for people and is length-policed for that reason;
+  the unit id is for `lib/claims.sh`. Putting both in one field made a naming
+  decision (a descriptive mission slug) silently break a protocol operation.
+- **Insight**: The repair that matters most here was the *reporting* one. The
+  length bug made four missions unclaimable; the bare `commit_failed` is what
+  made it take a live investigation to find out why.
+  **Context**: A refusal that discards the underlying tool's own explanation
+  converts a five-second fix into a debugging session.

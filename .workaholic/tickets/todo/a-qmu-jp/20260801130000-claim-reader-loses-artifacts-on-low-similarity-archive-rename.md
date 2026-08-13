@@ -129,3 +129,49 @@ fix renames git declines to call renames.
   discrepancy rather than a silently short list.
 - Existing claim/resume/release tests stay green, including the chained-rename
   case fixed on 2026-07-30 — that fix must not regress.
+
+## Final Report
+
+Verified fixed upstream. No change was needed in this repository, and none was made.
+
+The double-pick this ticket reported is closed by exactly the mechanism it asked
+for. `skills/drive/scripts/lib/claims.sh` now resolves a claimed artifact two
+ways: the `git diff --find-renames` map first, and — when that map misses — an
+exact **by-filename** lookup. The header comment at lines 249-273 states the
+cause in the ticket's own terms: `--find-renames` pairs a delete with an add only
+above 50% similarity, and an appended `## Final Report` can push a short ticket
+under that bar, so the archive rename goes unmapped and the claim reports zero
+artifacts.
+
+The fallback is scoped rather than general, and the scoping is the careful part:
+
+- it applies **only to ticket paths**, where the `YYYYMMDDHHMMSS-slug.md` rule
+  makes a basename unique in the tree by construction, and
+- **only when the basename resolves to exactly one file**. `mission.md` is the
+  counter-example the comment names to fix that scope — its basename is shared by
+  every mission, so an unscoped basename fallback would resolve one mission's
+  claim onto another's file.
+
+Both halves are live in the read path (lines 440-457: the rename map, then the
+by-filename resolution when it missed).
+
+The ticket's second observation — that an empty artifact list is two failures at
+once, a re-offered ticket *and* a drained unit called resumable — is recorded in
+`skills/drive/reference/claims.md` as the reason the reader's behaviour on an
+empty list is pinned by tests.
+
+### Discovered Insights
+
+- **Insight**: A similarity-threshold rename detector is not a safe foundation
+  for a correctness-critical identity mapping, because the threshold depends on
+  *content* the workflow itself mutates — here, the run appends a Final Report to
+  the very file whose rename must be tracked.
+  **Context**: The workflow made its own detection fail. Any second resolution
+  path has to key on something the workflow does not touch; the filename is that
+  thing, which is why the fix works.
+- **Insight**: The fallback's value is entirely in its scope. A general
+  basename lookup would have traded a missed claim for a *wrong* claim, which is
+  strictly worse — under-reporting makes a runner wait, mis-resolving makes two
+  runners drive the same unit.
+  **Context**: `mission.md` is the shared-basename case that forces the
+  single-unambiguous-match rule.
