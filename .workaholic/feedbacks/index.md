@@ -19,4 +19,5 @@
 * [Resolved: The real comparison record is machine-local, so a scoped sweep can silently shrink the published table](20260813104844-resolved-the-real-comparison-record-is-machine.md)
 * [Cloud [Implement] cannot claim personally-assigned tickets](20260813112432-cloud-implement-cannot-claim-personally-assigned.md)
 * [The foundation model catalog page should not share the verification-report outline](20260815052013-the-foundation-model-catalog-page-should-not-share-the-verification-report-outline.md)
+* [Keep up with each provider's newest models and plan the response](20260815052335-keep-up-with-each-provider-s-newest-models-and-plan-the-response.md)
 <!-- okf:generated:end -->
