@@ -6,6 +6,7 @@ depends_on:
 feedback: [20260815052013-the-foundation-model-catalog-page-should-not-share-the-verification-report-outline.md]
 merge_policy:
 verification_handoff: 
+claim: work-20260816-153818
 ---
 
 # Give the foundation model catalog page its own non-verification outline
