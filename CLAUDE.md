@@ -70,10 +70,22 @@ edit files itself.
   Still prefer bare, unmasked exit codes when verifying — no `| tail`, no
   `|| true` — and note `packages/industry` has zero test files with
   `--passWithNoTests`, so its green is weak evidence on its own.
-- **PRs are never self-merged.** Agents drive to commit + ticket archive only.
-  PR creation and readiness judgment happen via /report; merge, deploy, and
-  verification happen via /ship, after the developer names the PR number. Do
-  not close work with a raw `gh pr create` plus an ad-hoc merge request.
+- **Agents merge their own PRs; they never deploy.** A unit reaches its pull
+  request through /report, and a `review` unit is then merged by the run itself
+  once the branch-safety scan verdict is `pass` — no human confirmation, and the
+  claim is torn down with it. Quality is gated downstream at the `release/*` QA
+  window, not at merge time (mission
+  `auto-merge-propose-and-implement-prs-under-a-dev-release-branch-split`,
+  2026-08-11, which superseded the earlier stop-at-the-PR rule this bullet used
+  to state). A scan finding is the one thing that holds a PR open: a `secret`
+  finding hard-stops the unit, and a `size`/`leak` finding demotes it to the PR
+  path, because overriding either is a human ruling an unattended run does not
+  have. **Deploying is a separate, developer-instructed act**: an `auto` unit
+  ships through /ship, which drafts the unit's deployment plan and merges but
+  deploys nothing. Do not close work with a raw `gh pr create` plus an ad-hoc
+  merge request — /report opens the PR, and the merge goes through the REST API
+  (`gh-rest.sh api repos/<slug>/pulls/<n>/merge --method PUT`), never the
+  GraphQL-backed `gh pr merge`.
 - **Shell traps in this environment.** `noclobber` is set (use `>|` to
   overwrite); `cp` and `rm` are aliased (`cp -i`, trash-move) — use `/bin/cp`
   and `/bin/rm` deliberately; `diff` is aliased to nvim — use `/usr/bin/diff`;
