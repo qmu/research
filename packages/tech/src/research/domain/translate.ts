@@ -1,6 +1,7 @@
 import type { LlmClient } from "../../vendors/llm/types";
 import { ARTICLE_OUTLINES, outlineKindForTopicKind } from "./article-outline";
 import { findTopic } from "./topic";
+import { glossaryPromptLines } from "./translation-glossary";
 
 /**
  * The translation pipeline stage: render a topic's English insights into
@@ -297,6 +298,12 @@ export const buildTranslationPrompt = (input: TranslateInput): string => {
     `- When these standard article headings appear, translate them EXACTLY as`,
     `  follows and keep their order:`,
     headingPairs,
+    // Every chunk carries the glossary, because every chunk is a separate call
+    // that cannot see how an earlier one rendered a term. Without this a term
+    // first written in call 3 is re-invented in call 14.
+    `- Use these fixed renderings for recurring terms, in EVERY part of the`,
+    `  document — never a synonym, even where one reads more naturally:`,
+    ...glossaryPromptLines(),
     `- Output the translated Markdown body only — no frontmatter and no outer`,
     `  wrapper code fence.`,
     ``,

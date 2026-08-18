@@ -9,6 +9,7 @@ commit_hash:
 category:
 mission:
 depends_on:
+claim: work-20260813-042108
 ---
 
 # The Japanese translator names the same field two different ways inside one page
