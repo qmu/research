@@ -1,0 +1,183 @@
+{
+  "corpus": {
+    "id": "qmu-hard-input-ocr",
+    "version": "hard-v1",
+    "generator": "packages/tech/src/ocr-comparison/domain/hard-corpus.ts",
+    "renderer": "packages/tech/src/ocr-comparison/domain/hard-render.ts",
+    "purpose": "Hard, hard-to-machine-read inputs that separate OCR models. Generated rather than collected, so the ground truth is exact and no third-party document is redistributed.",
+    "stability": "Every page is a pure function of (version, class, index). This file pins the result: hard-corpus-manifest.test.ts fails if the generator drifts without a version bump, because a moved corpus would make cross-survey history meaningless.",
+    "pageWidthPx": 960,
+    "pageHeightPx": 640,
+    "mimeType": "image/png"
+  },
+  "classes": [
+    {
+      "id": "low-quality-scan",
+      "title": "Low-quality scan",
+      "difficulty": "An easy layout resampled to a third of its resolution, block-quantized, reduced to six grey levels and speckled, so the score isolates robustness to image quality.",
+      "documents": 3,
+      "fields": ["vendor", "document_id", "date", "line_count", "total"]
+    },
+    {
+      "id": "high-density",
+      "title": "High character density",
+      "difficulty": "The same page filled with 28 ledger lines of half-width type and no degradation, so the score isolates density rather than noise.",
+      "documents": 3,
+      "fields": ["vendor", "document_id", "date", "line_count", "total"]
+    },
+    {
+      "id": "nested-table",
+      "title": "Nested table",
+      "difficulty": "Three groups, each with its own item lines and subtotal, inside one ruled table; the required fields name the second group, so a flattened read fails them while still transcribing plausibly.",
+      "documents": 3,
+      "fields": [
+        "document_id",
+        "group_count",
+        "group_2_name",
+        "group_2_line_count",
+        "group_2_subtotal",
+        "grand_total"
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "id": "low-quality-scan-01",
+      "classId": "low-quality-scan",
+      "imageSha256": "57b27e2a95b8f2a97efadfa331b1ab5265b8e382073589c2ab26505f1f3c63ba",
+      "referenceSha256": "dc8a5c5c50450a9acc050ef41b4f153b8430bb6d984af22cc530764c6901b86d",
+      "referenceCharacters": 227,
+      "referenceLines": 12,
+      "fields": {
+        "vendor": "NORTHSIDE SUPPLY",
+        "document_id": "LQ-1000",
+        "date": "2026-09-23",
+        "line_count": "6",
+        "total": "407.38"
+      }
+    },
+    {
+      "id": "low-quality-scan-02",
+      "classId": "low-quality-scan",
+      "imageSha256": "8320f7a3b96dc343544ffa0068115cbf78deec52359e2d62ddaec4338ac5cd48",
+      "referenceSha256": "9c072d2fb3a4607bc89c36520f1f7f1dec25199cf0ef7d68dbd61c5f203c75bd",
+      "referenceCharacters": 205,
+      "referenceLines": 11,
+      "fields": {
+        "vendor": "ORCHARD LOGISTICS",
+        "document_id": "LQ-1001",
+        "date": "2026-03-25",
+        "line_count": "5",
+        "total": "185.81"
+      }
+    },
+    {
+      "id": "low-quality-scan-03",
+      "classId": "low-quality-scan",
+      "imageSha256": "3219af999fc294888b5973de130f788ff7aece30b9d54ad06c06ff9337bcee99",
+      "referenceSha256": "b168ef79a31821dc80edd6563c8cf9b6d05ef3b47b2633fc7dbf614c60b6663b",
+      "referenceCharacters": 206,
+      "referenceLines": 11,
+      "fields": {
+        "vendor": "BLUEWATER TRADING",
+        "document_id": "LQ-1002",
+        "date": "2026-06-19",
+        "line_count": "5",
+        "total": "166.17"
+      }
+    },
+    {
+      "id": "high-density-01",
+      "classId": "high-density",
+      "imageSha256": "d22b8ea4ef1fa8a6ddfab63f25b1f86e9db735c3408ae7b1844c609058d9efc7",
+      "referenceSha256": "b29f347e0f980fa140a154ecc55cff919ac217e56b99c93b4a60142865618be2",
+      "referenceCharacters": 847,
+      "referenceLines": 33,
+      "fields": {
+        "vendor": "HARBOUR MILLING",
+        "document_id": "HD-2000",
+        "date": "2026-02-23",
+        "line_count": "28",
+        "total": "15605.58"
+      }
+    },
+    {
+      "id": "high-density-02",
+      "classId": "high-density",
+      "imageSha256": "d2fd15f3de307d026207083672ac401893e9c1e58ca1bf6aa2cffa619fbbcf8c",
+      "referenceSha256": "3df498cca3dad64e33a8eac3e34cddb77a65f980e269765ced376c30c6a52270",
+      "referenceCharacters": 856,
+      "referenceLines": 33,
+      "fields": {
+        "vendor": "ORCHARD LOGISTICS",
+        "document_id": "HD-2001",
+        "date": "2026-03-14",
+        "line_count": "28",
+        "total": "13351.91"
+      }
+    },
+    {
+      "id": "high-density-03",
+      "classId": "high-density",
+      "imageSha256": "5ade573375872afd4f270e76f03b39b89b8f10cb1d60d7f110a31fce0f611cff",
+      "referenceSha256": "2eb11f28fb0f4698644afb44a43e9746770792acbea1552142e0f22000e9770c",
+      "referenceCharacters": 847,
+      "referenceLines": 33,
+      "fields": {
+        "vendor": "ORCHARD LOGISTICS",
+        "document_id": "HD-2002",
+        "date": "2026-07-02",
+        "line_count": "28",
+        "total": "15214.74"
+      }
+    },
+    {
+      "id": "nested-table-01",
+      "classId": "nested-table",
+      "imageSha256": "d74819e81238ff2dce837cbd698557795791bb3ecbd014dee9cd8f5aa2df6070",
+      "referenceSha256": "fe948cd557139490fc0b66b05d83f2c3dca2c9a4cab84bf3c9e0cfc189be2c72",
+      "referenceCharacters": 329,
+      "referenceLines": 17,
+      "fields": {
+        "document_id": "NT-3000",
+        "group_count": "3",
+        "group_2_name": "NORTHSIDE SUPPLY",
+        "group_2_line_count": "2",
+        "group_2_subtotal": "509.65",
+        "grand_total": "1329.94"
+      }
+    },
+    {
+      "id": "nested-table-02",
+      "classId": "nested-table",
+      "imageSha256": "c945ee0cdb19311d700f1213b8b455fcc54e7a46b87a09895fcdcebdaa7b4a60",
+      "referenceSha256": "1e5d07c34c5176e23402ba70539bb6eac066d38b2207d9a74a2df1ec3a9ab89b",
+      "referenceCharacters": 311,
+      "referenceLines": 16,
+      "fields": {
+        "document_id": "NT-3001",
+        "group_count": "3",
+        "group_2_name": "BLUEWATER TRADING",
+        "group_2_line_count": "2",
+        "group_2_subtotal": "221.38",
+        "grand_total": "1830.93"
+      }
+    },
+    {
+      "id": "nested-table-03",
+      "classId": "nested-table",
+      "imageSha256": "d0559a3fb58945ee3c9c378da9b55912e524be121ed8e33b210fa712fdfe855d",
+      "referenceSha256": "45ee0714493e7eb46ef21f33dc693de597f2a3de20ee5977c83e5ec90fb93173",
+      "referenceCharacters": 405,
+      "referenceLines": 21,
+      "fields": {
+        "document_id": "NT-3002",
+        "group_count": "3",
+        "group_2_name": "NORTHSIDE SUPPLY",
+        "group_2_line_count": "4",
+        "group_2_subtotal": "658.73",
+        "grand_total": "2464.42"
+      }
+    }
+  ]
+}
