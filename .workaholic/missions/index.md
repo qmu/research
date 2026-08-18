@@ -1,5 +1,9 @@
 # missions
 
+## active
+
+* [auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main](active/auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main/mission.md) - Auto-deploy the docs site to a Cloudflare Worker on merge to main
+
 ## archive
 
 * [image-generation-benchmark](archive/image-generation-benchmark/mission.md) - Image generation benchmark
