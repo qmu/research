@@ -6,6 +6,7 @@ depends_on:
 mission:
 merge_policy:
 verification_handoff: ANTHROPIC_API_KEY for the live translation call — the keyless fixture client returns a one-line stub and would overwrite the page
+claim: work-20260818-134843
 ---
 
 # Regenerate the Japanese catalog page through the live translation path
@@ -114,3 +115,42 @@ ticket if pursued.
 - `verifyNumbersPreserved` retries the call once before giving up, so a single
   numeric miss is self-healing; a reported miss after the retry is real and
   should be investigated rather than hand-patched.
+
+## Attempt log
+
+### 2026-08-18, unattended `[Implement]` run — step 1 fails, steps 2–5 not started
+
+Step 1 has two halves. The pricing half ran; the key half did not.
+
+```
+$ npm run research:translate-report -- foundation-models --estimate
+.env not found. Continuing without it.
+research foundation-models: full-report translation estimate — 5 call,
+  ~4190 prompt + ~81920 output tokens (model claude-sonnet-5)
+```
+
+So the call is priced: **5 calls, ~4190 prompt + ~81920 output tokens, model
+`claude-sonnet-5`**. That number is recorded here so the next attempt does not
+have to install and re-run to get it.
+
+What was checked for the key, and found:
+
+| Probe | Result |
+| --- | --- |
+| `ANTHROPIC_API_KEY` in the run's environment | unset |
+| `.env` anywhere in the checkout | absent — only `packages/tech/.env.example`, which lists the variable empty |
+| `.worktree-env` at the repository root | absent, so no env file is carried into a claim worktree |
+| the runner's own report | `.env not found. Continuing without it.` |
+
+Step 2 was **not** run: with the key absent, `translationClient()`
+(`report-translation-runner.ts:43`) returns `createFixtureTranslationClient()`,
+and running the documented command would have replaced the page with the stub's
+one line. That is the destruction this ticket exists to reverse, not to repeat.
+
+Worth knowing for the next attempt: the numeric-fidelity warning in step 2 cannot
+be used as a keyless safety net. The fixture stub echoes every number it finds in
+the prompt — `FIXTURE_NUMBER_RE` in `vendors/llm/fixture.ts`, commented "so the
+domain's numeric-preservation check passes on the keyless path" — so
+`verifyNumbersPreserved` stays silent over a destroyed page. That mechanism is now
+its own ticket,
+`20260818225100-make-the-keyless-translation-path-refuse-instead-of-stubbing.md`.
