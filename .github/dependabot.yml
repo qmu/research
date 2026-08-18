@@ -1,14 +1,52 @@
+# Dependabot raises one grouped pull request per manifest per week instead of one
+# per dependency. Ungrouped, a normal week produced ~11 open PRs across the three
+# manifests (2026-08-11: #89-#99), each with its own CI run and its own lockfile
+# conflict against every sibling — the review cost was in the count, not in the
+# changes, which were routine minor/patch bumps.
+#
+# Majors stay OUT of the group deliberately: they arrive as their own PR because
+# they need a judgment call rather than a merge. #96 (typescript 5.9.3 -> 7.0.2)
+# is the case that proves it — it cannot install at all while typescript-eslint
+# declares `typescript: ">=4.8.4 <6.1.0"`, and grouping it with the routine bumps
+# would have taken the whole week's batch red with it.
+#
+# `/docs` is listed because it carries its own package-lock.json (the VitePress
+# site and its pa11y-ci accessibility gate). It was previously reachable only by
+# Dependabot's security updates, which need no configuration — so its ordinary
+# version bumps were never proposed.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /packages/tech
     schedule:
       interval: weekly
+    groups:
+      tech-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
   - package-ecosystem: npm
     directory: /packages/industry
     schedule:
       interval: weekly
+    groups:
+      industry-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: npm
+    directory: /docs
+    schedule:
+      interval: weekly
+    groups:
+      docs-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]
