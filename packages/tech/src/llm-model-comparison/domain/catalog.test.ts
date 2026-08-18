@@ -122,7 +122,11 @@ describe("renderFoundationModelsReport", () => {
       buildFoundationModelsCatalog(sample),
     );
     expect(md).toContain("reference catalog");
-    expect(md).toContain("no measured metrics");
+    // The catalog outline has no Measurement Targets chapter to declare "no
+    // measured metrics" in; the Overview makes the same claim directly, and
+    // the page must still never read as a benchmark.
+    expect(md).toContain("Nothing on this page is evaluated here");
+    expect(md).toContain("never a live measurement");
     expect(md).toContain("provenance: `catalog`");
     // Curated values appear; no measured metric column leaks in.
     expect(md).toContain("Claude Fable 5");
