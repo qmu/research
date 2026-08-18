@@ -6,6 +6,7 @@ depends_on:
 mission:
 merge_policy:
 verification_handoff: ANTHROPIC_API_KEY for the live translation call — the keyless fixture client returns a one-line stub and would overwrite the page
+claim: work-20260818-134843
 ---
 
 # Regenerate the Japanese catalog page through the live translation path
