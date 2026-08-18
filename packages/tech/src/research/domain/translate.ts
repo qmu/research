@@ -1,5 +1,7 @@
 import type { LlmClient } from "../../vendors/llm/types";
-import { ARTICLE_OUTLINE } from "./article-outline";
+import { ARTICLE_OUTLINES, outlineKindForTopicKind } from "./article-outline";
+import { findTopic } from "./topic";
+import { glossaryPromptLines } from "./translation-glossary";
 
 /**
  * The translation pipeline stage: render a topic's English insights into
@@ -255,15 +257,21 @@ export const verifyNumbersPreserved = (
  */
 export const buildTranslationPrompt = (input: TranslateInput): string => {
   const numbers = extractNumbers(input.englishBody);
-  const headingPairs = ARTICLE_OUTLINE.english.h2
+  // The heading pairs are the topic's OWN outline: a reference-catalog topic
+  // must be told the catalog headings, or its Japanese page comes back on the
+  // verification headings (or on invented ones) and forks from its English
+  // source.
+  const outline =
+    ARTICLE_OUTLINES[outlineKindForTopicKind(findTopic(input.topicId)?.kind)];
+  const headingPairs = outline.english.h2
     .map(
       (heading, index) =>
-        `  - "## ${heading}" -> "## ${ARTICLE_OUTLINE.japanese.h2[index] ?? heading}"`,
+        `  - "## ${heading}" -> "## ${outline.japanese.h2[index] ?? heading}"`,
     )
     .concat(
-      ARTICLE_OUTLINE.english.h3.map(
+      outline.english.h3.map(
         (heading, index) =>
-          `  - "### ${heading}" -> "### ${ARTICLE_OUTLINE.japanese.h3[index] ?? heading}"`,
+          `  - "### ${heading}" -> "### ${outline.japanese.h3[index] ?? heading}"`,
       ),
     )
     .join("\n");
@@ -290,6 +298,12 @@ export const buildTranslationPrompt = (input: TranslateInput): string => {
     `- When these standard article headings appear, translate them EXACTLY as`,
     `  follows and keep their order:`,
     headingPairs,
+    // Every chunk carries the glossary, because every chunk is a separate call
+    // that cannot see how an earlier one rendered a term. Without this a term
+    // first written in call 3 is re-invented in call 14.
+    `- Use these fixed renderings for recurring terms, in EVERY part of the`,
+    `  document — never a synonym, even where one reads more naturally:`,
+    ...glossaryPromptLines(),
     `- Output the translated Markdown body only — no frontmatter and no outer`,
     `  wrapper code fence.`,
     ``,

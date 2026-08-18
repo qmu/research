@@ -1,6 +1,6 @@
 import type { ModelCard } from "./types";
 import { providerDisplayName } from "./provider";
-import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
+import { renderEnglishCatalogArticle } from "../../research/domain/article-outline";
 
 /**
  * The foundation-model catalog: a REFERENCE topic, not a benchmark. It renders
@@ -102,10 +102,9 @@ const catalogTable = (rows: ReadonlyArray<CatalogRow>): string => {
 };
 
 /**
- * The §4 overview: one row per provider (model count, tiers, catalog price
- * range). The full per-model catalog table lives in §7 Verification Data —
- * §4 stays a concise, decision-relevant summary by the site-wide article
- * policy.
+ * The Coverage table: one row per provider (model count, tiers, catalog price
+ * range). The full per-model table lives in the Catalog section — Coverage
+ * stays a concise, decision-relevant summary by the site-wide article policy.
  */
 const providerOverviewTable = (rows: ReadonlyArray<CatalogRow>): string => {
   const providers = [...new Set(rows.map((row) => row.provider))];
@@ -138,45 +137,39 @@ const sourceList = (rows: ReadonlyArray<CatalogRow>): string => {
     .join("\n");
 };
 
+/**
+ * Render the catalog page on the reference-catalog outline (Overview /
+ * Coverage / Catalog / Sources), not the seven-section verification outline
+ * the measured topics share. A catalog states no research purpose, no
+ * measurement targets and no reproduction cost, because it measures nothing;
+ * it opens instead on a rough summary of whose models are covered and where
+ * they are actually evaluated.
+ */
 export const renderFoundationModelsReport = (
   catalog: FoundationModelsCatalog,
 ): string => {
-  const providers = [...new Set(catalog.rows.map((r) => r.provider))].length;
-  return renderEnglishResearchArticle({
+  const providers = [...new Set(catalog.rows.map((r) => r.provider))];
+  return renderEnglishCatalogArticle({
     title: "Foundation model catalog",
-    description: `A curated reference catalog of ${catalog.rows.length} foundation models across ${providers} providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.`,
-    introduction:
-      "This is a **reference catalog**, not a benchmark. It lists the compared foundation models and records the catalog facts used by measured topics.",
-    purpose:
-      "The catalog gives readers one place to verify which providers, model names, API model ids, tiers, prices, effort controls, and API surfaces are in scope before reading measured speed, accuracy, and availability reports.",
-    targetModels: `${catalog.rows.length} foundation models across ${providers} providers are listed. The single source of truth is the model registry (\`${catalog.generatedFrom}\`).`,
-    targetMetrics:
-      "This topic has no measured metrics. It records curated catalog fields only: provider, model, API model id, tier, API surface, release label, input/output catalog price, and supported effort levels.",
-    scopeAndConstraints:
-      "Every value is curated catalog data with a cited source, not a live measurement. No throughput, latency, accuracy, OCR, RAG, or availability figure appears here. Treat each cell as correct only as of its source's date; provider catalog pages can change after this page is generated. Vision/multimodal support is **to verify** and is deliberately omitted rather than guessed.",
-    verificationResults: `${providerOverviewTable(catalog.rows)}
+    description: `A curated reference catalog of ${catalog.rows.length} foundation models across ${providers.length} providers — provider, tier, price, effort levels, and API surface — sourced from the model registry, not a live measurement.`,
+    overview: `This is a **reference catalog**, not a benchmark. It covers ${catalog.rows.length} foundation models from ${providers.length} providers — ${providers.join(", ")} — and records, for each, the curated facts the measured topics build on: provider, model name, API model id, tier, API surface, release label, catalog price, supported effort levels, and generational pairing.
 
-Every value is curated catalog data (provenance: \`catalog\`), not a measured value; prices are the USD-per-1M-token range across each provider's listed models. The full per-model catalog table is in section 7, Verification Data.`,
-    analysis:
-      "Use this page to understand the comparison matrix before reading measurement pages. Model selection should not be based on this catalog alone: prices and effort controls constrain cost and runtime behavior, but measured speed, output accuracy, OCR capability, RAG behavior, and availability are covered by the other research topics.",
-    reproductionSteps: `\`\`\`sh
+Nothing on this page is evaluated here. How these models actually behave is the subject of the measured topics — speed, accuracy, availability, OCR, RAG, computer use — which draw their subject lists from this catalog; this page is where you check what is in scope before reading them. Model selection should not rest on the catalog alone: price and effort controls constrain cost and runtime behavior, but say nothing about output quality.`,
+    coverage: `${providerOverviewTable(catalog.rows)}
+
+Prices are the USD-per-1M-token range across each provider's listed models. Every value is curated catalog data (provenance: \`catalog\`) with a cited source, never a live measurement: no throughput, latency, accuracy, OCR, RAG, or availability figure appears here. Treat each cell as correct only as of its source's date; provider catalog pages can change after this page is generated. Vision/multimodal support is **to verify** and is deliberately omitted rather than guessed.`,
+    catalog: `${catalogTable(catalog.rows)}
+
+**Legend.** Every column is curated catalog data (provenance: \`catalog\`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; \`n/a\` means the model exposes no user-selectable effort control. "Generation" marks a controlled former→new pairing: \`current (supersedes …)\` is the latest tier and \`previous (→ …)\` the retained prior generation it replaced; \`—\` means the model is outside any active pairing.`,
+    sources: `${sourceList(catalog.rows)}
+
+The catalog regenerates from \`${catalog.generatedFrom}\`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered:
+
+\`\`\`sh
 cd packages/tech
 npm run research -- foundation-models --fixture
-\`\`\``,
-    reproductionCost:
-      "The catalog path is keyless and costless. It reads the committed model registry and does not call provider APIs.",
-    cleanup:
-      "No external resources are created. Re-rendering only rewrites the catalog Markdown and JSON artifact in `docs/research-reports/`.",
-    verificationData: `**Full catalog**
+\`\`\`
 
-${catalogTable(catalog.rows)}
-
-**Legend.** Every column is curated catalog data (provenance: \`catalog\`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; \`n/a\` means the model exposes no user-selectable effort control. "Generation" marks a controlled former→new pairing: \`current (supersedes …)\` is the latest tier and \`previous (→ …)\` the retained prior generation it replaced; \`—\` means the model is outside any active pairing.
-
-**Sources**
-
-${sourceList(catalog.rows)}
-
-The catalog regenerates from \`${catalog.generatedFrom}\`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered.`,
+That path is keyless and costless — it reads the committed model registry and calls no provider API, so the page is reproducible by any reader.`,
   });
 };
