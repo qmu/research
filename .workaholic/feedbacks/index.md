@@ -21,4 +21,5 @@
 * [The foundation model catalog page should not share the verification-report outline](20260815052013-the-foundation-model-catalog-page-should-not-share-the-verification-report-outline.md)
 * [Keep up with each provider's newest models and plan the response](20260815052335-keep-up-with-each-provider-s-newest-models-and-plan-the-response.md)
 * [Auto-deploy docs to a Cloudflare Worker on merge to main (staging-research.qmu.co.jp)](20260818122035-auto-deploy-docs-to-a-cloudflare-worker-on-merge-to-main-staging-research-qmu-co-jp.md)
+* [The deployed robots.txt is Cloudflare-managed, not the one this repository ships](20260819044612-the-deployed-robots-txt-is-cloudflare-managed-not-the-one-this-repository-ships.md)
 <!-- okf:generated:end -->
