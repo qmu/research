@@ -83,7 +83,7 @@ edit files itself.
 
 ## Deploy
 
-This repository has two delivery surfaces:
+This repository has four delivery surfaces:
 
 1. **Preview site** — `make docs` serves the VitePress site under `docs/`. The
    site exposes `LLMs Research` (English source reports) and `LLM基礎検証`
@@ -106,6 +106,25 @@ This repository has two delivery surfaces:
    (Cloudflare Workers, built from `packages/site`) renders the copies; commit
    and deploy `qmu-co-jp` separately. See
    `docs/adr/0003-*` for the boundary.
+4. **Hosted staging preview** — the same VitePress build, served from a
+   Cloudflare Worker so a report is reviewable by URL without a checkout. This
+   is a **preview** surface, not a publishing one: nothing about surface 3 or
+   `docs/adr/0003-*` changes, and the published articles still reach readers only
+   through `qmu-co-jp`. See *Staging preview* below.
+
+Surfaces 1 and 4 are the same site: `docs/` previewed locally and the same build
+hosted. Only surface 3 publishes.
+
+### Staging preview (Cloudflare Worker)
+
+- **Deploy** — `make deploy-docs` builds the site and deploys it to the
+  `research-docs-staging` Worker. The whole path lives in the Makefile and
+  `docs/wrangler.jsonc`; nothing invokes wrangler flags from a workflow file
+  ("one runner"). `npm --prefix docs run deploy:dry` packages the built `dist`
+  without contacting Cloudflare.
+- **Credentials** — `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, supplied
+  from the environment and never from the tree. `make deploy-docs` fails
+  immediately and names the missing variable rather than exiting zero.
 
 ### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
 

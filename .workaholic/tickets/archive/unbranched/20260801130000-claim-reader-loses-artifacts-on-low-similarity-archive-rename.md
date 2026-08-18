@@ -1,5 +1,6 @@
 ---
 created_at: 2026-08-01T13:00:00+09:00
+status: abandoned
 author: a@qmu.jp
 type: bugfix
 layer: [Infrastructure]

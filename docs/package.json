@@ -10,10 +10,13 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "a11y": "start-server-and-test 'vitepress preview --port 4173' http://localhost:4173 'pa11y-ci'"
+    "a11y": "start-server-and-test 'vitepress preview --port 4173' http://localhost:4173 'pa11y-ci'",
+    "deploy": "wrangler deploy",
+    "deploy:dry": "wrangler deploy --dry-run"
   },
   "devDependencies": {
-    "vitepress": "^1.6.3"
+    "vitepress": "^1.6.3",
+    "wrangler": "^4.123.0"
   },
   "optionalDependencies": {
     "pa11y-ci": "^4.1.1",

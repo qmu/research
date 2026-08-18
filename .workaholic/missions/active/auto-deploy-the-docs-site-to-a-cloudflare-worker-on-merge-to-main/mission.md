@@ -43,9 +43,10 @@ Nothing about `scripts/publish-research.sh` or the qmu-co-jp path changes.
       deploy fails visibly instead of silently leaving the old build. (#20260818122248-deploy-the-docs-worker-from-ci-on-every-merge-to-main.md)
 - [ ] `staging-research.qmu.co.jp` serves the current site: both indexes and the
       per-topic report pages resolve. (#20260818122249-serve-the-deployed-worker-at-staging-research-qmu-co-jp.md)
-- [ ] The deploy runs from a repository `make` target CI invokes, with credentials
+- [x] The deploy runs from a repository `make` target CI invokes, with credentials
       supplied as secrets and the required ones documented. (#20260818122247-build-the-docs-site-into-a-deployable-cloudflare-worker-artifact.md)
 
 ## Changelog
 
 - 2026-08-18: Proposed from feedback (issue #115).
+- 2026-08-18 — ticket archived — 20260818122247-build-the-docs-site-into-a-deployable-cloudflare-worker-artifact.md

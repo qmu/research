@@ -36,11 +36,11 @@ if [ "$$rc" -ne 0 ]; then echo "make: $(1) FAILED in:$$failed" >&2; fi; \
 exit $$rc
 endef
 
-.PHONY: help install build test lint format docs a11y drift gate publish-guard publish
+.PHONY: help install build test lint format docs a11y deploy-docs drift gate publish-guard publish
 
 help: ## List available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-		| awk 'BEGIN {FS = ":.*?## "}; {printf "  make %-10s %s\n", $$1, $$2}'
+		| awk 'BEGIN {FS = ":.*?## "}; {printf "  make %-13s %s\n", $$1, $$2}'
 
 install: ## Install dependencies in every package and the docs site
 	$(call for_each_package,install,npm install)
@@ -64,6 +64,27 @@ docs: ## Run the local research preview site (VitePress)
 
 a11y: ## Check the built preview site against WCAG 2.2 AA (needs `make build`)
 	@cd $(DOCS_DIR) && npm run a11y
+
+# The whole deploy path lives here rather than in workflow YAML ("one runner"):
+# CI's deploy job runs exactly this target, so the same command releases the
+# staging site from a developer's machine.
+#
+# Credentials are checked BEFORE the build so a missing secret fails in the
+# first second with a name, instead of building for a minute and then letting
+# wrangler try to open an interactive browser login (which in a runner exits
+# with an error nobody can read). Never add `|| true` here — see the 0b09ddc
+# masking incident recorded in CLAUDE.md.
+deploy-docs: ## Build the preview site and deploy it to the Cloudflare Worker
+	@missing=""; \
+	[ -n "$$CLOUDFLARE_API_TOKEN" ] || missing="$$missing CLOUDFLARE_API_TOKEN"; \
+	[ -n "$$CLOUDFLARE_ACCOUNT_ID" ] || missing="$$missing CLOUDFLARE_ACCOUNT_ID"; \
+	if [ -n "$$missing" ]; then \
+		echo "make: deploy-docs needs these unset variables:$$missing" >&2; \
+		echo "make: supply them from repository secrets (see CLAUDE.md, Deploy)." >&2; \
+		exit 1; \
+	fi
+	@echo "==> build docs"; (cd $(DOCS_DIR) && npm run build)
+	@echo "==> deploy docs"; (cd $(DOCS_DIR) && npm run deploy)
 
 drift: ## Regenerate every keyless fixture and fail on drift from committed artifacts
 	@bash scripts/check-fixture-drift.sh
