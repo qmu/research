@@ -1,5 +1,6 @@
 ---
 created_at: 2026-07-19T00:30:00+09:00
+status: abandoned
 author: a@qmu.jp
 type: enhancement
 layer: [Infrastructure]
