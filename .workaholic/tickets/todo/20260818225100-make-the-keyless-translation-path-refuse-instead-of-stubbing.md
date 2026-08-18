@@ -6,6 +6,7 @@ depends_on:
 mission:
 merge_policy: review
 verification_handoff:
+claim: work-20260818-205634
 ---
 
 # Make the keyless translation path refuse instead of overwriting a page with a stub
