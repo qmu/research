@@ -57,3 +57,4 @@ Nothing about `scripts/publish-research.sh` or the qmu-co-jp path changes.
 - 2026-08-19 — Deploy verified — CI deploy job green on 47130d4, 367 assets uploaded, custom domain staging-research.qmu.co.jp bound; both indexes, a report page, the built 404 and robots.txt all served over HTTPS — run-20260818-123849
 - 2026-08-19 — mission achieved — mission.md
 - 2026-08-18 — ticket archived — 20260818124500-make-help-omits-targets-whose-names-contain-a-digit.md
+- 2026-08-18 — ticket archived — 20260818131500-deployment-record-still-says-the-merge-is-the-deployment.md
