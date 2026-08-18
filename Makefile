@@ -39,7 +39,7 @@ endef
 .PHONY: help install install-docs build test lint format docs a11y deploy-docs drift gate publish-guard publish
 
 help: ## List available commands
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  make %-13s %s\n", $$1, $$2}'
 
 install: ## Install dependencies in every package and the docs site
