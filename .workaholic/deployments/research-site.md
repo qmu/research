@@ -78,10 +78,18 @@ answered is this build rather than a placeholder:
 ```
 $ curl -fsS -o /dev/null -w '%{http_code}\n' https://staging-research.qmu.co.jp/
 200
-$ curl -fsS https://staging-research.qmu.co.jp/robots.txt
-User-agent: *
-Disallow: /
+$ curl -fsS https://staging-research.qmu.co.jp/ | grep -o '<meta name="robots"[^>]*>'
+<meta name="robots" content="noindex, nofollow">
 ```
+
+**Do not assert on `/robots.txt`.** Cloudflare serves the zone's Managed
+robots.txt ahead of the origin file, so the response is not the `Disallow: /`
+this repository builds and a confirmation keyed to it fails on a healthy deploy
+(concern `20260819044612-the-deployed-robots-txt-is-cloudflare-managed-not-the-one-this-repository-ships`).
+The robots **meta tag** above is emitted by the VitePress build itself
+(`docs/.vitepress/config.ts`, driven by `DOCS_PUBLIC_HOSTNAME`) and reaches the
+browser unmodified, which is what makes it a usable signal that the origin build
+is what answered.
 
 The site carries no commit marker, so the strongest available assertion that it
 is serving *this* commit is content: a page the merge added or changed is
