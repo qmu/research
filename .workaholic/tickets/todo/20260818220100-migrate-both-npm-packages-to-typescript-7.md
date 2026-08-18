@@ -6,7 +6,7 @@ depends_on:
 mission:
 merge_policy:
 verification_handoff: none — the work is keyless and offline apart from `npm install`
-claim: work-20260818-135319
+claim: work-20260818-211724
 ---
 
 # Migrate both npm packages to TypeScript 7
