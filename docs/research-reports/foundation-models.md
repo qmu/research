@@ -5,27 +5,13 @@ description: A curated reference catalog of 30 foundation models across 8 provid
 
 # Foundation model catalog
 
-This is a **reference catalog**, not a benchmark. It lists the compared foundation models and records the catalog facts used by measured topics.
+## Overview
 
-## 1. Research Purpose
+This is a **reference catalog**, not a benchmark. It covers 30 foundation models from 8 providers — Anthropic, OpenAI, Google, xAI, Perplexity, AWS Bedrock, Google Vertex AI, OpenRouter — and records, for each, the curated facts the measured topics build on: provider, model name, API model id, tier, API surface, release label, catalog price, supported effort levels, and generational pairing.
 
-The catalog gives readers one place to verify which providers, model names, API model ids, tiers, prices, effort controls, and API surfaces are in scope before reading measured speed, accuracy, and availability reports.
+Nothing on this page is evaluated here. How these models actually behave is the subject of the measured topics — speed, accuracy, availability, OCR, RAG, computer use — which draw their subject lists from this catalog; this page is where you check what is in scope before reading them. Model selection should not rest on the catalog alone: price and effort controls constrain cost and runtime behavior, but say nothing about output quality.
 
-## 2. Measurement Targets
-
-### Target Models
-
-30 foundation models across 8 providers are listed. The single source of truth is the model registry (`packages/tech/src/llm-model-comparison/models.ts`).
-
-### Target Metrics
-
-This topic has no measured metrics. It records curated catalog fields only: provider, model, API model id, tier, API surface, release label, input/output catalog price, and supported effort levels.
-
-## 3. Scope and Constraints
-
-Every value is curated catalog data with a cited source, not a live measurement. No throughput, latency, accuracy, OCR, RAG, or availability figure appears here. Treat each cell as correct only as of its source's date; provider catalog pages can change after this page is generated. Vision/multimodal support is **to verify** and is deliberately omitted rather than guessed.
-
-## 4. Verification Results
+## Coverage
 
 | Provider | Models | Tiers | Input $/MTok | Output $/MTok |
 | -------- | ------ | ----- | ------------ | ------------- |
@@ -38,36 +24,9 @@ Every value is curated catalog data with a cited source, not a live measurement.
 | Google Vertex AI | 1 | flagship | $5.00 | $25.00 |
 | OpenRouter | 2 | flagship | $5.00 | $25.00–$30.00 |
 
-Every value is curated catalog data (provenance: `catalog`), not a measured value; prices are the USD-per-1M-token range across each provider's listed models. The full per-model catalog table is in section 7, Verification Data.
+Prices are the USD-per-1M-token range across each provider's listed models. Every value is curated catalog data (provenance: `catalog`) with a cited source, never a live measurement: no throughput, latency, accuracy, OCR, RAG, or availability figure appears here. Treat each cell as correct only as of its source's date; provider catalog pages can change after this page is generated. Vision/multimodal support is **to verify** and is deliberately omitted rather than guessed.
 
-**推移 / Trend across surveys**
-
-This is the first comparable survey in the series, so there is no multi-survey trend to chart yet. A trend chart appears here once a second same-instrument survey is archived; earlier surveys are linked under Verification Data.
-
-## 5. Analysis
-
-Use this page to understand the comparison matrix before reading measurement pages. Model selection should not be based on this catalog alone: prices and effort controls constrain cost and runtime behavior, but measured speed, output accuracy, OCR capability, RAG behavior, and availability are covered by the other research topics.
-
-## 6. Reproduction
-
-### Reproduction Steps
-
-```sh
-cd packages/tech
-npm run research -- foundation-models --fixture
-```
-
-### Reproduction Cost (Estimate)
-
-The catalog path is keyless and costless. It reads the committed model registry and does not call provider APIs.
-
-### Cleanup
-
-No external resources are created. Re-rendering only rewrites the catalog Markdown and JSON artifact in `docs/research-reports/`.
-
-## 7. Verification Data
-
-**Full catalog**
+## Catalog
 
 | Provider | Model | API model id | Tier | API surface | Released | Input $/MTok | Output $/MTok | Effort levels | Generation |
 | -------- | ----- | ------------ | ---- | ----------- | -------- | ------------ | ------------- | ------------- | ---------- |
@@ -104,7 +63,7 @@ No external resources are created. Re-rendering only rewrites the catalog Markdo
 
 **Legend.** Every column is curated catalog data (provenance: `catalog`), not a measured value. Cost is USD per 1M tokens, input / output. "Effort levels" are the reasoning-effort settings the registry sweeps for that model; `n/a` means the model exposes no user-selectable effort control. "Generation" marks a controlled former→new pairing: `current (supersedes …)` is the latest tier and `previous (→ …)` the retained prior generation it replaced; `—` means the model is outside any active pairing.
 
-**Sources**
+## Sources
 
 - **Anthropic:** https://platform.claude.com/docs/en/about-claude/models/overview
 - **OpenAI:** https://developers.openai.com/api/docs/pricing
@@ -115,7 +74,14 @@ No external resources are created. Re-rendering only rewrites the catalog Markdo
 - **Google Vertex AI:** https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai
 - **OpenRouter:** https://openrouter.ai/anthropic/claude-opus-4.8
 
-The catalog regenerates from `packages/tech/src/llm-model-comparison/models.ts`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered.
+The catalog regenerates from `packages/tech/src/llm-model-comparison/models.ts`; a correction to a price or tier is a one-line edit there, after which this page is re-rendered:
+
+```sh
+cd packages/tech
+npm run research -- foundation-models --fixture
+```
+
+That path is keyless and costless — it reads the committed model registry and calls no provider API, so the page is reproducible by any reader.
 
 **過去の調査 / Past surveys in this series**
 
