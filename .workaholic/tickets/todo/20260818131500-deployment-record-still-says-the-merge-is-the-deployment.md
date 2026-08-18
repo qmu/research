@@ -6,6 +6,7 @@ depends_on:
 mission: auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main
 merge_policy:
 verification_handoff:
+claim: work-20260818-204006
 ---
 
 # Deployment record still says the merge is the deployment
