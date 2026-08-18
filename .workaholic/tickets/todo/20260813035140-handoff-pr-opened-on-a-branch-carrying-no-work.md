@@ -5,7 +5,7 @@ assignees:
 depends_on:
 mission:
 merge_policy: review
-claim: work-20260818-214032
+claim: work-20260818-223958
 ---
 
 # A handoff PR was opened on a branch carrying no work, and the finish post named a file that was never committed
@@ -435,3 +435,33 @@ changed. The three options are unmoved (file the prepared issue on
 ticket), but the middle one is worth naming as the only option that converts these
 ticks into progress instead of ending them: with scope, the very next tick files
 the issue and closes the ticket, because the payload is already written.
+
+## Re-check (2026-08-18 22:40 UTC, plugin tree 1.0.188) — sixth block
+
+Two releases have now passed over this file without touching it, which is a
+stronger statement than the fifth re-check could make with one.
+
+| Probe at 1.0.188 | Result |
+| --- | --- |
+| `md5sum skills/report/scripts/create-or-update.sh` | `3df6ca5e72fd252ebcae59dac93fe770` — **the same digest recorded at 1.0.186 and 1.0.187**, 134 lines |
+| `grep -rEn 'empty_head\|no_work_commit\|coordination-only\|unpushed_head' skills/ hooks/` | exit 1, no match |
+| `grep -nE 'git fetch\|origin/\|rev-list\|rev-parse' .../create-or-update.sh` | lines 28 (`git rev-parse --show-toplevel`) and 88 (`BASE_REF#origin/`) only — no remote read |
+| `grep -c 'git push' skills/commit/scripts/commit.sh` | `0` |
+
+Nothing else was re-derived: the analysis, *The patch to file*, *The caller-side
+half the issue must also ask for*, and the corrected acceptance criteria stand
+unchanged and remain the payload.
+
+The boundary was **not re-probed**, for the reason the fourth re-check gives:
+this session's GitHub access is scoped to `qmu/research` by configuration, and
+making a call against `qmu/workaholic` to harvest a denial is a call the session
+was instructed not to make.
+
+**The cost figure the fifth re-check introduced now has a second data point.**
+Blocked attempts are at 21:19, 21:40 and 22:40 UTC — three in eighty-one
+minutes, each spending one PR-unit to confirm an unchanged digest. The three
+options are unmoved (file the prepared issue on `qmu/workaholic`, grant this
+environment access to that repository, or icebox this ticket). This run
+escalated them to the developer out-of-band rather than only into the report,
+because six blocked attempts is evidence the report alone is not reaching a
+decision.

@@ -6,7 +6,7 @@ depends_on:
 mission:
 merge_policy: review
 verification_handoff:
-claim: work-20260818-214032
+claim: work-20260818-223958
 ---
 
 # A `verification_handoff:` value of "none" routes the unit to handoff anyway
@@ -285,3 +285,34 @@ verification_handoff: none — the work is keyless and offline apart from `npm i
 re-probed: this container's GitHub access is scoped to `qmu/research`, so the `/fb`
 issue cannot be filed from here and no retry by this routine reaches it. *The
 payload to file* above is unchanged and remains a single copy-paste.
+
+### 2026-08-18 22:40 UTC, unattended `[Implement]` run — third attempt; nothing moved
+
+Steps 1 and 2 stand as decided and were not re-derived. This entry records only
+what this tick measured.
+
+**The defect is live at plugin tree 1.0.188** (`plugin-src.sh` → `registry`,
+`src_immutable: true`, the only tree on the machine):
+
+| Probe at 1.0.188 | Result |
+| --- | --- |
+| `grep -nE '_c_value\|HANDOFF=' skills/drive/scripts/verification-handoff.sh` | `93: if [ -n "$_c_value" ] && [ -z "$REASON" ]` → `94: HANDOFF="true"` — the predicate verbatim as filed (md5 `de0fa555163bb61a4ecd9c4ee5cfced9`) |
+| `grep -n 'verification_handoff' hooks/validate-ticket.sh` | exit 1, no match — the writer-side rule *Step 1* asks for still does not exist (md5 `15d3a4ecc3dfd8cd3ce3c5ac952288a8`) |
+
+**Step 3's two blocks both still hold.** The field is a declaration a run may not
+write for itself, and the ticket carrying the bad value is still under a
+standing claim — `list-claims.sh` reports `batch-20260818211724` /
+`work-20260818-211724` holding
+`20260818220100-migrate-both-npm-packages-to-typescript-7.md`, `stale: false`,
+`resume_reason: parked_with_pr`. Parked is not released: the claim stands while
+its pull request waits, so editing the artifact is still the collision the claim
+protocol exists to prevent. The value is confirmed in place at line 8:
+
+```
+verification_handoff: none — the work is keyless and offline apart from `npm install`
+```
+
+**Step 4 is blocked on the same structural boundary** and was not re-probed:
+this container's GitHub access is scoped to `qmu/research`, so the `/fb` issue
+cannot be filed from here and no retry by this routine reaches it. *The payload
+to file* above is unchanged and remains a single copy-paste.
