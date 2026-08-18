@@ -6,7 +6,7 @@ depends_on:
 mission:
 merge_policy: review
 verification_handoff:
-claim: work-20260818-211938
+claim: work-20260818-214032
 ---
 
 # A `verification_handoff:` value of "none" routes the unit to handoff anyway
@@ -238,3 +238,50 @@ configuration, identical on every tick, so no retry by this routine reaches it.
 > declaring ticket (`handoff: true`, reason verbatim), a field-absent ticket
 > (`handoff: false`), and a nothing-declaring ticket, which must now be
 > impossible to write: `validate-ticket.sh` rejects it and names the rule.
+
+### 2026-08-18 21:40 UTC, unattended `[Implement]` run — second attempt; step 3 gains a second, independent block
+
+Steps 1 and 2 stand exactly as decided above and were not re-derived. This entry
+records only what this tick measured.
+
+**The router is unchanged at plugin tree 1.0.187** (`plugin-src.sh` → `registry`,
+`src_immutable: true`), so the defect is live at the newest tree on the machine:
+
+| Probe at 1.0.187 | Result |
+| --- | --- |
+| `grep -nE '_c_value\|HANDOFF=' skills/drive/scripts/verification-handoff.sh` | `93: if [ -n "$_c_value" ] && [ -z "$REASON" ]` → `94: HANDOFF="true"` — the predicate verbatim as filed |
+| `grep -n 'verification_handoff' hooks/validate-ticket.sh` | no match — the writer-side rule this ticket asks for does not exist |
+
+The second row is the one worth recording: the decision in *Step 1* places the fix
+in `validate-ticket.sh`, and that file carries no `verification_handoff` rule of
+any kind at 1.0.187, so the requested change is still an addition rather than an
+amendment.
+
+**Step 3 now has two independent blocks, not one.** The first is the one already
+recorded — the field is a declaration a run may not write for itself. The second
+was measured this tick and is simpler: the ticket carrying the bad value,
+`20260818220100-migrate-both-npm-packages-to-typescript-7.md`, is **under another
+runner's active claim**:
+
+```
+$ list-claims.sh
+{"unit": "batch-20260818211724", "branch": "work-20260818-211724",
+ "artifacts": [".../20260818220100-migrate-both-npm-packages-to-typescript-7.md"],
+ "last_commit_at": "2026-08-18T21:19:10+00:00", "stale": false, "resumable": false,
+ "resume_reason": "claim_active"}
+```
+
+Editing an artifact another live claim holds is a collision the claim protocol
+exists to prevent, so step 3 is not merely reserved for a person — it is
+unavailable to *any* concurrent run while that claim stands. The value is
+confirmed still in place:
+
+```
+$ sed -n '8p' .../20260818220100-…md
+verification_handoff: none — the work is keyless and offline apart from `npm install`
+```
+
+**Step 4 is blocked on the same structural boundary as before** and was not
+re-probed: this container's GitHub access is scoped to `qmu/research`, so the `/fb`
+issue cannot be filed from here and no retry by this routine reaches it. *The
+payload to file* above is unchanged and remains a single copy-paste.
