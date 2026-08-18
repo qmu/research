@@ -3,11 +3,13 @@ import { isDirectRun } from "./direct-run";
 
 const usage = (): string =>
   [
-    "Usage: research-translate-report <topic> [--estimate]",
+    "Usage: research-translate-report <topic> [--estimate] [--fixture]",
     "",
     "Translates the topic's full English report into the configured Japanese",
-    "report path. Without ANTHROPIC_API_KEY the deterministic fixture client is",
-    "used; pass --estimate to price the live translation without writing.",
+    "report path. The live translation needs ANTHROPIC_API_KEY; without it the",
+    "command refuses rather than overwriting the page with the deterministic",
+    "stub. Pass --estimate to price the live call without writing, or --fixture",
+    "to write the stub deliberately.",
     "",
   ].join("\n");
 
@@ -23,6 +25,9 @@ export const main = async (): Promise<void> => {
     topicId,
     mode: args.includes("--estimate") ? "estimate" : "real",
     generatedAt: new Date().toISOString(),
+    // The stub is reachable, but only on request: an unasked-for fixture run
+    // replaces a published page with a placeholder.
+    allowFixture: args.includes("--fixture"),
   });
 };
 

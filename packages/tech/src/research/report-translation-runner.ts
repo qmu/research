@@ -6,7 +6,6 @@ import {
   estimateTranslation,
   translateInsights,
   TRANSLATION_API_MODEL_ID,
-  TRANSLATION_OUTPUT_TOKENS,
   type TranslateInput,
 } from "./domain/translate";
 import {
@@ -14,12 +13,8 @@ import {
   reportFrameSources,
   type ResearchSiteTopic,
 } from "./domain/site";
-import type { LlmClient } from "../vendors/llm/types";
-import { createFixtureTranslationClient } from "../vendors/llm/fixture";
-import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
+import { selectTranslationClient } from "./translation-client";
 import { splitFrontmatter } from "./translate-runner";
-
-const TRANSLATION_KEY_ENV = "ANTHROPIC_API_KEY";
 
 const repoRoot = (): string => resolve(process.cwd(), "../..");
 
@@ -38,22 +33,6 @@ const currentCommit = async (): Promise<string> => {
   } catch {
     return "uncommitted";
   }
-};
-
-const translationClient = (): LlmClient => {
-  const key = process.env[TRANSLATION_KEY_ENV];
-  if (!key) return createFixtureTranslationClient();
-  const completion = createAnthropicCompletionClient(
-    TRANSLATION_API_MODEL_ID,
-    key,
-  );
-  return {
-    model: completion.model,
-    generateAnswer: (prompt) =>
-      completion
-        .complete(prompt, { maxTokens: TRANSLATION_OUTPUT_TOKENS })
-        .then((result) => result.text),
-  };
 };
 
 const trialsFrom = (frontmatter: ReadonlyMap<string, string>): number => {
@@ -88,6 +67,11 @@ export type ReportTranslationOptions = Readonly<{
   topicId: string;
   mode: "real" | "estimate";
   generatedAt: string;
+  /**
+   * Deliberate opt-in to the deterministic stub when no API key is set. Absent,
+   * a keyless `real` run refuses rather than overwriting the Japanese page.
+   */
+  allowFixture?: boolean;
 }>;
 
 export const runReportTranslation = async (
@@ -114,8 +98,14 @@ export const runReportTranslation = async (
     return;
   }
 
+  // Selected BEFORE the write, and it throws rather than substituting a stub:
+  // the page below is a published article, not a scratch file.
+  const client = selectTranslationClient({
+    target: topic.japanese.docsPath,
+    allowFixture: options.allowFixture ?? false,
+  });
   const report = await translateInsights({
-    client: translationClient(),
+    client,
     input,
     generatedAt: options.generatedAt,
   });

@@ -5,23 +5,19 @@ import {
   estimateTranslation,
   translateInsights,
   TRANSLATION_API_MODEL_ID,
-  TRANSLATION_OUTPUT_TOKENS,
   type TranslateInput,
 } from "./domain/translate";
-import type { LlmClient } from "../vendors/llm/types";
-import { createFixtureTranslationClient } from "../vendors/llm/fixture";
-import { createAnthropicCompletionClient } from "../vendors/llm/anthropic";
+import { selectTranslationClient } from "./translation-client";
 import { findPublishedResearchTopic } from "./domain/site";
 
 /**
  * Effectful glue for the translation pipeline stage: read a topic's English
  * insights, translate the prose into Japanese through the fixed translation
  * model, and write it beside the insights. The domain (`domain/translate.ts`)
- * stays pure; provider access lives here. Translation is real-run, owner-gated;
- * a keyless run uses the deterministic stub that echoes the numbers so the
- * numeric-preservation check still holds.
+ * stays pure; provider access lives here. Translation is real-run, owner-gated:
+ * a keyless run refuses rather than writing the deterministic stub over the
+ * page (`translation-client.ts`), unless the caller opts into the stub.
  */
-const TRANSLATION_KEY_ENV = "ANTHROPIC_API_KEY";
 
 const docsReportDir = (): string =>
   resolve(process.cwd(), "../../docs/research-reports");
@@ -87,27 +83,15 @@ const buildInput = (
   };
 };
 
-/** The live translation client, or the deterministic stub when no key is set. */
-const translationClient = (): LlmClient => {
-  const key = process.env[TRANSLATION_KEY_ENV];
-  if (!key) return createFixtureTranslationClient();
-  const completion = createAnthropicCompletionClient(
-    TRANSLATION_API_MODEL_ID,
-    key,
-  );
-  return {
-    model: completion.model,
-    generateAnswer: (prompt) =>
-      completion
-        .complete(prompt, { maxTokens: TRANSLATION_OUTPUT_TOKENS })
-        .then((result) => result.text),
-  };
-};
-
 export type TranslationStageOptions = Readonly<{
   spec: TopicSpec;
   mode: "real" | "estimate";
   generatedAt: string;
+  /**
+   * Deliberate opt-in to the deterministic stub when no API key is set. Absent,
+   * a keyless `real` run refuses rather than overwriting the Japanese page.
+   */
+  allowFixture?: boolean;
 }>;
 
 /**
@@ -145,7 +129,10 @@ export const runTranslationStage = async (
   // preserves them). If a figure is still missing after the retry, warn loudly
   // on stderr rather than halting the whole batch — the operator can review the
   // one flagged file, and the rest of the site still generates.
-  const client = translationClient();
+  const client = selectTranslationClient({
+    target: `${spec.artifactBase}.insights.ja.md`,
+    allowFixture: options.allowFixture ?? false,
+  });
   let report = await translateInsights({ client, input, generatedAt });
   if (report.missingNumbers.length > 0) {
     report = await translateInsights({ client, input, generatedAt });
