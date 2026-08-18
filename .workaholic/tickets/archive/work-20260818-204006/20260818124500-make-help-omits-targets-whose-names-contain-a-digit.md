@@ -1,11 +1,13 @@
 ---
 created_at: 2026-08-18T12:45:00+00:00
+status: done
 author: a@qmu.jp
 assignees: [a@qmu.jp]
 depends_on:
 mission: auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main
 merge_policy:
 verification_handoff:
+claim: work-20260818-204006
 ---
 
 # Make help omits targets whose names contain a digit
@@ -72,3 +74,47 @@ appears in the help output (ticket
 - The fix is one character class, but the second acceptance criterion is the
   point: an ad-hoc check of `a11y` alone leaves the same defect waiting for the
   next target named with a digit.
+
+## Final Report
+
+Development completed as planned.
+
+The `help` recipe's filter is now `^[a-zA-Z0-9_-]+:.*?## .*$$`. The only visible
+change is that `a11y` appears in `make help`; nothing else about the recipe, the
+`awk` formatter or the column width moved.
+
+Verified by set comparison rather than by eye, as step 2 asks — three sets built
+from the file and from the command and diffed pairwise:
+
+```
+$ make help | awk '{print $2}' | sort                       # what help lists
+$ grep -oE '^[a-zA-Z0-9_.-]+:.*## ' Makefile | sed 's/:.*//' | sort   # what is annotated
+$ tr ' ' '\n' <<< "<the .PHONY list>" | sort                # what is declared
+```
+
+All three are identical (14 targets: `a11y build deploy-docs docs drift format
+gate help install install-docs lint publish publish-guard test`), which proves
+both acceptance criteria at once — every `## `-annotated target is listed, and no
+unannotated target is. `make help | grep a11y` returns the row. `make gate` is
+green, so widening the class did not disturb the per-package targets it proves.
+
+### Discovered Insights
+
+- **Insight**: the `.PHONY` list, the set of `## `-annotated targets and the
+  `make help` output are three independently maintained lists that happen to
+  agree today; nothing in the repository asserts that they must.
+  **Context**: this defect was exactly one of those three drifting from the other
+  two, and it went unnoticed for the life of the `a11y` target. A durable guard
+  would be a `check-make-gate.sh`-style assertion that diffs the three sets, not a
+  wider regex — the regex fixes today's drift and leaves the class of drift open.
+  Not added here: `scripts/check-make-gate.sh` exists to prove one specific
+  property (per-package failure propagation), and folding an unrelated assertion
+  into it, or minting a second gate script, is a scope decision this ticket does
+  not carry. Recorded as a deferred decision instead.
+- **Insight**: `make -C <dir> help` prepends `make: Entering directory …` /
+  `Leaving directory …` lines that survive an `awk '{print $2}'` extraction as
+  the tokens `Entering` and `Leaving`.
+  **Context**: any scripted comparison of the help output must run from inside
+  the directory (a `( cd … && make help )` subshell) or pass
+  `--no-print-directory`; otherwise the comparison reports two phantom targets and
+  looks like a failure of the fix.
