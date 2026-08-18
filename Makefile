@@ -36,7 +36,7 @@ if [ "$$rc" -ne 0 ]; then echo "make: $(1) FAILED in:$$failed" >&2; fi; \
 exit $$rc
 endef
 
-.PHONY: help install install-docs build test lint format docs a11y deploy-docs drift gate ledger publish-guard publish
+.PHONY: help install install-docs build test lint format docs a11y deploy-docs drift gate ledger lockfiles publish-guard publish
 
 help: ## List available commands
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -100,6 +100,9 @@ gate: ## Prove the per-package targets report failures instead of masking them
 
 ledger: ## Check the .workaholic/ ledger indexes against their directories
 	@sh scripts/check-workaholic-indexes.sh
+
+lockfiles: ## Prove npm install is a no-op on a clean checkout in every package
+	@sh scripts/check-lockfile-stability.sh
 
 publish-guard: ## Prove the exporter cannot silently overwrite downstream prose
 	@bash scripts/check-publish-guard.sh

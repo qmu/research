@@ -58,3 +58,4 @@ Nothing about `scripts/publish-research.sh` or the qmu-co-jp path changes.
 - 2026-08-19 — mission achieved — mission.md
 - 2026-08-18 — ticket archived — 20260818124500-make-help-omits-targets-whose-names-contain-a-digit.md
 - 2026-08-18 — ticket archived — 20260818131500-deployment-record-still-says-the-merge-is-the-deployment.md
+- 2026-08-18 — ticket archived — 20260818204644-make-install-rewrites-all-three-lockfiles-under-node-22.md

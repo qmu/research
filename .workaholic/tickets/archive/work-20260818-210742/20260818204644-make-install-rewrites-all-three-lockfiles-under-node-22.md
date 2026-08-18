@@ -1,11 +1,13 @@
 ---
 created_at: 2026-08-18T20:46:44+00:00
+status: done
 author: a@qmu.jp
 assignees: []
 depends_on:
 mission: auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main
 merge_policy:
 verification_handoff:
+claim: work-20260818-210742
 ---
 
 # `make install` rewrites all three lockfiles under the pinned Node 22
@@ -121,3 +123,90 @@ of the pin or the pin is behind the lockfiles.
 - Severity is low and the workaround is one command
   (`git checkout -- '*package-lock.json'`), which is exactly why it can persist:
   every run pays a small tax and none of them is the run that fixes it.
+
+## Final Report
+
+Development completed as planned.
+
+**Step 1 — the two npms, and why the CI log could not answer it directly.** The
+`libc` arrays in the committed lockfiles are a field npm 11 writes and npm 10 does
+not, so the files were last written by an npm 11.x machine. This environment —
+which matches the repository's own pin — resolves `node v22.22.2` / `npm 10.9.7`,
+and CI's `actions/setup-node@v7` with `node-version: "22"` resolves the same Node
+line. The ticket asked for that read off a CI log rather than by local inference,
+and **no CI log carries it**: npm prints no version banner and no step asked for
+one. Rather than infer and move on, `make lockfiles` (below) now echoes
+`node -v` / `npm -v` as its first line, so from this commit forward the answer is
+readable in every run's log, which is what step 1 wanted.
+
+So the lockfiles were ahead of the pin, not the pin behind the lockfiles: a
+contributor ran an npm the repository does not declare.
+
+**Step 2 — decided: regenerate under the pin, and declare the pin.** The
+alternative (pin npm upward to 11) needs `corepack enable` or a global install to
+take effect, both system-wide changes this repository does not authorize, and it
+would move the pin on the evidence of one contributor's machine. Instead each
+package.json now carries
+
+```json
+"engines": { "node": ">=22.0.0 <23.0.0", "npm": ">=10.9.0 <11.0.0" }
+```
+
+and all three lockfiles were regenerated under exactly that. `engines` is the
+machine-read statement acceptance criterion 3 asks for; it also makes a
+mismatched install announce itself as an `EBADENGINE` warning rather than as
+seventy-five silent lines of diff. Note the field lands in the lockfile root too
+(`packages[""].engines`), so it had to be written before the regeneration, not
+after.
+
+**Step 3 — applied to all three projects**, `packages/tech`, `packages/industry`
+and `docs`, each lockfile regenerated independently (no workspaces).
+
+**Step 4 — the durable check exists now.** `scripts/check-lockfile-stability.sh`
+(`make lockfiles`, and a CI step right after `make install`) runs the install
+itself and compares content hashes taken either side of it. Both choices are
+deliberate and recorded in the script's header: trusting a preceding `make
+install` would pass vacuously wherever nobody installed, and a `git diff`
+comparison would report the author's own manifest edits as npm's — this very
+change edits all six manifests.
+
+Verification:
+
+```
+$ make install && git status --short          # empty
+$ make lockfiles
+==> check-lockfile-stability: node v22.22.2, npm 10.9.7
+check-lockfile-stability: npm install rewrote nothing in 3 projects.   → exit 0
+```
+
+Negative case proven, not assumed: restoring `docs/package-lock.json` from
+`origin/main` (the npm 11-shaped file) and re-running gives
+
+```
+check-lockfile-stability: npm install rewrote: docs/package-lock.json
+  The installing npm disagrees with the one that wrote these files.   → exit 1
+```
+
+Full gate green from the repository root, bare exit codes: `make gate`, `install`,
+`build`, `test` (822 passed, 2 skipped), `lint`, `a11y`, `publish-guard`, `drift`,
+`ledger`, `lockfiles`. `make help` lists the new target.
+
+### Discovered Insights
+
+- **Insight**: `engines` is recorded into the lockfile's own root entry, so
+  adding it and regenerating are one atomic change.
+  **Context**: adding `engines` after regenerating leaves the lockfile stating an
+  older root manifest, and the very next `npm install` rewrites it — i.e. doing
+  these two steps in the wrong order reproduces the defect being fixed.
+- **Insight**: a "did the tool change anything" guard must measure the tool, not
+  the tree.
+  **Context**: the first draft of the check used `git diff --exit-code` and had to
+  special-case a dirty tree, which made it silently skip on exactly the branch
+  that was editing those files. Hashing either side of the command removes the
+  git state from the question entirely and the special case with it.
+- **Insight**: npm version skew is a *file format* difference, not only a
+  dependency-resolution one.
+  **Context**: the whole 75-line diff is `libc` arrays on optional platform
+  packages plus one `hasInstallScript` flag — no version of any dependency moved.
+  A lockfile diff that changes no versions is a signal about the installing
+  toolchain, and reviewing it as if it were a dependency change misreads it.

@@ -99,6 +99,18 @@ edit files itself.
   written. Note github.com ignores `.gitattributes` when IT merges a pull request —
   this works because the desk merges `main` locally before pushing.
 
+- **The npm that installs is pinned, and `make install` must change nothing.**
+  Each `package.json` declares `engines` (`node >=22 <23`, `npm >=10.9 <11`) — the
+  toolchain its lockfile was written by — because npm versions disagree about the
+  lockfile *format*, not only about resolution: npm 11 writes `libc` arrays that
+  npm 10 strips out again, so a checkout installed with the wrong npm hands every
+  contributor three modified lockfiles and 75 lines of diff that move no dependency
+  version. `make lockfiles` (`scripts/check-lockfile-stability.sh`, in `ci.yml`
+  right after Install) runs the install and fails by name if any manifest was
+  rewritten, and prints the `node -v` / `npm -v` the runner resolved. If it fails
+  for you, install with the declared npm — do not commit the churn, and do not
+  revert `engines` without regenerating all three lockfiles in the same change.
+
 - **Shell traps in this environment.** `noclobber` is set (use `>|` to
   overwrite); `cp` and `rm` are aliased (`cp -i`, trash-move) — use `/bin/cp`
   and `/bin/rm` deliberately; `diff` is aliased to nvim — use `/usr/bin/diff`;
