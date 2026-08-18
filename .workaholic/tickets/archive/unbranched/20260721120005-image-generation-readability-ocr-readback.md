@@ -7,9 +7,9 @@ layer: [Domain, UX]
 effort:
 commit_hash:
 category: Added
-depends_on:
+depends_on: [20260721120004-ocr-discriminate-with-generated-hard-inputs.md]
 mission:
-claim: work-20260801-120905
+claim: work-20260813-042829
 ---
 
 # Add a qualitative "readability" metric to image-generation — text-document output judged by OCR read-back

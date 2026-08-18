@@ -9,7 +9,7 @@ commit_hash:
 category:
 depends_on:
 mission:
-claim: work-20260801-120912
+claim: work-20260813-024220
 ---
 
 # Add an "OSS Foundational Research" section (a per-dependency assessment type)

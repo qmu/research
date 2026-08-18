@@ -102,6 +102,10 @@ export default defineConfig({
             text: "Research development guideline",
             link: "/research-development-guideline",
           },
+          {
+            text: "OSS foundational research (proposal)",
+            link: "/oss-foundation-proposal",
+          },
           { text: "Glossary", link: "/glossary" },
           { text: "Dependency decisions", link: "/dependency-decisions" },
         ],

@@ -38,7 +38,12 @@ export type DeltaMetricSpec = Readonly<{
 
 // The measured metrics come from ProbeStats means; the cost metrics come from the
 // curated ModelCard. Order here is the display order.
-const STAT_METRICS: ReadonlyArray<
+/**
+ * Exported so the precision analysis (`generational-precision.ts`, ticket
+ * `20260801124500`) walks exactly the metrics this section publishes, rather
+ * than keeping a second list that could drift from this one.
+ */
+export const STAT_METRICS: ReadonlyArray<
   DeltaMetricSpec & Readonly<{ statKey: keyof ProbeStats }>
 > = [
   {
