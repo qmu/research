@@ -10,6 +10,10 @@ outputs/*
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 
+# Wrangler's local state for the docs Worker (build output, uploaded-asset
+# manifest, local dev storage) — regenerated on every deploy.
+docs/.wrangler/
+
 # Local release-scan denylist (per-machine backstop; terms must not be published)
 .workaholic/leak-denylist
 

@@ -1,5 +1,6 @@
 ---
 created_at: 2026-08-18T12:22:47+00:00
+status: done
 author: a@qmu.jp
 assignees: [a@qmu.jp]
 depends_on:
@@ -96,3 +97,49 @@ Everything here is local and dry-runnable; no Cloudflare account is touched.
 - `sitemap.hostname` and the staging hostname disagree. Leave the sitemap alone
   here — it describes the published site, not staging — and decide it in the
   hostname ticket, where the served URL is actually known.
+
+## Final Report
+
+Development completed as planned.
+
+The artifact half is in place: `docs/wrangler.jsonc` describes an assets-only
+Worker (`research-docs-staging`) pointed at `.vitepress/dist`, `docs/package.json`
+gained `deploy` / `deploy:dry` and the `wrangler` devDependency, and
+`make deploy-docs` is the single entry point CI will invoke. No Cloudflare
+account was touched.
+
+Step 2's confirmation was run against the real assets runtime rather than
+assumed: `wrangler dev` served the built `dist` locally on 127.0.0.1:8799 and
+`/`, `/research-reports/`, `/research-reports/llm-benchmark` and `/glossary` all
+returned 200 `text/html` (so `cleanUrls: true` links resolve to the emitted
+`<page>.html`), while `/no-such-page` returned 404 through
+`not_found_handling` — wrangler logged the branch by name.
+
+Two resolutions worth recording:
+
+- **`deploy-docs` builds before deploying** rather than consuming a `dist` some
+  earlier step left behind. The ticket asked for this and the CI/CD policy wants
+  the same delivery reproducible from any machine; the cost is one extra
+  `vitepress build` (~13s) in the deploy job.
+- **The credential check runs before the build**, not after. Wrangler's own
+  failure on a missing token comes a minute later and, in a runner, arrives as an
+  interactive-login error; naming the unset variable in the first second is the
+  loud failure the gate asked for.
+
+### Discovered Insights
+
+- **Insight**: `make help` silently omits any target whose name contains a digit.
+  **Context**: the recipe greps `^[a-zA-Z_-]+:.*?## `, so `a11y` has never
+  appeared in the help output even though it carries a `## ` comment. Found while
+  checking that `deploy-docs` shows up. Minted as ticket
+  `20260818124500-make-help-omits-targets-whose-names-contain-a-digit.md`.
+- **Insight**: an assets-only Worker (no `main`, only `assets.directory`) is a
+  complete deployable, and `wrangler dev` runs it offline with no credentials.
+  **Context**: this makes the served behavior of a static site testable in CI and
+  locally — `vitepress preview` proves nothing about `html_handling` or
+  `not_found_handling`, which are the assets runtime's, not VitePress's.
+- **Insight**: `npm install` under this container's npm 10.9.7 strips `libc`
+  fields from lockfiles written by a newer npm.
+  **Context**: `make install` dirtied `packages/tech` and `packages/industry`
+  lockfiles with pure churn; both were reverted. Expect this on any branch that
+  runs `make install` here, and check `git status` before committing.

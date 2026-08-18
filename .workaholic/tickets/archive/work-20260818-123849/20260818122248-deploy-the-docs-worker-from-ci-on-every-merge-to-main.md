@@ -1,5 +1,6 @@
 ---
 created_at: 2026-08-18T12:22:48+00:00
+status: done
 author: a@qmu.jp
 assignees: [a@qmu.jp]
 depends_on: 20260818122247-build-the-docs-site-into-a-deployable-cloudflare-worker-artifact.md
@@ -102,3 +103,55 @@ verification handoff.
   recommends the former, but the repository has two workflows already and may
   prefer deploys to live in their own file; the driving session resolves this
   explicitly and records the resolution in its Final Report.
+
+## Final Report
+
+Development completed as planned, up to the boundary the ticket names: the
+workflow is written and its failure behavior proven locally; the one green
+deploy on `main` is the declared verification handoff and belongs to whoever
+holds the qmu Cloudflare account.
+
+### Open Decision resolved — which trigger surface
+
+**A `deploy` job inside `ci.yml`, gated on `needs: check`**, not a separate
+`deploy-docs.yml` keyed on `workflow_run`. Three reasons, in order of weight:
+
+1. The order that matters is "every gate passes, *then* deploy", and it should
+   be readable in one file — the same argument `ci.yml` already makes in its
+   comment about why `make gate` runs first. `workflow_run` expresses that order
+   through a detached run carrying neither the triggering ref's context nor its
+   workflow file.
+2. A separate *job* (rather than more steps on `check`) is what keeps the
+   secrets out of the job that runs on pull requests. `check` runs on every PR
+   including forks; it must never be a job that holds a token. This is the part
+   of the decision that is about safety rather than readability, and it is why
+   the answer is not "add two steps to `check`".
+3. A deploy failure stays distinguishable from a gate failure and can be re-run
+   on its own — which is also the documented rollback path.
+
+The cost is a fresh runner that re-installs and re-builds. That is why the
+Makefile gained `install-docs`: the deploy job installs what the site build
+needs and skips the research packages' SDKs, which the site build never touches.
+
+### Verification
+
+The ticket's third verification method offers "assert by reasoning about the
+step's exit code if a scratch run is not available". Reasoning was not needed:
+the failure path was run for real, without contacting Cloudflare. With
+`CLOUDFLARE_API_BASE_URL` pointed at a dead local port and the proxy variables
+cleared, `make deploy-docs` reached wrangler, wrangler failed on the API call,
+and the target exited non-zero (`make: *** [Makefile:86: deploy-docs] Error 1`).
+A deploy that fails therefore fails the workflow run rather than passing with a
+warning. No credential appeared in any output.
+
+### Discovered Insights
+
+- **Insight**: the docs site builds with only `docs/`'s own dependencies
+  installed, even though `docs/.vitepress/config.ts` imports
+  `packages/tech/src/research/domain/site`.
+  **Context**: that module is type-only/pure at the import boundary, so Vite
+  compiles it from source without `packages/tech/node_modules`. This is what
+  makes `make install-docs` a safe basis for the deploy job — but it is a
+  property of that one import, not a guarantee. A future import from
+  `packages/tech` that reaches a dependency would break the deploy job while
+  leaving `make build` green, because `make build` always installs everything.
