@@ -14,6 +14,7 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "research": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-research.ts",
+    "generational-precision": "node --import tsx/esm src/entrypoints/analyze-generational-precision.ts",
     "research:archive": "node --import tsx/esm src/entrypoints/archive-research-report.ts",
     "research:site": "node --import tsx/esm src/entrypoints/render-research-site.ts",
     "research:translate-report": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/translate-research-report.ts",

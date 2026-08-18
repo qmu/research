@@ -9,6 +9,7 @@ commit_hash:
 category:
 mission:
 depends_on:
+claim: work-20260813-040646
 ---
 
 # The generational gate tests dispersion, not whether the two means differ — so no trial count can ever resolve a direction
