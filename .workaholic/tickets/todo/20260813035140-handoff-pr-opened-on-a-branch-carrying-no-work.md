@@ -137,3 +137,102 @@ so the local convention is to file here and route the fix through `/fb`.
   narrow, checkable property is "the head has a work commit"; a general
   assertion-checker over post text is not implementable and would be the kind of
   speculative scope this queue is meant to keep out.
+
+## Investigation (2026-08-18) — step 1 answered, and it corrects step 2
+
+Step 1 is done. The answer **rules out** the hypothesis step 2 offers, which is
+why step 1 was made a precondition.
+
+### The loss is at the push, not at the commit seam
+
+Timeline, from the merged history and the GitHub API (both branches):
+
+| | `work-20260813-024220` (PR #103) | `work-20260813-025737` (PR #104) |
+| --- | --- | --- |
+| `Claim a PR-unit` | 02:42:22Z | 02:57:39Z |
+| **PR created** | **02:55:45Z** | **03:08:53Z** |
+| next commit (`Resume a PR-unit`) | 03:41:23Z | 03:53:27Z |
+
+Both PRs were opened while the **remote** head was still the claim commit.
+
+The decisive evidence that the work nevertheless *existed as commits* is the
+scan verdict quoted in each PR body. PR #104's body records:
+
+```
+scan-branch-safety.sh →
+{"verdict": "block", ... "too-large-commit", "2087 added lines of implementation > 500"}
+```
+
+`scan-branch-safety.sh` computes `git diff <base>..HEAD` and its
+`too-large-commit` rule iterates `git rev-list "${BASE}..HEAD"`
+(`skills/release-scan/scripts/scan-branch-safety.sh`). A per-commit finding is
+not reachable from an uncommitted worktree: the run's **local HEAD carried the
+work** when the scan ran, minutes before the PR was opened on a remote head that
+did not.
+
+(The `1289 added lines` figure in this ticket's Overview came from the Slack
+post; the PR body says `2087`. The discrepancy does not affect the conclusion —
+either number is a committed-history measurement.)
+
+So the sequence was: commit locally → scan → open PR → post 🟡, with the push
+that belongs between the commit and the PR never having taken effect. The
+container went away and took the only copy with it.
+
+### Why step 2's proposed check would not have fired
+
+Step 2 proposes that `create-or-update.sh` "count the head's commits that are
+not `Claim`/`Resume`/`Refresh heartbeat`". Run in the worktree, that counts
+**local** `HEAD` — which held the full corpus and would have counted 1+ on both
+of these runs. The check would have passed and the PR would have opened exactly
+as it did.
+
+**The precondition has to read the remote head**, because that is what the pull
+request actually points at: `git rev-list origin/<branch>` (after a `git fetch`),
+not `HEAD`. Stated as an invariant rather than a count: *the PR's head commit
+must be an ancestor-or-equal of local `HEAD` **and** must carry the work the body
+describes* — the cheap, checkable half being `git rev-parse HEAD` equals
+`git rev-parse origin/<branch>`.
+
+That single comparison catches this incident directly and catches nothing else:
+a run whose push succeeded has the two equal by construction.
+
+### Where the seam actually is
+
+`/report`'s Write Story flow pushes in Phase 4 and creates the PR in Phase 5
+(`skills/report/SKILL.md`). Phase 4's push is **prose in the skill, not a step
+any script owns or verifies** — `commit.sh` does not push (confirmed: no `git
+push` in it), so nothing between the commit and the PR guarantees the remote
+moved. `create-or-update.sh` then opens the PR without reading the remote at all;
+its own header comment assumes the opposite, describing an earlier failure as
+happening "*after* the branch was already pushed".
+
+One seam has since been closed for **archive** commits only: `archive.sh` pushes
+itself immediately after committing (line 300, verified live on 2026-08-18 — each
+archive in this session reported `Push: pushed`). That covers a ticket archive.
+It does **not** cover the story commit or any other `commit.sh` commit, which is
+what Phase 4 pushes, so the gap this ticket describes is still open.
+
+### Upstream status: not fixed
+
+Checked against the newest plugin tree on this machine, **1.0.183**, which is
+also the registry version (`plugin-src.sh` → `src_immutable: true`):
+
+- `grep -rn 'empty_head|empty-head|no_work_commit|coordination-only'` over
+  `skills/` and `hooks/` → no match anywhere.
+- `create-or-update.sh` (134 lines) contains no `git fetch`, no remote read, and
+  no commit count.
+- The rule exists only as prose: `skills/drive/reference/routing.md:201`, "an
+  unpublished handoff is not a handoff".
+
+So unlike the three sibling plugin defects filed on 2026-08-01, this one is
+**not** already fixed upstream and the `/fb` routing in step 4 is still required.
+
+### What remains, and why this run stopped here
+
+Steps 2–4 all land in `qmu/workaholic`: the fix is in that repository's
+`create-or-update.sh`, the Quality Gate's two tests are tests of that script, and
+step 4 files the issue there. **This session's GitHub access is scoped to
+`qmu/research` alone**, so it can neither open the `/fb` issue on
+`qmu/workaholic` nor add tests to a checkout it does not have. Recorded
+`blocked` on that, with the analysis above committed so the next attempt starts
+from the corrected proposal rather than re-deriving it.
