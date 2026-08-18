@@ -6,6 +6,7 @@ depends_on:
 mission:
 merge_policy: review
 verification_handoff:
+claim: work-20260818-211938
 ---
 
 # A `verification_handoff:` value of "none" routes the unit to handoff anyway
