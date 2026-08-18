@@ -5,7 +5,7 @@ assignees:
 depends_on:
 mission:
 merge_policy: review
-claim: work-20260818-134240
+claim: work-20260818-143916
 ---
 
 # A handoff PR was opened on a branch carrying no work, and the finish post named a file that was never committed
@@ -325,3 +325,50 @@ Still `blocked`, on the same external boundary and nothing else: the code, its
 tests, and the `/fb` issue all live in `qmu/workaholic`, and this session's GitHub
 access is scoped to `qmu/research` alone. What a person (or a session scoped to
 both repositories) has to do is now one act — file the section above as the issue.
+
+## Re-check (2026-08-18, plugin tree 1.0.186) — third block, and the boundary is structural
+
+Nothing in the analysis or the payload above changes. This section records only
+what a third attempt measured, so the next reader does not re-run the probes.
+
+### Upstream status at 1.0.186
+
+`plugin-src.sh` → `source: registry`, `version: 1.0.186`, `src_immutable: true`;
+`1.0.186` is the only tree on the machine and is also the registry version.
+
+| Probe | Result at 1.0.186 |
+| --- | --- |
+| `grep -rnE 'empty_head\|no_work_commit\|coordination-only\|unpushed_head' skills/ hooks/` | no match |
+| `grep -nE 'git fetch\|origin/\|rev-list\|rev-parse' skills/report/scripts/create-or-update.sh` | `git rev-parse --show-toplevel` (28) and the `BASE_REF#origin/` trim (88) only — still no remote read |
+| `wc -l skills/report/scripts/create-or-update.sh` | 134, unchanged (md5 `3df6ca5e72fd252ebcae59dac93fe770`) |
+| `grep -n 'git push' skills/commit/scripts/commit.sh` | no match — `commit.sh` still does not push |
+| `grep -rn 'unpublished handoff' skills/drive/reference/routing.md` | `routing.md:201`, prose only, same line as at 1.0.183 |
+
+One detail worth adding to *Where the seam actually is*: at 1.0.186 the push is
+not merely unowned by a script, it is a **single word in a prose bullet** —
+`skills/report/SKILL.md:51`, "commit, push" at the end of Phase 4 — and the only
+other mention of it in the whole flow is the `gh_unavailable` degrade note
+asserting the branch "is pushed" (`SKILL.md:94`, `reference/create-pr.md:24`).
+The assertion the incident falsified is still the one the code relies on.
+
+### The boundary is a property of the environment, not of this attempt
+
+Recorded because three consecutive runs have now hit it and the report is where a
+decision about it belongs:
+
+- This checkout is `/home/user/research`, and it is the **only** repository on the
+  machine (`ls -d /home/user/* /home/user/projects/*` → `/home/user/research`
+  alone). There is no `qmu/workaholic` checkout to add the two tests to.
+- The routine's container declares its GitHub access scoped to `qmu/research`
+  alone, with calls to other repositories denied. That is per-container
+  configuration, identical on every tick, so no retry of this ticket by this
+  routine can reach step 4 — the block is structural rather than transient, and
+  re-attempting it costs one PR-unit per tick.
+
+**Developer decision needed, deferred rather than guessed** (an unattended run
+may neither widen its own GitHub scope nor curate the icebox): either file the
+prepared issue on `qmu/workaholic` — the *The patch to file* section above is the
+payload, verbatim — or grant this routine's environment access to that
+repository, or icebox this ticket so the queue stops re-offering work no run here
+can finish. Until one of those happens the ticket is correct to stay in `todo/`
+and correct to keep blocking.
