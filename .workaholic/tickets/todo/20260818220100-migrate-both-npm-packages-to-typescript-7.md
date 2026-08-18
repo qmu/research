@@ -96,3 +96,38 @@ behaviour change in the toolchain, not only a version number: type-check output,
 - If the linter stack supports 7.x only in a new major of its own, that major is
   part of this migration and belongs in the same PR — splitting it produces an
   intermediate commit that cannot install.
+
+## Step 1 checks
+
+Step 1 says the ticket is not startable until the linter stack's declared
+`typescript` peer range admits 7.x, and to record the checked version. Each row is
+`npm view <pkg>@<tag> version peerDependencies.typescript`.
+
+### 2026-08-18, unattended `[Implement]` run — not startable
+
+| Package | Channel | Version | Declared `typescript` peer range |
+| --- | --- | --- | --- |
+| `typescript-eslint` | `latest` | 8.67.0 | `>=4.8.4 <6.1.0` |
+| `typescript-eslint` | `canary` | 8.67.1-alpha.7 | `>=4.8.4 <6.1.0` |
+| `@typescript-eslint/eslint-plugin` | `latest` | 8.67.0 | `>=4.8.4 <6.1.0` |
+| `@typescript-eslint/parser` | `latest` | 8.67.0 | `>=4.8.4 <6.1.0` |
+
+`typescript@latest` is 7.0.2, outside every range above. `npm view
+typescript-eslint dist-tags` lists only `latest`, `canary` and the historical
+`rc-v8` (8.0.0-alpha.62) — there is no `next` or `rc` channel carrying 7.x support,
+so the blocker is not merely unreleased on the stable channel, it is unpublished
+anywhere.
+
+Repository pins at the time of the check are unchanged from the Overview:
+`packages/tech` `typescript ^5.9.3` / `typescript-eslint ^8.64.0`,
+`packages/industry` `typescript ^5.9.3` / `typescript-eslint ^8.66.0`.
+
+Stopped here, as step 1 instructs; nothing was bumped and no lockfile was touched.
+
+**Cheapest way to re-check** — one command, no install:
+
+```
+npm view typescript-eslint@latest peerDependencies.typescript
+```
+
+Startable as soon as that prints a range whose upper bound admits 7.x.
