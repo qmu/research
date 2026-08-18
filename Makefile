@@ -36,7 +36,7 @@ if [ "$$rc" -ne 0 ]; then echo "make: $(1) FAILED in:$$failed" >&2; fi; \
 exit $$rc
 endef
 
-.PHONY: help install build test lint format docs a11y deploy-docs drift gate publish-guard publish
+.PHONY: help install install-docs build test lint format docs a11y deploy-docs drift gate publish-guard publish
 
 help: ## List available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -44,6 +44,12 @@ help: ## List available commands
 
 install: ## Install dependencies in every package and the docs site
 	$(call for_each_package,install,npm install)
+	@$(MAKE) --no-print-directory install-docs
+
+# Split out so the deploy job can install what `deploy-docs` actually needs
+# without pulling in the research packages' SDKs, which no part of the site
+# build touches.
+install-docs: ## Install only the docs site's dependencies
 	@echo "==> install docs"; (cd $(DOCS_DIR) && npm install)
 
 build: ## Type-check and build every package and the docs site

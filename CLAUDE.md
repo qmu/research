@@ -122,9 +122,20 @@ hosted. Only surface 3 publishes.
   `docs/wrangler.jsonc`; nothing invokes wrangler flags from a workflow file
   ("one runner"). `npm --prefix docs run deploy:dry` packages the built `dist`
   without contacting Cloudflare.
-- **Credentials** — `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, supplied
-  from the environment and never from the tree. `make deploy-docs` fails
-  immediately and names the missing variable rather than exiting zero.
+- **Automatic deploy** — the `deploy` job in `.github/workflows/ci.yml` runs
+  `make deploy-docs` on every push to `main` in `qmu/research`, after the
+  `check` job's gates pass. Pull requests — including from forks — run no deploy
+  and need no secret. A failed deploy fails the workflow run.
+- **Credentials** — repository secrets `CLOUDFLARE_API_TOKEN` (a Cloudflare API
+  token with Workers Scripts: Edit on the qmu account) and
+  `CLOUDFLARE_ACCOUNT_ID`. They are provisioned by whoever holds the qmu
+  Cloudflare account — the same account that hosts `qmu-co-jp` — and are passed
+  only into the deploy step's environment, never into the tree and never into a
+  `run:` string. `make deploy-docs` fails immediately and names the missing
+  variable rather than exiting zero.
+- **Recovery** — every merge deploys, so a merge that lands broken content is
+  live until the next one. To roll back, re-run the `deploy` job on the last good
+  `main` commit, or run `make deploy-docs` from that commit locally.
 
 ### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
 
