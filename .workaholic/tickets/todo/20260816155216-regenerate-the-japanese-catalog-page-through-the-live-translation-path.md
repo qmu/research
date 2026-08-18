@@ -6,7 +6,7 @@ depends_on:
 mission:
 merge_policy:
 verification_handoff: ANTHROPIC_API_KEY for the live translation call — the keyless fixture client returns a one-line stub and would overwrite the page
-claim: work-20260818-134843
+claim: work-20260818-212426
 ---
 
 # Regenerate the Japanese catalog page through the live translation path
@@ -154,3 +154,49 @@ domain's numeric-preservation check passes on the keyless path" — so
 `verifyNumbersPreserved` stays silent over a destroyed page. That mechanism is now
 its own ticket,
 `20260818225100-make-the-keyless-translation-path-refuse-instead-of-stubbing.md`.
+
+### 2026-08-18 21:26 UTC, unattended `[Implement]` run — step 1 fails again, but the risk is gone
+
+Same verdict as the previous attempt, on a materially changed footing.
+
+The key half of step 1 still fails, checked the same four ways:
+
+| Probe | Result |
+| --- | --- |
+| `ANTHROPIC_API_KEY` in the run's environment | unset |
+| `.env` anywhere in the claim worktree | absent |
+| `.worktree-env` at the repository root | absent, so no env file is carried in |
+| the runner's own report | `.env not found. Continuing without it.` |
+
+The pricing half runs unchanged: **5 calls, ~4190 prompt + ~81920 output tokens,
+model `claude-sonnet-5`**.
+
+**What changed since the last attempt: step 2 is now safe to attempt.** The
+provoking concern this ticket raised in its own "Consider …" note was filed as
+`20260818225100-make-the-keyless-translation-path-refuse-instead-of-stubbing.md`
+and merged earlier in this same run
+([#132](https://github.com/qmu/research/pull/132)), so the documented command no
+longer destroys the page when it runs keyless — it refuses:
+
+```
+$ npm run research:translate-report -- foundation-models
+.env not found. Continuing without it.
+research report translation failed: Error: ANTHROPIC_API_KEY is not set, so the
+live translation cannot run. Refusing to overwrite
+docs/research-reports/foundation-models.insights.ja.md with the deterministic
+fixture stub. …
+$ echo $?
+1
+$ git status --short          # empty
+```
+
+So step 2 was **attempted this time rather than skipped**, and the page is
+byte-identical afterwards. The reason this ticket cannot finish is now purely the
+missing credential: the trap that made even attempting it dangerous is closed.
+
+Steps 3, 4 and 5 are unreachable without a regenerated page and were not started.
+`docs/research-reports/history/` was not touched.
+
+**What a person needs to do:** run steps 1–5 in an environment carrying
+`ANTHROPIC_API_KEY` (or drop a `packages/tech/.env`). The command is exactly the
+one above without `--estimate`; budget the 5 calls priced above.
