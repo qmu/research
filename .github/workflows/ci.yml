@@ -29,6 +29,15 @@ jobs:
       - name: Install
         run: make install
 
+      # Runs right after Install, while node_modules are warm. The lockfiles are
+      # written by whichever npm installs, and npm versions disagree about the
+      # file format — so a repository installed with an npm other than the one
+      # its `engines` declares hands every contributor three modified files.
+      # Nothing here would have caught that before; this does, and it prints the
+      # node/npm the runner actually resolved.
+      - name: Lockfile stability (install must rewrite nothing)
+        run: make lockfiles
+
       - name: Build
         run: make build
 
