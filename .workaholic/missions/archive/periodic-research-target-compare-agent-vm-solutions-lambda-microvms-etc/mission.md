@@ -1,0 +1,237 @@
+---
+type: Mission
+title: Periodic Research Target: Compare Agent VM Solutions (Lambda MicroVMs etc)
+slug: periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc
+status: abandoned
+created_at: 2026-07-14T00:40:40+09:00
+author: a@qmu.jp
+assignee: a@qmu.jp
+strategy: periodically-benchmark-agent-vm-sandbox-execution-platforms
+tickets:
+  - 20260714005157-kickoff-propose-periodic-research.md
+  - 20260714024001-agent-vm-real-coldstart-cost-probe.md
+  - 20260714024002-agent-vm-wire-into-published-topics.md
+  - 20260714024003-agent-vm-history-and-trend-composition.md
+  - 20260714024004-agent-vm-first-validation-trial.md
+  - 20260714024005-agent-vm-japanese-translation-and-publish.md
+stories: []
+concerns: []
+actual_hours: 0.2
+---
+
+# Periodic Research Target: Compare Agent VM Solutions (Lambda MicroVMs etc)
+
+## Goal
+
+qmu builds AI agents that must execute untrusted, AI-generated code and run
+long-lived agent workloads in isolated compute. The backend that provides that
+isolation — a microVM, a gVisor/Kata container, or a raw Firecracker primitive —
+is the single infrastructure choice that sets an agent's **cold-start latency**
+(how quickly it can react), its **running cost**, its **isolation guarantee**
+(the security boundary around code we did not write), and its **capability
+envelope** (GPU access, filesystem persistence, max runtime, snapshot/resume).
+
+The market for this layer is consolidating quickly — AWS shipped Lambda microVMs
+(Firecracker) around 2026-06, and E2B, Modal, Daytona, Fly Machines, Cloudflare,
+Vercel, and Northflank all compete on the same axes with very different pricing
+and isolation models. This mission builds a **recurring, reproducible comparison**
+so the team's sandbox-backend decision stays current as offerings and prices
+move, published as a dated survey series like the other research topics.
+
+## Proposal (proposal-first — awaiting developer approval)
+
+Per `CLAUDE.md` and `docs/research-development-guideline.md`, the keyless
+skeleton is built ahead of approval (precedent: svg-generation `8a3a6f9`, speech
+`75af304`); the proposal-first gate blocks **paid (real) trials and publishing to
+the site/qmu**, which stay held until this proposal is approved. The five
+required elements:
+
+**Working topic id:** `agent-vm` (slug `agent-vm-comparison`). "Sandbox" is the
+umbrella term the market uses, but the mission names "VM Solutions", so the id
+tracks the mission; rename on approval if preferred.
+
+### 1. Cadence
+
+**Quarterly**, base. Sandbox offerings and their pricing change on a
+months-long rhythm — slower than LLM model releases (monthly topics) but this
+layer is in active churn (a major provider, AWS, entered the set in 2026-06).
+Following the guideline's Step 3, the **first two trials run monthly** to catch
+the current consolidation, then settle to quarterly once the metrics prove they
+discriminate. **Off-cadence triggers:** a new provider entering the compared
+set, a published pricing change at a covered provider, or a new isolation
+primitive (e.g. a provider moving from containers to Firecracker).
+
+### 2. Comparison subjects
+
+Eight providers, all present as **catalog subjects** (reference metrics read from
+provider docs, keyless). The **measured-probe subset** is those exposing a keyed
+create-and-boot API reachable from CI with a token:
+
+| Subject | Isolation (stated) | Probe reachability |
+| --- | --- | --- |
+| AWS Lambda microVMs | Firecracker microVM | AWS credentials |
+| Fly.io Machines | Firecracker microVM | Fly API token |
+| E2B | Firecracker microVM (agent-first) | E2B API key |
+| Modal | gVisor container (GPU-strong) | Modal token |
+| Daytona | container, persistent workspace | Daytona API key |
+| Cloudflare Containers / Sandbox SDK | container at edge | Cloudflare token |
+| Vercel Sandbox | Firecracker microVM | Vercel token |
+| Northflank Sandboxes | Kata / Firecracker / gVisor | Northflank token |
+
+A provider with no reachable API in a given trial stays catalog-only for that
+trial (its measured cells read 未測定), so a missing credential never blocks the
+report.
+
+### 3. Metrics
+
+**Reference metrics** (from provider docs, keyless catalog):
+
+| Metric | Unit | Direction |
+| --- | --- | --- |
+| isolationModel | category (Firecracker/gVisor/Kata/container) | reference |
+| publishedVcpuHourUsd | USD/vCPU-hr | lower-is-better |
+| publishedGbHourUsd | USD/GB-hr | lower-is-better |
+| billingGranularity | per-second / per-100ms / per-hour | reference |
+| maxRuntime | seconds (∞ = unbounded) | higher-is-better |
+| snapshotResume | capability (yes/no, pause-billing) | reference |
+| filesystemPersistence | ephemeral / persistent volume | reference |
+| networkEgress | allowed / restricted | reference |
+| gpuAvailable | yes/no (+ types) | reference |
+
+**Measured metrics** (real probe, gated on approval + credentials):
+
+| Metric | Unit | Direction |
+| --- | --- | --- |
+| coldStartMsP50 | ms | lower-is-better |
+| coldStartMsP95 | ms | lower-is-better |
+| warmReuseMs | ms | lower-is-better |
+| fixedTaskWallClockMs | ms | lower-is-better |
+| measuredCostPerTaskUsd | USD | lower-is-better |
+
+The probe boots a sandbox per provider, times cold start over N repetitions,
+reuses a warm sandbox once, and runs one fixed CPU task (a fixed deterministic
+workload, e.g. a bounded compute loop) to derive wall-clock and measured cost.
+
+### 4. Cost and trial count
+
+Cost is compute-seconds only over short tasks, so it is small but not zero, and
+several providers bill a minimum duration or require a funded account.
+
+- **Premises:** 8 providers × **5–20 cold-start repetitions** + 1 warm reuse + 1
+  fixed CPU task each; tasks a few seconds of vCPU. The tension: more repetitions
+  narrow the cold-start p50/p95 variance the artifact records as stdDev, but
+  multiply the boot count (and any per-boot minimum charge).
+- **Estimated range:** **$1–$8 per trial** — cents at the cheapest providers
+  (~$0.017/vCPU-hr, per-second billing) up to low single dollars at the priciest
+  (AWS Lambda microVMs run several× the cheapest published rate). The figure is a
+  range with these premises, never a single number; `npm run research -- agent-vm
+  --estimate` decides before each real run, and an estimate outside the agreed
+  range stops for re-approval.
+- Keyless CI runs the **fixture path** (no boots): the reference catalog and the
+  report shape stay green without spend, exactly like foundation-models.
+
+### 5. Accumulated history
+
+Per-provider `HistoryPoint` series for **`coldStartMsP50`** and
+**`publishedVcpuHourUsd`**, one point per trial. After three or more trials the
+current article's 推移 (trend) block shows each provider's cold-start and price
+movement across the tendency window; the reference-capability columns (isolation,
+snapshot, GPU, max runtime) are shown as the current catalog with a per-survey
+changelog of what changed. Charts connect same-instrument-version points only,
+per the existing history convention.
+
+## Scope
+
+**Definition of done.** An `agent-vm` research topic that:
+
+- renders a **keyless reference catalog** of the eight providers' capability and
+  published-pricing metrics from a committed subject registry;
+- carries a **gated real probe** measuring cold-start (p50/p95), warm reuse,
+  fixed-task wall-clock, and measured cost, behind `--estimate`;
+- publishes the standard **7-section dated survey article** with 推移 (trend) and
+  過去の調査 (past-survey) blocks, wired into `publishedResearchTopics` with its
+  `ResearchDesign` metadata so indexes, publishing, and the cost gate read one
+  source of truth;
+- **accumulates per-provider history** and translates to Japanese for the qmu
+  publish pipeline.
+
+**Out of scope.** Running production agent workloads on these platforms; GPU /
+ML-training benchmarks (a separate topic); a security audit of the isolation
+boundary (the topic records each vendor's *stated* isolation model, not a
+pen-test of it).
+
+## Experience
+
+What a reader and an operator can observe once this mission is satisfied:
+
+- **The comparison page renders for every subject, keyless.**
+  `docs/research-reports/agent-vm-comparison.md` (and its `.data.json` artifact)
+  shows all eight providers as a reference catalog — isolation model, published
+  vCPU/GB-hour price, billing granularity, max runtime, snapshot/resume,
+  filesystem persistence, egress, GPU — with no credentials and no spend.
+- **A real trial adds measured rows per reachable provider.** After an
+  owner-approved `npm run research -- agent-vm --real`, the artifact carries
+  `coldStartMsP50`/`coldStartMsP95`, `warmReuseMs`, `fixedTaskWallClockMs`, and
+  `measuredCostPerTaskUsd` for each provider whose credentials are present
+  (Fly.io first, via `FLY_API_TOKEN`+`FLY_APP_NAME`). These are real timings
+  from booting, reusing, and running one fixed CPU task — never fabricated.
+- **Missing credentials read as honest unreachable rows, not failures.** A
+  provider with no token in the environment is recorded `unreachable` / 未測定
+  for that trial; the run reports exactly which env vars are missing, spends
+  nothing, and does not crash. A trial with zero reachable providers still
+  produces a valid page.
+- **Cost stays inside the gate and nothing leaks.** `--estimate` prices a run
+  before `--real`; an estimate outside the agreed $1–$8 range stops for
+  re-approval. After any real run, no orphaned sandboxes remain (teardown is
+  code-guaranteed even on error paths).
+- **The survey publishes in both languages with history.** The topic ships the
+  standard 7-section dated survey wired into `publishedResearchTopics`, with 推移
+  (trend) and 過去の調査 (past-survey) blocks once three or more trials
+  accumulate, and a Japanese page generated as a pipeline translation of the
+  composed English current article (English → translate → Japanese, never
+  forked). The EN and JP indexes list it in the same order.
+
+This is testable: the keyless catalog and page shape are asserted by the
+existing unit tests and the published-page guards (title==label, no-mermaid, §4
+budget, 7-section outline); the unreachable-row behavior is exercised by running
+`--real` with no tokens; the measured rows appear only after a credentialed,
+owner-approved trial.
+
+## Acceptance
+
+<!-- One checklist item per criterion, each naming the ticket/story expected to satisfy it.
+     Ticket filenames marked (planned) are created after the proposal is approved (gate). -->
+
+- [x] Proposal (cadence, subjects, metrics, cost/trial range, accumulated history) approved by the developer (a@qmu.jp, 2026-07-15)
+- [x] `agent-vm` subject registry + capability schema behind an anti-corruption `vendors/sandbox/` layer, with a keyless fixture path (#20260714005157-kickoff-propose-periodic-research.md — scaffolded 2026-07-14)
+- [x] Keyless reference-catalog renderer + result page for the nine reference metrics (#20260714005157-kickoff-propose-periodic-research.md — `docs/research-reports/agent-vm-comparison.md`)
+- [ ] Gated real cold-start / warm-reuse / fixed-task cost probe with `--estimate`, one vendor adapter per reachable provider (#20260714024001-agent-vm-real-coldstart-cost-probe.md)
+- [x] `agent-vm` topic wired into `publishedResearchTopics` with `ResearchDesign` metadata; English/Japanese indexes regenerate from it (#20260714024002-agent-vm-wire-into-published-topics.md)
+- [x] Per-provider accumulated `HistoryPoint` history + 推移/過去の調査 composition into the current article (#20260714024003-agent-vm-history-and-trend-composition.md)
+- [ ] First validation trial run + design review; cadence confirmed or revised (gated on approval + credentials: #20260714024004-agent-vm-first-validation-trial.md)
+- [x] Japanese translation + qmu publish wiring for the topic (#20260714024005-agent-vm-japanese-translation-and-publish.md — pipeline translation shipped 2026-07-18)
+
+## Changelog
+
+<!-- Append-only, dated timeline relating this mission's tickets and reports over time. -->
+
+- 2026-07-14 — mission created (scaffold) — mission.md
+- 2026-07-14 — kickoff proposal drafted (cadence, 8 subjects, 9 reference + 5 measured metrics, $1–$8/trial range, per-provider history); Goal/Scope/Acceptance filled — 20260714005157-kickoff-propose-periodic-research.md
+- 2026-07-14 — keyless skeleton scaffolded (registry + `vendors/sandbox` port + fixture, percentile/cost domain, fixture/estimate runner, 7-section report, tests; `docs/research-reports/agent-vm-comparison.{md,data.json}`); 323 tests + lint green; 5 follow-on tickets created (real probe, publish, history, first trial, JP). Paid trial + publish held for approval — 20260714005157-kickoff-propose-periodic-research.md
+- 2026-07-14 — history projection core built (keyless): `agent-vm/domain/history.ts` (`toHistoryPoint`/`buildHistoryEntry`/`appendHistory`/`providerTrends`) + instrument version + 6 tests; 329 tests + lint green. Trend composition into the current article remains publish-coupled (rides with #024002) — 20260714024003-agent-vm-history-and-trend-composition.md
+- 2026-07-15 — proposal APPROVED by developer; both unblock levers requested (approve + provide credentials). Credentials not yet present in the environment (no .env); publish (#024002/#024005) awaits an LLM key for JP translation, real trials (#024001/#024004) await provider tokens — mission.md
+- 2026-07-15 — real-adapter framework built (keyless): `vendors/sandbox/credentials.ts` (`buildRealFactory`/`adaptersMissingCredentials`) + Fly.io Machines HTTP adapter `vendors/sandbox/fly.ts` (no SDK dep, injectable transport), wired into `--real`; 10 tests, 339 total green. `--real` with no tokens reports missing creds and records unreachable. Set `FLY_API_TOKEN`+`FLY_APP_NAME` to run the first live Fly trial — 20260714024001-agent-vm-real-coldstart-cost-probe.md
+- 2026-07-17 — ticket archived — 20260714024002-agent-vm-wire-into-published-topics.md
+- 2026-07-17 — publish + trend composition drive (keyless): topic registered in `publishedResearchTopics` with the approved design, EN/JP indexes regenerated, keyless JP placeholder page shipped; `agentVmSnapshotPoints` extractor + artifact `instrumentVersion` wire the 推移/過去の調査 composition; 477 tests + lint + docs dead-link build green. Remaining tickets stay blocked: #024001/#024004 on provider tokens + spend approval, #024005 on an LLM key for the pipeline translation (todo tickets carry Blocked notes) — mission.md
+- 2026-07-17 — ticket archived — 20260714024003-agent-vm-history-and-trend-composition.md
+- 2026-07-18 — night drive: LLM key now present, so the JP pipeline translation ran for real. `research:translate-report -- agent-vm` regenerated `agent-vm-comparison.insights.ja.md` from the current English page with provenance frontmatter (translation_model claude-sonnet-5); EN/JP indexes byte-identical, copy-plan/qmu-ticket carry it in order. Estimated cost ≤ ~$2 worst-case (8 calls, ~5,638 prompt + ≤131,072 output tokens @ claude-sonnet-5; actual a fraction), inside the $1–$8 gate — the only spend this drive. tech tests/lint/build + docs dead-link build green (raw exit 0) — 20260714024005-agent-vm-japanese-translation-and-publish.md
+- 2026-07-18 — ticket archived — 20260714024005-agent-vm-japanese-translation-and-publish.md
+- 2026-07-18 — night drive: real cold-start probe (#024001) and first validation trial (#024004) remain externally blocked — no bootable sandbox provider credential is present. AWS instance role absent (IMDS 404, `aws sts` NoCredentials); no FLY_*/E2B_*/MODAL_*/VERCEL_*/DAYTONA_*/NORTHFLANK_* tokens; only LLM keys + Cloudflare (deploy-coupled Sandbox SDK, no REST boot adapter) present. Demonstrated the honest real path: `agent-vm --estimate` = ~$0.0004 compute (within $8 ceiling) and `--real` recorded all 8 providers `unreachable` with zero spend and zero orphaned resources (no boot occurred). Tickets left in todo with dated Blocked notes — 20260714024001-agent-vm-real-coldstart-cost-probe.md, 20260714024004-agent-vm-first-validation-trial.md
+- 2026-07-19 — mission replanned — periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc
+- 2026-07-19 — keyless Daytona sandbox adapter added (documented REST, injectable transport, 7 tests); apiReachable flipped true, fixture regenerated byte-clean — advances real probe — 20260714024001-agent-vm-real-coldstart-cost-probe.md
+- 2026-07-19 — night drive — real probe + first validation trial remain blocked (no reachable VM provider; FLY_/DAYTONA_ tokens absent this run); no spend, zero orphaned resources — 20260714024004-agent-vm-first-validation-trial.md
+- 2026-07-22 — real cold-start/warm-reuse/fixed-task cost probe spend APPROVED by the developer (a@qmu.jp) in the /mission planning session; recorded in tickets #024001/#024004/#024005 (remaining gate is environmental credentials only — FLY_API_TOKEN+FLY_APP_NAME for the Fly.io probe / an LLM key for the pipeline translation; the `--real` path self-reports missing credentials and records unreachable rows). Wrote the mission's `## Experience` section (observable measured/unreachable rows per provider + the published EN/JP survey with 推移/history). `drive_authorized` remains unstamped: it needs a linked strategy, and the strategy-granularity decision is pending with the developer — mission.md
+- 2026-07-22 — strategy created — periodically-benchmark-agent-vm-sandbox-execution-platforms — strategy.md
+- 2026-07-22 — mission replanned — real cost probe authorized (spend approved 2026-07-22); strategy linked; drive-ready — mission.md
+- 2026-07-23 — run recorded (+0.2h) — run-20260723-224446
+- 2026-08-13 — mission abandoned — mission.md

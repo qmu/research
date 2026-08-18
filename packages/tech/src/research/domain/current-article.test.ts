@@ -250,4 +250,45 @@ describe("buildTrendBlock", () => {
     expect(block).toContain("first comparable survey");
     expect(block).not.toContain("<svg"); // but no degenerate single-date chart
   });
+
+  it("emits no block for a topic whose metrics are all reference facts", () => {
+    // A reference catalog measures nothing, so it can never gain a trend — it
+    // gets no block rather than a placeholder promising one. An empty block is
+    // already a no-op for composeCurrentArticle (tested above), so the
+    // catalog page keeps the shape its own outline gives it.
+    const catalogTopic = {
+      id: "foundation-models",
+      design: {
+        metrics: [
+          {
+            name: "inputCostPerMTok",
+            unit: "USD/MTok",
+            direction: "reference",
+          },
+          {
+            name: "outputCostPerMTok",
+            unit: "USD/MTok",
+            direction: "reference",
+          },
+        ],
+      },
+    } as unknown as ResearchSiteTopic;
+    const points: ReadonlyArray<SnapshotPoint> = [
+      {
+        seriesId: "m",
+        seriesLabel: "M",
+        metric: "inputCostPerMTok",
+        measuredAt: "2026-06-01T00:00:00.000Z",
+        value: 1,
+      },
+      {
+        seriesId: "m",
+        seriesLabel: "M",
+        metric: "inputCostPerMTok",
+        measuredAt: "2026-07-01T00:00:00.000Z",
+        value: 2,
+      },
+    ];
+    expect(buildTrendBlock(catalogTopic, points)).toBe("");
+  });
 });
