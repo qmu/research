@@ -6,7 +6,7 @@ depends_on:
 mission:
 merge_policy:
 verification_handoff: none — the work is keyless and offline apart from `npm install`
-claim: work-20260818-135319
+claim: work-20260818-211724
 ---
 
 # Migrate both npm packages to TypeScript 7
@@ -131,3 +131,60 @@ npm view typescript-eslint@latest peerDependencies.typescript
 ```
 
 Startable as soon as that prints a range whose upper bound admits 7.x.
+
+### 2026-08-18 21:17 UTC, unattended `[Implement]` run — still not startable
+
+The cheapest re-check the previous attempt left, re-run verbatim, plus the two
+sibling packages and both non-stable channels:
+
+```
+$ npm view typescript-eslint@latest version peerDependencies.typescript
+version = '8.67.0'
+peerDependencies.typescript = '>=4.8.4 <6.1.0'
+
+$ npm view typescript-eslint@canary version peerDependencies.typescript
+version = '8.67.1-alpha.17'
+peerDependencies.typescript = '>=4.8.4 <6.1.0'
+
+$ npm view @typescript-eslint/eslint-plugin@latest version peerDependencies.typescript
+version = '8.67.0'
+peerDependencies.typescript = '>=4.8.4 <6.1.0'
+
+$ npm view @typescript-eslint/parser@latest peerDependencies.typescript
+>=4.8.4 <6.1.0
+
+$ npm view typescript@latest version
+7.0.2
+
+$ npm view typescript-eslint dist-tags
+{ 'rc-v8': '8.0.0-alpha.62', latest: '8.67.0', canary: '8.67.1-alpha.17' }
+```
+
+Unchanged from the 2026-08-18 check earlier today except that `canary` advanced
+`8.67.1-alpha.7` → `8.67.1-alpha.17`, still declaring the same peer range. The
+upper bound is still `<6.1.0` and `typescript@latest` is still `7.0.2`, so the
+install would still resolve to `ERESOLVE`. Stopped at step 1 as instructed:
+nothing was bumped, no lockfile was touched, and no repository pin moved.
+
+**Two things worth recording for the next re-check, so it stays one command.**
+
+The blocker is upstream and time-based, not something this repository can act on;
+ten alpha releases in one day on a peer range that has not moved is evidence the
+support is not imminent. And the routing note below is now measured rather than
+predicted.
+
+**This ticket's own `verification_handoff:` value routes its unit to `handoff`.**
+Measured on this run, which is the reproduction
+`20260818225600-verification-handoff-none-is-read-as-a-declaration.md` asked for:
+
+```
+$ verification-handoff.sh tickets .../20260818220100-migrate-both-npm-packages-to-typescript-7.md
+{"handoff": true, ..., "reason": "none — the work is keyless and offline apart from `npm install`", ...}
+```
+
+The run honored the verdict rather than reasoning past it (`workaholic:drive` §6
+makes this a script decision precisely because it gates merges to `main`), so this
+unit's pull request opens and stays open, its claim stays standing, and its finish
+line is 🟡 — for a ticket whose author declared there is **no** handoff. Clearing
+the field is a person's act, not a driving run's; until it is cleared, every
+re-check of this ticket costs one PR that cannot merge.
