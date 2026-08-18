@@ -70,10 +70,22 @@ edit files itself.
   Still prefer bare, unmasked exit codes when verifying — no `| tail`, no
   `|| true` — and note `packages/industry` has zero test files with
   `--passWithNoTests`, so its green is weak evidence on its own.
-- **PRs are never self-merged.** Agents drive to commit + ticket archive only.
-  PR creation and readiness judgment happen via /report; merge, deploy, and
-  verification happen via /ship, after the developer names the PR number. Do
-  not close work with a raw `gh pr create` plus an ad-hoc merge request.
+- **Agents merge their own PRs; they never deploy.** A unit reaches its pull
+  request through /report, and a `review` unit is then merged by the run itself
+  once the branch-safety scan verdict is `pass` — no human confirmation, and the
+  claim is torn down with it. Quality is gated downstream at the `release/*` QA
+  window, not at merge time (mission
+  `auto-merge-propose-and-implement-prs-under-a-dev-release-branch-split`,
+  2026-08-11, which superseded the earlier stop-at-the-PR rule this bullet used
+  to state). A scan finding is the one thing that holds a PR open: a `secret`
+  finding hard-stops the unit, and a `size`/`leak` finding demotes it to the PR
+  path, because overriding either is a human ruling an unattended run does not
+  have. **Deploying is a separate, developer-instructed act**: an `auto` unit
+  ships through /ship, which drafts the unit's deployment plan and merges but
+  deploys nothing. Do not close work with a raw `gh pr create` plus an ad-hoc
+  merge request — /report opens the PR, and the merge goes through the REST API
+  (`gh-rest.sh api repos/<slug>/pulls/<n>/merge --method PUT`), never the
+  GraphQL-backed `gh pr merge`.
 - **Shell traps in this environment.** `noclobber` is set (use `>|` to
   overwrite); `cp` and `rm` are aliased (`cp -i`, trash-move) — use `/bin/cp`
   and `/bin/rm` deliberately; `diff` is aliased to nvim — use `/usr/bin/diff`;
@@ -111,27 +123,46 @@ This repository has two delivery surfaces:
 
 Publishing does not edit `qmu-co-jp` directly — that repo has its own writing
 conventions (である体), a Cloudflare Workers build (Wrangler, `packages/site`),
-and `/ship` deploy. Instead, this
-repo's `/ship` generates a **publish ticket** into the sibling `qmu-co-jp` repo,
-and a `/drive` there applies it. As part of `/ship`, after the PR is merged:
+and `/ship` deploy. Instead, this repo exports the Markdown and then **raises the
+ordered plan as a GitHub issue on `qmu/qmu-co-jp`**, which that repo's own loop
+ingests. As part of `/ship`, after the PR is merged:
 
 1. Refresh the published Markdown and indexes from the shared metadata:
    `npm run research:site -- write-indexes` in `packages/tech`, then
    `scripts/publish-research.sh copy --all` (or a single slug), so
    `../qmu-co-jp/docs/llm-foundation-research/*.md` matches this repo's Japanese
-   reports and order.
+   reports and order. The exporter skips every destination marked `downstream` in
+   `scripts/publish-ledger.tsv` (`image-generation.md`, `agent-vm-comparison.md`)
+   — those are written by the corporate side and the plan must ask for them
+   rather than overwrite them. Commit the ledger afterwards; it records what was
+   emitted, and the next run's divergence check reads it as its baseline.
 2. Locate the `qmu-co-jp` checkout as a **sibling of this repo** (`../qmu-co-jp`).
    **If there is no `qmu-co-jp` repo at the same directory level, ask the user**
    for its path.
-3. **Ask the user which `qmu-co-jp` worktree** to generate the ticket in
-   (`git -C <qmu-co-jp> worktree list`); if there is only one, use it.
-4. Write a ticket into that worktree's `.workaholic/tickets/todo/` using
-   `npm run research:site -- qmu-ticket` as the ordered payload. The ticket tells
-   qmu-co-jp to copy/delete Markdown, update navigation and JP/EN indexes in the
-   same order, verify with the site build (`npm run build` in `packages/site`),
-   then commit and deploy via that repo's own `/ship` (`scripts/deploy.sh`, which
-   runs `npm run deploy` = build + `wrangler deploy` to Cloudflare Workers).
-5. **Tell the user to run `/drive` in `qmu-co-jp`** to apply the ticket.
+3. Raise the plan with **`/fb <the ask> to qmu/qmu-co-jp`**, using
+   `npm run research:site -- qmu-ticket` as the ordered payload. The carrier is a
+   GitHub issue on that repository — **never a file written into its checkout**;
+   `hooks/guard-repo-confinement.sh` refuses every other route, and composing a
+   file there with a shell redirect to evade it is the bypass the guard exists to
+   prevent. The ask tells qmu-co-jp to copy/delete Markdown, update navigation and
+   JP/EN indexes in the same order, verify with the site build (`npm run build` in
+   `packages/site`), then commit and deploy via that repo's own `/ship`
+   (`scripts/deploy.sh`, which runs `npm run deploy` = build + `wrangler deploy`
+   to Cloudflare Workers).
+4. **Tell the user to run `/drive` in `qmu-co-jp`** to apply it.
+
+**Live blocker (2026-08-12) — `qmu/workaholic#384`.** The outbound backstop
+refuses the generated payload: two of its lines carry this repository's basename
+as an ordinary English word — the emitter's heading
+(`packages/tech/src/research/domain/site.ts:1331`) and the published article title
+`Deep research APIs`, which cannot be reworded because it doubles as the
+destination's sidebar label. Until that lands, step 3 cannot send the payload
+verbatim. Step 1 has already placed the files in the sibling checkout, so the
+interim path is a `/drive` there over those working-tree changes.
+
+The route was `/request`, writing a ticket into the sibling repo's
+`.workaholic/tickets/todo/`, until 2026-08-05; that command and its
+`submit-request.sh` no longer exist. Archived artifacts naming it are history.
 
 CI must be green before merge to `main` (type-check, tests, lint, dependency
 audit, and — once the site lands — an accessibility check).

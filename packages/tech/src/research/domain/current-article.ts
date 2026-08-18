@@ -120,7 +120,16 @@ export const buildTrendBlock = (
   points: ReadonlyArray<SnapshotPoint>,
   maxSeriesPerChart = SNAPSHOT_MAX_SERIES_PER_CHART,
 ): string => {
-  const metricsWithTrend = topic.design.metrics
+  // A `reference` metric records a catalog fact, not a measurement, so it is
+  // never charted. A topic whose design declares ONLY reference metrics — a
+  // reference catalog — therefore has nothing to trend, ever: it gets no
+  // trend block at all rather than a placeholder promising a chart that can
+  // never arrive, and its page keeps the shape its own outline gives it.
+  const trendableMetrics = topic.design.metrics.filter(
+    (metric) => metric.direction !== "reference",
+  );
+  if (trendableMetrics.length === 0) return "";
+  const metricsWithTrend = trendableMetrics
     .map((metric) => metric.name)
     .filter((name) => distinctDates(points, name) >= 2);
   if (metricsWithTrend.length === 0) {
