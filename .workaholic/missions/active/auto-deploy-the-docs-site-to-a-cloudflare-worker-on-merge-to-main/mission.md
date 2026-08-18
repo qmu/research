@@ -16,6 +16,7 @@ stories: []
 gate_type:
 gate_target:
 gate_assert:
+claim: work-20260818-123849
 ---
 
 # Auto-deploy the docs site to a Cloudflare Worker on merge to main
