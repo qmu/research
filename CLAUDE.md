@@ -117,6 +117,20 @@ hosted. Only surface 3 publishes.
 
 ### Staging preview (Cloudflare Worker)
 
+- **URL** — `https://staging-research.qmu.co.jp`, serving the site built from
+  `main`'s latest merge. It is the Worker's only hostname; `workers_dev` is off,
+  so there is no second address serving the same content.
+- **Access** — open to anyone with the URL, deliberately. This repository is
+  public, so the staging site renders nothing that is not already readable at
+  `github.com/qmu/research` at the same commit; an access gate would add no
+  confidentiality. **If this repository is ever made private, that reasoning
+  expires and the access rule must be decided again before the next deploy.**
+- **Not indexable** — the build emits `robots.txt` with `Disallow: /` and a
+  `noindex, nofollow` robots meta tag, and emits no sitemap. Search visibility,
+  not access, is the real risk here: drafts on `main` must not compete with the
+  published articles on qmu.co.jp. Setting `DOCS_PUBLIC_HOSTNAME` flips all
+  three signals together (`docs/.vitepress/config.ts`) and is how a genuinely
+  public surface would opt in — the staging deploy leaves it unset.
 - **Deploy** — `make deploy-docs` builds the site and deploys it to the
   `research-docs-staging` Worker. The whole path lives in the Makefile and
   `docs/wrangler.jsonc`; nothing invokes wrangler flags from a workflow file

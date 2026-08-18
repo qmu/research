@@ -41,7 +41,7 @@ Nothing about `scripts/publish-research.sh` or the qmu-co-jp path changes.
 
 - [x] A merge to `main` deploys the built site with no manual step, and a failed
       deploy fails visibly instead of silently leaving the old build. (#20260818122248-deploy-the-docs-worker-from-ci-on-every-merge-to-main.md)
-- [ ] `staging-research.qmu.co.jp` serves the current site: both indexes and the
+- [x] `staging-research.qmu.co.jp` serves the current site: both indexes and the
       per-topic report pages resolve. (#20260818122249-serve-the-deployed-worker-at-staging-research-qmu-co-jp.md)
 - [x] The deploy runs from a repository `make` target CI invokes, with credentials
       supplied as secrets and the required ones documented. (#20260818122247-build-the-docs-site-into-a-deployable-cloudflare-worker-artifact.md)
@@ -51,3 +51,4 @@ Nothing about `scripts/publish-research.sh` or the qmu-co-jp path changes.
 - 2026-08-18: Proposed from feedback (issue #115).
 - 2026-08-18 — ticket archived — 20260818122247-build-the-docs-site-into-a-deployable-cloudflare-worker-artifact.md
 - 2026-08-18 — ticket archived — 20260818122248-deploy-the-docs-worker-from-ci-on-every-merge-to-main.md
+- 2026-08-18 — ticket archived — 20260818122249-serve-the-deployed-worker-at-staging-research-qmu-co-jp.md

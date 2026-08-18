@@ -1,3 +1,5 @@
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { defineConfig } from "vitepress";
 import {
   EN_RESEARCH_TITLE,
@@ -9,6 +11,22 @@ import {
 // The base path is environment-driven so the same build can serve from a
 // subpath (e.g. GitHub Pages) or the dev tunnel root.
 const base = process.env.DOCS_BASE ?? "/";
+
+// Where this build is actually served, when it is served publicly at all.
+//
+// The only hosted surface today is the staging preview
+// (`staging-research.qmu.co.jp`), which serves whatever is on `main` — drafts,
+// ADRs, the development guideline — while the finished articles are published
+// on qmu.co.jp (docs/adr/0003-*). Staging must therefore not be indexed, or
+// unfinished prose competes in search with the published article.
+//
+// One variable drives all three search signals — the sitemap, `robots.txt` and
+// the robots meta tag — so they cannot disagree with each other, and so the
+// build never advertises a hostname it is not served from. Unset (the default,
+// and what the staging deploy uses) means "not served publicly": no sitemap,
+// and everything asked not to index. Setting it declares the opposite.
+const publicHostname = process.env.DOCS_PUBLIC_HOSTNAME ?? "";
+const indexable = publicHostname !== "";
 
 export default defineConfig({
   base,
@@ -30,7 +48,19 @@ export default defineConfig({
     "research-reports/*.tendency.md",
     "research-reports/*.report.md",
   ],
-  sitemap: { hostname: "https://research.qmu.dev" },
+  ...(indexable ? { sitemap: { hostname: publicHostname } } : {}),
+  head: indexable
+    ? []
+    : [["meta", { name: "robots", content: "noindex, nofollow" }]],
+  // `robots.txt` is written here rather than kept in `public/` so it is derived
+  // from the same flag as the sitemap and the meta tag above; a static file
+  // would be one more thing to remember to flip.
+  async buildEnd(siteConfig) {
+    const body = indexable
+      ? `User-agent: *\nAllow: /\nSitemap: ${publicHostname.replace(/\/$/, "")}${base}sitemap.xml\n`
+      : "User-agent: *\nDisallow: /\n";
+    await writeFile(join(siteConfig.outDir, "robots.txt"), body, "utf8");
+  },
   markdown: {
     // High-contrast code themes so syntax-highlighted tokens (comments,
     // keywords) in code blocks meet WCAG 2.2 AA (4.5:1). The default

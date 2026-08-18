@@ -13,6 +13,13 @@
   "compatibility_date": "2026-08-18",
   // An unattended CI deploy should make no outbound call it was not asked for.
   "send_metrics": false,
+  // The staging preview answers on this hostname and no other. Binding it needs
+  // the DNS record in the qmu.co.jp zone — the corporate site's zone — so the
+  // first deploy is run by whoever holds that access.
+  "routes": [{ "pattern": "staging-research.qmu.co.jp", "custom_domain": true }],
+  // No `*.workers.dev` hostname: one surface, so the site cannot be reached at
+  // an address nothing documents and the robots rules below do not cover.
+  "workers_dev": false,
   "assets": {
     // Written by `npm run build` (vitepress build); untracked, see .gitignore.
     "directory": ".vitepress/dist",

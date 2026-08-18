@@ -53,6 +53,25 @@ drives the VitePress sidebar, indexes, qmu copy order, and qmu handoff payload.
   auditable. Current pages keep stable URLs, while dated history frames preserve
   past Markdown and JSON.
 
+## Amendment (2026-08-18) — a hosted preview does not move the boundary
+
+The VitePress site is now also served from a Cloudflare Worker at
+`staging-research.qmu.co.jp`, deployed on every merge to `main`. Because the
+hostname sits under the corporate zone, it could be read as a second publishing
+surface. It is not, and the distinction is what this ADR protects:
+
+- **Publishing is still the one-directional Markdown copy** into
+  `../qmu-co-jp/docs/llm-foundation-research/`. Nothing about
+  `publish-research.sh`, the copy plan, or the ledger changes, and the staging
+  Worker is not a step in it.
+- **The staging surface has no readership of its own.** It exists so a report
+  can be reviewed by URL without a checkout, and it is marked `noindex` with a
+  `Disallow: /` robots file precisely so it does not accumulate one.
+- **The corporate site remains the rendering target** for finished articles. If
+  a reader is ever pointed at the staging URL as the place to read a report,
+  that is the boundary blurring, and the fix is publishing the report — not
+  promoting the preview.
+
 ## Consequences
 
 - The generate stage does not require a `qmu-co-jp` checkout and must not write
