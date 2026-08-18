@@ -1,5 +1,6 @@
 ---
 created_at: 2026-08-18T22:51:00+09:00
+status: done
 author: a@qmu.jp
 assignees: []
 depends_on:
@@ -122,3 +123,96 @@ is a separate change and belongs in its own ticket if pursued."
   `provenance: hand-authored-translation` for this reason, which is what
   `20260816155216` exists to undo — so this ticket protects the page that ticket
   will regenerate.
+
+## Final Report
+
+Development completed as planned.
+
+**Step 1 — the opt-in is `--fixture`**, the vocabulary the repository already
+uses (`compare:fixture`, `benchmark:fixture`, `rag:fixture`, …). No second
+environment variable was invented: an env var is exactly the invisible signal
+this defect is made of, and a flag is typed by whoever accepts the consequence.
+
+**Steps 2 and 3 — the fork moved into one place and became a refusal.** Both
+translation runners carried a byte-identical `translationClient()` — the
+published-report path (`report-translation-runner.ts:43`) and the insights-stage
+path (`translate-runner.ts:91`) — so fixing only the one the ticket names would
+have left the same silent substitution one call away. The selection now lives in
+`research/translation-client.ts` as `selectTranslationClient({ target,
+allowFixture })`, which throws when the key is absent and the fixture was not
+asked for, naming the variable, the page it declined to write, and both ways
+forward. Both runners take `allowFixture` (defaulting to `false`) and select the
+client **before** the write.
+
+Step 3's check found no caller depending on the old fallback:
+`planPipeline` (`domain/topic.ts:314`) never emits the translation stage on the
+`fixture` path, so `npm run research -- <topic> --fixture` and `make drift` never
+reach it — `runTranslationStage` and `runReportTranslation` are called from
+`run-research.ts` only in `real`/`estimate` mode. `domain/translate.test.ts` uses
+`createFixtureTranslationClient` directly, not the fork. `make drift` is green,
+unchanged.
+
+**Step 4 — `--estimate` stays keyless.** It returns before any client is built,
+so pricing a live translation still needs nothing.
+
+Verification, all four acceptance criteria run end to end from the worktree:
+
+```
+$ npm run research:translate-report -- foundation-models
+research report translation failed: Error: ANTHROPIC_API_KEY is not set, so the
+live translation cannot run. Refusing to overwrite
+docs/research-reports/foundation-models.insights.ja.md with the deterministic
+fixture stub. Set ANTHROPIC_API_KEY (or put it in packages/tech/.env), pass
+--estimate to price the live call without writing, or pass --fixture to write
+the stub deliberately.
+exit=1
+$ git status --short -- docs/research-reports/      # empty
+$ npm run research:translate-report -- foundation-models --estimate
+research foundation-models: full-report translation estimate — 5 call, ~4190
+prompt + ~81920 output tokens (model claude-sonnet-5)
+exit=0
+$ npm run research:translate-report -- foundation-models --fixture
+research foundation-models: wrote docs/research-reports/foundation-models.insights.ja.md (model fixture)
+exit=0
+```
+
+The `--fixture` run was performed once to prove the opt-in still reaches the stub
+and then restored with a targeted `git checkout --` on that one path; its output
+is the damage the refusal now prevents — the page body reduced to
+`_Fixtured 翻訳スタブ — 決定的プレースホルダ。_ 数値: 5`.
+
+Seven new tests cover the selector (refuses absent key, refuses **empty** key,
+names variable/page/`--estimate`/`--fixture`, returns the stub under the flag,
+returns a live client with a key) and the runner keyless over the real published
+page (rejects, and the file's bytes are equal before and after; `--estimate`
+still resolves). Full gate green from the repository root, bare exit codes:
+`make gate`, `build`, `test` (822 passed, 2 skipped), `lint`, `a11y` 5/5,
+`publish-guard`, `drift`, `ledger`.
+
+CLAUDE.md's Deploy §2 was corrected in the same change — it stated that running
+the command without `--estimate` writes the Japanese page, which is now true only
+with a key.
+
+### Discovered Insights
+
+- **Insight**: the same silent key-fork existed twice, and only one copy was
+  reported.
+  **Context**: `translate-runner.ts` and `report-translation-runner.ts` each held
+  their own `translationClient()` with identical bodies, differing only in which
+  page they then overwrote. A defect found in one copy of duplicated glue is a
+  claim about the other copy too; the fix that only touches the reported site
+  leaves the bug reachable through a different command.
+- **Insight**: the fixture stub's number-echoing is what made this
+  undetectable, and it is still correct.
+  **Context**: `FIXTURE_NUMBER_RE` exists so `verifyNumbersPreserved` passes
+  deterministically on the keyless path — which means the one check positioned to
+  notice a destroyed page is guaranteed silent by design. The lesson is not to
+  weaken the stub but that a determinism aid can neutralise a safety check
+  without either one being wrong; the guard has to sit where the client is
+  chosen, before anything is generated.
+- **Insight**: `planPipeline` is the reason a repository-wide refusal does not
+  break CI.
+  **Context**: the LLM stages are excluded from the `fixture` mode at plan time
+  (`domain/topic.ts:314`), so no keyless CI path ever needed the fallback the
+  runners provided. The fallback was protecting nothing that the plan was not
+  already protecting.

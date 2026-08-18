@@ -121,7 +121,10 @@ This repository has four delivery surfaces:
    a dated frame under `docs/research-reports/history/<topic>/<timestamp>/`.
    `npm run research:translate-report -- <topic> --estimate` prices the
    full-report Japanese translation; running it without `--estimate` writes the
-   Japanese page configured in the shared metadata. `npm run research:site --
+   Japanese page configured in the shared metadata. That write needs
+   `ANTHROPIC_API_KEY` — without it the command **refuses and writes nothing**,
+   rather than overwriting the page with the deterministic stub as it did until
+   2026-08-18; pass `--fixture` to write the stub deliberately. `npm run research:site --
    write-indexes` regenerates the English and Japanese indexes from the same
    metadata.
 3. **Corporate copy** — `scripts/publish-research.sh copy --all` gets its ordered
