@@ -488,6 +488,29 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   env-gated harness self-test; swapping engines (e.g. a CDP driver) is a
   single-file change behind the provider-neutral `AgentPolicy` seam.
 
+### wrangler (docs)
+
+- **Reason**: The preview site is deployed to a Cloudflare Worker as a hosted
+  staging surface (`make deploy-docs`). Wrangler is Cloudflare's own deploy
+  client and the only supported way to upload a Worker's static assets;
+  implementing the upload protocol ourselves would mean tracking an
+  undocumented, versioned API for no gain. The corporate site (`qmu-co-jp`,
+  `packages/site`) already deploys through Wrangler, so this shares that
+  account's conventions and tooling rather than introducing a second path.
+- **Assessment**:
+  - License: MIT or Apache-2.0 — compatible with this MIT repo.
+  - Reputation: Official Cloudflare CLI, broad adoption, active security response.
+  - Development status: Active, frequent releases.
+  - Sustainability: Vendored by Cloudflare; the repository is already dependent
+    on that vendor for the corporate site's hosting.
+- **Monitoring**: Dependabot (`.github/dependabot.yml`), `npm audit` in CI.
+- **Exit strategy**: Confined to `docs/` and reached only through
+  `make deploy-docs` → `npm run deploy`. No site content, build config, or
+  research code references it, so moving the staging surface to another host
+  means replacing `docs/wrangler.jsonc` and one Makefile recipe. The published
+  articles never travel this path at all (`docs/adr/0003-*`), so the boundary
+  with qmu-co-jp is unaffected by dropping it.
+
 > Per-research dependencies (LLM provider SDKs, database drivers, datasets) are
 > added here by the ticket that introduces them, behind a `src/vendors/`
 > anti-corruption layer.

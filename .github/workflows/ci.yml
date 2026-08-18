@@ -57,3 +57,49 @@ jobs:
           for p in packages/tech packages/industry; do
             (cd "$p" && npm audit --audit-level=high) || true
           done
+
+  # Deploys the built preview site to the staging Worker. It lives in THIS file
+  # rather than in a `workflow_run`-keyed workflow of its own, for the same
+  # reason `make gate` runs first above: the order that matters — every gate
+  # passes, THEN we deploy — should be readable in one place. `workflow_run`
+  # would express the same order through a detached run that carries neither the
+  # triggering ref's context nor its workflow file, which is harder to reason
+  # about for no gain here.
+  #
+  # It is a separate JOB rather than more steps on `check` so that the secrets
+  # below exist only in this job's environment. `check` runs on every pull
+  # request, including from forks; it must never be a job that holds a token.
+  # The cost of the split is one install and one docs build in a fresh runner —
+  # `make install-docs` skips the research packages, which the site build does
+  # not touch.
+  deploy:
+    needs: check
+    # `push` to `main` only: a pull_request event never satisfies this, so a PR
+    # (fork or not) runs no deploy and needs no secret. The repository check
+    # stops a fork's own `main` from deploying to our Worker.
+    if: >-
+      github.event_name == 'push'
+      && github.ref == 'refs/heads/main'
+      && github.repository == 'qmu/research'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install docs dependencies
+        run: make install-docs
+
+      # No `|| true` and no `continue-on-error`: a failed deploy must fail the
+      # run rather than leave the previous build silently in place. See the
+      # 0b09ddc masking incident recorded in CLAUDE.md.
+      #
+      # The credentials are passed into this step's environment and nowhere
+      # else. Never interpolate them into a `run:` string.
+      - name: Deploy the preview site
+        run: make deploy-docs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
