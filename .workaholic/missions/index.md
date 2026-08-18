@@ -1,11 +1,8 @@
 # missions
 
-## active
-
-* [auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main](active/auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main/mission.md) - Auto-deploy the docs site to a Cloudflare Worker on merge to main
-
 ## archive
 
+* [auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main](archive/auto-deploy-the-docs-site-to-a-cloudflare-worker-on-merge-to-main/mission.md) - Auto-deploy the docs site to a Cloudflare Worker on merge to main
 * [image-generation-benchmark](archive/image-generation-benchmark/mission.md) - Image generation benchmark
 * [living-research-development-guideline](archive/living-research-development-guideline/mission.md) - Living research development guideline
 * [per-topic-research-pipeline-benchmark-llm-insights-jp-translation](archive/per-topic-research-pipeline-benchmark-llm-insights-jp-translation/mission.md) - Per-topic research pipeline: benchmark, LLM insights, JP translation
