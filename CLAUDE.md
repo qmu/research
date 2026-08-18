@@ -86,6 +86,19 @@ edit files itself.
   merge request — /report opens the PR, and the merge goes through the REST API
   (`gh-rest.sh api repos/<slug>/pulls/<n>/merge --method PUT`), never the
   GraphQL-backed `gh pr merge`.
+- **Ledger indexes merge by union — never hand-resolve them.** Every desk appends
+  its line at the top of `.workaholic/**/index.md`, so two branches recording their
+  own work always collided there; one week cost seven identical hand-resolutions,
+  none a real disagreement. `.gitattributes` now marks those indexes `merge=union`
+  (git's built-in driver, no per-clone config), so the local catch-up merge keeps
+  both sides' lines and reports nothing. Because union is silent, `make ledger`
+  (`scripts/check-workaholic-indexes.sh`, in `ci.yml`) is the guard: every index
+  entry must point at a file that exists and every file must be listed exactly
+  once, so an entry dropped or duplicated by a merge fails CI by name. It found 12
+  stories and one feedback record already missing from their indexes when it was
+  written. Note github.com ignores `.gitattributes` when IT merges a pull request —
+  this works because the desk merges `main` locally before pushing.
+
 - **Shell traps in this environment.** `noclobber` is set (use `>|` to
   overwrite); `cp` and `rm` are aliased (`cp -i`, trash-move) — use `/bin/cp`
   and `/bin/rm` deliberately; `diff` is aliased to nvim — use `/usr/bin/diff`;

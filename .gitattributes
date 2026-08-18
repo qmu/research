@@ -1,0 +1,19 @@
+# Ledger indexes merge by union, never by conflict.
+#
+# `.workaholic/**/index.md` is an append-only bullet list, and every desk adds its
+# line at the SAME position (the top). Two branches that each record their own work
+# therefore conflict on a file where both sides are always right — over one week
+# this cost seven identical hand-resolutions, none of which was a real
+# disagreement. `union` is git's built-in driver (no per-clone `git config`), and it
+# keeps both sides' lines.
+#
+# This works because the conflict happens in the LOCAL catch-up merge a desk runs
+# before it pushes — github.com ignores .gitattributes when it merges a pull
+# request, so a branch that reaches GitHub already merged is what makes this
+# effective. A server-side conflict still blocks the merge exactly as it does today.
+#
+# Union never reports a conflict, so it cannot tell a genuine divergence from an
+# append: `make ledger` (scripts/check-workaholic-indexes.sh, run in CI) is the
+# guard that turns a bad union into a named failure instead of a silent one. Do not
+# add this attribute to a file without a corresponding check.
+.workaholic/**/index.md merge=union
