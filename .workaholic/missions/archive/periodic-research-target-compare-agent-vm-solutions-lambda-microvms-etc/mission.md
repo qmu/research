@@ -2,7 +2,7 @@
 type: Mission
 title: Periodic Research Target: Compare Agent VM Solutions (Lambda MicroVMs etc)
 slug: periodic-research-target-compare-agent-vm-solutions-lambda-microvms-etc
-status: active
+status: abandoned
 created_at: 2026-07-14T00:40:40+09:00
 author: a@qmu.jp
 assignee: a@qmu.jp
@@ -234,3 +234,4 @@ owner-approved trial.
 - 2026-07-22 — strategy created — periodically-benchmark-agent-vm-sandbox-execution-platforms — strategy.md
 - 2026-07-22 — mission replanned — real cost probe authorized (spend approved 2026-07-22); strategy linked; drive-ready — mission.md
 - 2026-07-23 — run recorded (+0.2h) — run-20260723-224446
+- 2026-08-13 — mission abandoned — mission.md
