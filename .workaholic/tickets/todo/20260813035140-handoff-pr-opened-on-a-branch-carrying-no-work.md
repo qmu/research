@@ -5,7 +5,7 @@ assignees:
 depends_on:
 mission:
 merge_policy: review
-claim: work-20260818-130526
+claim: work-20260818-134240
 ---
 
 # A handoff PR was opened on a branch carrying no work, and the finish post named a file that was never committed
@@ -236,3 +236,92 @@ step 4 files the issue there. **This session's GitHub access is scoped to
 `qmu/workaholic` nor add tests to a checkout it does not have. Recorded
 `blocked` on that, with the analysis above committed so the next attempt starts
 from the corrected proposal rather than re-deriving it.
+
+## Re-check (2026-08-18, plugin tree 1.0.185) — still unfixed, and the payload is now ready to file
+
+The blocker is unchanged, so this section adds the two things that make the next
+attempt a single act rather than a re-derivation: the upstream status at the
+newest tree on the machine, and the concrete patch the `/fb` issue should carry.
+
+### Upstream status at 1.0.185
+
+Re-run of the same three probes the 2026-08-18 investigation ran against 1.0.183,
+now against 1.0.185 (`plugin-src.sh` → `source: registry`, `version: 1.0.185`,
+`src_immutable: true`, i.e. the registry version and the newest tree present):
+
+| Probe | Result |
+| --- | --- |
+| `grep -rnE 'empty_head\|no_work_commit\|coordination-only' skills/ hooks/` | no match |
+| `grep -nE 'git fetch\|origin/\|rev-list' skills/report/scripts/create-or-update.sh` | only `git rev-parse --show-toplevel` (line 28) and the `BASE_REF#origin/` string trim (line 88) — no remote read |
+| `skills/report/scripts/create-or-update.sh` line count | 134, unchanged |
+
+So two plugin releases later the script still opens the pull request without ever
+asking what `origin/<branch>` points at.
+
+### The patch to file
+
+Written against `skills/report/scripts/create-or-update.sh` at 1.0.185. It goes
+**before** the `command -v gh` degrade at line 61: the check is pure git, needs no
+CLI, and must run even in the `gh_unavailable` path — a caller told "open the pull
+request by hand" over an unpushed branch is being handed the same silent loss.
+
+```sh
+# THE PULL REQUEST POINTS AT THE REMOTE HEAD, SO THE REMOTE IS WHAT MUST CARRY THE WORK.
+# Measured 2026-08-13 (qmu/research 20260813035140): two units committed locally, scanned a
+# real diff, opened PRs and posted their finish lines while `origin/<branch>` was still the
+# `Claim a PR-unit` commit. Every surface reported success and both units' work went away
+# with the container. A LOCAL commit count would not have caught it -- local HEAD held the
+# work. Comparing the two SHAs does, and costs one fetch.
+git fetch --quiet origin "$BRANCH" 2>/dev/null || true
+LOCAL_HEAD=$(git rev-parse HEAD 2>/dev/null || echo "")
+REMOTE_HEAD=$(git rev-parse FETCH_HEAD 2>/dev/null || echo "")
+if [ -z "$REMOTE_HEAD" ] || [ "$LOCAL_HEAD" != "$REMOTE_HEAD" ]; then
+    printf '{"pr": null, "reason": "unpushed_head", "branch": "%s", "story": "%s", "local_head": "%s", "remote_head": "%s", "detail": "the local branch tip is not what origin/<branch> points at, so a pull request opened now would describe work its head does not carry; push the branch and re-run"}\n' \
+        "$BRANCH" "$STORY_FILE" "$LOCAL_HEAD" "$REMOTE_HEAD"
+    exit 0
+fi
+```
+
+Two properties worth stating in the issue, because they are what keep the check
+narrow enough to be safe:
+
+- **It cannot fire on a healthy run.** A run whose push succeeded has the two SHAs
+  equal by construction, so the happy path is untouched — the third acceptance
+  criterion holds without a behavioural carve-out.
+- **It is the cheap half of the invariant, deliberately.** The full statement is
+  "the PR's head must be an ancestor-or-equal of local `HEAD` *and* carry the work
+  the body describes"; only the SHA comparison is checkable, and it is exactly the
+  half that catches this incident.
+
+### The caller-side half the issue must also ask for
+
+`unpushed_head` must **not** be treated like `gh_unavailable`.
+`workaholic:drive` (`reference/routing.md`, *Report*) says a PR-creation failure
+"never changes a unit's outcome classification, the reconciliation counts, or the
+terminal token" — correct for a missing CLI, wrong here: `gh_unavailable` means
+the work is pushed and only the PR is missing, while `unpushed_head` means the
+work is **not** published at all. The route must stop and the finish line must not
+be posted, or the check merely moves the false success from the PR to Slack.
+
+### The acceptance criteria this corrects
+
+The Quality Gate above is left as the developer agreed it, but its first two
+criteria describe the commit-count check that the investigation ruled out.
+Restated for the corrected invariant, for the developer to accept or reject:
+
+- Running the route step on a branch whose **remote** tip differs from local
+  `HEAD` produces a reported failure, not a silently-opened PR and not a finish
+  post.
+- The reported failure names the branch and both SHAs it compared.
+- A branch whose push succeeded routes exactly as it does today (unchanged).
+
+The two tests follow the same substitution: the fixture is a branch committed
+locally and **not** pushed, plus its pushed counterpart, rather than a branch with
+coordination-only commits.
+
+### Status
+
+Still `blocked`, on the same external boundary and nothing else: the code, its
+tests, and the `/fb` issue all live in `qmu/workaholic`, and this session's GitHub
+access is scoped to `qmu/research` alone. What a person (or a session scoped to
+both repositories) has to do is now one act — file the section above as the issue.
