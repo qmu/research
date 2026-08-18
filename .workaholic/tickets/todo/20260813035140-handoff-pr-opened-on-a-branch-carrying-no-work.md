@@ -399,3 +399,39 @@ payload, verbatim), grant this routine's environment access to that repository, 
 icebox the ticket so the queue stops re-offering work no run here can finish. A
 fourth blocked attempt is evidence for the third option's cost, not an argument
 against the ticket.
+
+## Re-check (2026-08-18 21:40 UTC) — fifth block, plugin tree 1.0.187
+
+The plugin tree moved for the first time since this ticket started re-blocking
+(1.0.186 → **1.0.187**, `plugin-src.sh` → `source: registry`, `src_immutable:
+true`), so the probes were re-run rather than assumed. **The release does not
+touch this defect**, and the evidence is stronger than a version comparison: the
+file is byte-identical across the two releases.
+
+| Probe at 1.0.187 | Result |
+| --- | --- |
+| `md5sum skills/report/scripts/create-or-update.sh` | `3df6ca5e72fd252ebcae59dac93fe770` — **the same digest the third and fourth re-checks recorded at 1.0.186**, 134 lines |
+| `grep -rE 'empty_head\|no_work_commit\|coordination-only\|unpushed_head' skills/ hooks/` | no match |
+| `grep -E 'git fetch\|origin/\|rev-list\|rev-parse' .../create-or-update.sh` | `git rev-parse --show-toplevel` (28) and the `BASE_REF#origin/` trim (88) only — still no remote read |
+| `grep -c 'git push' skills/commit/scripts/commit.sh` | `0` |
+
+So a version bump has now been observed to leave this script untouched, which is
+the one thing the previous re-checks could not distinguish from "nobody has cut a
+release yet". The analysis, the patch in *The patch to file*, and the caller-side
+half in *The caller-side half the issue must also ask for* are unchanged and
+remain the payload.
+
+The boundary was **not re-probed**, for the reason the fourth re-check gives: this
+session's GitHub access is scoped to `qmu/research` by configuration, and making a
+call against `qmu/workaholic` to harvest a denial is a call the session was
+instructed not to make.
+
+**What this attempt adds to the developer decision is its cost, now measurable.**
+The fourth block was recorded at 21:19 UTC and this one at 21:40 UTC — twenty-one
+minutes apart, because the routine fires faster than a human can act on what it
+asks for. Each tick spends one PR-unit re-measuring a file whose digest has not
+changed. The three options are unmoved (file the prepared issue on
+`qmu/workaholic`, grant this environment access to that repository, or icebox this
+ticket), but the middle one is worth naming as the only option that converts these
+ticks into progress instead of ending them: with scope, the very next tick files
+the issue and closes the ticket, because the payload is already written.
