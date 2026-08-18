@@ -52,6 +52,12 @@ jobs:
       - name: Keyless fixture drift
         run: make drift
 
+      # The ledger indexes under `.workaholic/` merge by union (.gitattributes), so
+      # a merge never reports a conflict on them — including a merge that dropped or
+      # duplicated an entry. This is the check that makes that failure visible.
+      - name: Ledger index consistency
+        run: make ledger
+
       - name: Audit dependencies
         run: |
           for p in packages/tech packages/industry; do
