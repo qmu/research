@@ -1,0 +1,34 @@
+// Cloudflare Worker that serves the built VitePress preview site.
+//
+// This is a hosted PREVIEW surface, not a publishing surface: the published
+// articles still travel to qmu-co-jp as Markdown (docs/adr/0003-*). See the
+// Deploy section of CLAUDE.md.
+//
+// Nothing here is invoked with wrangler flags from a workflow file — the deploy
+// runs through `make deploy-docs`, which calls the `deploy` script in
+// package.json ("one runner").
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "research-docs-staging",
+  "compatibility_date": "2026-08-18",
+  // An unattended CI deploy should make no outbound call it was not asked for.
+  "send_metrics": false,
+  // The staging preview answers on this hostname and no other. Binding it needs
+  // the DNS record in the qmu.co.jp zone — the corporate site's zone — so the
+  // first deploy is run by whoever holds that access.
+  "routes": [{ "pattern": "staging-research.qmu.co.jp", "custom_domain": true }],
+  // No `*.workers.dev` hostname: one surface, so the site cannot be reached at
+  // an address nothing documents and the robots rules below do not cover.
+  "workers_dev": false,
+  "assets": {
+    // Written by `npm run build` (vitepress build); untracked, see .gitignore.
+    "directory": ".vitepress/dist",
+    // The site sets `cleanUrls: true`, so pages are linked without `.html`
+    // while the build emits `<page>.html`. The assets runtime resolves that
+    // itself — VitePress's own `preview` server is not proof of this, so the
+    // mapping is stated here rather than assumed.
+    "html_handling": "auto-trailing-slash",
+    // Serve VitePress's built 404.html rather than a bare runtime 404.
+    "not_found_handling": "404-page"
+  }
+}

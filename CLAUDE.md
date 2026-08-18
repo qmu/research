@@ -95,7 +95,7 @@ edit files itself.
 
 ## Deploy
 
-This repository has two delivery surfaces:
+This repository has four delivery surfaces:
 
 1. **Preview site** — `make docs` serves the VitePress site under `docs/`. The
    site exposes `LLMs Research` (English source reports) and `LLM基礎検証`
@@ -118,6 +118,50 @@ This repository has two delivery surfaces:
    (Cloudflare Workers, built from `packages/site`) renders the copies; commit
    and deploy `qmu-co-jp` separately. See
    `docs/adr/0003-*` for the boundary.
+4. **Hosted staging preview** — the same VitePress build, served from a
+   Cloudflare Worker so a report is reviewable by URL without a checkout. This
+   is a **preview** surface, not a publishing one: nothing about surface 3 or
+   `docs/adr/0003-*` changes, and the published articles still reach readers only
+   through `qmu-co-jp`. See *Staging preview* below.
+
+Surfaces 1 and 4 are the same site: `docs/` previewed locally and the same build
+hosted. Only surface 3 publishes.
+
+### Staging preview (Cloudflare Worker)
+
+- **URL** — `https://staging-research.qmu.co.jp`, serving the site built from
+  `main`'s latest merge. It is the Worker's only hostname; `workers_dev` is off,
+  so there is no second address serving the same content.
+- **Access** — open to anyone with the URL, deliberately. This repository is
+  public, so the staging site renders nothing that is not already readable at
+  `github.com/qmu/research` at the same commit; an access gate would add no
+  confidentiality. **If this repository is ever made private, that reasoning
+  expires and the access rule must be decided again before the next deploy.**
+- **Not indexable** — the build emits `robots.txt` with `Disallow: /` and a
+  `noindex, nofollow` robots meta tag, and emits no sitemap. Search visibility,
+  not access, is the real risk here: drafts on `main` must not compete with the
+  published articles on qmu.co.jp. Setting `DOCS_PUBLIC_HOSTNAME` flips all
+  three signals together (`docs/.vitepress/config.ts`) and is how a genuinely
+  public surface would opt in — the staging deploy leaves it unset.
+- **Deploy** — `make deploy-docs` builds the site and deploys it to the
+  `research-docs-staging` Worker. The whole path lives in the Makefile and
+  `docs/wrangler.jsonc`; nothing invokes wrangler flags from a workflow file
+  ("one runner"). `npm --prefix docs run deploy:dry` packages the built `dist`
+  without contacting Cloudflare.
+- **Automatic deploy** — the `deploy` job in `.github/workflows/ci.yml` runs
+  `make deploy-docs` on every push to `main` in `qmu/research`, after the
+  `check` job's gates pass. Pull requests — including from forks — run no deploy
+  and need no secret. A failed deploy fails the workflow run.
+- **Credentials** — repository secrets `CLOUDFLARE_API_TOKEN` (a Cloudflare API
+  token with Workers Scripts: Edit on the qmu account) and
+  `CLOUDFLARE_ACCOUNT_ID`. They are provisioned by whoever holds the qmu
+  Cloudflare account — the same account that hosts `qmu-co-jp` — and are passed
+  only into the deploy step's environment, never into the tree and never into a
+  `run:` string. `make deploy-docs` fails immediately and names the missing
+  variable rather than exiting zero.
+- **Recovery** — every merge deploys, so a merge that lands broken content is
+  live until the next one. To roll back, re-run the `deploy` job on the last good
+  `main` commit, or run `make deploy-docs` from that commit locally.
 
 ### Reflecting research changes onto `qmu-co-jp` (via `/ship`)
 
