@@ -9,7 +9,7 @@ author: a@qmu.jp
 assignees: [a@qmu.jp]
 assignee:
 predicted_hours:
-actual_hours:
+actual_hours: 0.4
 feedback: [20260818122035-auto-deploy-docs-to-a-cloudflare-worker-on-merge-to-main-staging-research-qmu-co-jp.md]
 tickets: []
 stories: []
@@ -53,3 +53,4 @@ Nothing about `scripts/publish-research.sh` or the qmu-co-jp path changes.
 - 2026-08-18 — ticket archived — 20260818122248-deploy-the-docs-worker-from-ci-on-every-merge-to-main.md
 - 2026-08-18 — ticket archived — 20260818122249-serve-the-deployed-worker-at-staging-research-qmu-co-jp.md
 - 2026-08-18 — Implemented — artifact, CI trigger and hostname configured; awaiting the declared verification handoff (real deploy + qmu.co.jp DNS) — work-20260818-123849.md
+- 2026-08-18 — run recorded (+0.4h) — run-20260818-123849
