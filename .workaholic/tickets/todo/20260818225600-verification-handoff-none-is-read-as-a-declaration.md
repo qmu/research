@@ -116,3 +116,125 @@ is to file the defect here and route the fix through `/fb`, as
 - The same reasoning applies to `merge_policy`, which is an enum and therefore
   cannot express this bug — evidence that the free-text choice is what carries the
   cost here, and it was a deliberate choice with its own good reason.
+
+## Attempt log
+
+### 2026-08-18, unattended `[Implement]` run — steps 1 and 2 answered, step 4 blocked
+
+Steps 1 and 2 are decidable here and are decided below. Steps 3 and 4 are not:
+step 3 is explicitly a person's act, and step 4's target repository is outside
+this container's GitHub scope. The payload for step 4 is written out verbatim so
+filing it is one copy-paste.
+
+**The reproduction is no longer theoretical.** It was measured on a real unit
+during this same run, driving
+`20260818220100-migrate-both-npm-packages-to-typescript-7.md`:
+
+```
+$ verification-handoff.sh tickets .../20260818220100-migrate-both-npm-packages-to-typescript-7.md
+{"handoff": true, ..., "reason": "none — the work is keyless and offline apart from `npm install`", ...}
+```
+
+The verdict was honored rather than reasoned past, so that unit's pull request
+(#134) is open, unmergeable, with its claim standing and a `## Handoff` section
+whose *Not done* line reads "none — the work is keyless and offline apart from
+`npm install`". The predicted consequence is now an artifact a reviewer can look
+at.
+
+### Step 1 — which half is wrong: the writer, with a narrow validator
+
+Neither of the ticket's two candidates survives on its own, and the third
+(a documented sentinel) does not survive contact with the actual value:
+
+| Candidate | Why it fails |
+| --- | --- |
+| Router treats a nothing-declaring value as empty | Requires matching prose at route time — the exact thing the script's own header rejects ("a routing decision made by reading prose is a guess"), on the axis that gates merges to `main`. |
+| A single exact sentinel (`none`) | The real value is `none — the work is keyless and offline apart from \`npm install\``. An exact-match sentinel does not fire on it, so the bug that provoked the ticket would still be live. |
+| Writers refuse to emit one | Correct direction, but on its own it cannot see a value a human types, and it leaves every already-written ticket wrong. |
+
+**The decision: keep the router's predicate exactly as it is, and reject the
+value at write time.** `hooks/validate-ticket.sh` already machine-checks
+frontmatter and already enforces an enum on `merge_policy`; it gains one narrow
+rule — a `verification_handoff:` value whose **first token** is a negation from a
+small, closed, documented list is refused, with a message telling the author to
+leave the field empty instead.
+
+Why this placement and not the router's:
+
+- **A false positive costs a rejected ticket, not a wrong merge.** At route time
+  the same matching would decide whether machinery merges to `main`; at write
+  time the worst case is an author being told to clear a field, with a human
+  right there to judge it.
+- **The router's contract is unchanged**, so nothing in `workaholic:drive` §6 or
+  `reference/routing.md` has to relax its "non-emptiness is the signal" rule —
+  the rule simply becomes true, because nothing can write a value that means
+  emptiness any more.
+- **The open set stays closed.** The ticket is right that `"none" / "なし" /
+  "n/a" / "not applicable"` is open-ended; a deny-list that is wrong only ever
+  fails to catch a new phrasing, which is the pre-existing behaviour, never a
+  new failure.
+
+### Step 2 — the closed list, and what it matches
+
+Only the **first token** of the trimmed value, case-insensitively, against:
+`none`, `no`, `n/a`, `na`, `nil`, `なし`, `不要`, plus the two-word forms `not
+applicable` and `not needed`. Anything else — including a value that merely
+*contains* one of these words later ("the device none of the runners has") — is
+a declaration and passes. First-token-only is what keeps the rule from reading
+prose: it inspects a label, not a sentence.
+
+### Steps 3 and 4 — both blocked, for different reasons
+
+**Step 3 (clear the local ticket's field) is a person's act and was not done.**
+`workaholic:drive` §6 and `reference/routing.md` both state the field is never
+edited by a run; clearing it would grant this run's own sibling unit permission
+to merge, which is precisely the direction the rule guards. It is asked for in
+PR #134's `## Handoff` and in that unit's Slack finish line.
+
+**Step 4 (file it on `qmu/workaholic`) cannot be reached from here.** This
+container's GitHub access is scoped to `qmu/research` alone; there is no
+`qmu/workaholic` checkout on the machine either
+(`20260813035140-handoff-pr-opened-on-a-branch-carrying-no-work.md` measured the
+same boundary three times before this run). The block is per-container
+configuration, identical on every tick, so no retry by this routine reaches it.
+
+### The payload to file — verbatim
+
+> **Title:** `verification_handoff:` accepts a value that declares no handoff, and routes the unit to handoff anyway
+>
+> **Body:**
+>
+> `skills/drive/scripts/verification-handoff.sh`'s `consider()` tests
+> `[ -n "$_c_value" ]`, so a `verification_handoff:` value that NAMES NOTHING
+> inverts its author's declaration. Measured in `qmu/research` on
+> `20260818220100-migrate-both-npm-packages-to-typescript-7.md`, whose author
+> wrote `verification_handoff: none — the work is keyless and offline apart from
+> \`npm install\``:
+>
+> ```
+> $ verification-handoff.sh tickets .../20260818220100-…md
+> {"handoff": true, ..., "reason": "none — the work is keyless and offline apart from `npm install`", ...}
+> ```
+>
+> `workaholic:drive` §6 reads this axis before the merge-policy table and a
+> declared handoff outranks `auto`, so the unit's pull request opens and stays
+> open, its claim stays standing, and the token is forced to `pending` — for a
+> unit its author declared fully verifiable. Live consequence:
+> `qmu/research#134`.
+>
+> **Requested fix — at the writer, not the router.** Leave
+> `verification-handoff.sh` untouched: matching prose at route time is what its
+> own header rejects, and it is the axis that gates merges to `main`. Instead
+> `hooks/validate-ticket.sh` should refuse a `verification_handoff:` value whose
+> first token (trimmed, case-insensitive) is one of `none`, `no`, `n/a`, `na`,
+> `nil`, `なし`, `不要`, `not applicable`, `not needed`, with a message telling
+> the author to leave the field empty. First-token-only is deliberate: it
+> inspects a label, not a sentence, so a genuine declaration that happens to
+> contain the word "none" still passes. State the accepted-values rule in the
+> script header and in `skills/drive/reference/routing.md`, *The declared
+> handoff*.
+>
+> **Acceptance:** three fixtures through `verification-handoff.sh tickets` — a
+> declaring ticket (`handoff: true`, reason verbatim), a field-absent ticket
+> (`handoff: false`), and a nothing-declaring ticket, which must now be
+> impossible to write: `validate-ticket.sh` rejects it and names the rule.

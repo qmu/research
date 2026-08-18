@@ -372,3 +372,30 @@ payload, verbatim — or grant this routine's environment access to that
 repository, or icebox this ticket so the queue stops re-offering work no run here
 can finish. Until one of those happens the ticket is correct to stay in `todo/`
 and correct to keep blocking.
+
+## Re-check (2026-08-18 21:19 UTC) — fourth block, plugin tree byte-identical
+
+Nothing above changes. Recorded so the count of blocked attempts is honest and so
+the next reader knows this tick measured rather than assumed.
+
+The plugin tree is the **same tree** the third re-check inspected, not merely the
+same version: `plugin-src.sh` reports `registry` / `1.0.186` / `src_immutable:
+true`, and `skills/report/scripts/create-or-update.sh` is still 134 lines at md5
+`3df6ca5e72fd252ebcae59dac93fe770`. The two probes that would show a fix —
+`grep -rE 'empty_head|no_work_commit|coordination-only|unpushed_head'` over
+`skills/` and `hooks/`, and `grep -c 'git push'` in `skills/commit/scripts/commit.sh`
+— return no match and `0`. So there is nothing new to measure, and re-running the
+full probe table would only reprint the third re-check's rows.
+
+The boundary is unchanged and was **not re-probed**, deliberately: this session's
+GitHub access is scoped to `qmu/research` by configuration, and attempting a call
+against `qmu/workaholic` to produce a denial for the log is a call the session was
+instructed not to make. The block is read off the environment's own scope
+statement rather than off a refusal message.
+
+**The developer decision this ticket is waiting on has not moved** — file the
+prepared issue on `qmu/workaholic` (the *The patch to file* section above is the
+payload, verbatim), grant this routine's environment access to that repository, or
+icebox the ticket so the queue stops re-offering work no run here can finish. A
+fourth blocked attempt is evidence for the third option's cost, not an argument
+against the ticket.
