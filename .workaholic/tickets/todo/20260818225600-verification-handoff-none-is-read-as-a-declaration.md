@@ -6,7 +6,7 @@ depends_on:
 mission:
 merge_policy: review
 verification_handoff:
-claim: work-20260819-003922
+claim: work-20260819-043911
 ---
 
 # A `verification_handoff:` value of "none" routes the unit to handoff anyway
@@ -365,3 +365,49 @@ sibling ticket rather than duplicated here:
 `20260813035140-handoff-pr-opened-on-a-branch-carrying-no-work.md`, *Re-check
 (2026-08-19 00:39 UTC, plugin tree 1.0.189)*. In short: filing needs an attended
 `/fb` by a developer, and the alternative is iceboxing, which a run may not do.
+
+### 2026-08-19 04:39 UTC, unattended `[Implement]` run — fifth attempt; the tree is byte-identical to the fourth
+
+Steps 1 and 2 stand as decided and were not re-derived. This entry records three
+measurements and nothing else.
+
+**The router is unchanged, and provably so.** The fourth attempt ran at plugin
+tree 1.0.189; so does this one, and the two files this ticket turns on carry the
+same digests it recorded — `skills/drive/scripts/verification-handoff.sh` at
+`de0fa555163bb61a4ecd9c4ee5cfced9` and `hooks/validate-ticket.sh` at
+`15d3a4ecc3dfd8cd3ce3c5ac952288a8`. The predicate is verbatim as filed:
+
+```
+93:    if [ -n "$_c_value" ] && [ -z "$REASON" ]; then
+94:        HANDOFF="true"
+95:        REASON="$_c_value"
+```
+
+`grep -n 'verification_handoff' hooks/validate-ticket.sh` exits 1, so the
+writer-side rule *Step 1* asks for is still an addition rather than an amendment.
+
+**Step 3's second block was re-measured and still holds.** This tick's survey
+reports `batch-20260818211724` / `work-20260818-211724` still holding
+`20260818220100-migrate-both-npm-packages-to-typescript-7.md`, `stale: false`,
+`resume_reason: parked_with_pr` — its pull request is
+[#134](https://github.com/qmu/research/pull/134), open since 21:19 UTC. Parked is
+not released, so the artifact is still untouchable by a concurrent run, and the
+value is confirmed in place at line 8:
+
+```
+verification_handoff: none — the work is keyless and offline apart from `npm install`
+```
+
+The first block is unchanged: a run may not write the field for itself.
+
+**Step 4's attended-only block is confirmed from this run's own contract**, not
+from the feedback skill's text this time. The `/implement` command states "no
+`AskUserQuestion` anywhere, at any step", and the crossing's confirmation is an
+`AskUserQuestion`; the two are mutually exclusive by definition. The sibling
+ticket's *Re-check (2026-08-19 04:39 UTC)* carries the full reasoning and the
+option set, which this tick did not re-derive.
+
+This tick escalated the developer decision out-of-band through the routine's
+notification surface as well as into the run report, on the reasoning recorded in
+the sibling ticket: eight blocked attempts across the pair is evidence that a
+report nobody opens is not reaching a ruling.
