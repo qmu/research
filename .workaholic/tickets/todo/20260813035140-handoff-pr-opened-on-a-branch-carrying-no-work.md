@@ -465,3 +465,88 @@ environment access to that repository, or icebox this ticket). This run
 escalated them to the developer out-of-band rather than only into the report,
 because six blocked attempts is evidence the report alone is not reaching a
 decision.
+
+## Re-check (2026-08-19 00:39 UTC, plugin tree 1.0.189) — seventh block, and the option set was wrong
+
+Three releases have now passed over `create-or-update.sh` without touching it. That
+part of this entry is a formality. What this tick adds is not another digest: it
+**measured two further blocks on step 4**, and between them they refute the option
+the fifth re-check named as "the only option that converts these ticks into
+progress".
+
+### Upstream status at 1.0.189
+
+`plugin-src.sh` → `source: registry`, `version: 1.0.189`, `src_immutable: true`.
+
+| Probe at 1.0.189 | Result |
+| --- | --- |
+| `md5sum skills/report/scripts/create-or-update.sh` | `3df6ca5e72fd252ebcae59dac93fe770` — **the same digest recorded at 1.0.186, 1.0.187 and 1.0.188**, 134 lines |
+| `grep -rEn 'empty_head\|no_work_commit\|coordination-only\|unpushed_head' skills/ hooks/` | exit 1, no match |
+| `grep -nE 'git fetch\|origin/\|rev-list\|rev-parse' .../create-or-update.sh` | lines 28 (`git rev-parse --show-toplevel`) and 88 (`BASE_REF#origin/`) only — no remote read |
+| `grep -c 'git push' skills/commit/scripts/commit.sh` | `0` |
+
+### Block 2 — the `/fb` crossing is attended-only by contract, so scope alone changes nothing
+
+The previous six entries recorded step 4's blocker as GitHub scope, and the fifth
+re-check argued that granting this environment access to `qmu/workaholic` would let
+"the very next tick file the issue". **That is false, and it is false by design
+rather than by configuration.**
+
+Sending an ask to another repository runs `workaholic:feedback`'s *Crossing a
+repository boundary*, whose first hard rule is:
+
+> **The confirmation cannot be skipped, ever.** One `AskUserQuestion` shows the
+> destination (`slug`, `remote`, `visibility` …) **and** the title and body verbatim
+> — the actual text, no summary, no fast path for a clean-looking body, a re-run, or
+> an earlier approval.
+
+(`skills/feedback/SKILL.md:135`; the same gate is step 4 of the workflow in
+`skills/feedback/reference/crossing.md:73`, with `:52` recording that the command
+owns every `AskUserQuestion` because subagents cannot prompt, and `:97` requiring a
+re-confirmation whenever the body changes.)
+
+`/implement` is defined as the entry point that issues **no `AskUserQuestion`
+anywhere, at any step** (`workaholic:drive` §2 and the `/implement` command). So the
+crossing is not reachable from any unattended tick of this routine at any GitHub
+scope. Granting scope removes one of two blocks and leaves the other standing.
+
+### Block 3 — the prepared payload is not a single copy-paste; the backstop refuses it
+
+*The patch to file* above has been described since the second re-check as a payload a
+person can send verbatim. Measured this tick against the outbound self-name backstop,
+which runs after the human confirmation and is the one place a confirmed ask can
+still be refused:
+
+```
+$ check-outbound-body.sh <this ticket's "The patch to file" section>
+{"ok": false, "error": "body still names this repository as 'qmu/research' at line 10:
+ # Measured 2026-08-13 (qmu/research 20260813035140): two units committed locally,
+ scanned a — mask it and re-confirm"}
+```
+
+The offending line is inside the patch's own provenance comment, which is there
+deliberately. Removing it is the masking **judgement** of *Crossing a repository
+boundary* §1 — explicitly a developer reading the body, never a matcher — so it is
+another act reserved to a person, not a mechanical fix a run can apply first. This is
+the same class of refusal as the live blocker `CLAUDE.md` records against
+`qmu/workaholic#384`.
+
+### The corrected option set
+
+The three options the earlier entries offered were: file the issue, grant scope, or
+icebox. Two survive, and one of them is not what it looked like:
+
+1. **A developer runs `/fb <the ask> to qmu/workaholic` attended** — masking the
+   provenance line at the confirmation. This is the only option that files the issue,
+   because the confirmation and the masking are both developer acts.
+2. **Icebox this ticket**, so the queue stops offering an unattended routine work no
+   unattended run can finish. A run may not do this in either direction
+   (`workaholic:drive`, *NEVER autonomously move tickets to icebox*).
+
+**Granting this environment access to `qmu/workaholic` is not option 3.** It is at
+most a precondition of doing option 1 from a container like this one, and on its own
+it would leave the next tick blocked at the same step for a different reason.
+
+Blocked attempts now stand at 21:19, 21:40, 22:40 and 00:39 UTC. The cost argument is
+unchanged; the recommendation it supports has moved, because option 2 is now the only
+one this routine's ticks can be affected by.

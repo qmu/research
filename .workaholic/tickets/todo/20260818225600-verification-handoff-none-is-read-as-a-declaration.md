@@ -316,3 +316,52 @@ verification_handoff: none — the work is keyless and offline apart from `npm i
 this container's GitHub access is scoped to `qmu/research`, so the `/fb` issue
 cannot be filed from here and no retry by this routine reaches it. *The payload
 to file* above is unchanged and remains a single copy-paste.
+
+### 2026-08-19 00:39 UTC, unattended `[Implement]` run — fourth attempt; step 4 is attended-only, not merely out of scope
+
+Steps 1 and 2 stand as decided and were not re-derived. Two things moved, and neither
+is a digest.
+
+**The defect is live at plugin tree 1.0.189** (`plugin-src.sh` → `registry`,
+`src_immutable: true`, the only tree on the machine):
+
+| Probe at 1.0.189 | Result |
+| --- | --- |
+| `grep -nE '_c_value\|HANDOFF=' skills/drive/scripts/verification-handoff.sh` | `93: if [ -n "$_c_value" ] && [ -z "$REASON" ]` → `94: HANDOFF="true"` — the predicate verbatim as filed (md5 `de0fa555163bb61a4ecd9c4ee5cfced9`, unchanged from 1.0.188) |
+| `grep -n 'verification_handoff' hooks/validate-ticket.sh` | exit 1, no match — the writer-side rule *Step 1* asks for still does not exist (md5 `15d3a4ecc3dfd8cd3ce3c5ac952288a8`, unchanged) |
+
+**Step 3's two blocks both still hold.** The field is a declaration a run may not
+write for itself, and `20260818220100-migrate-both-npm-packages-to-typescript-7.md`
+is still held by claim `batch-20260818211724` / `work-20260818-211724`
+(`resume_reason: parked_with_pr`, `stale: false`). Parked is not released.
+
+**Step 4 has a second, independent block, and it is the one that matters.** Every
+previous entry recorded the blocker as this container's GitHub scope. Measured this
+tick, the `/fb` crossing is **attended-only by contract**: `workaholic:feedback`'s
+*Crossing a repository boundary* requires one `AskUserQuestion` showing destination,
+title and body verbatim, with "no fast path for a clean-looking body, a re-run, or an
+earlier approval" (`skills/feedback/SKILL.md:135`;
+`skills/feedback/reference/crossing.md:52,73,97`), and `/implement` issues no
+`AskUserQuestion` anywhere at any step. So no unattended tick reaches step 4 at any
+GitHub scope.
+
+**And this ticket's own payload is not a single copy-paste either.** *The payload to
+file* was run through the outbound self-name backstop, which fires after the human
+confirmation:
+
+```
+$ check-outbound-body.sh <this ticket's "The payload to file — verbatim" section>
+{"ok": false, "error": "body still names this repository as 'qmu/research' at line 9:
+ > inverts its author's declaration. Measured in `qmu/research` on — mask it and re-confirm"}
+```
+
+The body also cites `qmu/research#134` as the live consequence, which is the same
+class of reference. Masking these is the developer judgement of *Crossing a
+repository boundary* §1, not a mechanical substitution a run may make on its own —
+and the citations are what ground the ask, so removing them is a real editorial call.
+
+The full analysis, and the corrected option set it produces, is recorded once in the
+sibling ticket rather than duplicated here:
+`20260813035140-handoff-pr-opened-on-a-branch-carrying-no-work.md`, *Re-check
+(2026-08-19 00:39 UTC, plugin tree 1.0.189)*. In short: filing needs an attended
+`/fb` by a developer, and the alternative is iceboxing, which a run may not do.
