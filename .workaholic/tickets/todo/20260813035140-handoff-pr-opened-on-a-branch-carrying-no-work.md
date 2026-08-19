@@ -550,3 +550,51 @@ it would leave the next tick blocked at the same step for a different reason.
 Blocked attempts now stand at 21:19, 21:40, 22:40 and 00:39 UTC. The cost argument is
 unchanged; the recommendation it supports has moved, because option 2 is now the only
 one this routine's ticks can be affected by.
+
+## Re-check (2026-08-19 04:39 UTC, plugin tree 1.0.189) — eighth block, and the first tick that can prove nothing moved
+
+The seventh re-check ran against 1.0.189. So does this one, and the three files
+this ticket and its sibling depend on are **byte-identical**, not merely
+same-versioned:
+
+| File at 1.0.189 | md5 | Same as |
+| --- | --- | --- |
+| `skills/report/scripts/create-or-update.sh` | `3df6ca5e72fd252ebcae59dac93fe770` | 1.0.186, .187, .188, .189 |
+| `skills/drive/scripts/verification-handoff.sh` | `de0fa555163bb61a4ecd9c4ee5cfced9` | 1.0.188, .189 |
+| `hooks/validate-ticket.sh` | `15d3a4ecc3dfd8cd3ce3c5ac952288a8` | 1.0.188, .189 |
+
+`grep -rE 'empty_head|no_work_commit|coordination-only|unpushed_head'` over
+`skills/` and `hooks/` exits 1, and `grep -c 'git push'
+skills/commit/scripts/commit.sh` returns `0`. The probe table is not reprinted:
+two consecutive ticks on an identical tree cannot differ, which is the one thing
+the previous seven entries could not assert.
+
+### Block 2 confirmed first-hand, not by citation
+
+The seventh re-check established that the `/fb` crossing is attended-only and
+therefore unreachable at any GitHub scope. This tick can confirm the second half
+of that from its own contract rather than from the feedback skill's text: the
+`/implement` command this run was invoked as states **"no `AskUserQuestion`
+anywhere, at any step"** and "a decision the run cannot make is deferred and
+recorded in the final report, never asked". The crossing's confirmation is an
+`AskUserQuestion`. The two are mutually exclusive by definition, so this is a
+property of the entry point, not of the container.
+
+### What this tick did differently
+
+Every previous entry ended by recording the developer decision in the report. The
+report is read by whoever opens the pull request; a routine tick that nobody
+opens leaves it unread, which is the most likely reason eight attempts have not
+produced a ruling. This tick therefore **escalated out-of-band as well**, through
+the scheduled routine's own notification surface, naming the two surviving
+options rather than the analysis.
+
+### The option set, unchanged
+
+1. **A developer runs `/fb <the ask> to qmu/workaholic` attended**, masking the
+   provenance line at the confirmation. *The patch to file* above is the payload.
+2. **Icebox this ticket.** A run may not do this in either direction.
+
+Blocked attempts: 21:19, 21:40, 22:40, 00:39 and 04:39 UTC. The interval widened
+from twenty-one minutes to four hours, which lowers the running cost but does not
+change it in kind — each tick still spends one PR-unit to reprint a digest.
