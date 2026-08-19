@@ -5,7 +5,7 @@ assignees:
 depends_on:
 mission:
 merge_policy: review
-claim: work-20260819-003922
+claim: work-20260819-043911
 ---
 
 # A handoff PR was opened on a branch carrying no work, and the finish post named a file that was never committed
