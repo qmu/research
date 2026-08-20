@@ -120,4 +120,4 @@ npm run research -- computer-use --real
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison.ja)
+- [2026-07-18T15:08:10.261Z](./history/computer-use/2026-07-18T15-08-10-261Z/computer-use-comparison)

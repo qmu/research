@@ -94,4 +94,4 @@ npm run rag:estimate
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-09T11:02:46.726Z](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark.ja)
+- [2026-07-09T11:02:46.726Z](./history/rag/2026-07-09T11-02-46-726Z/rag-benchmark)

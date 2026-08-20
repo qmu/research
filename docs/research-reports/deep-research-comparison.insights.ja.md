@@ -113,4 +113,4 @@ npm run research -- deep-research --real
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-19T02:12:52.868Z](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison.ja)
+- [2026-07-19T02:12:52.868Z](./history/deep-research/2026-07-19T02-12-52-868Z/deep-research-comparison)

@@ -93,5 +93,5 @@ npm run research -- foundation-models --fixture
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-09T11:54:54.587Z](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models.ja)
-- [2026-07-09T11:02:05.370Z](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models.ja)
+- [2026-07-09T11:54:54.587Z](./history/foundation-models/2026-07-09T11-54-54-587Z/foundation-models)
+- [2026-07-09T11:02:05.370Z](./history/foundation-models/2026-07-09T11-02-05-370Z/foundation-models)

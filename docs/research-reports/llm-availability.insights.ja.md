@@ -135,4 +135,4 @@ npm run availability
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-09T11:08:12.753Z](./history/availability/2026-07-09T11-08-12-753Z/llm-availability.ja)
+- [2026-07-09T11:08:12.753Z](./history/availability/2026-07-09T11-08-12-753Z/llm-availability)
