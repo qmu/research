@@ -89,17 +89,86 @@ export type InternalResearchSource = Readonly<{
 
 const stripMarkdown = (path: string): string => path.replace(/\.md$/, "");
 
-const docsLink = (path: string): string =>
-  `/${stripMarkdown(path.replace(/^docs\//, ""))}`;
+/**
+ * The site serves one locale per URL prefix (`/en/...`, `/ja/...`), the shape a
+ * header language switcher needs: VitePress derives the locale — and therefore
+ * which language the switcher is currently on — from the leading path segment
+ * alone. The Markdown files stay where the research pipeline writes them
+ * (English and Japanese both under `docs/research-reports/`, the Japanese
+ * article as `<base>.insights.ja.md`); `docsRewriteTarget` is the mapping from
+ * that on-disk layout to the served route, applied by the VitePress `rewrites`
+ * option in `docs/.vitepress/config.ts`.
+ *
+ * The two locales are MIRRORED on purpose — `/en/<base>` and `/ja/<base>` name
+ * the same study — because the theme's switcher swaps only the locale segment
+ * and keeps the rest of the path. A page whose counterpart sat at a different
+ * path would switch into a 404.
+ */
+export const SITE_LOCALE_PREFIXES = { en: "en", ja: "ja" } as const;
+
+export type SiteLocale = keyof typeof SITE_LOCALE_PREFIXES;
+
+/** Both Japanese naming conventions on disk: the translated insights article
+ * (`<base>.insights.ja.md`) and a dated frame's translation (`<base>.ja.md`).
+ * Both serve as `/ja/<base>`, mirroring the English `/en/<base>`. */
+const JAPANESE_SOURCE_SUFFIX = /\.(?:insights\.)?ja\.md$/;
+
+/**
+ * The VitePress rewrite destination for a docs-relative path, or undefined
+ * when the page belongs to no locale and keeps its route at the site root —
+ * the project documents (ADRs, glossary, guideline), which exist in English
+ * only and are not part of the bilingual reading path.
+ */
+export const docsRewriteTarget = (docsRelative: string): string | undefined => {
+  if (docsRelative.startsWith("research-reports/")) {
+    const rest = docsRelative.slice("research-reports/".length);
+    return JAPANESE_SOURCE_SUFFIX.test(rest)
+      ? `${SITE_LOCALE_PREFIXES.ja}/${rest.replace(JAPANESE_SOURCE_SUFFIX, ".md")}`
+      : `${SITE_LOCALE_PREFIXES.en}/${rest}`;
+  }
+  if (docsRelative.startsWith("llm-foundation/")) {
+    return `${SITE_LOCALE_PREFIXES.ja}/${docsRelative.slice("llm-foundation/".length)}`;
+  }
+  return undefined;
+};
+
+/** The served route for a repo-relative `docs/...` path — the same mapping the
+ * rewrites apply, so a link and the page it points at cannot disagree. */
+export const docsRoute = (docsPath: string): string => {
+  const relative = docsPath.replace(/^docs\//, "");
+  const target = docsRewriteTarget(relative) ?? relative;
+  return `/${stripMarkdown(target.replace(/(^|\/)index\.md$/, "$1"))}`;
+};
+
+/**
+ * The same route as `docsRoute`, but relative to its own locale root, for
+ * links written INSIDE an article. The articles are copied verbatim to
+ * qmu-co-jp, where the language sections sit at different paths, so an
+ * article's own links must not carry this site's `/en` or `/ja` prefix.
+ */
+export const localeRelativeRoute = (docsPath: string): string =>
+  `./${docsRoute(docsPath).replace(/^\/(?:en|ja)\//, "")}`;
 
 export const overview = {
-  source: { text: "Overview", link: "/research-reports/" },
-  japanese: { text: "はじめに", link: "/llm-foundation/" },
+  source: {
+    text: "Overview",
+    link: docsRoute("docs/research-reports/index.md"),
+  },
+  japanese: {
+    text: "はじめに",
+    link: docsRoute("docs/llm-foundation/index.md"),
+  },
 } satisfies Readonly<{ source: ResearchPage; japanese: ResearchPage }>;
 
 export const historyOverview = {
-  source: { text: "History", link: "/research-reports/history" },
-  japanese: { text: "History", link: "/llm-foundation/history" },
+  source: {
+    text: "History",
+    link: docsRoute("docs/research-reports/history.md"),
+  },
+  japanese: {
+    text: "History",
+    link: docsRoute("docs/llm-foundation/history.md"),
+  },
 } satisfies Readonly<{ source: ResearchPage; japanese: ResearchPage }>;
 
 export const publishedResearchTopics: ReadonlyArray<ResearchSiteTopic> = [
@@ -996,7 +1065,7 @@ export const sourceResearchItems = (): ReadonlyArray<ResearchPage> => [
   overview.source,
   ...publishedResearchTopics.map((topic) => ({
     text: topic.source.text,
-    link: docsLink(topic.source.docsPath),
+    link: docsRoute(topic.source.docsPath),
   })),
   historyOverview.source,
 ];
@@ -1005,7 +1074,7 @@ export const japaneseResearchItems = (): ReadonlyArray<ResearchPage> => [
   overview.japanese,
   ...publishedResearchTopics.map((topic) => ({
     text: topic.japanese.text,
-    link: docsLink(topic.japanese.docsPath),
+    link: docsRoute(topic.japanese.docsPath),
   })),
   historyOverview.japanese,
 ];
@@ -1045,11 +1114,10 @@ export const framePublishPlan = (
         // Source: docs-relative, no `docs/` prefix, no `.md` (the publish
         // script's slug form) — e.g. research-reports/history/speed/<ts>/llm-speed-comparison.ja
         sourceSlug: stripMarkdown(japanesePath).replace(/^docs\//, ""),
-        // Destination mirrors the in-article link target under the topic pages.
-        destinationSlug: stripMarkdown(japanesePath).replace(
-          /^docs\/research-reports\//,
-          "",
-        ),
+        // Destination mirrors the in-article link target under the topic
+        // pages, which is the frame's locale-relative route — so it carries no
+        // `.ja` suffix, exactly like the `/ja/` route this site serves.
+        destinationSlug: localeRelativeRoute(japanesePath).slice(2),
       };
     });
 
@@ -1067,10 +1135,7 @@ export const englishFramePublishPlan = (
       const sourcePath = frame.sourcePath as string;
       return {
         sourceSlug: stripMarkdown(sourcePath).replace(/^docs\//, ""),
-        destinationSlug: stripMarkdown(sourcePath).replace(
-          /^docs\/research-reports\//,
-          "",
-        ),
+        destinationSlug: localeRelativeRoute(sourcePath).slice(2),
       };
     });
 
@@ -1145,15 +1210,11 @@ export const imageAssetPublishPlan = (
   return copies;
 };
 
-const sourceHistoryLink = (path: string): string => {
-  const relative = path.replace(/^docs\/research-reports\//, "");
-  return `./${path.endsWith(".md") ? stripMarkdown(relative) : relative}`;
-};
-
-const japaneseHistoryLink = (path: string): string => {
-  const relative = path.replace(/^docs\//, "");
-  return `../${path.endsWith(".md") ? stripMarkdown(relative) : relative}`;
-};
+/** Both history indexes link frames by their served route, so the English
+ * index can link a Japanese frame (and the reverse) across the locale
+ * prefixes. `data.json` artifacts keep their route form too — they are listed
+ * as the frame's committed artifact, and are read from the repository. */
+const historyFrameLink = (path: string): string => docsRoute(path);
 
 const sortHistoryFrames = (
   frames: ReadonlyArray<ResearchHistoryFrame>,
@@ -1212,26 +1273,33 @@ description: English reports, data artifacts, and history kept as reproducible s
 # ${EN_RESEARCH_TITLE}
 
 English reports, data artifacts, and history are kept here as reproducible
-source material. The public reading line for the Japanese canonical articles is
-[${JA_RESEARCH_TITLE}](../llm-foundation/).
+source material. The same studies in Japanese are at
+[${JA_RESEARCH_TITLE}](${docsRoute("docs/llm-foundation/index.md")}) — use the
+language switcher in the header to move between them.
 
 These are organized by research topic. Current reports and data artifacts are
 the reproducible source for each topic; keyless fixture outputs remain available
 as self-tests but do not replace owner-triggered real measurements on the public
 reading path.
 
-Past generated frames are listed in [History](./history).
+Past generated frames are listed in
+[History](${docsRoute("docs/research-reports/history.md")}).
 
 **Topics**
 
 ${publishedResearchTopics
   .map(
     (topic) =>
-      `- [${topic.source.text}](./${stripMarkdown(topic.source.docsPath).replace("docs/research-reports/", "")}) — ${topic.source.summary}`,
+      `- [${topic.source.text}](${docsRoute(topic.source.docsPath)}) — ${topic.source.summary}`,
   )
   .join("\n")}
 
-To add a study, see the \`TEMPLATE.md\` in the relevant package under \`packages/\`.
+## Reproduce a study
+
+Every report documents the exact commands, required credentials, and expected
+cost to reproduce it. Clone the repository, install with \`make install\`, and run
+the study's command as listed on its page. To add a study, see the
+\`TEMPLATE.md\` in the relevant package under \`packages/\`.
 `;
 
 export const renderSourceHistoryIndex = (
@@ -1247,14 +1315,15 @@ This page lists dated report frames committed under
 \`docs/research-reports/history/\`. Each frame keeps the English source report,
 Japanese translation, and \`data.json\` artifact when available.
 
-The topic order matches [${EN_RESEARCH_TITLE}](./) and
-[${JA_RESEARCH_TITLE}](../llm-foundation/).
+The topic order matches
+[${EN_RESEARCH_TITLE}](${docsRoute("docs/research-reports/index.md")}) and
+[${JA_RESEARCH_TITLE}](${docsRoute("docs/llm-foundation/index.md")}).
 
 ## Frames
 
 ${renderHistorySections(
   frames,
-  sourceHistoryLink,
+  historyFrameLink,
   (topic) => topic.source.text,
   "No dated frames have been archived yet.",
 )}
@@ -1267,11 +1336,12 @@ description: LLMs Research と同じ構成で、日本語の生成・翻訳済�
 
 # ${JA_RESEARCH_TITLE}
 
-このページは [${EN_RESEARCH_TITLE}](../research-reports/) と同じトピック順で、
+このページは [${EN_RESEARCH_TITLE}](${docsRoute("docs/research-reports/index.md")}) と同じトピック順で、
 日本語の生成・翻訳済み記事を並べる。英語レポート、\`data.json\`、history は
 再現可能なソースとして英語側に残し、日本語側は同じトピックを日本語で読む入口にする。
+ヘッダーの言語切り替えで、同じ記事の英語版・日本語版を行き来できる。
 
-過去の生成フレームは [History](./history) に残す。
+過去の生成フレームは [History](${docsRoute("docs/llm-foundation/history.md")}) に残す。
 
 ## トピック
 
@@ -1279,10 +1349,10 @@ ${publishedResearchTopics
   .map(
     (
       topic,
-    ) => `### [${topic.japanese.text}](${docsLink(topic.japanese.docsPath)})
+    ) => `### [${topic.japanese.text}](${docsRoute(topic.japanese.docsPath)})
 
 ${topic.japanese.summary}
-英語ソースは [${topic.source.text}](${docsLink(topic.source.docsPath)})。`,
+英語ソースは [${topic.source.text}](${docsRoute(topic.source.docsPath)})。`,
   )
   .join("\n\n")}
 
@@ -1308,14 +1378,15 @@ description: 生成日ごとの英語ソース、日本語翻訳、data.json の
 調査フレームを一覧する。各フレームには、利用できる場合に英語ソース、
 日本語翻訳、\`data.json\` を残す。
 
-トピック順は [${EN_RESEARCH_TITLE}](../research-reports/) と
-[${JA_RESEARCH_TITLE}](./) に合わせる。
+トピック順は
+[${EN_RESEARCH_TITLE}](${docsRoute("docs/research-reports/index.md")}) と
+[${JA_RESEARCH_TITLE}](${docsRoute("docs/llm-foundation/index.md")}) に合わせる。
 
 ## フレーム
 
 ${renderHistorySections(
   frames,
-  japaneseHistoryLink,
+  historyFrameLink,
   (topic) => topic.japanese.text,
   "まだ日付別フレームは保存されていない。",
 )}
@@ -1362,7 +1433,7 @@ export const renderQmuTicketPayload = (
     ...(framePlan.length === 0
       ? []
       : [
-          `Past-survey articles (${framePlan.length} Japanese): copy each dated Japanese survey under the mirrored path below, so the 過去の調査 links in the Japanese current pages resolve on qmu-co-jp. These are the earlier runs of each topic, kept as their own articles:`,
+          `Past-survey articles (${framePlan.length} Japanese): copy each dated Japanese survey under the mirrored path below, so the 過去の調査 links in the Japanese current pages resolve on qmu-co-jp. These are the earlier runs of each topic, kept as their own articles. The destination names no longer carry the \`.ja\` suffix — delete any earlier \`history/**/*.ja.md\` copies left from the previous naming:`,
           "",
           ...framePlan.map(
             (entry) =>

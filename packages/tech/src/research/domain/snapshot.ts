@@ -1,8 +1,9 @@
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
-import type {
-  MetricDirection,
-  ResearchHistoryFrame,
-  ResearchSiteTopic,
+import {
+  docsRoute,
+  type MetricDirection,
+  type ResearchHistoryFrame,
+  type ResearchSiteTopic,
 } from "./site";
 
 /**
@@ -567,9 +568,9 @@ const directionFor = (
 const unitFor = (topic: ResearchSiteTopic, metric: string): string =>
   topic.design.metrics.find((entry) => entry.name === metric)?.unit ?? "";
 
-/** Links are relative to docs/research-reports/, where snapshots live. */
-const frameLink = (path: string): string =>
-  `./${path.replace(/^docs\/research-reports\//, "").replace(/\.md$/, "")}`;
+/** A frame line lists both languages from one page, so the links cross the
+ * locale prefixes and are written as served routes. */
+const frameLink = (path: string): string => docsRoute(path);
 
 const frameLine = (frame: ResearchHistoryFrame): string => {
   const links = [

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!--
+      The site root carries no content of its own: every page belongs to a
+      locale (`/en/…`, `/ja/…`), which is what lets the header language
+      switcher work. `/` therefore redirects to the English top; readers reach
+      Japanese from the switcher, and a `/ja/…` link opens Japanese directly.
+      The target is relative, so it holds under a non-root `base` too.
+    -->
+    <meta http-equiv="refresh" content="0; url=en/" />
+    <title>qmu research</title>
+    <script>
+      window.location.replace("en/" + window.location.search + window.location.hash);
+    </script>
+  </head>
+  <body>
+    <p><a href="en/">qmu research (English)</a></p>
+    <p><a href="ja/">qmu リサーチ（日本語）</a></p>
+  </body>
+</html>

@@ -126,6 +126,21 @@ This repository has four delivery surfaces:
    site exposes `LLMs Research` (English source reports) and `LLM基礎検証`
    (Japanese articles) in the same topic order. The order and labels come from
    `packages/tech/src/research/domain/site.ts`, not parallel hand-written lists.
+   **The two languages are VitePress locales, one per URL prefix** — `/en/…`
+   and `/ja/…` — so the header carries the theme's language switcher beside the
+   appearance toggle and the sidebar holds one language at a time. The Markdown
+   files stay where the pipeline writes them (both languages under
+   `docs/research-reports/`, the Japanese article as `<base>.insights.ja.md`);
+   `docsRewriteTarget` in `site.ts` maps that layout onto the routes and is fed
+   to VitePress's `rewrites`, so no file moved and no runner path changed. The
+   routes are deliberately MIRRORED (`/en/<base>` ↔ `/ja/<base>`, the dated
+   frames included) because the switcher swaps only the locale segment — a page
+   whose counterpart sat elsewhere would switch into a 404. Links in the repo
+   are generated from the same function (`docsRoute`, `localeRelativeRoute`),
+   so a link and its page cannot disagree, and `make build` fails on any that
+   do. The English-only project documents (ADRs, glossary, guideline) belong to
+   no locale and keep root routes, where the theme hides the switcher. `/`
+   holds no content: `docs/public/index.html` redirects it to `/en/`.
 2. **Foundational research** — each topic is runnable through `npm run research
    -- <topic> --real` or its topic-specific npm script. After a run, use
    `npm run research:archive -- <topic> --generated-at <iso>` to keep the

@@ -194,7 +194,7 @@ describe("buildRelatedBlock (language-matched single links)", () => {
     const block = buildRelatedBlock(frames, "ja");
     // Only the 2026-06-01 frame has a japanesePath in the fixture.
     expect(block).toContain(
-      "(./history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison.ja)",
+      "(./history/speed/2026-06-01T00-00-00-000Z/llm-speed-comparison)",
     );
     expect(block).not.toContain("2026-07-01"); // no JP frame → not listed
   });
