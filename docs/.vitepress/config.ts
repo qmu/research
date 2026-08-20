@@ -4,6 +4,8 @@ import { defineConfig } from "vitepress";
 import {
   EN_RESEARCH_TITLE,
   JA_RESEARCH_TITLE,
+  docsRewriteTarget,
+  docsRoute,
   japaneseResearchItems,
   sourceResearchItems,
 } from "../../packages/tech/src/research/domain/site";
@@ -28,12 +30,45 @@ const base = process.env.DOCS_BASE ?? "/";
 const publicHostname = process.env.DOCS_PUBLIC_HOSTNAME ?? "";
 const indexable = publicHostname !== "";
 
+// The English-only project documents. They are not part of the bilingual
+// reading path, so they are served WITHOUT a locale prefix: on those pages the
+// theme finds no locale and hides the language switcher, instead of offering a
+// Japanese counterpart that does not exist.
+const projectItems = [
+  {
+    text: "Research development guideline",
+    link: docsRoute("docs/research-development-guideline.md"),
+  },
+  {
+    text: "OSS foundational research (proposal)",
+    link: docsRoute("docs/oss-foundation-proposal.md"),
+  },
+  { text: "Glossary", link: docsRoute("docs/glossary.md") },
+  {
+    text: "Dependency decisions",
+    link: docsRoute("docs/dependency-decisions.md"),
+  },
+];
+
+const enHome = docsRoute("docs/research-reports/index.md");
+const jaHome = docsRoute("docs/llm-foundation/index.md");
+
 export default defineConfig({
   base,
   lang: "en",
   title: "qmu research",
   description: "Public, reproducible foundational research for qmu.co.jp.",
   cleanUrls: true,
+  // The two languages are served as locales — `/en/…` and `/ja/…` — so the
+  // header carries the theme's language switcher beside the appearance toggle
+  // and the sidebar holds one language at a time. The Markdown files stay
+  // where the research pipeline writes them (both languages under
+  // `docs/research-reports/`, the Japanese article as `<base>.insights.ja.md`);
+  // `docsRewriteTarget` maps that layout onto the locale routes, and is the
+  // same function the in-repo links are generated from, so a link and the page
+  // it points at cannot disagree. `/` redirects to `/en/` via
+  // `docs/public/index.html`.
+  rewrites: (page: string) => docsRewriteTarget(page) ?? page,
   // Role/template READMEs and combined compare side files are source material,
   // not public site pages. Speed and accuracy carry the public split articles.
   srcExclude: [
@@ -41,12 +76,22 @@ export default defineConfig({
     "llm-foundation/_generated/**",
     "research-reports/*.real.md",
     "research-reports/*.fixture.md",
+    // The English insights drafts each `*.insights.ja.md` article is
+    // translated from. They are inputs to the translation step, are linked
+    // from nowhere, and have no Japanese counterpart to switch to.
+    "research-reports/*.insights.md",
     // Legacy side files from the retired snapshot layout (tendency narratives
     // and working full reports). None are produced now — each topic's current
     // page is the composed dated survey article — but the globs stay so any
     // stale copy is never served standalone.
     "research-reports/*.tendency.md",
     "research-reports/*.report.md",
+    // Superseded Japanese pages kept in the tree until their cleanup ticket
+    // lands. Each topic's current Japanese article is the `*.insights.ja.md`
+    // page under `research-reports/`, which serves the same `/ja/` route.
+    "llm-foundation/ocr-comparison.md",
+    "llm-foundation/availability-comparison.md",
+    "llm-foundation/vector-db-comparison.md",
   ],
   ...(indexable ? { sitemap: { hostname: publicHostname } } : {}),
   head: indexable
@@ -71,48 +116,93 @@ export default defineConfig({
       dark: "github-dark-high-contrast",
     },
   },
-  themeConfig: {
-    outline: false,
-    nav: [
-      { text: "Home", link: "/" },
-      {
-        text: EN_RESEARCH_TITLE,
-        items: sourceResearchItems(),
-      },
-      {
-        text: JA_RESEARCH_TITLE,
-        items: japaneseResearchItems(),
-      },
-    ],
-    sidebar: [
-      {
-        text: EN_RESEARCH_TITLE,
-        link: "/research-reports/",
-        items: sourceResearchItems(),
-      },
-      {
-        text: JA_RESEARCH_TITLE,
-        link: "/llm-foundation/",
-        items: japaneseResearchItems(),
-      },
-      {
-        text: "Project",
-        items: [
+  locales: {
+    en: {
+      label: "English",
+      lang: "en",
+      link: `${enHome}`,
+      title: "qmu research",
+      description: "Public, reproducible foundational research for qmu.co.jp.",
+      themeConfig: {
+        nav: [
+          { text: EN_RESEARCH_TITLE, items: [...sourceResearchItems()] },
+          { text: "Project", items: projectItems },
+        ],
+        sidebar: [
           {
-            text: "Research development guideline",
-            link: "/research-development-guideline",
+            text: EN_RESEARCH_TITLE,
+            link: enHome,
+            items: [...sourceResearchItems()],
           },
-          {
-            text: "OSS foundational research (proposal)",
-            link: "/oss-foundation-proposal",
-          },
-          { text: "Glossary", link: "/glossary" },
-          { text: "Dependency decisions", link: "/dependency-decisions" },
+          { text: "Project", items: projectItems },
         ],
       },
+    },
+    ja: {
+      label: "日本語",
+      lang: "ja",
+      link: `${jaHome}`,
+      title: "qmu リサーチ",
+      description: "qmu.co.jp の公開・再現可能な基礎検証。",
+      themeConfig: {
+        nav: [
+          { text: JA_RESEARCH_TITLE, items: [...japaneseResearchItems()] },
+          { text: "プロジェクト文書", items: projectItems },
+        ],
+        sidebar: [
+          {
+            text: JA_RESEARCH_TITLE,
+            link: jaHome,
+            items: [...japaneseResearchItems()],
+          },
+          // The project documents are written in English only; they are listed
+          // here so the Japanese reading path can still reach them.
+          { text: "プロジェクト文書（英語）", items: projectItems },
+        ],
+        darkModeSwitchLabel: "外観",
+        lightModeSwitchTitle: "ライトモードに切り替える",
+        darkModeSwitchTitle: "ダークモードに切り替える",
+        sidebarMenuLabel: "メニュー",
+        returnToTopLabel: "トップへ戻る",
+        langMenuLabel: "言語を変更",
+        docFooter: { prev: "前のページ", next: "次のページ" },
+      },
+    },
+  },
+  themeConfig: {
+    outline: false,
+    // The locale-less project pages (ADRs, glossary, guideline) render with
+    // this base configuration: both language entrances in the nav, and the
+    // project documents in the sidebar.
+    nav: [
+      { text: "English", link: enHome },
+      { text: "日本語", link: jaHome },
     ],
+    sidebar: [{ text: "Project", items: projectItems }],
     socialLinks: [{ icon: "github", link: "https://github.com/qmu/research" }],
-    search: { provider: "local" },
+    search: {
+      provider: "local",
+      options: {
+        locales: {
+          ja: {
+            translations: {
+              button: { buttonText: "検索", buttonAriaLabel: "検索" },
+              modal: {
+                displayDetails: "詳細を表示",
+                resetButtonTitle: "検索をリセット",
+                backButtonTitle: "閉じる",
+                noResultsText: "見つかりませんでした:",
+                footer: {
+                  selectText: "選択",
+                  navigateText: "移動",
+                  closeText: "閉じる",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   vite: {
     // Allow the Cloudflare tunnel host to reach the dev server.

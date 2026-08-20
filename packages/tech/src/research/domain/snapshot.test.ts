@@ -237,9 +237,9 @@ describe("renderSnapshot", () => {
     expect(markdown).toContain("## Tendency");
     expect(markdown).toContain("## Trials");
     expect(markdown).toContain("## Design");
-    expect(markdown).toContain("[English](./history/speed/stamp/speed)");
+    expect(markdown).toContain("[English](/en/history/speed/stamp/speed)");
     expect(markdown).toContain(
-      "[data.json](./history/speed/stamp/speed.data.json)",
+      "[data.json](/en/history/speed/stamp/speed.data.json)",
     );
     expect(markdown).toContain(`last ${TENDENCY_WINDOW_MONTHS} months`);
   });
@@ -294,7 +294,7 @@ describe("renderSnapshot", () => {
       points: [],
     });
     expect(markdown).toContain(
-      "[English](./history/speed/2026-07-01T00-00-00-000Z/llm-speed-comparison)",
+      "[English](/en/history/speed/2026-07-01T00-00-00-000Z/llm-speed-comparison)",
     );
   });
 });

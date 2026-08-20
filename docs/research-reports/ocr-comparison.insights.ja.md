@@ -123,4 +123,4 @@ OCRのフィクスチャ経路および実データ経路は、外部クラウ�
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-09T11:03:48.277Z](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison.ja)
+- [2026-07-09T11:03:48.277Z](./history/ocr/2026-07-09T11-03-48-277Z/ocr-comparison)

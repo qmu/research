@@ -121,4 +121,4 @@ npm run research -- trend-recency --real
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-17T01:34:36.857Z](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison.ja)
+- [2026-07-17T01:34:36.857Z](./history/trend-recency/2026-07-17T01-34-36-857Z/trend-recency-comparison)

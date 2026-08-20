@@ -319,4 +319,4 @@ npm run research -- token-metering --real
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-17T03:02:34.699Z](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison.ja)
+- [2026-07-17T03:02:34.699Z](./history/token-metering/2026-07-17T03-02-34-699Z/token-metering-comparison)

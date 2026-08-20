@@ -113,4 +113,4 @@ npm run research -- svg-generation --real
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-18T11:29:34.171Z](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison.ja)
+- [2026-07-18T11:29:34.171Z](./history/svg-generation/2026-07-18T11-29-34-171Z/svg-generation-comparison)

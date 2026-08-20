@@ -171,5 +171,5 @@ _meeting-document-minutes_
 
 Earlier dated surveys of this topic, newest first — each a complete article for its run.
 
-- [2026-07-18T15:04:12.341Z](./history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison.ja)
-- [2026-07-17T00:53:39.901Z](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison.ja)
+- [2026-07-18T15:04:12.341Z](./history/image-generation/2026-07-18T15-04-12-341Z/image-generation-comparison)
+- [2026-07-17T00:53:39.901Z](./history/image-generation/2026-07-17T00-53-39-901Z/image-generation-comparison)

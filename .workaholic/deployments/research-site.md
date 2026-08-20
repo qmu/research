@@ -78,9 +78,15 @@ answered is this build rather than a placeholder:
 ```
 $ curl -fsS -o /dev/null -w '%{http_code}\n' https://staging-research.qmu.co.jp/
 200
-$ curl -fsS https://staging-research.qmu.co.jp/ | grep -o '<meta name="robots"[^>]*>'
+$ curl -fsS https://staging-research.qmu.co.jp/en/ | grep -o '<meta name="robots"[^>]*>'
 <meta name="robots" content="noindex, nofollow">
 ```
+
+**Probe the meta tag on `/en/`, not on `/`.** Since the site became
+locale-routed, `/` is a static redirect stub to `/en/` (`docs/public/index.html`)
+and carries its own hard-coded robots tag, so a tag found there proves only that
+the stub was copied. `/en/` is the English top page — a rendered VitePress page,
+which is what makes the tag below a signal about the origin build.
 
 **Do not assert on `/robots.txt`.** Cloudflare serves the zone's Managed
 robots.txt ahead of the origin file, so the response is not the `Disallow: /`

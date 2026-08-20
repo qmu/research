@@ -1,8 +1,9 @@
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
-import type {
-  MetricDirection,
-  ResearchHistoryFrame,
-  ResearchSiteTopic,
+import {
+  localeRelativeRoute,
+  type MetricDirection,
+  type ResearchHistoryFrame,
+  type ResearchSiteTopic,
 } from "./site";
 import {
   SNAPSHOT_MAX_SERIES_PER_CHART,
@@ -163,17 +164,17 @@ export const buildTrendBlock = (
 
 export type ArticleLanguage = "en" | "ja";
 
-/** Link a frame's article IN ONE LANGUAGE, relative to docs/research-reports/
- * (where the current pages live). English → the `.md` frame; Japanese → the
- * `.ja.md` frame. Undefined when that language's frame is absent. */
+/** Link a frame's article IN ONE LANGUAGE, relative to the language section
+ * the current page sits in — `/en/` or `/ja/` on this site, and the matching
+ * qmu-co-jp section once published. English → the `.md` frame; Japanese → the
+ * `.ja.md` frame, which serves under the same name as its English counterpart.
+ * Undefined when that language's frame is absent. */
 const frameArticleLink = (
   frame: ResearchHistoryFrame,
   language: ArticleLanguage,
 ): string | undefined => {
   const path = language === "ja" ? frame.japanesePath : frame.sourcePath;
-  return path === undefined
-    ? undefined
-    : `./${path.replace(/^docs\/research-reports\//, "").replace(/\.md$/, "")}`;
+  return path === undefined ? undefined : localeRelativeRoute(path);
 };
 
 /**
