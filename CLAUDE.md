@@ -223,6 +223,15 @@ ingests. As part of `/ship`, after the PR is merged:
    — those are written by the corporate side and the plan must ask for them
    rather than overwrite them. Commit the ledger afterwards; it records what was
    emitted, and the next run's divergence check reads it as its baseline.
+   **Then `scripts/publish-research.sh prune --all`**, which deletes the copies
+   a renamed or retired destination left behind — `copy` writes the new name and
+   never looks at the old one, so without this a rename leaves an unreferenced
+   page on qmu-co-jp forever (the dated Japanese surveys dropped their `.ja`
+   suffix on 2026-08-19 and orphaned 19). It deletes ONLY files whose bytes still
+   match the ledger; a `downstream` mark or any downstream edit is kept and
+   reported, and it requires `--all` because the plan it compares against must be
+   the whole plan. When it reports a KEPT file, that page is qmu-co-jp's to
+   decide on — put it in the ask, do not force it.
 2. Locate the `qmu-co-jp` checkout as a **sibling of this repo** (`../qmu-co-jp`).
    **If there is no `qmu-co-jp` repo at the same directory level, ask the user**
    for its path.
