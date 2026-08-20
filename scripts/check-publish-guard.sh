@@ -215,9 +215,132 @@ else
   cat "$SCRATCH/out.log" >&2
 fi
 
+# ---------------------------------------------------------------------------
+# 15-21. PRUNE -- deleting the copies a renamed destination leaves behind.
+#
+# The dated Japanese surveys were renamed on 2026-08-19 (the `.ja` suffix left
+# the site's Japanese routes, so it left the copy destinations with them), and
+# the copy stage cannot notice a rename: it writes the new name and never looks
+# at the old one. Prune reads the ledger in the deleting direction, so the same
+# ownership rules decide -- and it deletes, which is the one operation nothing
+# downstream can undo. These assertions pin what it must refuse.
+# ---------------------------------------------------------------------------
+rm -f "$PUBLISH_LEDGER"
+rm -rf "$DEST_DIR"
+mkdir -p "$DEST_DIR/history/retired/2026-01-01T00-00-00-000Z"
+
+ORPHAN_REL="docs/llm-foundation-research/history/retired/2026-01-01T00-00-00-000Z/retired.ja.md"
+EDITED_REL="docs/llm-foundation-research/history/retired/2026-01-01T00-00-00-000Z/edited.ja.md"
+OWNED_REL="docs/llm-foundation-research/history/retired/2026-01-01T00-00-00-000Z/owned.ja.md"
+ABSENT_REL="docs/llm-foundation-research/history/retired/2026-01-01T00-00-00-000Z/absent.ja.md"
+# A destination the plan DOES name, so prune must leave it alone.
+PLANNED_REL="docs/llm-foundation-research/foundation-models.md"
+
+seed_prune_fixture() {
+  printf 'exporter output\n' > "$QMU/$ORPHAN_REL"
+  printf 'exporter output\n' > "$QMU/$EDITED_REL"
+  printf 'exporter output\n' > "$QMU/$OWNED_REL"
+  printf 'exporter output\n' > "$QMU/$PLANNED_REL"
+  OUR_HASH="$(sha256sum "$QMU/$ORPHAN_REL" | cut -d' ' -f1)"
+  {
+    printf '%s\t%s\n' "$ORPHAN_REL" "$OUR_HASH"
+    printf '%s\t%s\n' "$EDITED_REL" "$OUR_HASH"
+    printf '%s\t%s\n' "$OWNED_REL" "downstream"
+    printf '%s\t%s\n' "$ABSENT_REL" "$OUR_HASH"
+    printf '%s\t%s\n' "$PLANNED_REL" "$OUR_HASH"
+  } | LC_ALL=C sort > "$PUBLISH_LEDGER"
+  # Authored downstream AFTER we recorded it: the bytes no longer match.
+  printf 'qmu-co-jp が書き直した本文\n' > "$QMU/$EDITED_REL"
+  EDITED_HASH="$(sha256sum "$QMU/$EDITED_REL" | cut -d' ' -f1)"
+}
+
+prune() {
+  ( cd "$ROOT" && ./scripts/publish-research.sh prune --all --qmu-dir "$QMU" "$@" ) \
+    > "$SCRATCH/prune.log" 2>&1
+}
+
+seed_prune_fixture
+
+# 15. --dry-run deletes nothing at all.
+prune --dry-run || true
+if [ -f "$QMU/$ORPHAN_REL" ] && grep -q "would delete orphan" "$SCRATCH/prune.log"; then
+  pass "--dry-run reports the orphan without deleting it"
+else
+  fail "--dry-run deleted an orphan or reported nothing"
+  cat "$SCRATCH/prune.log" >&2
+fi
+
+if prune; then
+  # 16. Our own untouched output, no longer in the plan, is what prune is for.
+  if [ ! -e "$QMU/$ORPHAN_REL" ]; then
+    pass "an orphan matching the ledger is deleted"
+  else
+    fail "an orphan matching the ledger survived"
+  fi
+  if ! grep -q "^$ORPHAN_REL	" "$PUBLISH_LEDGER"; then
+    pass "the deleted orphan's ledger row is dropped"
+  else
+    fail "the ledger still claims a file that was deleted"
+  fi
+
+  # 17. THE POINT: an orphan edited downstream is prose, not our output.
+  if [ -f "$QMU/$EDITED_REL" ] \
+    && [ "$(sha256sum "$QMU/$EDITED_REL" | cut -d' ' -f1)" = "$EDITED_HASH" ]; then
+    pass "an orphan authored downstream is left byte-identical"
+  else
+    fail "an orphan authored downstream was DELETED -- the guard does not hold"
+  fi
+  if grep -q "KEPT (authored downstream)" "$SCRATCH/prune.log" \
+    && grep -q "reason:" "$SCRATCH/prune.log"; then
+    pass "the refusal is reported with a reason"
+  else
+    fail "an orphan was kept silently"
+    cat "$SCRATCH/prune.log" >&2
+  fi
+
+  # 18. The standing decision holds in the deleting direction too, and quietly.
+  if [ -f "$QMU/$OWNED_REL" ] && ! grep -q "owned.ja.md" "$SCRATCH/prune.log"; then
+    pass "a downstream-owned orphan is kept, and not reported as a divergence"
+  else
+    fail "a downstream-owned orphan was deleted or reported as unresolved"
+    cat "$SCRATCH/prune.log" >&2
+  fi
+
+  # 19. A destination the plan still names is not an orphan.
+  if [ -f "$QMU/$PLANNED_REL" ]; then
+    pass "a destination still in the plan is untouched"
+  else
+    fail "prune deleted a destination the plan still names"
+  fi
+
+  # 20. A row whose file is already gone is an observation of nothing.
+  if ! grep -q "^$ABSENT_REL	" "$PUBLISH_LEDGER"; then
+    pass "a stale row for an absent file is dropped"
+  else
+    fail "a stale ledger row survived"
+  fi
+else
+  fail "prune failed (exit $?)"
+  cat "$SCRATCH/prune.log" >&2
+fi
+
+# 21. Without --all the plan is partial, so almost everything would look like an
+#     orphan. Refuse before building it, and delete nothing.
+seed_prune_fixture
+if ( cd "$ROOT" && ./scripts/publish-research.sh prune --qmu-dir "$QMU" ) \
+  > "$SCRATCH/prune-partial.log" 2>&1; then
+  fail "prune without --all was accepted"
+else
+  if [ -f "$QMU/$ORPHAN_REL" ]; then
+    pass "prune without --all refuses and deletes nothing"
+  else
+    fail "prune without --all deleted an orphan before refusing"
+  fi
+fi
+
 if [ "$failures" -ne 0 ]; then
   echo "check-publish-guard: $failures assertion(s) failed -- the exporter can clobber downstream prose." >&2
   exit 1
 fi
 
-echo "check-publish-guard: downstream-authored prose is never silently replaced."
+echo "check-publish-guard: downstream-authored prose is never silently replaced, and never deleted."

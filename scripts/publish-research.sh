@@ -4,6 +4,7 @@
 # Usage:
 #   publish-research.sh generate
 #   publish-research.sh copy [--all | <slug>...] [options]
+#   publish-research.sh prune --all [options]
 #
 # Stages:
 #   generate          Read committed/local artifacts and write regenerable drafts
@@ -12,13 +13,21 @@
 #                     Markdown. The --all set is generated from the shared
 #                     research site metadata so the publish order matches the
 #                     VitePress sidebar order.
+#   prune             Delete destinations this exporter emitted that the current
+#                     plan no longer contains -- the copies a renamed or retired
+#                     destination leaves behind. Deletes ONLY files whose bytes
+#                     still match the ledger (our own untouched output); a
+#                     downstream-owned mark or any downstream edit is refused and
+#                     reported, never removed. Requires --all, because the plan it
+#                     compares against must be the whole plan.
 #
 # Options:
 #   --all             With copy, copy every per-topic published report (the set
-#                     above).
+#                     above). Required by prune.
 #   --qmu-dir DIR     Path to the qmu-co-jp checkout (default: ../qmu-co-jp,
 #                     overridable with the QMU_DIR environment variable).
-#   --dry-run         With copy, print what would be copied without writing.
+#   --dry-run         Print what copy would write, or what prune would delete,
+#                     without touching anything.
 #   --force           Overwrite destinations that diverged from this exporter's
 #                     last emit. Destroys downstream-authored prose -- pass it
 #                     only when you have decided the generated text wins. It does
@@ -120,8 +129,11 @@ published_report_plan() {
 }
 
 usage() {
-  # Through the "Also:" block (mark-downstream), which is part of the interface.
-  sed -n '2,42p' "$0" | sed 's/^# \{0,1\}//'
+  # From the second line to the first horizontal rule, which is where the
+  # interface description ends and the ownership essay begins. Bounded by that
+  # marker rather than by a line number, so adding an option cannot silently
+  # start truncating the help text.
+  awk 'NR == 1 { next } /^# -{10,}/ { exit } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$0"
 }
 
 # sha256 of a file, bare hex. Both tools ship on this platform; prefer coreutils.
@@ -153,6 +165,17 @@ ledger_record() {
   mv "$_lr_tmp" "$LEDGER"
 }
 
+# Remove a destination's row. Used by prune once the copy it recorded is gone:
+# the row is an observation of a file that no longer exists, and leaving it would
+# report the destination as ours forever.
+ledger_record_delete() {
+  _ld_key="$1"
+  [ -f "$LEDGER" ] || return 0
+  _ld_tmp="${LEDGER}.tmp.$$"
+  awk -F'\t' -v key="$_ld_key" '$1 != key' "$LEDGER" >"$_ld_tmp"
+  mv "$_ld_tmp" "$LEDGER"
+}
+
 # True when the ledger states that qmu-co-jp owns this destination.
 ledger_is_downstream_owned() {
   [ "$(ledger_hash "$1")" = "$DOWNSTREAM_MARK" ]
@@ -160,7 +183,7 @@ ledger_is_downstream_owned() {
 
 if [ $# -gt 0 ]; then
   case "$1" in
-    generate | copy | mark-downstream) COMMAND="$1"; shift ;;
+    generate | copy | prune | mark-downstream) COMMAND="$1"; shift ;;
     --generate) COMMAND="generate"; shift ;;
     --copy) COMMAND="copy"; shift ;;
   esac
@@ -230,6 +253,15 @@ case "$COMMAND" in
     exit 0
     ;;
   copy) ;;
+  prune)
+    # Checked before the plan is built: prune deletes what the plan does NOT
+    # name, so a partial plan would call almost every destination an orphan.
+    if [ "$ALL" -eq 0 ]; then
+      echo "Error: prune needs --all -- it deletes what the plan does NOT contain," >&2
+      echo "so a partial plan would name almost every destination an orphan." >&2
+      exit 1
+    fi
+    ;;
   "")
     usage >&2
     exit 1
@@ -264,6 +296,97 @@ if [ -z "$QMU_DIR" ] || [ ! -d "$QMU_DIR/docs" ]; then
 fi
 
 DEST_DIR="$QMU_DIR/docs/llm-foundation-research"
+DEST_PREFIX="docs/llm-foundation-research/"
+
+if [ "$COMMAND" = "prune" ]; then
+  # Delete what this exporter emitted and the plan no longer names.
+  #
+  # A destination is renamed by changing the plan (the dated Japanese surveys
+  # lost their `.ja` suffix on 2026-08-19 when the site's Japanese routes
+  # stopped carrying it), and the copy stage has no way to notice: it writes the
+  # new name and never looks at the old one, so the previous copy stays on
+  # qmu-co-jp forever as an unreferenced page. The ledger is what makes removing
+  # it safe rather than a guess -- a row states, in committed data, that THIS
+  # exporter wrote those exact bytes.
+  #
+  # The ownership rules are the copy stage's, read in the deleting direction:
+  #
+  #   marked `downstream`        -> KEEP, quietly (a standing decision)
+  #   still in the plan          -> KEEP (not an orphan)
+  #   file already absent        -> drop the stale row only
+  #   bytes match the ledger     -> DELETE (our own untouched output)
+  #   bytes differ               -> KEEP, loudly (authored downstream since our emit)
+  #
+  # There is deliberately no --force: overwriting prose can be undone from the
+  # target's history by whoever authored it, but a delete this exporter was not
+  # entitled to make removes a page from a site nobody here owns.
+  PLANNED_FILE=$(mktemp)
+  trap 'rm -f "$PLAN_FILE" "$PLANNED_FILE"' EXIT
+  cut -f2 "$PLAN_FILE" | sed "s|^|$DEST_PREFIX|;s|\$|.md|" | LC_ALL=C sort >"$PLANNED_FILE"
+
+  removed=0
+  kept=0
+  dropped=0
+  [ -f "$LEDGER" ] || { echo "No ledger at ${LEDGER#"$REPO_ROOT"/}; nothing to prune."; exit 0; }
+
+  while IFS="$(printf '\t')" read -r dest_rel recorded; do
+    [ -n "$dest_rel" ] || continue
+    case "$dest_rel" in
+      "#"*) continue ;;
+      "$DEST_PREFIX"*) ;;
+      # A key outside the destination directory is not something this exporter
+      # can reason about, so it is never a deletion candidate.
+      *) continue ;;
+    esac
+    [ "$recorded" = "$DOWNSTREAM_MARK" ] && continue
+    if LC_ALL=C grep -qxF "$dest_rel" "$PLANNED_FILE"; then
+      continue
+    fi
+
+    DEST="$QMU_DIR/$dest_rel"
+    if [ ! -f "$DEST" ]; then
+      if [ "$DRY" -eq 1 ]; then
+        echo "would drop stale ledger row (file already absent): $dest_rel"
+      else
+        ledger_record_delete "$dest_rel"
+        echo "dropped stale ledger row (file already absent): $dest_rel"
+      fi
+      dropped=$((dropped + 1))
+      continue
+    fi
+
+    if [ "$(file_hash "$DEST")" != "$recorded" ]; then
+      echo "KEPT (authored downstream): $dest_rel" >&2
+      echo "  reason: no longer in the plan, but its bytes differ from what this exporter emitted" >&2
+      echo "  qmu-co-jp is authoritative for this text. Decide there whether the page" >&2
+      echo "  should stay; mark it downstream-owned to settle it in committed data:" >&2
+      echo "    $0 mark-downstream $dest_rel" >&2
+      kept=$((kept + 1))
+      continue
+    fi
+
+    if [ "$DRY" -eq 1 ]; then
+      echo "would delete orphan: $dest_rel"
+    else
+      rm -f "$DEST"
+      ledger_record_delete "$dest_rel"
+      echo "deleted orphan: $dest_rel"
+    fi
+    removed=$((removed + 1))
+  done <"$LEDGER"
+
+  if [ "$DRY" -eq 0 ]; then
+    echo "Done. $removed orphan copy(ies) deleted from $QMU_DIR/$DEST_PREFIX."
+    [ "$dropped" -gt 0 ] && echo "$dropped stale ledger row(s) dropped (the file was already gone)."
+    if [ "$kept" -gt 0 ]; then
+      echo "$kept destination(s) KEPT because qmu-co-jp is authoritative for them (see above)." >&2
+    fi
+    echo "Review and commit the deletions in the qmu-co-jp repository."
+    echo "Commit ${LEDGER#"$REPO_ROOT"/} in this repository too -- it records what was emitted."
+  fi
+  exit 0
+fi
+
 copied=0
 skipped=0
 excluded=0
