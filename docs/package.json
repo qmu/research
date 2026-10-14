@@ -20,10 +20,10 @@
   },
   "devDependencies": {
     "vitepress": "^1.6.3",
-    "wrangler": "^4.123.0"
+    "wrangler": "^4.149.0"
   },
   "optionalDependencies": {
     "pa11y-ci": "^4.1.1",
-    "start-server-and-test": "^3.0.12"
+    "start-server-and-test": "^3.0.13"
   }
 }
