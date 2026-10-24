@@ -49,6 +49,31 @@ make install
 cd packages/tech && npm run dev
 ```
 
+### Keyless path: fixture to result page
+
+No API key is needed to get from a fresh clone to a rendered result page. Run
+these from the repository root; no absolute path such as `/workspace` is assumed.
+
+```sh
+make install   # dependencies in packages/tech, packages/industry and docs
+make drift     # regenerates every topic's keyless fixture into docs/research-reports/
+make build     # type-checks and builds the VitePress site
+make docs      # serves the preview site locally (VitePress dev server)
+```
+
+- `make drift` writes the fixture pages (for example
+  `docs/research-reports/llm-model-comparison.fixture.md`,
+  `llm-speed-comparison.fixture.md`, `llm-accuracy-comparison.fixture.md`) and
+  fails if any regenerated file differs from the committed one.
+- `make build` leaves the static result pages under
+  `docs/.vitepress/dist/en/` (for example `llm-accuracy-comparison.html`) and
+  `docs/.vitepress/dist/ja/`.
+- To run a single topic's fixture, use `npm run <topic>:fixture` inside
+  `packages/tech` (for example `npm run compare:fixture`).
+- Use Node.js 22. Node 23 installs and builds, but npm prints `EBADENGINE`
+  warnings and may add `"hasInstallScript": true` to
+  `packages/tech/package-lock.json`; do not commit that change.
+
 Each research topic documents its exact commands, required credentials, and
 expected cost in its own README and result page.
 
