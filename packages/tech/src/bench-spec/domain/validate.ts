@@ -57,9 +57,7 @@ export const validateBenchSpec = (
       errors.push("modelConditions: id must not be empty");
     }
     if (condition.model.trim() === "") {
-      errors.push(
-        `modelConditions '${condition.id}': model must not be empty`,
-      );
+      errors.push(`modelConditions '${condition.id}': model must not be empty`);
     }
   }
   for (const id of duplicates(spec.modelConditions.map((c) => c.id))) {
@@ -82,10 +80,7 @@ export const validateBenchSpec = (
         `expectedMetrics '${metric.name}': direction must be one of ${allowed}`,
       );
     }
-    if (
-      metric.threshold !== undefined &&
-      !Number.isFinite(metric.threshold)
-    ) {
+    if (metric.threshold !== undefined && !Number.isFinite(metric.threshold)) {
       errors.push(
         `expectedMetrics '${metric.name}': threshold must be a finite number`,
       );

@@ -46,9 +46,7 @@ describe("validateBenchSpec", () => {
   it("rejects a fixed input with a negative itemCount", () => {
     const errors = validateBenchSpec({
       ...VALID_SPEC,
-      fixedInputs: [
-        { id: "tasks", description: "bad count", itemCount: -1 },
-      ],
+      fixedInputs: [{ id: "tasks", description: "bad count", itemCount: -1 }],
     });
     expect(
       errors.some((error) =>
