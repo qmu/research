@@ -1,0 +1,41 @@
+{
+  "topicId": "llm-benchmark",
+  "fixedInputs": [
+    {
+      "id": "exact-match-tasks",
+      "description": "5 short-answer prompts",
+      "itemCount": 5
+    }
+  ],
+  "modelConditions": [
+    { "id": "sonnet-5-5", "model": "claude-sonnet-5-5" },
+    {
+      "id": "haiku-5-5",
+      "model": "claude-haiku-5-5",
+      "params": { "effort": "low" }
+    }
+  ],
+  "expectedMetrics": [
+    {
+      "name": "accuracy",
+      "unit": "ratio",
+      "direction": "higher-is-better",
+      "threshold": 0.8,
+      "tolerance": { "kind": "absolute", "value": 0.05 },
+      "onMissing": "fail"
+    },
+    {
+      "name": "latency-p50",
+      "unit": "ms",
+      "direction": "lower-is-better",
+      "threshold": 2000,
+      "tolerance": { "kind": "relative", "value": 0.1 },
+      "onMissing": "exclude"
+    },
+    {
+      "name": "cost-per-run",
+      "unit": "usd",
+      "direction": "lower-is-better"
+    }
+  ]
+}
