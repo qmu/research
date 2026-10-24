@@ -14,6 +14,7 @@ describe("runRagBenchmark", () => {
     expect(result.runs[0]?.retrieval.recallAtK).toBeGreaterThan(0);
     expect(result.runs[0]?.retrieval.queryCount).toBe(3);
     expect(result.runs[0]?.operational.trialCount).toBe(1);
+    expect(result.runs.every((run) => run.reasonCode === undefined)).toBe(true);
   });
 
   it("runs sqlite-vec locally without API credentials", async () => {
@@ -71,6 +72,9 @@ describe("runRagBenchmark", () => {
       ]);
       // Credential absent → deterministic fixture store, never a live call.
       expect(result.runs.every((run) => run.provenance === "fixtured")).toBe(
+        true,
+      );
+      expect(result.runs.every((run) => run.reasonCode === "UNREACHABLE")).toBe(
         true,
       );
     } finally {
