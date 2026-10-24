@@ -11,7 +11,16 @@ export type LlmBenchmarkRunOptions = Readonly<{
   fixture: boolean;
 }>;
 
-const buildClient = (fixture: boolean): LlmClient => {
+/**
+ * The timestamp stamped into the fixture report, so the keyless page is
+ * byte-stable across runs (same convention as the rag-benchmark fixture).
+ */
+export const FIXTURE_GENERATED_AT = "2026-01-01T00:00:00.000Z";
+
+export const resolveGeneratedAt = (fixture: boolean): string =>
+  fixture ? FIXTURE_GENERATED_AT : new Date().toISOString();
+
+const buildClient =(fixture: boolean): LlmClient => {
   if (fixture) {
     const canned = new Map(TASKS.map((task) => [task.prompt, task.expected]));
     return createFixtureClient(canned);

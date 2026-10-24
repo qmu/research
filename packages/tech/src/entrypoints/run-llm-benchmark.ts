@@ -1,7 +1,7 @@
 import { writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { isDirectRun } from "./direct-run";
-import { runLlmBenchmark } from "../llm-benchmark/run";
+import { resolveGeneratedAt, runLlmBenchmark } from "../llm-benchmark/run";
 import { renderReport } from "../llm-benchmark/domain/report";
 
 // Thin entrypoint: pick fixture vs. real from the environment, run the pure
@@ -18,7 +18,7 @@ export const main = async (): Promise<void> => {
   }
 
   const result = await runLlmBenchmark({ fixture });
-  const generatedAt = new Date().toISOString();
+  const generatedAt = resolveGeneratedAt(fixture);
   const page = renderReport(result, generatedAt);
 
   const outputPath =

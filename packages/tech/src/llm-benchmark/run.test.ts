@@ -1,5 +1,10 @@
-import { describe, expect, it } from "vitest";
-import { runLlmBenchmark } from "./run";
+import { describe, expect, it, vi } from "vitest";
+import {
+  FIXTURE_GENERATED_AT,
+  resolveGeneratedAt,
+  runLlmBenchmark,
+} from "./run";
+import { renderReport } from "./domain/report";
 import { TASKS } from "./dataset";
 
 describe("runLlmBenchmark (fixture dry-run)", () => {
@@ -23,6 +28,41 @@ describe("runLlmBenchmark (fixture dry-run)", () => {
     } finally {
       if (saved !== undefined) process.env.ANTHROPIC_API_KEY = saved;
     }
+  });
+
+  it("renders a byte-identical report across runs and wall-clock time", async () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date("2030-05-05T00:00:00Z"));
+      const a = renderReport(
+        await runLlmBenchmark({ fixture: true }),
+        resolveGeneratedAt(true),
+      );
+      vi.setSystemTime(new Date("2031-06-06T12:34:56Z"));
+      const b = renderReport(
+        await runLlmBenchmark({ fixture: true }),
+        resolveGeneratedAt(true),
+      );
+      expect(b).toBe(a);
+      expect(a).toContain(FIXTURE_GENERATED_AT);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("stamps the real clock only off the fixture path", () => {
+    expect(resolveGeneratedAt(false)).not.toBe(FIXTURE_GENERATED_AT);
+  });
+
+  it("keeps JSON key order fixed", async () => {
+    const result = await runLlmBenchmark({ fixture: true });
+    expect(Object.keys(result)).toEqual([
+      "model",
+      "total",
+      "correct",
+      "accuracy",
+      "grades",
+    ]);
   });
 
   it("produces a byte-stable result from the same input across repeated runs", async () => {
