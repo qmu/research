@@ -117,6 +117,16 @@ describe("validateBenchSpec", () => {
     ).toBe(true);
   });
 
+  it("accepts an expected metric with no threshold declared", () => {
+    const errors = validateBenchSpec({
+      ...VALID_SPEC,
+      expectedMetrics: [
+        { name: "latency", unit: "ms", direction: "lower-is-better" },
+      ],
+    });
+    expect(errors).toEqual([]);
+  });
+
   it("rejects an expected metric with a non-finite threshold", () => {
     const errors = validateBenchSpec({
       ...VALID_SPEC,
