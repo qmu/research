@@ -1,6 +1,9 @@
-import type { BenchSpec, MetricDirection } from "./types";
+import { METRIC_UNITS } from "./types";
+import type { BenchSpec, MetricDirection, MissingPolicy } from "./types";
 
 export type BenchSpecError = string;
+
+const MISSING_POLICIES: ReadonlyArray<MissingPolicy> = ["fail", "exclude"];
 
 const METRIC_DIRECTIONS: ReadonlyArray<MetricDirection> = [
   "higher-is-better",
@@ -71,8 +74,11 @@ export const validateBenchSpec = (
     if (metric.name.trim() === "") {
       errors.push("expectedMetrics: name must not be empty");
     }
-    if (metric.unit.trim() === "") {
-      errors.push(`expectedMetrics '${metric.name}': unit must not be empty`);
+    if (!(METRIC_UNITS as ReadonlyArray<string>).includes(metric.unit)) {
+      const allowed = METRIC_UNITS.join(", ");
+      errors.push(
+        `expectedMetrics '${metric.name}': unit must be one of ${allowed}`,
+      );
     }
     if (!METRIC_DIRECTIONS.includes(metric.direction)) {
       const allowed = METRIC_DIRECTIONS.join(", ");
@@ -83,6 +89,33 @@ export const validateBenchSpec = (
     if (metric.threshold !== undefined && !Number.isFinite(metric.threshold)) {
       errors.push(
         `expectedMetrics '${metric.name}': threshold must be a finite number`,
+      );
+    }
+    if (metric.tolerance !== undefined) {
+      const { kind, value } = metric.tolerance;
+      if (metric.threshold === undefined) {
+        errors.push(
+          `expectedMetrics '${metric.name}': tolerance requires a threshold`,
+        );
+      }
+      if (kind !== "absolute" && kind !== "relative") {
+        errors.push(
+          `expectedMetrics '${metric.name}': tolerance kind must be absolute or relative`,
+        );
+      }
+      if (!Number.isFinite(value) || value < 0) {
+        errors.push(
+          `expectedMetrics '${metric.name}': tolerance value must be a non-negative finite number`,
+        );
+      }
+    }
+    if (
+      metric.onMissing !== undefined &&
+      !MISSING_POLICIES.includes(metric.onMissing)
+    ) {
+      const allowed = MISSING_POLICIES.join(", ");
+      errors.push(
+        `expectedMetrics '${metric.name}': onMissing must be one of ${allowed}`,
       );
     }
   }
