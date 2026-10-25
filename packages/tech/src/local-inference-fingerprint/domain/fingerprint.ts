@@ -26,7 +26,10 @@ const isFingerprint = (value: unknown): value is Fingerprint => {
 };
 
 /** Attach a host fingerprint to a local-inference schemaVersion 1 result, once. */
-export function enrichFingerprint(source: string, fingerprint: Fingerprint) {
+export function enrichFingerprint(
+  source: string,
+  fingerprint: Fingerprint,
+): Record<string, unknown> {
   const result = object(JSON.parse(source));
   if (
     result.schemaVersion !== 1 ||
