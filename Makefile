@@ -109,3 +109,7 @@ publish-guard: ## Prove the exporter cannot silently overwrite downstream prose
 
 publish: ## Copy finished research Markdown to the corporate site
 	@bash scripts/publish-research.sh --all
+
+.PHONY: peak-rss-remeasurement
+peak-rss-remeasurement: ## Generate a pinned peak RSS retry request (ARGS='expected.json snapshot.json')
+	@cd packages/tech && node --import tsx/esm src/entrypoints/prepare-peak-rss-remeasurement.ts $(ARGS)
