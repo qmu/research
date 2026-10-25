@@ -36,8 +36,27 @@ async function setup() {
 }
 
 describe("atomic common JSON publication", () => {
+  it.each([
+    undefined,
+    () => undefined,
+    Symbol("result"),
+    { toJSON: () => undefined },
+  ])(
+    "rejects non-JSON values before opening a temporary file (%s)",
+    async (value) => {
+      const { dir, output } = await setup();
+      await expect(writeJsonAtomic(output, value)).rejects.toThrow(
+        "Result must be JSON serializable",
+      );
+      expect(fs.open).not.toHaveBeenCalled();
+      expect(fs.rename).not.toHaveBeenCalled();
+      expect(await fs.readFile(output, "utf8")).toBe('{"previous":true}\n');
+      expect(await fs.readdir(dir)).toEqual(["result.json"]);
+    },
+  );
   it("keeps the previous JSON visible until the closed, synced file is renamed", async () => {
     const { dir, output } = await setup();
+    const value = { next: true, execution: { runId: "test-run", version: 2 } };
     const events: string[] = [];
     vi.mocked(fs.open).mockImplementationOnce(async (...args) => {
       const file = await actual.open(...args);
@@ -56,13 +75,13 @@ describe("atomic common JSON publication", () => {
     vi.mocked(fs.rename).mockImplementationOnce(async (source, target) => {
       expect(events).toEqual(["sync", "close"]);
       expect(await fs.readFile(output, "utf8")).toBe('{"previous":true}\n');
-      expect(JSON.parse(await fs.readFile(source, "utf8"))).toEqual({
-        next: true,
-      });
+      expect(JSON.parse(await fs.readFile(source, "utf8"))).toEqual(value);
       await actual.rename(source, target);
     });
-    await writeJsonAtomic(output, { next: true });
-    expect(await fs.readFile(output, "utf8")).toBe('{\n  "next": true\n}\n');
+    await writeJsonAtomic(output, value);
+    expect(await fs.readFile(output, "utf8")).toBe(
+      JSON.stringify(value, null, 2) + "\n",
+    );
     expect(await fs.readdir(dir)).toEqual(["result.json"]);
   });
 
