@@ -5,6 +5,9 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, it } from "vitest";
+import { fileURLToPath } from "node:url";
+import { captureCommit } from "./vendors/provenance.js";
+import { runnerVersion } from "./run.js";
 import { engines } from "./domain/result.js";
 
 const exec = promisify(execFile);
@@ -45,22 +48,30 @@ it.each([false, true])(
       );
       const args = [
         "--import",
-        "tsx/esm",
-        "src/entrypoints/run-local-inference.ts",
+        import.meta.resolve("tsx/esm"),
+        fileURLToPath(
+          new URL("../entrypoints/run-local-inference.ts", import.meta.url),
+        ),
         config,
         output,
       ];
       if (fail)
-        await expect(exec(process.execPath, args)).rejects.toMatchObject({
+        await expect(
+          exec(process.execPath, args, { cwd: dir }),
+        ).rejects.toMatchObject({
           code: 1,
         });
       else {
-        const { stdout } = await exec(process.execPath, args);
+        const { stdout } = await exec(process.execPath, args, { cwd: dir });
         expect(JSON.parse(stdout).runs).toEqual(
           engines.map((engine) => ({ engine, status: "measured" })),
         );
       }
       const json = await readFile(output, "utf8");
+      expect(JSON.parse(json).execution).toMatchObject({
+        commitSha: await captureCommit(),
+        runnerVersion,
+      });
       expect(
         JSON.parse(json).runs.map((r: { status: string }) => r.status),
       ).toEqual(Array(4).fill(fail ? "failed" : "measured"));

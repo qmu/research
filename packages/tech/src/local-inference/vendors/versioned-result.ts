@@ -104,9 +104,9 @@ export async function assertExecutionCurrent(
 }
 
 /** Compare and publish under the same cross-process lock (no check/write gap). */
-export async function completeExecution<T extends object>(
+export async function completeExecution<T extends object, E extends Execution>(
   output: string,
-  execution: Execution,
+  execution: E,
   value: T,
 ) {
   output = await canonical(output);

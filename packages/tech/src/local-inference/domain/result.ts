@@ -50,3 +50,14 @@ export function metrics(observation: Observation, failed = false) {
     peak_rss: gap("MiB", "NOT-RUN"),
   };
 }
+
+/** Additive v1 metadata; absent on artifacts produced by older runners.
+ * commandSha256 hashes JSON argv after allowlist normalization, never raw argv.
+ * runnerVersion identifies the saving/measurement implementation, not the engine.
+ */
+export type Execution = {
+  /** Repository HEAD captured before measurement; not a hash of dirty files. */
+  commitSha: string;
+  commandSha256: string;
+  runnerVersion: string;
+};

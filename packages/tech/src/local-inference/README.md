@@ -129,3 +129,31 @@ instead of issuing requests to the remaining engines, including when its last
 response failed or the newer reservation has not completed. An in-flight request
 is allowed to finish or time out. A newer reservation can race the preflight;
 the locked comparison at publication remains the authority for saving results.
+
+### Commit and runner provenance
+
+The in-process runner captures its own checkout's full Git `HEAD` once, before
+reserving an execution or sending requests. It adds `execution.commitSha`,
+`execution.runnerVersion` (`local-inference/3`) and the sanitized argv fingerprint
+`execution.commandSha256` to the same JSON as `runId`, `version` and all four
+measurement rows. Successful and failed measurements use the same locked,
+fsynced temporary-file / atomic-rename publication. A publication failure keeps
+the previous result's metrics and provenance together; no metadata-only result
+is published. This does not add directory fsync or make the reservation sidecar
+and result file a single filesystem transaction.
+
+Commit resolution is anchored to the runner module, not the shell's current
+directory. Git environment overrides are excluded. Missing Git, a checkout with
+no commit, or an exported tree without Git metadata fails before measurement;
+there is no fabricated `unknown` commit. Git diagnostics, paths, remotes and
+credentials are not included in the result. SHA-1 and SHA-256 repositories and
+detached HEADs are supported. `commitSha` identifies HEAD at execution start,
+not uncommitted file contents; use a clean, stable checkout for reproducibility.
+`runnerVersion` identifies measurement/persistence semantics and is separate
+from engine `runtimeVersion` and the monotonically increasing execution `version`.
+
+These are additive schema-v1 fields. Older artifacts and external-worker notices
+may omit them; do not infer the current checkout's commit for old measurements.
+The external-worker notice protocol is unchanged. The command fingerprint reuses
+allowlist normalization: it hashes JSON argv after redacting unknown tokens,
+paths, URLs, credentials and values, so it cannot distinguish redacted settings.

@@ -1,11 +1,18 @@
+import { createHash } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { engines, metrics } from "./domain/result.js";
-import { parseConfig, runLocalInference } from "./run.js";
 import { beginExecution } from "./vendors/versioned-result.js";
+import { captureCommit } from "./vendors/provenance.js";
+import {
+  commandFingerprint,
+  runnerVersion,
+  parseConfig,
+  runLocalInference,
+} from "./run.js";
 import { observeStream } from "./vendors/stream.js";
 
 const directories: string[] = [];
@@ -75,8 +82,27 @@ describe("local inference common JSON", () => {
     const result = await runLocalInference(
       config(`http://127.0.0.1:${address.port}/v1`),
       output,
+      60_000,
+      [
+        "/usr/bin/node",
+        "/checkout/run-local-inference.ts",
+        "private-config.json",
+        "private-output.json",
+      ],
     );
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+    expect(result.execution).toMatchObject({
+      commitSha: await captureCommit(),
+      commandSha256: commandFingerprint([
+        "node",
+        "run-local-inference.ts",
+        "other-config.json",
+        "other-output.json",
+      ]),
+      runnerVersion,
+    });
+    expect(await readFile(output, "utf8")).not.toContain("private-");
+    expect(result.schemaVersion).toBe(1);
     expect(result.runs.map((r) => r.engine)).toEqual(engines);
     expect(requests).toHaveLength(4);
     for (const request of requests) expect(request).toEqual(requests[0]);
@@ -260,5 +286,64 @@ describe("local inference common JSON", () => {
     ])
       expect(() => parseConfig(config(url))).toThrow();
     expect(() => parseConfig({ ...valid, messages: [] })).toThrow();
+  });
+});
+
+describe("command fingerprint", () => {
+  it("hashes normalized argv with a stable SHA-256 encoding", () => {
+    expect(
+      commandFingerprint([
+        "/usr/bin/node",
+        "/a/run-local-inference.ts",
+        "config.json",
+        "out.json",
+      ]),
+    ).toBe(
+      createHash("sha256")
+        .update(
+          JSON.stringify([
+            "node",
+            "run-local-inference.ts",
+            "[REDACTED]",
+            "[REDACTED]",
+          ]),
+        )
+        .digest("hex"),
+    );
+    expect(
+      commandFingerprint([
+        "C:\\bin\\nodejs",
+        "C:\\repo\\run-local-inference.ts",
+        "x",
+        "y",
+      ]),
+    ).toBe(commandFingerprint(["node", "run-local-inference.ts", "a", "b"]));
+  });
+
+  it.each([
+    ["--api-key=secret-a", "--api-key=secret-b"],
+    ["TOKEN=secret-a", "TOKEN=secret-b"],
+    ["Authorization: Bearer secret-a", "Authorization: Bearer secret-b"],
+    [
+      "https://user:secret-a@host/?token=a",
+      "https://user:secret-b@host/?token=b",
+    ],
+    ["unrecognized-secret-a", "unrecognized-secret-b"],
+  ])(
+    "removes secret-bearing and unknown tokens before hashing (%#)",
+    (a, b) => {
+      expect(commandFingerprint(["node", a])).toBe(
+        commandFingerprint(["node", b]),
+      );
+    },
+  );
+
+  it("preserves public syntax and argv boundaries", () => {
+    expect(commandFingerprint(["node", "--import", "tsx/esm"])).not.toBe(
+      commandFingerprint(["tsx", "--import", "tsx/esm"]),
+    );
+    expect(commandFingerprint(["node", "a b"])).not.toBe(
+      commandFingerprint(["node", "a", "b"]),
+    );
   });
 });
