@@ -1,13 +1,27 @@
-import type { StreamedCompletion } from "./types";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import type {
+  Completion,
+  CompletionClient,
+  CompletionOptions,
+  StreamedCompletion,
+  StructuredCompletion,
+} from "./types";
 
 // Anti-corruption layer for MLX (Apple's on-device inference framework). Unlike
 // the cloud adapters in this directory, there is no SDK call to wrap: a trial
 // runs `mlx_lm.generate --verbose` (or the equivalent `generate()` Python call)
-// on the operator's own Apple Silicon machine, and only the CAPTURED stdout
-// comes back to this repository. This module's job is narrower than the other
-// adapters' — parse that one fixed text format and normalize it into the same
-// `StreamedCompletion` every provider produces — so the domain never branches on
-// whether a trial ran in the cloud or on device.
+// on the operator's own Apple Silicon machine. Most of this module's job is
+// narrower than the other adapters' — parse that one fixed text format and
+// normalize it into the same `StreamedCompletion` every provider produces — so
+// the domain never branches on whether a trial ran in the cloud or on device.
+// `createMlxCliCompletionClient` below is the exception: it actually runs the
+// official CLI and measures a genuine timed trial — not a replay of a
+// transcript someone captured by hand — and connects that measurement to this
+// directory's shared `CompletionClient` port, the same contract
+// `createAnthropicClient`/`createOpenAiCompatibleCompletionClient`/etc.
+// implement — so any benchmark entrypoint written against that port reaches
+// MLX exactly the way it reaches a cloud provider, with no provider branch.
 //
 // The format parsed here is `mlx_lm`'s own `--verbose` output: the generated
 // text framed by a `==========` line on each side, followed by a fixed
@@ -113,5 +127,107 @@ export const normalizeMlxGenerateOutput = (
     elapsedMs: ttftMs + generationMs,
     ttftMs,
     model,
+  };
+};
+
+const execFileAsync = promisify(execFile);
+
+// One invocation of the official CLI: the model path/id to load, the prompt to
+// generate from, and the token budget. Kept provider-neutral at the call site —
+// `createMlxCliCompletionClient` below is what maps a `CompletionOptions` onto
+// this shape.
+export type MlxGenerateInvocation = Readonly<{
+  model: string;
+  prompt: string;
+  maxTokens: number;
+}>;
+
+// Runs one invocation and returns its captured stdout (the same text
+// `normalizeMlxGenerateOutput` parses). A seam, not just a type: tests inject a
+// fake that returns a fixture instead of shelling out, since the real CLI needs
+// `mlx_lm` installed on Apple Silicon hardware this repository's CI does not
+// have.
+export type MlxGenerateRunner = (
+  invocation: MlxGenerateInvocation,
+) => Promise<string>;
+
+// Pure argv builder, split out from the actual subprocess call below so the
+// exact flags/order sent to the official CLI are unit-tested without needing
+// `mlx_lm` installed anywhere. `--verbose` is required: without it, `mlx_lm`
+// prints only the generated text, not the stats block this module parses.
+export const buildMlxGenerateArgs = (
+  invocation: MlxGenerateInvocation,
+): string[] => [
+  "--model",
+  invocation.model,
+  "--prompt",
+  invocation.prompt,
+  "--max-tokens",
+  String(invocation.maxTokens),
+  "--verbose",
+];
+
+// The real runner: shells out to the official `mlx_lm.generate` CLI exactly as
+// an operator would from a terminal. No SDK and no server — `mlx_lm.generate`
+// is a one-shot process, unlike `mlx_lm.server`'s OpenAI-compatible HTTP API —
+// so this is the one adapter in this directory that measures a subprocess
+// instead of a wire response.
+export const runMlxGenerateCli: MlxGenerateRunner = async (invocation) => {
+  const { stdout } = await execFileAsync(
+    "mlx_lm.generate",
+    buildMlxGenerateArgs(invocation),
+  );
+  return stdout;
+};
+
+// Connects the official CLI runner to this repository's shared
+// `CompletionClient` port. `run` defaults to the real subprocess call; a test
+// (or a keyless/dry-run caller) supplies a fixture-backed runner instead, the
+// same seam `createFixtureClient` gives the cloud-provider adapters.
+export const createMlxCliCompletionClient = (
+  model: string,
+  options?: Readonly<{ run?: MlxGenerateRunner }>,
+): CompletionClient => {
+  const run = options?.run ?? runMlxGenerateCli;
+
+  const completeStreaming = async (
+    prompt: string,
+    completionOptions?: CompletionOptions,
+  ): Promise<StreamedCompletion> => {
+    const stdout = await run({
+      model,
+      prompt,
+      maxTokens: completionOptions?.maxTokens ?? 1024,
+    });
+    return normalizeMlxGenerateOutput(stdout, model);
+  };
+
+  return {
+    model,
+    completeStreaming,
+    complete: async (
+      prompt: string,
+      completionOptions?: CompletionOptions,
+    ): Promise<Completion> => {
+      // `mlx_lm.generate` has no separate non-streamed mode; one CLI call
+      // measures both. Discard `ttftMs` rather than carry a streaming-only
+      // field into the plain `Completion` contract.
+      const { ttftMs: _ttftMs, ...completion } = await completeStreaming(
+        prompt,
+        completionOptions,
+      );
+      return completion;
+    },
+    // `mlx_lm.generate` prints free text; it has no JSON-schema-constrained
+    // output mode to drive, so there is nothing to implement here. Throwing
+    // (rather than, say, best-effort JSON-parsing the free text) matches
+    // `CompletionOptions.effort`'s rule in types.ts: a capability a model/tool
+    // does not support is a failed call, never silently approximated.
+    completeStructured: async (): Promise<StructuredCompletion> => {
+      throw new Error(
+        "MLX CLI adapter has no structured-output mode: mlx_lm.generate " +
+          "produces free text, not JSON-schema-constrained output",
+      );
+    },
   };
 };
