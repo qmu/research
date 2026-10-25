@@ -95,7 +95,7 @@ it.each(["success", "http", "truncated", "empty", "invalid"] as const)(
           version: 1,
         });
         expect(pending.runs.map((r: { status: string }) => r.status)).toEqual(
-          Array(4).fill(
+          Array(5).fill(
             ["http", "truncated", "invalid"].includes(mode)
               ? "failed"
               : "measured",
@@ -103,7 +103,16 @@ it.each(["success", "http", "truncated", "empty", "invalid"] as const)(
         );
         expect(
           new Set(pending.runs.map((r: { runId: string }) => r.runId)).size,
-        ).toBe(4);
+        ).toBe(5);
+        expect(pending.runs.map((r: { purpose: string }) => r.purpose)).toEqual(
+          [
+            "adoption-target",
+            "adoption-target",
+            "adoption-target",
+            "warmup",
+            "adoption-target",
+          ],
+        );
         for (const row of pending.runs) {
           expect(row.runnerVersion).toBe(pending.execution.runnerVersion);
           expect(row.targetCommit).toBe(pending.execution.targetCommit);
@@ -126,7 +135,7 @@ it.each(["success", "http", "truncated", "empty", "invalid"] as const)(
     });
     const result = await runLocalInference(input, output);
     expect(published).toBe(1);
-    expect(fetch).toHaveBeenCalledTimes(4);
+    expect(fetch).toHaveBeenCalledTimes(5);
     expect(JSON.parse(await actual.readFile(output, "utf8"))).toEqual(result);
     expect(result.execution.targetCommit).toBe(sha);
     expect(await actual.readFile(output, "utf8")).not.toContain(

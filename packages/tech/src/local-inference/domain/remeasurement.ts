@@ -1,5 +1,10 @@
 import type { FixedCapacityTier } from "../../local-inference-memory-margin/domain/types.js";
-import { engines, type Engine } from "./result.js";
+import {
+  engines,
+  runPurposes,
+  type Engine,
+  type RunPurpose,
+} from "./result.js";
 
 export type RemeasurementBinding = {
   execution: { runId: string; version: number };
@@ -31,6 +36,7 @@ export type RecoverableResult = {
     engine: Engine;
     targetCommit: string;
     runnerVersion: string;
+    purpose: RunPurpose;
     metrics: {
       ttft: { value: number | null };
       peak_rss: { value: number | null };
@@ -97,10 +103,15 @@ export function remeasurementRequest(
       runIds.has(row.runId) ||
       !engines.includes(row.engine) ||
       row.targetCommit !== binding.targetCommit ||
-      row.runnerVersion !== binding.runnerVersion
+      row.runnerVersion !== binding.runnerVersion ||
+      !runPurposes.includes(row.purpose)
     )
       throw new Error("REMEASUREMENT-BINDING-MISMATCH");
     runIds.add(row.runId);
+    // Warm-up rows are provenance-checked above like any other row, but never
+    // contribute a remeasurement target: their speed/memory values must not
+    // be read as evidence that an adoption-target measurement is missing.
+    if (row.purpose === "warmup") continue;
     const missingMetrics: RemeasurementRequest["targets"][number]["missingMetrics"] =
       [];
     for (const metric of ["ttft", "peak_rss"] as const) {

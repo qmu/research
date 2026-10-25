@@ -5,9 +5,15 @@ import {
   completeExecution,
 } from "./vendors/versioned-result.js";
 import { readTargetCommit } from "./vendors/provenance.js";
-import { engines, metrics, type Engine } from "./domain/result.js";
+import {
+  engines,
+  metrics,
+  type Engine,
+  type RunPurpose,
+} from "./domain/result.js";
 import { startPeakRss } from "./vendors/peak-rss.js";
 import { peakRssReading } from "./domain/peak-memory.js";
+import type { PeakRss } from "./domain/peak-memory.js";
 import {
   remeasurementRequest,
   validFixedTier,
@@ -20,7 +26,7 @@ import {
 } from "./vendors/stream.js";
 
 /** Bump when the runner's measurement or persistence semantics change. */
-export const runnerVersion = "local-inference/6";
+export const runnerVersion = "local-inference/7";
 
 /** Only fixed public syntax survives. Unknown arguments, paths, environment
  * assignments, headers, URLs and option values are redacted BEFORE hashing.
@@ -170,8 +176,31 @@ export async function runLocalInference(
       }),
     )
     .digest("hex");
-  const runs = [];
-  for (const target of config.targets) {
+  type Run = {
+    runId: string;
+    purpose: RunPurpose;
+    runnerVersion: string;
+    targetCommit: string;
+    ttft: {
+      value: number | null;
+      unit: string;
+      source?: "client" | "usage" | "os-sampler";
+      reason: string;
+    };
+    quality: { value: null; reason: "NOT-RUN" };
+    peakMemory: PeakRss;
+    engine: Engine;
+    model: string;
+    runtimeVersion: string;
+    condition: Record<string, string | number | boolean>;
+    status: "measured" | "failed";
+    metrics: ReturnType<typeof metrics>;
+  };
+  const runs: Run[] = [];
+  async function requestRun(
+    target: Config["targets"][number],
+    purpose: RunPurpose,
+  ) {
     await assertExecutionCurrent(output, execution);
     const runId = randomUUID();
     const sampler = memorySampler(target.memoryPid);
@@ -211,6 +240,7 @@ export async function runLocalInference(
       reading.value === null ? reading : { ...reading, source: "os-sampler" };
     runs.push({
       runId,
+      purpose,
       runnerVersion: execution.runnerVersion,
       targetCommit: execution.targetCommit,
       ttft: {
@@ -232,6 +262,13 @@ export async function runLocalInference(
       metrics: measured,
     });
   }
+  for (const target of config.targets) {
+    // Strata's community packs pay a cold-start cost (load/compile) on their
+    // first request; an explicit warm-up absorbs it before the one request
+    // whose speed/quality/memory values are eligible for adoption.
+    if (target.engine === "strata") await requestRun(target, "warmup");
+    await requestRun(target, "adoption-target");
+  }
   const result = {
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
@@ -239,7 +276,7 @@ export async function runLocalInference(
       .update(JSON.stringify(config.messages))
       .digest("hex"),
     sampling,
-    procedure: "single-request-per-engine",
+    procedure: "single-request-per-engine-with-strata-warmup",
     fixtureSha256,
     ...(config.fixedTier
       ? {
