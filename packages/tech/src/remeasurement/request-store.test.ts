@@ -175,3 +175,110 @@ describe("execution-versioned remeasurement persistence", () => {
     expect(await readFile(path, "utf8")).toBe("keep");
   });
 });
+
+const source = {
+  runId: "failed-snapshot-one",
+  targetCommit: identity.targetCommit,
+  runnerVersion: identity.runnerVersion,
+};
+
+describe("failed snapshot references", () => {
+  it("persists only the pinned reference and retries it across processes", async () => {
+    const directory = await store();
+    const input = {
+      ...identity,
+      source: { ...source, path: "private-marker", metrics: { accuracy: 1 } },
+    };
+    const first = await cli(directory, input);
+    expect(first.code).toBe(0);
+    const saved = JSON.parse(first.stdout);
+    expect(saved.request.source).toEqual(source);
+    const bytes = await readFile(
+      join(directory, `${saved.request.idempotencyKey}.json`),
+      "utf8",
+    );
+    expect(JSON.parse(bytes).source).toEqual(source);
+    expect(bytes).not.toMatch(/private-marker|metrics/);
+    const retry = await cli(directory, { ...identity, source });
+    expect(retry.code).toBe(0);
+    expect(JSON.parse(retry.stdout)).toEqual({ ...saved, created: false });
+  });
+
+  it.each([
+    null,
+    undefined,
+    {},
+    [],
+    { ...source, runId: "" },
+    { ...source, runId: "../other" },
+    { ...source, runId: "run\n" },
+    { ...source, runId: "a".repeat(129) },
+    { ...source, runId: 1 },
+    { ...source, targetCommit: undefined },
+    { ...source, targetCommit: "b".repeat(40) },
+    { ...source, runnerVersion: undefined },
+    { ...source, runnerVersion: "local-inference/3" },
+  ])(
+    "rejects invalid or mixed references before creating storage: %j",
+    async (invalid) => {
+      const directory = await store();
+      await expect(
+        saveRemeasurementRequest(join(directory, "new"), {
+          ...identity,
+          source: invalid,
+        }),
+      ).rejects.toThrow("INVALID-REMEASUREMENT-SOURCE");
+      expect(await readdir(directory)).toEqual([]);
+    },
+  );
+
+  it.each([false, true])(
+    "refuses to attach or remove a reference on an existing request (bound first: %s)",
+    async (boundFirst) => {
+      const directory = await store();
+      const bound = { ...identity, source };
+      const first = await saveRemeasurementRequest(
+        directory,
+        boundFirst ? bound : identity,
+      );
+      const path = join(directory, `${first.request.idempotencyKey}.json`);
+      const original = await readFile(path, "utf8");
+      await expect(
+        saveRemeasurementRequest(directory, boundFirst ? identity : bound),
+      ).rejects.toThrow("REMEASUREMENT-STORE-CONFLICT");
+      expect(await readFile(path, "utf8")).toBe(original);
+      expect(await readdir(directory)).toHaveLength(1);
+    },
+  );
+
+  it("rejects another run competing for the same requested execution", async () => {
+    const directory = await store();
+    const inputs = [source, { ...source, runId: "failed-snapshot-two" }].map(
+      (reference) => ({ ...identity, source: reference }),
+    );
+    const results = await Promise.all(
+      inputs.map((input) => cli(directory, input)),
+    );
+    expect(results.map((result) => result.code).sort()).toEqual([0, 1]);
+    const rejected = results.find((result) => result.code === 1);
+    if (!rejected) throw new Error("Expected a rejected request");
+    expect(rejected.stdout).toBe("");
+    expect(rejected.stderr).toBe("REMEASUREMENT-SAVE-FAILED\n");
+    const accepted = results.find((result) => result.code === 0);
+    if (!accepted) throw new Error("Expected an accepted request");
+    const winner = JSON.parse(accepted.stdout);
+    const original = await readFile(
+      join(directory, `${winner.request.idempotencyKey}.json`),
+      "utf8",
+    );
+    expect(JSON.parse(original).source).toEqual(winner.request.source);
+    expect(await readdir(directory)).toHaveLength(1);
+    // A genuinely new requested execution can bind a different failed run.
+    const next = await saveRemeasurementRequest(directory, {
+      ...inputs[1],
+      executionVersion: 2,
+    });
+    expect(next.created).toBe(true);
+    expect(next.request.source).toEqual(inputs[1].source);
+  }, 15000);
+});

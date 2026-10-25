@@ -41,8 +41,42 @@ export function requestIdentity(value: unknown): RemeasurementIdentity {
   };
 }
 
+export interface FailedSnapshotSource {
+  runId: string;
+  targetCommit: string;
+  runnerVersion: string;
+}
+
+function failedSnapshotSource(
+  value: unknown,
+  identity: RemeasurementIdentity,
+): FailedSnapshotSource {
+  if (!value || typeof value !== "object" || Array.isArray(value))
+    throw new Error("INVALID-REMEASUREMENT-SOURCE");
+  const source = value as Record<string, unknown>;
+  if (
+    typeof source.runId !== "string" ||
+    source.runId.trim() !== source.runId ||
+    !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(source.runId) ||
+    source.targetCommit !== identity.targetCommit ||
+    source.runnerVersion !== identity.runnerVersion
+  )
+    throw new Error("INVALID-REMEASUREMENT-SOURCE");
+  return {
+    runId: source.runId,
+    targetCommit: identity.targetCommit,
+    runnerVersion: identity.runnerVersion,
+  };
+}
+
 export function remeasurementRequest(value: unknown) {
   const identity = requestIdentity(value);
+  const data = value as Record<string, unknown>;
+  // A supplied reference is never silently discarded or repaired. Keep it out
+  // of the key so a different source for the same execution is a conflict.
+  const source = Object.hasOwn(data, "source")
+    ? failedSnapshotSource(data.source, identity)
+    : undefined;
   const digest = createHash("sha256")
     .update(JSON.stringify(["remeasurement-request/1", identity]))
     .digest("hex");
@@ -51,5 +85,6 @@ export function remeasurementRequest(value: unknown) {
     schemaVersion: 1 as const,
     idempotencyKey: `remeasurement-v1-${digest}`,
     ...identity,
+    ...(source ? { source } : {}),
   };
 }
