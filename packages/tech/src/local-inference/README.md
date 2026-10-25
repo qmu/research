@@ -11,7 +11,11 @@ From `packages/tech`, run:
 npm run local-inference -- /path/to/config.json /path/to/new-result.json
 ```
 
-The output parent directory must exist; an existing result is never overwritten.
+The output parent directory must exist. Results replace an existing output atomically:
+a temporary file on the same filesystem is written, fsynced and closed before
+rename. A failure before rename leaves the previous bytes intact and removes
+the temporary file. Concurrent writers use last-rename-wins. This does not
+guarantee directory-entry durability across power loss.
 The command exits nonzero if a request fails, but saves every engine's row.
 Each request has a 60-second timeout. Start the servers separately, using their
 explicit model, context, cache, thread and GPU settings. No server is launched
@@ -66,3 +70,13 @@ Runtime-specific `timings` are deliberately not substituted for the client clock
 Tests use a local HTTP server and synthetic SSE streams; their numbers are not
 performance measurements of any installed inference engine. Real hardware runs,
 quality judging and steady-state aggregation remain separate work.
+
+### Saved code provenance
+
+Before sending requests, the runner resolves the full Git HEAD of its own
+checkout (independent of the calling directory). It saves this as
+`execution.targetCommit` with `execution.runnerVersion` and the measurements
+in the same atomic JSON replacement. Missing Git metadata aborts before any
+request or result replacement. Older v1 artifacts may omit this field.
+The commit identifies committed code; uncommitted edits are not represented.
+Runner version `local-inference/3` adds this provenance contract.

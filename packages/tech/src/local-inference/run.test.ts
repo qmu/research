@@ -3,7 +3,7 @@ import { createServer, type Server } from "node:http";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { engines, metrics } from "./domain/result.js";
 import {
   commandFingerprint,
@@ -13,9 +13,12 @@ import {
 } from "./run.js";
 import { observeStream } from "./vendors/stream.js";
 
+import * as provenance from "./vendors/provenance.js";
+
 const directories: string[] = [];
 const servers: Server[] = [];
 afterEach(async () => {
+  vi.restoreAllMocks();
   for (const server of servers.splice(0)) {
     server.closeAllConnections();
     await new Promise<void>((resolve) => server.close(() => resolve()));
@@ -97,6 +100,7 @@ describe("local inference common JSON", () => {
         "other-output.json",
       ]),
       runnerVersion,
+      targetCommit: provenance.readTargetCommit(),
     });
     expect(await readFile(output, "utf8")).not.toContain("private-");
     expect(result.schemaVersion).toBe(1);
@@ -113,10 +117,11 @@ describe("local inference common JSON", () => {
       });
     }
     expect(await readFile(output, "utf8")).not.toContain("127.0.0.1");
-    await expect(
-      runLocalInference(config(`http://127.0.0.1:${address.port}/v1`), output),
-    ).rejects.toThrow();
-    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+    const replacement = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+    );
+    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(replacement);
   });
 
   it("saves failures without response bodies or URLs and continues to later engines", async () => {
@@ -161,6 +166,46 @@ describe("local inference common JSON", () => {
       reason: "NO-FIELD",
     });
     expect(await readFile(output, "utf8")).not.toContain("secret-test-marker");
+  });
+
+  it("captures the commit before requests and saves it with the runner version", async () => {
+    const commit = "a".repeat(40);
+    const readCommit = vi
+      .spyOn(provenance, "readTargetCommit")
+      .mockReturnValue(commit);
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(async () => {
+        readCommit.mockReturnValue("b".repeat(40));
+        return new Response(sse([content("ok")]));
+      });
+    const output = await destination();
+    const result = await runLocalInference(
+      config("http://localhost/v1"),
+      output,
+    );
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(readCommit).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+    expect(result.execution).toMatchObject({
+      targetCommit: commit,
+      runnerVersion,
+    });
+  });
+
+  it("refuses measurement and preserves the old result if provenance is unavailable", async () => {
+    const output = await destination();
+    const { writeFile } = await import("node:fs/promises");
+    await writeFile(output, "prior result");
+    vi.spyOn(provenance, "readTargetCommit").mockImplementation(() => {
+      throw new Error("Cannot determine target commit");
+    });
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+    await expect(
+      runLocalInference(config("http://localhost/v1"), output),
+    ).rejects.toThrow("Cannot determine target commit");
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(await readFile(output, "utf8")).toBe("prior result");
   });
 
   it("parses fragmented UTF-8 and ignores role and usage frames for client timing", async () => {
