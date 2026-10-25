@@ -203,3 +203,55 @@ describe("local inference common JSON", () => {
     expect(() => parseConfig({ ...valid, messages: [] })).toThrow();
   });
 });
+
+describe("saved RSS evidence", () => {
+  it("saves per-target RSS even on HTTP failure and keeps the tier input separate", async () => {
+    const output = await destination();
+    let calls = 0;
+    const result = await runLocalInference(
+      config("http://127.0.0.1:1/v1"),
+      output,
+      100,
+      () => ({
+        stop: async () => ({
+          value: ++calls,
+          unit: "MiB",
+          source: "ps-rss-sampled",
+          scope: "single-server-process",
+          reason: "SAMPLED",
+          samples: 1,
+          intervalMs: 50,
+        }),
+      }),
+    );
+    expect(result.runs.map((r) => r.peakMemory.value)).toEqual([1, 2, 3, 4]);
+    expect(result.runs.every((r) => r.status === "failed")).toBe(true);
+    expect(result.runs[0].metrics.peak_rss).toEqual({
+      value: 1,
+      unit: "MiB",
+      source: "os-sampler",
+    });
+    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+  });
+  it.each([0, -1, 1.5, NaN, Infinity])(
+    "rejects invalid memory PID %s",
+    (pid) => {
+      const input = config("http://localhost/v1");
+      expect(() =>
+        parseConfig({
+          ...input,
+          targets: input.targets.map((t) => ({ ...t, memoryPid: pid })),
+        }),
+      ).toThrow("memoryPid");
+    },
+  );
+  it("rejects remote PID attribution", () => {
+    const input = config("https://example.com/v1");
+    expect(() =>
+      parseConfig({
+        ...input,
+        targets: input.targets.map((t) => ({ ...t, memoryPid: 42 })),
+      }),
+    ).toThrow("loopback");
+  });
+});

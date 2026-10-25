@@ -66,3 +66,32 @@ Runtime-specific `timings` are deliberately not substituted for the client clock
 Tests use a local HTTP server and synthetic SSE streams; their numbers are not
 performance measurements of any installed inference engine. Real hardware runs,
 quality judging and steady-state aggregation remain separate work.
+
+### Per-request server RSS
+
+Each target may specify `memoryPid` (positive local server PID). It is accepted
+only with a loopback endpoint (`localhost`, `127.0.0.1`, `[::1]`). The operator
+must supply the actual server PID; no process discovery or client-PID fallback
+is performed. On macOS arm64 the runner polls `/bin/ps -o rss= -p PID` at
+50 ms intervals while the HTTP request runs. Reads are serialized and bounded
+by a 1 s timeout. RSS is converted from KiB to MiB. Sampling stops and pending
+reads finish for successful, failed and timed-out requests alike.
+
+Every saved run has `peakMemory`: value or null, unit `MiB`, source
+`ps-rss-sampled`, scope `single-server-process`, samples, intervalMs and reason:
+`SAMPLED`, `NO-PID`, `UNSUPPORTED-HOST`, or `SAMPLE-FAILED`. Any failed read makes
+the run's memory unavailable rather than reporting an incomplete peak. Raw OS
+errors and PIDs are not saved. `metrics.peak_rss` contains the same valid value
+or the compatible `NOT-RUN`/`MEASURE-FAILED` reason. Old configs without a PID
+still run and explicitly save `NO-PID`.
+
+`peakRssReading(run.peakMemory)` returns the `MemoryReading` input accepted by
+`computeMemoryMargin(reading, tier)` in `local-inference-memory-margin`.
+Missing readings propagate as undetermined, never zero. This computes only a
+**process RSS margin**. Do not publish it as whole-machine unified-memory
+headroom: it excludes other processes, child workers and GPU allocations not
+represented in server RSS. The sampled maximum can miss peaks between reads;
+it is not an OS lifetime high-water mark. Server identity, PID reuse and model
+isolation are operator responsibilities. No Apple Silicon hardware measurement
+is claimed by the synthetic tests. Runner version and reproduction identity
+remain separate concerns.
