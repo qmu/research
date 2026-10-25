@@ -20,7 +20,8 @@ const validFingerprint = {
 };
 
 it("attaches the fingerprint while preserving the original fields", () => {
-  const result = enrichFingerprint(source, validFingerprint);
+  const written = enrichFingerprint(source, validFingerprint);
+  const result = JSON.parse(JSON.stringify(written));
   expect(result.fingerprint).toEqual(validFingerprint);
   expect(result.schemaVersion).toBe(1);
   expect(result.runs).toEqual(base.runs);
