@@ -100,6 +100,10 @@ describe("execution-versioned remeasurement persistence", () => {
 
   it.each([
     { targetCommit: "main" },
+    { targetCommit: "a".repeat(40) + "\n" },
+    { runnerVersion: "local-inference/4\n" },
+    { fixtureIds: ["fixture-a\n"] },
+    { fixtureIds: Array(1) },
     { targetCommit: undefined },
     { runnerVersion: "" },
     { runnerVersion: "local-inference/999" },

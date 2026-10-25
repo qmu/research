@@ -14,17 +14,21 @@ export function requestIdentity(value: unknown): RemeasurementIdentity {
   const data = value as Record<string, unknown>;
   if (
     typeof data.targetCommit !== "string" ||
+    data.targetCommit.length !== 40 ||
     !/^[a-f0-9]{40}$/.test(data.targetCommit) ||
     typeof data.runnerVersion !== "string" ||
-    !/^local-inference\/[234]$/.test(data.runnerVersion) ||
+    !["local-inference/2", "local-inference/3", "local-inference/4"].includes(
+      data.runnerVersion,
+    ) ||
     !Number.isSafeInteger(data.executionVersion) ||
     (data.executionVersion as number) < 1 ||
     !Array.isArray(data.fixtureIds) ||
     data.fixtureIds.length === 0 ||
     data.fixtureIds.length > 10000 ||
-    data.fixtureIds.some(
+    Array.from(data.fixtureIds).some(
       (id: unknown) =>
         typeof id !== "string" ||
+        id.trim() !== id ||
         !/^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}$/.test(id),
     )
   )
