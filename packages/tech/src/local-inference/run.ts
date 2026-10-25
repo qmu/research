@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeJsonAtomic } from "./vendors/atomic-json.js";
+import { readTargetCommit } from "./vendors/provenance.js";
 import {
   engines,
   metrics,
@@ -9,7 +10,7 @@ import {
 import { observeStream } from "./vendors/stream.js";
 
 /** Bump when the runner's measurement or persistence semantics change. */
-export const runnerVersion = "local-inference/2";
+export const runnerVersion = "local-inference/3";
 
 /** Only fixed public syntax survives. Unknown arguments, paths, environment
  * assignments, headers, URLs and option values are redacted BEFORE hashing.
@@ -125,6 +126,7 @@ export async function runLocalInference(
   const execution: Execution = {
     commandSha256: commandFingerprint(argv),
     runnerVersion,
+    targetCommit: readTargetCommit(),
   };
 
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
@@ -174,9 +176,6 @@ export async function runLocalInference(
     procedure: "single-request-per-engine",
     runs,
   };
-  // Refuse to overwrite prior measurements; callers choose a new path per trial.
-  await writeFile(output, JSON.stringify(result, null, 2) + "\n", {
-    flag: "wx",
-  });
+  await writeJsonAtomic(output, result);
   return result;
 }

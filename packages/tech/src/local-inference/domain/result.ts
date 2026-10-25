@@ -58,4 +58,6 @@ export function metrics(observation: Observation, failed = false) {
 export type Execution = {
   commandSha256: string;
   runnerVersion: string;
+  /** Full checkout HEAD captured before measurement; absent on older runners. */
+  targetCommit?: string;
 };
