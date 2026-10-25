@@ -57,3 +57,29 @@ cannot reconstruct the pre-enrichment source bytes to authenticate it. Callers
 must supply trustworthy artifacts and preserve their provenance. The adapter
 does not print raw generated output or OS/parser error contents; condition fields
 are displayed, so supply only non-secret reproducibility metadata.
+
+## Remeasure
+
+`EVALUATOR-VERSION-MISMATCH` means that otherwise identical recorded conditions
+use different evaluator versions for at least one fixture. Such rows stay in
+separate condition tables. Their pass/fail values describe their own evaluators;
+never subtract quality scores or select a winner across these versions. The
+mismatch table identifies both source/run indexes and each fixture's version.
+Missing metadata remains undetermined, rather than a version mismatch.
+
+1. Choose one evaluator implementation/version and the same fixed fixture IDs
+   and hashes for both runs. Preserve the original JSON artifacts.
+2. Rerun both measurements and quality evaluation with that implementation,
+   preserving the recorded host, model, runtime, condition, input hash, sampling
+   and procedure. Save new common JSON artifacts with the actual evaluator
+   version and newly recorded judgments. Editing a version label is not a rerun.
+3. Render the new artifacts from `packages/tech`:
+
+   ```sh
+   npm run local-inference:adoption -- /tmp/remeasured-adoption.md first-new.json second-new.json
+   ```
+
+Only matching complete condition groups can be compared. Rendering saved JSON
+alone does not execute inference or remeasure quality; this adapter does not
+provide an engine runner. The keyless synthetic command above only reproduces
+the report and its mismatch notice.
