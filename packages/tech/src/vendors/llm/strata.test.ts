@@ -337,8 +337,10 @@ const recordingLauncher = (): {
   return { launch, invocations };
 };
 
-const failingLauncher = (error: Error): StrataLauncher => () =>
-  Promise.reject(error);
+const failingLauncher =
+  (error: Error): StrataLauncher =>
+  () =>
+    Promise.reject(error);
 
 const stepClock = (incrementMs = 10) => {
   let t = 0;
@@ -356,9 +358,7 @@ const CONNECTION_REFUSED = new Error(
 
 describe("createStrataCompletionClient", () => {
   it("rejects on an unsupported host before launching or calling", async () => {
-    const { transport, calls } = scriptedTransport(() =>
-      jsonResponse(200, {}),
-    );
+    const { transport, calls } = scriptedTransport(() => jsonResponse(200, {}));
     const { launch, invocations } = recordingLauncher();
     const client = createStrataCompletionClient("m", {
       hostInfo: {

@@ -93,8 +93,7 @@ const darwinMajorVersion = (release: string): number | undefined => {
 };
 
 export type StrataHostUnsupportedReason =
-  | "unsupported-chip"
-  | "unsupported-os-version";
+  "unsupported-chip" | "unsupported-os-version";
 
 // Pure precheck against Strata's own stated requirements. Returns `undefined`
 // when the host clears them — it does NOT confirm Strata is installed or
