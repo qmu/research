@@ -106,9 +106,7 @@ function parseMeasurement(value: unknown, name: string): Measurement {
   const unit = nonEmptyString(data.unit, `metrics.${name}.unit`);
   if (data.value === null) {
     if (!GAP_REASONS.includes(data.reason as GapReason)) {
-      throw new Error(
-        `metrics.${name} is missing but has no recognised gap reason`,
-      );
+      throw new Error(`Invalid gap reason for metrics.${name}`);
     }
     return { value: null, unit, reason: data.reason as GapReason };
   }
@@ -124,9 +122,7 @@ function parseMeasurement(value: unknown, name: string): Measurement {
       source: data.source as "client" | "usage",
     };
   }
-  throw new Error(
-    `metrics.${name} must be a nonnegative measurement or a null value with a gap reason`,
-  );
+  throw new Error(`Invalid metrics.${name} value`);
 }
 
 function parseMetrics(value: unknown): Record<MetricName, Measurement> {

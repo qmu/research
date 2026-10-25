@@ -141,7 +141,7 @@ describe("renderComparisonMarkdown", () => {
     expect(renderComparisonMarkdown(fixture)).toBe(page);
   });
 
-  it("always orders rows Ollama, llama.cpp, MLX, Strata regardless of input order", () => {
+  it("always orders rows Ollama, llama.cpp, MLX, Strata", () => {
     const page = renderComparisonMarkdown(fixture);
     const ollama = page.indexOf("| Ollama |");
     const llamaCpp = page.indexOf("| llama.cpp |");
