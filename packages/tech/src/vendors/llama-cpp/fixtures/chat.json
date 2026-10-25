@@ -1,0 +1,20 @@
+{
+  "id": "chatcmpl-fixture",
+  "object": "chat.completion",
+  "model": "fixture-model.gguf",
+  "choices": [
+    {
+      "index": 0,
+      "message": { "role": "assistant", "content": "東京です。" },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": { "prompt_tokens": 24, "completion_tokens": 4, "total_tokens": 28 },
+  "timings": {
+    "prompt_n": 24,
+    "prompt_ms": 12.5,
+    "predicted_n": 4,
+    "predicted_ms": 80,
+    "predicted_per_second": 50
+  }
+}
