@@ -139,11 +139,17 @@ describe("local inference common JSON", () => {
       "measured",
       "failed",
     ]);
+    expect(result.runs.map((r) => r.ttft.reason)).toEqual([
+      "HTTP-ERROR",
+      "INVALID-STREAM",
+      "FIRST-CONTENT",
+      "TIMEOUT",
+    ]);
     for (const run of result.runs.filter((r) => r.status === "failed")) {
       expect(run.ttft).toEqual({
         value: null,
         unit: "s",
-        reason: "REQUEST-FAILED",
+        reason: run.ttft.reason,
       });
     }
     expect(result.runs[0].metrics.ttft).toMatchObject({
@@ -192,7 +198,7 @@ describe("local inference common JSON", () => {
   it("rejects truncated streams and treats absent or invalid counts as gaps", async () => {
     await expect(
       observeStream(new Response('data: {"choices":[]}\n\n'), 0),
-    ).rejects.toThrow("incomplete");
+    ).rejects.toThrow("INCOMPLETE-STREAM");
     for (const count of [-1, 1.5, "4", null]) {
       const observed = await observeStream(
         new Response(
@@ -243,6 +249,113 @@ describe("local inference common JSON", () => {
     }
   });
 
+  it.each([
+    ["null", "INVALID-STREAM"],
+    ["[]", "INVALID-STREAM"],
+    ['{"error":{"message":"secret-test-marker"}}', "STREAM-ERROR"],
+  ])("persists safe TTFT reason for payload %s", async (payload, reason) => {
+    const server = createServer((_req, res) => {
+      res.end(
+        `data: ${JSON.stringify(content("partial"))}\n\ndata: ${payload}\n\ndata: [DONE]\n\n`,
+      );
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const output = await destination();
+    const result = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+    );
+    for (const run of result.runs) {
+      expect(run.ttft).toEqual({ value: null, unit: "s", reason });
+      expect(run.metrics.ttft.value).toBeNull();
+      expect(run.status).toBe("failed");
+    }
+    const saved = await readFile(output, "utf8");
+    expect(JSON.parse(saved)).toEqual(result);
+    expect(saved).not.toContain("secret-test-marker");
+  });
+
+  it.each([
+    ["NO-BODY", 204, ""],
+    [
+      "INCOMPLETE-STREAM",
+      200,
+      sse([content("partial")]).replace("data: [DONE]\r\n\r\n", ""),
+    ],
+    ["TIMEOUT", 200, null],
+  ])("persists %s without partial timing", async (reason, status, body) => {
+    const server = createServer((_req, res) => {
+      res.writeHead(status);
+      if (body === null) {
+        res.write(`data: ${JSON.stringify(content("partial"))}\n\n`);
+      } else {
+        res.end(body);
+      }
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const output = await destination();
+    const result = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+      200,
+    );
+    for (const run of result.runs) {
+      expect(run.ttft).toEqual({ value: null, unit: "s", reason });
+      expect(run.metrics.ttft.value).toBeNull();
+      expect(run.status).toBe("failed");
+    }
+    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+  });
+
+  it("persists split JSON log lines and discards timing on truncated logs", async () => {
+    let calls = 0;
+    const server = createServer((_req, res) => {
+      const complete = ++calls % 2 === 1;
+      res.writeHead(200, { "Content-Type": "application/x-ndjson" });
+      const line = JSON.stringify(content("hello"));
+      res.write(line.slice(0, 10));
+      setTimeout(
+        () => res.end(line.slice(10) + "\n" + (complete ? "[DONE]" : "")),
+        10,
+      );
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const output = await destination();
+    const result = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+    );
+    expect(result.runs.map((run) => run.ttft.reason)).toEqual([
+      "FIRST-CONTENT",
+      "INCOMPLETE-STREAM",
+      "FIRST-CONTENT",
+      "INCOMPLETE-STREAM",
+    ]);
+    for (const run of result.runs.filter((run) => run.status === "failed")) {
+      expect(run.ttft.value).toBeNull();
+      expect(run.metrics.ttft.value).toBeNull();
+    }
+    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+  });
+
   it("validates engine identity, conditions and URL credentials before requests", () => {
     const valid = config("http://localhost:8000/v1");
     expect(parseConfig(valid)).toEqual(valid);
@@ -284,6 +397,9 @@ describe("saved RSS evidence", () => {
     );
     expect(result.runs.map((r) => r.peakMemory.value)).toEqual([1, 2, 3, 4]);
     expect(result.runs.every((r) => r.status === "failed")).toBe(true);
+    expect(result.runs.every((r) => r.ttft.reason === "REQUEST-FAILED")).toBe(
+      true,
+    );
     expect(result.runs[0].metrics.peak_rss).toEqual({
       value: 1,
       unit: "MiB",

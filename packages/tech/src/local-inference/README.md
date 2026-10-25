@@ -103,11 +103,32 @@ to that one request. Do not join measurements from other requests by engine alon
 Existing `metrics.ttft` remains compatible; `ttft` repeats its value/unit/source
 and adds an explicit acquisition reason: `FIRST-CONTENT` for the first nonempty
 content delta, `NO-CONTENT` for a completed stream without content, or
-`REQUEST-FAILED` for HTTP, parsing, truncation or timeout failure. Failed streams
-discard partial timings. Role, empty-content and usage frames cannot start TTFT.
+a fixed failure reason from the table below. Failed streams discard partial timings.
+
+| TTFT reason         | Meaning                                                   |
+| ------------------- | --------------------------------------------------------- |
+| `HTTP-ERROR`        | Endpoint returned a non-success HTTP status.              |
+| `NO-BODY`           | Successful response has no readable body.                 |
+| `INVALID-STREAM`    | An SSE data frame is not a JSON object.                   |
+| `STREAM-ERROR`      | A JSON frame reports a server error.                      |
+| `INCOMPLETE-STREAM` | The stream ends without the `[DONE]` event.               |
+| `TIMEOUT`           | The request deadline expires, including during streaming. |
+| `REQUEST-FAILED`    | Other transport/read failure; no raw error is saved.      |
+
+HTTP status bodies, server error messages and exception text are never saved.
+Role, empty-content and usage frames cannot start TTFT.
 The time begins immediately before fetch, so it includes connection and request
 latency; it is not model-only prefill time or server startup time.
 
 `quality: { value: null, reason: "NOT-RUN" }` explicitly records that this runner
 has no quality evaluator. It is not a zero or a passing judgment. Real quality
 scores require a separately specified evaluator; none are fabricated here.
+
+The HTTP TTFT reader incrementally decodes UTF-8 and buffers incomplete lines.
+It accepts SSE events and, when explicitly advertised as `application/x-ndjson`
+or `application/jsonl`, JSON log lines using the same OpenAI content/usage
+fields and `[DONE]` terminator. Blank JSON log lines are ignored; a final
+`[DONE]` line need not have a newline. Arbitrary console prose and other vendor
+JSON schemas are not interpreted as token measurements. Malformed records use
+`INVALID-STREAM`; EOF before `[DONE]` uses `INCOMPLETE-STREAM`. Both paths
+discard partial TTFT through the existing fixed-reason failure handling.
