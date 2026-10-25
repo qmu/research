@@ -418,12 +418,15 @@ const DEFAULT_POLL_INTERVAL_MS = 500;
 const defaultSleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
+const errorCauseCode = (error: Error): string | undefined => {
+  const cause = error.cause as Readonly<{ code?: string }> | undefined;
+  return cause?.code;
+};
+
 const isConnectionRefused = (error: unknown): boolean => {
   if (!(error instanceof Error)) return false;
-  const cause = (error as Readonly<{ cause?: Readonly<{ code?: string }> }>)
-    .cause;
   return (
-    cause?.code === "ECONNREFUSED" ||
+    errorCauseCode(error) === "ECONNREFUSED" ||
     error.message.includes("ECONNREFUSED") ||
     error.message.includes("fetch failed")
   );
