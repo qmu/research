@@ -169,3 +169,34 @@ the commit gate. This check validates labels, not artifact authenticity.
 
 The demo's supported, unknown and empty version labels are synthetic test data,
 not updates to historical engine measurements.
+
+## Snapshot-bound remeasurement
+
+The comparison page creates a local entry for each source snapshot only when its
+`execution.runId`, `execution.targetCommit`, and supported `execution.runnerVersion`
+are complete. The saved identity is captured while rendering; links use fixed
+source anchors and never resolve `latest`, a branch, a query parameter, or the
+current checkout. A different saved commit remains explicitly different from the
+current comparison commit. Selecting another target is a separate measurement,
+not remeasurement through this entry.
+
+Execution IDs must be 1–128 ASCII letters, digits, hyphens or underscores, starting
+with a letter or digit. This accepts UUIDs and existing opaque runner tokens.
+Missing or unsafe IDs, missing commits and unsupported runners disable the entry;
+existing recovery guidance remains available. This does not alter adoption gates.
+
+The entry includes a command for `prepare-local-inference-remeasurement.ts` with
+all three pinned arguments. Supply the original artifact path as the final
+argument. The guard rereads that JSON and compares every identifier exactly. A
+changed, missing or malformed identity returns exit code 1 and no plan; matching
+identity returns only the allowlisted source identity plus
+`requiresNewExecutionId: true`. Parser contents, paths and extra JSON fields are
+not printed. The original artifact is never written.
+
+This is a preparation guard, not an engine runner: it makes no model call and does
+not certify artifact authenticity or the full measurement schema. Use a trusted
+checkout and runner independently, retain the original measurement conditions,
+then run inference and evaluation into a new artifact under a new execution ID.
+The source ID identifies the measurement being reproduced and must not be reused
+as the new execution ID. Never patch the old JSON to satisfy the guard. The
+synthetic example IDs on this page are demonstration data.
