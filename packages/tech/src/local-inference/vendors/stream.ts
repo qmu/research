@@ -5,7 +5,14 @@ export type StreamFailureReason =
   | "NO-BODY"
   | "INVALID-STREAM"
   | "STREAM-ERROR"
-  | "INCOMPLETE-STREAM";
+  | "INCOMPLETE-STREAM"
+  | "OUTPUT-BUDGET-EXCEEDED";
+
+/** Decoded-text characters a single response may deliver before the reader
+ * gives up. `sampling.max_tokens` only asks the server to stop; this is the
+ * client-side backstop against a server that ignores or exceeds it, so one
+ * run cannot grow the process's memory without bound inside its timeout. */
+export const defaultOutputBudgetChars = 4_000_000;
 
 const streamFailures = new WeakMap<Error, StreamFailureReason>();
 
@@ -27,6 +34,7 @@ export async function observeStream(
   response: Response,
   started: number,
   now = () => performance.now(),
+  outputBudgetChars = defaultOutputBudgetChars,
 ): Promise<Observation> {
   if (!response.ok) throw streamFailure("HTTP-ERROR");
   if (!response.body) throw streamFailure("NO-BODY");
@@ -36,6 +44,7 @@ export async function observeStream(
     response.headers.get("content-type") ?? "",
   );
   let buffer = "";
+  let receivedChars = 0;
   let data: string[] = [];
   function event(payload = data.join("\n")): boolean {
     data = [];
@@ -70,6 +79,9 @@ export async function observeStream(
           return observation;
         throw streamFailure("INCOMPLETE-STREAM");
       }
+      receivedChars += value.length;
+      if (receivedChars > outputBudgetChars)
+        throw streamFailure("OUTPUT-BUDGET-EXCEEDED");
       buffer += value;
       let newline: number;
       while ((newline = buffer.indexOf("\n")) >= 0) {

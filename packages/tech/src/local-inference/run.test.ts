@@ -226,6 +226,49 @@ describe("local inference common JSON", () => {
     expect(await readFile(output, "utf8")).not.toContain("secret-test-marker");
   });
 
+  it("ends every row — including Strata's separate warm-up — once output exceeds the budget", async () => {
+    const frame = JSON.stringify(content("x"));
+    const server = createServer((_req, res) => {
+      res.writeHead(200, { "Content-Type": "text/event-stream" });
+      // No [DONE]: the budget, not stream completion, must end the request.
+      res.write(`data: ${frame}\r\n\r\n`.repeat(100));
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const output = await destination();
+    const result = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+      60_000,
+      200,
+    );
+    expect(result.runs).toHaveLength(engines.length + 1);
+    expect(result.runs.map((r) => r.purpose)).toEqual([
+      "adoption-target",
+      "adoption-target",
+      "adoption-target",
+      "warmup",
+      "adoption-target",
+    ]);
+    for (const run of result.runs) {
+      expect(run.status).toBe("failed");
+      expect(run.ttft).toEqual({
+        value: null,
+        unit: "s",
+        reason: "OUTPUT-BUDGET-EXCEEDED",
+      });
+      expect(run.metrics.ttft).toMatchObject({
+        value: null,
+        reason: "MEASURE-FAILED",
+      });
+    }
+  });
+
   it("parses fragmented UTF-8 and ignores role and usage frames for client timing", async () => {
     const bytes = new TextEncoder().encode(
       sse([
@@ -447,6 +490,7 @@ describe("saved RSS evidence", () => {
       config("http://127.0.0.1:1/v1"),
       output,
       100,
+      undefined,
       () => ({
         stop: async () => ({
           value: ++calls,
