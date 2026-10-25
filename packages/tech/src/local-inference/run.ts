@@ -1,7 +1,45 @@
 import { createHash } from "node:crypto";
 import { writeFile } from "node:fs/promises";
-import { engines, metrics, type Engine } from "./domain/result.js";
+import {
+  engines,
+  metrics,
+  type Engine,
+  type Execution,
+} from "./domain/result.js";
 import { observeStream } from "./vendors/stream.js";
+
+/** Bump when the runner's measurement or persistence semantics change. */
+export const runnerVersion = "local-inference/2";
+
+/** Only fixed public syntax survives. Unknown arguments, paths, environment
+ * assignments, headers, URLs and option values are redacted BEFORE hashing.
+ * Accept argv tokens, not a shell command: whitespace inside a token is data.
+ * No environment is read and neither raw nor normalized argv is persisted.
+ */
+export function commandFingerprint(argv: readonly string[]): string {
+  const publicTokens = new Set([
+    "node",
+    "nodejs",
+    "tsx",
+    "npm",
+    "run",
+    "local-inference",
+    "run-local-inference.ts",
+    "--import",
+    "tsx/esm",
+    "--",
+  ]);
+  const normalized = argv.map((token, index) => {
+    // Normalize only the executable and the known runner path; never trim or
+    // split arguments, which would collapse distinct argument boundaries.
+    const name = token.replaceAll("\\", "/").split("/").at(-1) ?? "";
+    if (index === 0 && ["node", "nodejs", "tsx", "npm"].includes(name))
+      return name === "nodejs" ? "node" : name;
+    if (name === "run-local-inference.ts") return name;
+    return publicTokens.has(token) ? token : "[REDACTED]";
+  });
+  return createHash("sha256").update(JSON.stringify(normalized)).digest("hex");
+}
 
 export type Config = {
   messages: { role: "system" | "user"; content: string }[];
@@ -77,8 +115,14 @@ export async function runLocalInference(
   input: unknown,
   output: string,
   timeoutMs = 60_000,
+  argv: readonly string[] = process.argv,
 ) {
   const config = parseConfig(input);
+  const execution: Execution = {
+    commandSha256: commandFingerprint(argv),
+    runnerVersion,
+  };
+
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
   const runs = [];
   for (const target of config.targets) {
@@ -116,6 +160,7 @@ export async function runLocalInference(
     });
   }
   const result = {
+    execution,
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
     inputSha256: createHash("sha256")
