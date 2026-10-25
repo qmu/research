@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "execution": {
+    "runnerVersion": "local-inference/4",
+    "targetCommit": "1111111111111111111111111111111111111111"
+  },
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 42,
+    "max_tokens": 1024
+  },
+  "procedure": "single-request-per-engine",
+  "inputSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "runs": [
+    {
+      "runId": "synthetic-timeout-request",
+      "engine": "mlx",
+      "model": "synthetic-model",
+      "runtimeVersion": "test-only",
+      "condition": {
+        "quantization": "test-only"
+      },
+      "status": "failed",
+      "ttft": {
+        "value": null,
+        "unit": "s",
+        "reason": "TIMEOUT"
+      },
+      "metrics": {
+        "ttft": {
+          "value": null,
+          "unit": "s",
+          "reason": "MEASURE-FAILED"
+        }
+      },
+      "quality": {
+        "value": null,
+        "reason": "NOT-RUN"
+      }
+    }
+  ]
+}
