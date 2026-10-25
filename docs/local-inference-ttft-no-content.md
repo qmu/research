@@ -1,0 +1,110 @@
+# Local inference adoption and comparability
+
+Adoption pass means the recorded fixtures passed under complete recorded conditions; it is not a general model recommendation. Only rows with the same condition group share all recorded comparison dimensions. Missing metadata is undetermined. Groups do not establish statistical significance or verify provenance. Engine and runtime are exact identity dimensions; no cross-engine equivalence is inferred.
+
+Synthetic entries test joining and are not measured engine performance.
+
+## First-token latency eligibility
+
+Only saved TTFT from a uniquely selected run ID, runner version and target commit is adopted here. When a run is selected, adoption below also requires its available TTFT; acquisition and identity failures keep adoption undetermined. Quality failures still fail adoption. Without selection the adoption table evaluates quality only. Missing selection or evidence never becomes zero.
+
+[Synthetic quality-pass / unavailable-TTFT example](./local-inference-ttft-no-content.md#first-token-latency-eligibility) shows why a passing quality fixture cannot substitute for a missing latency.
+
+[Synthetic acquisition failure example](./local-inference-ttft-failure.md#first-token-latency-eligibility). No Apple Silicon performance measurement is claimed.
+
+Selected run: synthetic-no-content-request; runner: local-inference/4; commit: 1111111111111111111111111111111111111111.
+
+| Source / run | Engine / model | Adopted TTFT (s) | Reason / next step | Acquisition | Saved execution (request / runner / commit) |
+| --- | --- | --- | --- | --- | --- |
+| 1 / 1 | ollama / synthetic-model | not adopted | NO-CONTENT — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unavailable | synthetic-no-content-request / local-inference/4 / 1111111111111111111111111111111111111111 |
+
+## Commit eligibility
+
+Current comparison commit: 1111111111111111111111111111111111111111
+
+COMMIT-MISMATCH: Saved measurement commit differs from the current comparison commit. MISSING-COMMIT: No saved commit was recorded. These rows are excluded from adoption and condition groups; recorded evidence remains available below. [Remeasure](./local-inference-adoption-format.md#commit-eligibility).
+
+| Source / run | Saved commit | Eligibility | Reason |
+| --- | --- | --- | --- |
+| 1 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
+
+## Runner version eligibility
+
+Only explicitly supported runner versions clear this gate. Commit eligibility alone does not permit adoption. Unknown or missing versions are excluded from adoption, condition groups and evaluator differences; original metrics and quality remain evidence. A supported version still requires all other checks.
+
+| Source / run | Runner version | Eligibility | Reason / next step |
+| --- | --- | --- | --- |
+| 1 / 1 | local-inference/4 | supported | none |
+
+## condition-1
+
+Rows in this group share every recorded comparison dimension.
+
+| Source / run | Engine / model | Status | Adoption | Reasons |
+| --- | --- | --- | --- | --- |
+| 1 / 1 | ollama / synthetic-model | measured | undetermined | NO-CONTENT |
+
+<details>
+<summary>Recorded evidence</summary>
+
+### Source / run 1 / 1
+
+<pre>&#123;
+  "metrics": &#123;
+    "ttft": &#123;
+      "value": null,
+      "unit": "s",
+      "reason": "NO-FIELD"
+    &#125;
+  &#125;,
+  "quality": &#91;
+    &#123;
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evaluatorVersion": "exact-text/v1",
+      "verdict": "pass",
+      "reason": null
+    &#125;
+  &#93;
+&#125;</pre>
+
+</details>
+
+<details>
+<summary>Exact group conditions</summary>
+
+<pre>&#123;
+  "condition": &#123;
+    "context": 4096,
+    "quantization": "Q4"
+  &#125;,
+  "engine": "ollama",
+  "fingerprint": &#123;
+    "arch": "arm64",
+    "engineVersion": "v22.0.0",
+    "os": "fixture-os-1",
+    "totalMemoryMiB": 16384
+  &#125;,
+  "inputSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "model": "synthetic-model",
+  "procedure": "synthetic-demo-not-measured",
+  "quality": &#91;
+    &#123;
+      "evaluatorVersion": "exact-text/v1",
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    &#125;
+  &#93;,
+  "runnerVersion": "local-inference/4",
+  "runtimeVersion": "fixture-runtime-1",
+  "sampling": &#123;
+    "max&#95;tokens": 1024,
+    "seed": 42,
+    "temperature": 0,
+    "top&#95;p": 1
+  &#125;
+&#125;</pre>
+
+</details>
+
+[Input contract and interpretation](./local-inference-adoption-format.md)

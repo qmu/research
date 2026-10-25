@@ -1,0 +1,34 @@
+{
+  "fixture": true,
+  "note": "Synthetic numbers for demonstrating renderMemoryMarginTable end to end. Not a measurement of any installed engine or host; the strata row's rawTotalMiB/peak values are the same synthetic figures qmu/research#211 and #215 use in their own fixtures, chosen only so this module's output is checkable against theirs by eye. See ../README.md.",
+  "rows": [
+    {
+      "engine": "ollama",
+      "speed": "(NOT-RUN)",
+      "quality": "(NOT-RUN)",
+      "rawTotalMiB": 65000,
+      "peak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+    },
+    {
+      "engine": "llama.cpp",
+      "speed": "(NOT-RUN)",
+      "quality": "(NOT-RUN)",
+      "rawTotalMiB": 65000,
+      "peak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+    },
+    {
+      "engine": "mlx",
+      "speed": "(NOT-RUN)",
+      "quality": "(NOT-RUN)",
+      "rawTotalMiB": 65000,
+      "peak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+    },
+    {
+      "engine": "strata",
+      "speed": "(NOT-RUN)",
+      "quality": "(NOT-RUN)",
+      "rawTotalMiB": 65000,
+      "peak": { "value": 46637.9, "unit": "MiB" }
+    }
+  ]
+}
