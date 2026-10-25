@@ -116,6 +116,25 @@ it("preserves bytes and allows retry after serialization fails", async () => {
   await completeExecution(output, execution, { ok: true });
 });
 
+it("keeps the reservation retryable when toJSON returns no JSON", async () => {
+  const output = await destination();
+  await writeFile(output, '{"previous":true}\n');
+  const execution = await beginExecution(output);
+  await expect(
+    completeExecution(output, execution, { toJSON: () => undefined }),
+  ).rejects.toThrow("Result must be JSON serializable");
+  expect(await readFile(output, "utf8")).toBe('{"previous":true}\n');
+  expect(
+    JSON.parse(await readFile(`${output}.execution.json`, "utf8")),
+  ).toEqual({
+    ...execution,
+    completed: false,
+  });
+  const result = await completeExecution(output, execution, { runs: [] });
+  expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+  expect(result.execution).toEqual(execution);
+});
+
 it("shares reservations through directory symlinks", async () => {
   const output = await destination();
   const alias = join(dirs[0], "alias");

@@ -3,7 +3,10 @@ import { basename, dirname, join } from "node:path";
 
 /** Publish only complete, synced JSON. Concurrent writers use last-rename-wins. */
 export async function writeJsonAtomic(output: string, value: unknown) {
-  const json = JSON.stringify(value, null, 2) + "\n";
+  const serialized = JSON.stringify(value, null, 2);
+  if (serialized === undefined)
+    throw new TypeError("Result must be JSON serializable");
+  const json = serialized + "\n";
   // Same directory/filesystem as the destination so rename is atomic.
   const temporary = await mkdtemp(
     join(dirname(output), `.${basename(output)}-`),
