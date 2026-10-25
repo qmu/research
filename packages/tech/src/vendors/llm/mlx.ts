@@ -180,13 +180,17 @@ export const runMlxGenerateCli: MlxGenerateRunner = async (invocation) => {
   return stdout;
 };
 
+export type MlxCliCompletionClientOptions = Readonly<{
+  run?: MlxGenerateRunner;
+}>;
+
 // Connects the official CLI runner to this repository's shared
 // `CompletionClient` port. `run` defaults to the real subprocess call; a test
 // (or a keyless/dry-run caller) supplies a fixture-backed runner instead, the
 // same seam `createFixtureClient` gives the cloud-provider adapters.
 export const createMlxCliCompletionClient = (
   model: string,
-  options?: Readonly<{ run?: MlxGenerateRunner }>,
+  options?: MlxCliCompletionClientOptions,
 ): CompletionClient => {
   const run = options?.run ?? runMlxGenerateCli;
 
@@ -205,18 +209,20 @@ export const createMlxCliCompletionClient = (
   return {
     model,
     completeStreaming,
+    // `mlx_lm.generate` has no separate non-streamed mode; one CLI call
+    // measures both. `ttftMs` is dropped rather than carried into the plain
+    // `Completion` contract, which has no such field.
     complete: async (
       prompt: string,
       completionOptions?: CompletionOptions,
     ): Promise<Completion> => {
-      // `mlx_lm.generate` has no separate non-streamed mode; one CLI call
-      // measures both. Discard `ttftMs` rather than carry a streaming-only
-      // field into the plain `Completion` contract.
-      const { ttftMs: _ttftMs, ...completion } = await completeStreaming(
-        prompt,
-        completionOptions,
-      );
-      return completion;
+      const streamed = await completeStreaming(prompt, completionOptions);
+      return {
+        text: streamed.text,
+        outputTokens: streamed.outputTokens,
+        elapsedMs: streamed.elapsedMs,
+        model: streamed.model,
+      };
     },
     // `mlx_lm.generate` prints free text; it has no JSON-schema-constrained
     // output mode to drive, so there is nothing to implement here. Throwing
