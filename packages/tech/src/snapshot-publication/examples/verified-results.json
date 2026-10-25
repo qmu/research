@@ -1,0 +1,28 @@
+[
+  {
+    "verification": "verified",
+    "runId": "demo-adopt",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "runnerVersion": "1.0.0",
+    "decision": "adopt",
+    "reasons": {
+      "environment": "pass",
+      "memory": "pass",
+      "quality": "pass",
+      "speed": "pass"
+    }
+  },
+  {
+    "verification": "verified",
+    "runId": "demo-reject",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "runnerVersion": "1.0.0",
+    "decision": "reject",
+    "reasons": {
+      "environment": "unsupported",
+      "memory": "missing",
+      "quality": "fail",
+      "speed": "pass"
+    }
+  }
+]

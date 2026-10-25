@@ -91,6 +91,17 @@ describe("verified snapshot publication", () => {
       path,
     ];
     try {
+      const example = "src/snapshot-publication/examples/verified-results.json";
+      const demo = execFileSync(
+        process.execPath,
+        [...args.slice(0, -1), example],
+        { encoding: "utf8" },
+      );
+      const page = readFileSync(
+        new URL("../../../../../docs/snapshot-publication.md", import.meta.url),
+        "utf8",
+      );
+      expect(page).toContain(demo);
       writeFileSync(path, JSON.stringify([valid]));
       expect(execFileSync(process.execPath, args, { encoding: "utf8" })).toBe(
         renderVerifiedSnapshotResults([valid]),
