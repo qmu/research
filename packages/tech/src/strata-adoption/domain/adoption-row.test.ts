@@ -6,7 +6,7 @@ import {
 } from "./adoption-row.js";
 
 const provenance = {
-  engine: "engine-a",
+  engine: "strata",
   model: "model-a",
   fixture: "fixture-a",
   runnerVersion: "1.0.0",
