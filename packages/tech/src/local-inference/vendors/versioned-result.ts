@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, realpath, rmdir } from "node:fs/promises";
+import { readFile, realpath } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
-import { setTimeout } from "node:timers/promises";
+import { withRunningLock } from "./running-lock.js";
 import { writeJsonAtomic } from "./atomic-json.js";
 
 export type Execution = { runId: string; version: number };
@@ -21,24 +21,7 @@ async function canonical(output: string) {
 }
 
 async function locked<T>(output: string, action: () => Promise<T>) {
-  const lock = `${output}.execution.lock`;
-  const deadline = performance.now() + 5_000;
-  for (;;) {
-    try {
-      await mkdir(lock, { mode: 0o700 });
-      break;
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-      if (performance.now() >= deadline)
-        throw new Error("OUTPUT-LOCKED: execution lock could not be acquired");
-      await setTimeout(10);
-    }
-  }
-  try {
-    return await action();
-  } finally {
-    await rmdir(lock);
-  }
+  return withRunningLock(`${output}.publication`, action, true);
 }
 
 async function readState(output: string): Promise<State | undefined> {

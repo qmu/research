@@ -1,3 +1,4 @@
+import { withRunningLock } from "./vendors/running-lock.js";
 import { createHash } from "node:crypto";
 import {
   beginExecution,
@@ -81,53 +82,55 @@ export async function runLocalInference(
   output: string,
   timeoutMs = 60_000,
 ) {
-  const config = parseConfig(input);
-  const execution = await beginExecution(output);
-  const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
-  const runs = [];
-  for (const target of config.targets) {
-    const started = performance.now();
-    let measured;
-    let status: "measured" | "failed" = "measured";
-    try {
-      const response = await fetch(
-        `${target.baseUrl.replace(/\/$/, "")}/chat/completions`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: target.model,
-            messages: config.messages,
-            ...sampling,
-            stream: true,
-            stream_options: { include_usage: true },
-          }),
-          signal: AbortSignal.timeout(timeoutMs),
-        },
-      );
-      measured = metrics(await observeStream(response, started));
-    } catch {
-      status = "failed";
-      measured = metrics({}, true);
+  return withRunningLock(output, async () => {
+    const config = parseConfig(input);
+    const execution = await beginExecution(output);
+    const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
+    const runs = [];
+    for (const target of config.targets) {
+      const started = performance.now();
+      let measured;
+      let status: "measured" | "failed" = "measured";
+      try {
+        const response = await fetch(
+          `${target.baseUrl.replace(/\/$/, "")}/chat/completions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              model: target.model,
+              messages: config.messages,
+              ...sampling,
+              stream: true,
+              stream_options: { include_usage: true },
+            }),
+            signal: AbortSignal.timeout(timeoutMs),
+          },
+        );
+        measured = metrics(await observeStream(response, started));
+      } catch {
+        status = "failed";
+        measured = metrics({}, true);
+      }
+      runs.push({
+        engine: target.engine,
+        model: target.model,
+        runtimeVersion: target.runtimeVersion,
+        condition: target.condition,
+        status,
+        metrics: measured,
+      });
     }
-    runs.push({
-      engine: target.engine,
-      model: target.model,
-      runtimeVersion: target.runtimeVersion,
-      condition: target.condition,
-      status,
-      metrics: measured,
-    });
-  }
-  const result = {
-    schemaVersion: 1,
-    generatedAt: new Date().toISOString(),
-    inputSha256: createHash("sha256")
-      .update(JSON.stringify(config.messages))
-      .digest("hex"),
-    sampling,
-    procedure: "single-request-per-engine",
-    runs,
-  };
-  return completeExecution(output, execution, result);
+    const result = {
+      schemaVersion: 1,
+      generatedAt: new Date().toISOString(),
+      inputSha256: createHash("sha256")
+        .update(JSON.stringify(config.messages))
+        .digest("hex"),
+      sampling,
+      procedure: "single-request-per-engine",
+      runs,
+    };
+    return completeExecution(output, execution, result);
+  });
 }
