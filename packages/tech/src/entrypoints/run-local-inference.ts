@@ -1,3 +1,4 @@
+import { isStaleExecutionError } from "../local-inference/vendors/versioned-result.js";
 import { readFile } from "node:fs/promises";
 import { runLocalInference } from "../local-inference/run.js";
 
@@ -12,6 +13,7 @@ try {
     JSON.stringify(
       {
         schemaVersion: result.schemaVersion,
+        execution: result.execution,
         runs: result.runs.map((r) => ({ engine: r.engine, status: r.status })),
       },
       null,
@@ -19,9 +21,11 @@ try {
     ),
   );
   if (result.runs.some((r) => r.status === "failed")) process.exitCode = 1;
-} catch {
+} catch (error) {
   console.error(
-    "Local inference failed. Usage: npm run local-inference -- config.json new-result.json (valid config and unused output path required).",
+    isStaleExecutionError(error)
+      ? error.message
+      : "Local inference failed. Usage: npm run local-inference -- config.json new-result.json (valid config and existing output directory required).",
   );
   process.exitCode = 1;
 }
