@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import {
+  assertExecutionCurrent,
   beginExecution,
   completeExecution,
 } from "./vendors/versioned-result.js";
@@ -86,6 +87,7 @@ export async function runLocalInference(
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
   const runs = [];
   for (const target of config.targets) {
+    await assertExecutionCurrent(output, execution);
     const started = performance.now();
     let measured;
     let status: "measured" | "failed" = "measured";

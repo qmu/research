@@ -79,6 +79,30 @@ export async function beginExecution(output: string): Promise<Execution> {
   });
 }
 
+function assertCurrent(current: State | undefined, execution: Execution) {
+  if (
+    !current ||
+    current.completed ||
+    current.runId !== execution.runId ||
+    current.version !== execution.version
+  )
+    throw Object.assign(
+      new Error("STALE-EXECUTION: execution is no longer current"),
+      { code: "STALE-EXECUTION" },
+    );
+}
+
+/** Advisory preflight; publication must still compare under its own lock. */
+export async function assertExecutionCurrent(
+  output: string,
+  execution: Execution,
+): Promise<void> {
+  output = await canonical(output);
+  await locked(output, async () => {
+    assertCurrent(await readState(output), execution);
+  });
+}
+
 /** Compare and publish under the same cross-process lock (no check/write gap). */
 export async function completeExecution<T extends object>(
   output: string,
@@ -88,16 +112,7 @@ export async function completeExecution<T extends object>(
   output = await canonical(output);
   return locked(output, async () => {
     const current = await readState(output);
-    if (
-      !current ||
-      current.completed ||
-      current.runId !== execution.runId ||
-      current.version !== execution.version
-    )
-      throw Object.assign(
-        new Error("STALE-EXECUTION: execution is no longer current"),
-        { code: "STALE-EXECUTION" },
-      );
+    assertCurrent(current, execution);
     const result = { ...value, execution: { ...execution } };
     await writeJsonAtomic(output, result);
     await writeJsonAtomic(`${output}.execution.json`, {
