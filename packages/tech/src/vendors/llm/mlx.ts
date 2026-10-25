@@ -94,7 +94,10 @@ export const extractMlxGeneratedText = (stdout: string): string => {
     );
   }
   const [firstIndex, secondIndex] = separatorIndexes;
-  return lines.slice(firstIndex + 1, secondIndex).join("\n").trim();
+  return lines
+    .slice(firstIndex + 1, secondIndex)
+    .join("\n")
+    .trim();
 };
 
 // Normalize one captured `mlx_lm.generate --verbose` run into this repository's
