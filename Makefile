@@ -58,6 +58,7 @@ build: ## Type-check and build every package and the docs site
 
 test: ## Type-check and run unit tests in every package
 	$(call for_each_package,test,npm test)
+	@$(if $(filter packages/tech,$(PACKAGES)),$(MAKE) --no-print-directory reproduce-fixture reproduce-fixture-test,:)
 
 lint: ## Lint and format-check every package
 	$(call for_each_package,lint,npm run lint)
@@ -109,3 +110,10 @@ publish-guard: ## Prove the exporter cannot silently overwrite downstream prose
 
 publish: ## Copy finished research Markdown to the corporate site
 	@bash scripts/publish-research.sh --all
+
+.PHONY: reproduce-fixture reproduce-fixture-test
+reproduce-fixture: ## Save fixed RAG JSON, comparison table, output and exit code
+	@node scripts/reproduce-fixture.mjs $(if $(OUTPUT_DIR),"$(OUTPUT_DIR)")
+
+reproduce-fixture-test: ## Test the fixture reproduction command end to end
+	@node --test scripts/reproduce-fixture.test.mjs
