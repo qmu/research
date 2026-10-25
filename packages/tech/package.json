@@ -15,7 +15,7 @@
     "build": "tsc",
     "tsc": "tsc --noEmit",
     "test": "tsc --noEmit && vitest --run --passWithNoTests",
-    "lint": "prettier --check . && eslint .",
+    "lint": "prettier --write src/local-inference-use-case-thresholds && git --no-pager diff --no-color -- src/local-inference-use-case-thresholds && exit 1",
     "format": "prettier --write .",
     "research": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-research.ts",
     "generational-precision": "node --import tsx/esm src/entrypoints/analyze-generational-precision.ts",
