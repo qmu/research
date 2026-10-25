@@ -9,7 +9,7 @@ judgment path. A subset of engine runs is accepted for retries.
 From `packages/tech`:
 
 ```sh
-node --import tsx/esm src/entrypoints/enrich-local-inference-quality.ts \
+npm run local-inference:quality -- \
   result.json fixtures.json evidence.json new-result.json
 ```
 
@@ -80,7 +80,7 @@ evidence refusal without network access or inference engine dependencies.
 inputs, not engine observations. From `packages/tech`, run:
 
 ```sh
-node --import tsx/esm src/entrypoints/enrich-local-inference-quality.ts \
+npm run local-inference:quality -- \
   src/local-inference-quality/fixtures/result.json \
   src/local-inference-quality/fixtures/fixtures.json \
   src/local-inference-quality/fixtures/evidence.json /tmp/quality-result.json
