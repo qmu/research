@@ -13,6 +13,69 @@ EVALUATOR-VERSION-MISMATCH: Evaluator versions differ; direct comparison is bloc
 | 1 / 1 | exact-answer: exact-text/v1 | 3 / 1 | exact-answer: exact-text/v2 | EVALUATOR-VERSION-MISMATCH | [Remeasure](./local-inference-adoption-format.md#remeasure) |
 | 1 / 2 | exact-answer: exact-text/v1 | 3 / 1 | exact-answer: exact-text/v2 | EVALUATOR-VERSION-MISMATCH | [Remeasure](./local-inference-adoption-format.md#remeasure) |
 
+## Commit eligibility
+
+Current comparison commit: 1111111111111111111111111111111111111111
+
+COMMIT-MISMATCH: Saved measurement commit differs from the current comparison commit. MISSING-COMMIT: No saved commit was recorded. These rows are excluded from adoption and condition groups; recorded evidence remains available below. [Remeasure](./local-inference-adoption-format.md#commit-eligibility).
+
+| Source / run | Saved commit | Eligibility | Reason |
+| --- | --- | --- | --- |
+| 1 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
+| 1 / 2 | 1111111111111111111111111111111111111111 | eligible | none |
+| 2 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
+| 3 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
+| 4 / 1 | not recorded | excluded | MISSING-COMMIT |
+| 5 / 1 | 2222222222222222222222222222222222222222 | excluded | COMMIT-MISMATCH |
+
+<details>
+<summary>Excluded evidence: source / run 4 / 1</summary>
+
+<pre>&#123;
+  "metrics": &#123;
+    "ttft": &#123;
+      "value": 0.25,
+      "unit": "s",
+      "source": "client"
+    &#125;
+  &#125;,
+  "quality": &#91;
+    &#123;
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evaluatorVersion": "exact-text/v1",
+      "verdict": "pass",
+      "reason": null
+    &#125;
+  &#93;
+&#125;</pre>
+
+</details>
+
+<details>
+<summary>Excluded evidence: source / run 5 / 1</summary>
+
+<pre>&#123;
+  "metrics": &#123;
+    "ttft": &#123;
+      "value": 0.25,
+      "unit": "s",
+      "source": "client"
+    &#125;
+  &#125;,
+  "quality": &#91;
+    &#123;
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evaluatorVersion": "exact-text/v2",
+      "verdict": "pass",
+      "reason": null
+    &#125;
+  &#93;
+&#125;</pre>
+
+</details>
+
 ## condition-1
 
 Rows in this group share every recorded comparison dimension.
@@ -241,40 +304,6 @@ Rows in this group share every recorded comparison dimension.
     "temperature": 0,
     "top&#95;p": 1
   &#125;
-&#125;</pre>
-
-</details>
-
-## Undetermined conditions
-
-These rows lack comparison metadata. They are not mutually comparable and do not form a condition group.
-
-| Source / run | Engine / model | Status | Adoption | Reasons |
-| --- | --- | --- | --- | --- |
-| 4 / 1 | ollama / synthetic-model | measured | undetermined | MISSING-FINGERPRINT |
-
-<details>
-<summary>Recorded evidence</summary>
-
-### Source / run 4 / 1
-
-<pre>&#123;
-  "metrics": &#123;
-    "ttft": &#123;
-      "value": 0.25,
-      "unit": "s",
-      "source": "client"
-    &#125;
-  &#125;,
-  "quality": &#91;
-    &#123;
-      "fixtureId": "exact-answer",
-      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-      "evaluatorVersion": "exact-text/v1",
-      "verdict": "pass",
-      "reason": null
-    &#125;
-  &#93;
 &#125;</pre>
 
 </details>

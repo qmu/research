@@ -1,10 +1,10 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { renderAdoptionReport } from "../local-inference-adoption/domain/adoption.js";
 
-const [output, ...inputs] = process.argv.slice(2);
-if (!output || inputs.length === 0) {
+const [flag, currentCommit, output, ...inputs] = process.argv.slice(2);
+if (flag !== "--commit" || !currentCommit || !output || inputs.length === 0) {
   console.error(
-    "Usage: local-inference:adoption <new-report.md> <result.json> [...]",
+    "Usage: local-inference:adoption --commit <full-sha> <new-report.md> <result.json> [...]",
   );
   process.exitCode = 1;
 } else {
@@ -12,7 +12,7 @@ if (!output || inputs.length === 0) {
     const results = await Promise.all(
       inputs.map(async (path) => JSON.parse(await readFile(path, "utf8"))),
     );
-    const report = renderAdoptionReport(results);
+    const report = renderAdoptionReport(results, currentCommit);
     await writeFile(output, report, { flag: "wx" });
     console.log("Wrote condition-scoped adoption report.");
   } catch {

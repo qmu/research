@@ -3,6 +3,8 @@ type RecordValue = Record<string, unknown>;
 type Verdict = "pass" | "fail" | "undetermined";
 export interface AdoptionRow {
   sourceIndex: number;
+  commitSha: string | null;
+  excluded: boolean;
   runIndex: number;
   engine: string;
   model: string;
@@ -18,6 +20,7 @@ export interface AdoptionRow {
 }
 export interface AdoptionReport {
   schemaVersion: 1;
+  currentCommit: string;
   rows: AdoptionRow[];
   evaluatorMismatches: {
     rowIndexes: [number, number];
@@ -34,6 +37,8 @@ const text = (value: unknown): value is string =>
   typeof value === "string" && value.trim().length > 0;
 const oneOf = (value: unknown, values: readonly string[]) =>
   typeof value === "string" && values.includes(value);
+const isCommit = (value: unknown): value is string =>
+  typeof value === "string" && /^[a-f0-9]{40}$/.test(value);
 const hash = (value: unknown) =>
   typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 const own = (value: RecordValue, key: string) =>
@@ -119,7 +124,9 @@ function quality(value: unknown): RecordValue[] {
 /** Missing legacy metadata stays visible but cannot establish comparability or adoption. */
 export function joinAdoptionResults(
   inputs: readonly unknown[],
+  currentCommit: string,
 ): AdoptionReport {
+  if (!isCommit(currentCommit)) throw new Error("Invalid current commit");
   if (!Array.isArray(inputs) || !inputs.length)
     throw new Error("Expected at least one result");
   const rows: AdoptionRow[] = [];
@@ -131,6 +138,18 @@ export function joinAdoptionResults(
       !data.runs.length
     )
       throw new Error("Expected schemaVersion 1 with nonempty runs");
+    const execution = own(data, "execution") ? object(data.execution) : {};
+    if (own(execution, "targetCommit") && !isCommit(execution.targetCommit))
+      throw new Error("Invalid saved commit");
+    const commitSha = isCommit(execution.targetCommit)
+      ? execution.targetCommit
+      : null;
+    const commitReason =
+      commitSha === null
+        ? "MISSING-COMMIT"
+        : commitSha !== currentCommit
+          ? "COMMIT-MISMATCH"
+          : null;
     const environment = own(data, "fingerprint")
       ? fingerprint(data.fingerprint)
       : null;
@@ -169,7 +188,7 @@ export function joinAdoptionResults(
         evaluations.some((q) => q.reason === "MEASURE-FAILED")
       )
         throw new Error("Measured run has contradictory quality");
-      const reasons: string[] = [];
+      const reasons: string[] = commitReason ? [commitReason] : [];
       if (!environment) reasons.push("MISSING-FINGERPRINT");
       if (!condition || !Object.keys(condition).length)
         reasons.push("MISSING-CONDITION");
@@ -211,6 +230,8 @@ export function joinAdoptionResults(
         reasons.push("QUALITY-FAIL");
       rows.push({
         sourceIndex,
+        commitSha,
+        excluded: commitReason !== null,
         runIndex,
         engine: String(run.engine),
         model: run.model,
@@ -218,11 +239,14 @@ export function joinAdoptionResults(
         metrics: metrics(run.metrics),
         ...(own(run, "error") ? { error: run.error as string } : {}),
         quality: evaluations,
-        adoption: reasons.includes("QUALITY-FAIL")
-          ? "fail"
-          : reasons.length
+        adoption:
+          commitReason !== null
             ? "undetermined"
-            : "pass",
+            : reasons.includes("QUALITY-FAIL")
+              ? "fail"
+              : reasons.length
+                ? "undetermined"
+                : "pass",
         comparability: conditionKey === null ? "undetermined" : "comparable",
         reasons,
         conditionKey,
@@ -279,7 +303,7 @@ export function joinAdoptionResults(
       }
     }
   });
-  return { schemaVersion: 1, rows, groups, evaluatorMismatches };
+  return { schemaVersion: 1, currentCommit, rows, groups, evaluatorMismatches };
 }
 
 // Encode markup, including Vue template delimiters, before embedding untrusted JSON.
@@ -287,8 +311,11 @@ const cell = (value: string) =>
   value.replace(/[&<>|`*_[\]\\{}\r\n]/g, (char) =>
     char === "\r" || char === "\n" ? " " : `&#${char.charCodeAt(0)};`,
   );
-export function renderAdoptionReport(inputs: readonly unknown[]): string {
-  const report = joinAdoptionResults(inputs);
+export function renderAdoptionReport(
+  inputs: readonly unknown[],
+  currentCommit: string,
+): string {
+  const report = joinAdoptionResults(inputs, currentCommit);
   const pretty = (value: unknown) =>
     JSON.stringify(value, null, 2).split("\n").map(cell).join("\n");
   const table = (rows: AdoptionRow[]) => [
@@ -325,7 +352,9 @@ export function renderAdoptionReport(inputs: readonly unknown[]): string {
     "</details>",
     "",
   ]);
-  const ungrouped = report.rows.filter((row) => row.groupId === null);
+  const ungrouped = report.rows.filter(
+    (row) => row.groupId === null && !row.excluded,
+  );
   if (ungrouped.length)
     sections.push(
       "## Undetermined conditions",
@@ -369,6 +398,30 @@ export function renderAdoptionReport(inputs: readonly unknown[]): string {
           "",
         ]
       : []),
+    "## Commit eligibility",
+    "",
+    `Current comparison commit: ${report.currentCommit}`,
+    "",
+    "COMMIT-MISMATCH: Saved measurement commit differs from the current comparison commit. MISSING-COMMIT: No saved commit was recorded. These rows are excluded from adoption and condition groups; recorded evidence remains available below. [Remeasure](./local-inference-adoption-format.md#commit-eligibility).",
+    "",
+    "| Source / run | Saved commit | Eligibility | Reason |",
+    "| --- | --- | --- | --- |",
+    ...report.rows.map(
+      (row) =>
+        `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.commitSha ?? "not recorded"} | ${row.excluded ? "excluded" : "eligible"} | ${row.excluded ? row.reasons[0] : "none"} |`,
+    ),
+    "",
+    ...report.rows
+      .filter((row) => row.excluded)
+      .flatMap((row) => [
+        "<details>",
+        `<summary>Excluded evidence: source / run ${row.sourceIndex + 1} / ${row.runIndex + 1}</summary>`,
+        "",
+        `<pre>${pretty({ metrics: row.metrics, quality: row.quality })}</pre>`,
+        "",
+        "</details>",
+        "",
+      ]),
     ...sections,
     "[Input contract and interpretation](./local-inference-adoption-format.md)",
     "",

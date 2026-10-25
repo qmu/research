@@ -1,8 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { joinAdoptionResults, renderAdoptionReport } from "./adoption.js";
+import {
+  joinAdoptionResults as joinResults,
+  renderAdoptionReport as renderReport,
+} from "./adoption.js";
+const currentCommit = "1".repeat(40);
+const joinAdoptionResults = (inputs: readonly unknown[]) =>
+  joinResults(inputs, currentCommit);
+const renderAdoptionReport = (inputs: readonly unknown[]) =>
+  renderReport(inputs, currentCommit);
 const digest = "a".repeat(64);
 const sample = () => ({
   schemaVersion: 1,
+  execution: { targetCommit: currentCommit },
   inputSha256: digest,
   sampling: { temperature: 0, seed: 42 },
   procedure: "single-request-per-engine",
@@ -340,7 +349,7 @@ describe("exact adoption join", () => {
       }),
       legacy,
     ]);
-    expect(output.match(/\| Source \/ run \|/g)).toHaveLength(3);
+    expect(output.match(/\| Source \/ run \| Engine/g)).toHaveLength(3);
     expect(output).toContain("## condition-1");
     expect(output).toContain("## condition-2");
     expect(output).toContain("## Undetermined conditions");
@@ -445,5 +454,76 @@ describe("evaluator mismatch diagnostics", () => {
     expect(rendered).not.toContain("<script>");
     expect(rendered).not.toContain("{{x}}");
     expect(rendered).toContain("&#60;script&#62;");
+  });
+});
+
+describe("current commit eligibility", () => {
+  it("excludes every run in a stale source, including quality failures", () => {
+    const stale = sample();
+    stale.execution.targetCommit = "2".repeat(40);
+    stale.runs.push(structuredClone(stale.runs[0]));
+    stale.runs[1].quality[0].verdict = "fail";
+    const before = structuredClone(stale);
+    const report = joinAdoptionResults([sample(), stale]);
+    expect(report.groups.flatMap((g) => g.rowIndexes)).toEqual([0]);
+    expect(
+      report.rows
+        .slice(1)
+        .map((r) => [r.excluded, r.adoption, r.groupId, r.reasons[0]]),
+    ).toEqual([
+      [true, "undetermined", null, "COMMIT-MISMATCH"],
+      [true, "undetermined", null, "COMMIT-MISMATCH"],
+    ]);
+    expect(stale).toEqual(before);
+    expect(report.rows[2].quality[0].verdict).toBe("fail");
+  });
+  it("does not treat missing commit metadata as eligible or evaluator mismatches", () => {
+    const missing: Record<string, unknown> = sample();
+    delete missing.execution;
+    const stale = changed((v) => {
+      v.execution.targetCommit = "2".repeat(40);
+      v.runs[0].quality[0].evaluatorVersion = "v2";
+    });
+    const report = joinAdoptionResults([sample(), missing, stale]);
+    expect(report.rows[1].reasons[0]).toBe("MISSING-COMMIT");
+    expect(report.evaluatorMismatches).toEqual([]);
+    expect(report.groups).toHaveLength(1);
+  });
+  it.each([
+    undefined,
+    null,
+    "",
+    "HEAD",
+    "1".repeat(7),
+    "z".repeat(40),
+    "1".repeat(41),
+  ])("rejects invalid current commit %s", (value) => {
+    expect(() => joinResults([sample()], value as string)).toThrow(
+      "Invalid current commit",
+    );
+  });
+  it.each([null, "", "HEAD", "1".repeat(7), {}, "<script>"])(
+    "rejects malformed saved commit %s",
+    (value) => {
+      expect(() =>
+        joinAdoptionResults([
+          { ...sample(), execution: { targetCommit: value } },
+        ]),
+      ).toThrow("Invalid saved commit");
+    },
+  );
+  it("renders stale rows only as excluded evidence, never adoption rows", () => {
+    const stale = changed((v) => {
+      v.execution.targetCommit = "2".repeat(40);
+    });
+    const rendered = renderAdoptionReport([stale]);
+    expect(rendered).toContain("COMMIT-MISMATCH");
+    expect(rendered).toContain("Excluded evidence: source / run 1 / 1");
+    expect(rendered).not.toContain("| Adoption |");
+    expect(rendered).not.toContain("## condition-");
+    expect(rendered).not.toContain("## Undetermined conditions");
+    expect(
+      joinResults([stale], stale.execution.targetCommit).rows[0].adoption,
+    ).toBe("pass");
   });
 });
