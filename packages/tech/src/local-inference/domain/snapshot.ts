@@ -38,9 +38,7 @@ const parseSnapshot = (raw: unknown, index: number): ComparisonSnapshot => {
 
   for (const field of REQUIRED_STRING_FIELDS) {
     if (!isNonEmptyString(record[field])) {
-      throw new Error(
-        `snapshots[${index}].${field} must be a nonempty string`,
-      );
+      throw new Error(`snapshots[${index}].${field} must be a nonempty string`);
     }
   }
 
@@ -50,10 +48,7 @@ const parseSnapshot = (raw: unknown, index: number): ComparisonSnapshot => {
     );
   }
 
-  if (
-    record.reasonCode !== undefined &&
-    !isNonEmptyString(record.reasonCode)
-  ) {
+  if (record.reasonCode !== undefined && !isNonEmptyString(record.reasonCode)) {
     throw new Error(
       `snapshots[${index}].reasonCode must be a nonempty string when present`,
     );

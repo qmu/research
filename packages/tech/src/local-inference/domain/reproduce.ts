@@ -17,9 +17,9 @@ const SECRET_LIKE = /key|token|secret|password|credential|profile/i;
 const shellQuote = (value: string): string =>
   `'${value.replace(/'/g, "'\\''")}'`;
 
-const COMMAND_FIELDS: ReadonlyArray<
-  readonly [flag: string, read: (snapshot: ComparisonSnapshot) => string]
-> = [
+type ReadField = (snapshot: ComparisonSnapshot) => string;
+
+const COMMAND_FIELDS: ReadonlyArray<readonly [string, ReadField]> = [
   ["--engine-version", (snapshot) => snapshot.engineVersion],
   ["--model", (snapshot) => snapshot.model],
   ["--fixture-version", (snapshot) => snapshot.fixtureVersion],
@@ -31,9 +31,7 @@ const COMMAND_FIELDS: ReadonlyArray<
  * --fixture-version <v> --runner-version <v>` from a snapshot's own fields.
  * Throws instead of rendering if any of those four values looks secret-like.
  */
-export const safeReproduceCommand = (
-  snapshot: ComparisonSnapshot,
-): string => {
+export const safeReproduceCommand = (snapshot: ComparisonSnapshot): string => {
   const args = COMMAND_FIELDS.map(([flag, read]) => {
     const value = read(snapshot);
     if (SECRET_LIKE.test(value)) {

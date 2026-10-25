@@ -14,9 +14,7 @@ const repoPath = (path: string): string =>
 
 describe("docs/local-inference-adoption.md", () => {
   it("matches renderAdoptionReport over the committed fixture", () => {
-    const expected = renderAdoptionReport(
-      parseComparisonSnapshotFile(fixture),
-    );
+    const expected = renderAdoptionReport(parseComparisonSnapshotFile(fixture));
     const committed = readFileSync(
       repoPath("docs/local-inference-adoption.md"),
       "utf8",

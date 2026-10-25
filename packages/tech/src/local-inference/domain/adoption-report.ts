@@ -10,11 +10,12 @@ import type { ComparisonSnapshot, ComparisonSnapshotFile } from "./snapshot";
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
 
-const VERDICT_LABEL: Readonly<Record<ComparisonSnapshot["verdict"], string>> =
-  {
-    adopted: "採用",
-    rejected: "不採用",
-  };
+type Verdict = ComparisonSnapshot["verdict"];
+
+const VERDICT_LABEL: Readonly<Record<Verdict, string>> = {
+  adopted: "採用",
+  rejected: "不採用",
+};
 
 const sortedById = (
   snapshots: ReadonlyArray<ComparisonSnapshot>,
@@ -41,9 +42,7 @@ const reproductionSection = (snapshot: ComparisonSnapshot): string =>
  * Renders the full adoption page Markdown from a parsed comparison snapshot
  * file. Rows are sorted by `id` so the output is independent of input order.
  */
-export const renderAdoptionReport = (
-  file: ComparisonSnapshotFile,
-): string => {
+export const renderAdoptionReport = (file: ComparisonSnapshotFile): string => {
   const snapshots = sortedById(file.snapshots);
   const table = [TABLE_HEADER, ...snapshots.map(tableRow)].join("\n");
   const sections = snapshots.map(reproductionSection).join("\n\n");
