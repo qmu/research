@@ -96,8 +96,9 @@ function parseUseCase(useCase: RawUseCase): UseCase {
 export const useCaseCatalogStatus: string = catalog.status;
 export const useCaseCatalogNote: string = catalog.note;
 
-export const useCases: ReadonlyArray<UseCase> =
-  catalog.useCases.map(parseUseCase);
+export const useCases: ReadonlyArray<UseCase> = catalog.useCases.map(
+  parseUseCase,
+);
 
 export function useCaseById(id: string): UseCase {
   const useCase = useCases.find((candidate) => candidate.id === id);
