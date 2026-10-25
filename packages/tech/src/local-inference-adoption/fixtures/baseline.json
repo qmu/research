@@ -73,6 +73,7 @@
   ],
   "execution": {
     "targetCommit": "1111111111111111111111111111111111111111",
-    "runnerVersion": "local-inference/4"
+    "runnerVersion": "local-inference/4",
+    "runId": "synthetic-baseline"
   }
 }

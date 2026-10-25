@@ -1,3 +1,4 @@
+import { remeasurementContext, remeasurementAnchor } from "./remeasurement.js";
 import { checkRunnerVersion, type RunnerRecovery } from "./runner-version.js";
 
 /** Join the schemaVersion 1 measurement, fingerprint and exact-text quality contracts. */
@@ -325,14 +326,21 @@ export function renderAdoptionReport(
   currentCommit: string,
 ): string {
   const report = joinAdoptionResults(inputs, currentCommit);
+  const contexts = inputs.map((input) =>
+    remeasurementContext(object(input).execution),
+  );
+  const entry = (sourceIndex: number, label = "Remeasure snapshot") =>
+    contexts[sourceIndex]
+      ? `[${label}](#${remeasurementAnchor(sourceIndex)})`
+      : "Remeasurement unavailable: incomplete snapshot identity";
   const pretty = (value: unknown) =>
     JSON.stringify(value, null, 2).split("\n").map(cell).join("\n");
   const table = (rows: AdoptionRow[]) => [
-    "| Source / run | Engine / model | Status | Adoption | Reasons |",
-    "| --- | --- | --- | --- | --- |",
+    "| Source / run | Engine / model | Status | Adoption | Reasons | Next step |",
+    "| --- | --- | --- | --- | --- | --- |",
     ...rows.map(
       (r) =>
-        `| ${[`${r.sourceIndex + 1} / ${r.runIndex + 1}`, `${r.engine} / ${r.model}`, r.status, r.adoption, r.reasons.join(", ") || "none"].map(cell).join(" | ")} |`,
+        `| ${[`${r.sourceIndex + 1} / ${r.runIndex + 1}`, `${r.engine} / ${r.model}`, r.status, r.adoption, r.reasons.join(", ") || "none"].map(cell).join(" | ")} | ${entry(r.sourceIndex)} |`,
     ),
     "",
     "<details>",
@@ -402,7 +410,7 @@ export function renderAdoptionReport(
                 .map((q) => `${q.fixtureId}: ${q.evaluatorVersion}`)
                 .sort(compare)
                 .join(", ");
-            return `| ${cell(`${a.sourceIndex + 1} / ${a.runIndex + 1}`)} | ${cell(versions(a))} | ${cell(`${b.sourceIndex + 1} / ${b.runIndex + 1}`)} | ${cell(versions(b))} | ${reason} | [Remeasure](./local-inference-adoption-format.md#remeasure) |`;
+            return `| ${cell(`${a.sourceIndex + 1} / ${a.runIndex + 1}`)} | ${cell(versions(a))} | ${cell(`${b.sourceIndex + 1} / ${b.runIndex + 1}`)} | ${cell(versions(b))} | ${reason} | ${entry(a.sourceIndex, "Remeasure A")} / ${entry(b.sourceIndex, "Remeasure B")} |`;
           }),
           "",
         ]
@@ -411,13 +419,13 @@ export function renderAdoptionReport(
     "",
     `Current comparison commit: ${report.currentCommit}`,
     "",
-    "COMMIT-MISMATCH: Saved measurement commit differs from the current comparison commit. MISSING-COMMIT: No saved commit was recorded. These rows are excluded from adoption and condition groups; recorded evidence remains available below. [Remeasure](./local-inference-adoption-format.md#commit-eligibility).",
+    "COMMIT-MISMATCH: Saved measurement commit differs from the current comparison commit. MISSING-COMMIT: No saved commit was recorded. These rows are excluded from adoption and condition groups; recorded evidence remains available below. [Recovery guidance](./local-inference-adoption-format.md#commit-eligibility).",
     "",
     "| Source / run | Saved commit | Eligibility | Reason |",
     "| --- | --- | --- | --- |",
     ...report.rows.map((row) => {
       if (row.reasons[0] === "MISSING-COMMIT")
-        return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Remeasure missing commit](./local-inference-adoption-format.md#missing-commit) |`;
+        return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Missing commit guidance](./local-inference-adoption-format.md#missing-commit) |`;
       const commitExcluded = row.reasons.includes("COMMIT-MISMATCH");
       return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.commitSha ?? "not recorded"} | ${commitExcluded ? "excluded" : "eligible"} | ${commitExcluded ? "COMMIT-MISMATCH" : "none"} |`;
     }),
@@ -430,7 +438,7 @@ export function renderAdoptionReport(
     "| --- | --- | --- | --- |",
     ...report.rows.map((row) => {
       const recovery = row.runnerRecovery;
-      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.runnerVersion ?? "unavailable"} | ${recovery ? "excluded (cannot adopt)" : "supported"} | ${recovery ? `${recovery.reason}: ${recovery.message} [Remeasure runner](${recovery.href})` : "none"} |`;
+      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.runnerVersion ?? "unavailable"} | ${recovery ? "excluded (cannot adopt)" : "supported"} | ${recovery ? `${recovery.reason}: ${recovery.message} [Runner recovery guidance](${recovery.href})` : "none"} |`;
     }),
     "",
     ...report.rows
@@ -444,6 +452,40 @@ export function renderAdoptionReport(
         "</details>",
         "",
       ]),
+    "## Snapshot-bound remeasurement",
+    "",
+    "Each entry is pinned to the saved snapshot, not latest or the current checkout. Missing or unsupported identity disables the entry. Rendering and preparing a plan do not execute inference.",
+    "",
+    "| Source | Next step |",
+    "| --- | --- |",
+    ...contexts.map((_, index) => `| ${index + 1} | ${entry(index)} |`),
+    "",
+    ...contexts.flatMap((context, index) =>
+      context
+        ? [
+            `### Source ${index + 1} remeasurement {#${remeasurementAnchor(index)}}`,
+            "",
+            `Snapshot execution ID: \`${context.runId}\``,
+            "",
+            `Snapshot target commit: \`${context.targetCommit}\``,
+            "",
+            `Snapshot runner version: \`${context.runnerVersion}\``,
+            "",
+            `Current comparison commit: \`${report.currentCommit}\`. This entry preserves the snapshot target even if it differs.`,
+            "",
+            "From packages/tech, replace only snapshot.json with the original artifact path:",
+            "",
+            "```sh",
+            `node --import tsx/esm src/entrypoints/prepare-local-inference-remeasurement.ts ${context.runId} ${context.targetCommit} ${context.runnerVersion} snapshot.json`,
+            "```",
+            "",
+            "The guard reads the original snapshot and rejects any changed identity before returning a plan. Preserve the old artifact. Use the pinned target and runner in a trusted checkout, retain all recorded input/model/evaluator conditions, and save remeasurement under a NEW execution ID and output path. Never reuse the source execution ID for the new run. No engine runner is invoked by this entry.",
+            "",
+            "[Remeasurement contract](./local-inference-adoption-format.md#snapshot-bound-remeasurement)",
+            "",
+          ]
+        : [],
+    ),
     ...sections,
     "[Input contract and interpretation](./local-inference-adoption-format.md)",
     "",

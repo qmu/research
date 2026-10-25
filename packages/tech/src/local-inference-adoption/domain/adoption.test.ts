@@ -12,6 +12,7 @@ const digest = "a".repeat(64);
 const sample = () => ({
   schemaVersion: 1,
   execution: {
+    runId: "sample-run",
     targetCommit: currentCommit,
     runnerVersion: "local-inference/4",
   },
@@ -416,7 +417,7 @@ describe("evaluator mismatch diagnostics", () => {
     expect(rendered).toContain("exact-text/v2");
     expect(rendered).toContain("EVALUATOR-VERSION-MISMATCH");
     expect(rendered).toContain(
-      "./local-inference-adoption-format.md#remeasure",
+      "[Remeasure A](#remeasure-source-1) / [Remeasure B](#remeasure-source-2)",
     );
     expect(inputs).toEqual(before);
   });
@@ -561,7 +562,7 @@ describe("missing target commit recovery", () => {
       const output = renderAdoptionReport([sample(), missing]);
       for (const run of [1, 2])
         expect(output).toContain(
-          `| 2 / ${run} | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Remeasure missing commit](./local-inference-adoption-format.md#missing-commit) |`,
+          `| 2 / ${run} | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Missing commit guidance](./local-inference-adoption-format.md#missing-commit) |`,
         );
       expect(missing).toEqual(before);
       expect(renderAdoptionReport([sample(), missing])).toBe(output);
@@ -625,7 +626,7 @@ describe("saved runner version eligibility", () => {
     expect(rendered).not.toContain("## condition-");
     expect(rendered).toContain("excluded (cannot adopt)");
     expect(rendered).toContain(
-      "[Remeasure runner](./local-inference-adoption-format.md#runner-version)",
+      "[Runner recovery guidance](./local-inference-adoption-format.md#runner-version)",
     );
     expect(renderAdoptionReport([saved])).toBe(rendered);
   });
