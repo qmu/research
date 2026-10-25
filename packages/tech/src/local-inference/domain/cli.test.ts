@@ -1,13 +1,15 @@
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
+  linkSync,
   mkdtempSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 import fixture from "../fixtures/comparison.json";
 import { renderInferenceReport } from "./report";
@@ -64,6 +66,34 @@ const invalid = [
 ];
 
 describe("shared inference validation preflight", () => {
+  it.each(["same path", "relative alias", "symlink", "hard link"])(
+    "preserves valid input when output is the %s",
+    (alias) => {
+      const dir = mkdtempSync(join(tmpdir(), "inference-alias-"));
+      try {
+        const input = join(dir, "input.json");
+        const original = JSON.stringify(fixture);
+        writeFileSync(input, original);
+        let output = input;
+        if (alias === "relative alias") output = relative(process.cwd(), input);
+        if (alias === "symlink" || alias === "hard link") {
+          output = join(dir, "comparison.md");
+          if (alias === "symlink") symlinkSync(input, output);
+          else linkSync(input, output);
+        }
+        const result = invoke("render", [input, output]);
+        expect(result.status).toBe(1);
+        expect(result.stdout).toBe("");
+        expect(result.stderr).toContain("must not overwrite the input JSON");
+        expect(readFileSync(input, "utf8")).toBe(original);
+        expect(readFileSync(output, "utf8")).toBe(original);
+        expect(invoke("validate", [input]).status).toBe(0);
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+    },
+  );
+
   it("accepts the fixture and produces the same deterministic table on stdout and disk", () => {
     const input = "src/local-inference/fixtures/comparison.json";
     const before = readFileSync(input);
