@@ -84,7 +84,9 @@ export async function runLocalInference(
 ) {
   return withRunningLock(output, async () => {
     const config = parseConfig(input);
-    const execution = await beginExecution(output);
+    const execution = await beginExecution(output, {
+      timeoutMs: timeoutMs * config.targets.length,
+    });
     const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
     const runs = [];
     for (const target of config.targets) {

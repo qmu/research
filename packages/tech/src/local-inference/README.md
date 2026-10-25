@@ -130,8 +130,9 @@ publication. A second runner targeting the same canonical output fails with
 outputs remain independent. Existing execution ID/version validation still
 rejects stale external completion notices.
 
-This path requires Linux and util-linux `flock` on PATH; a missing or incompatible
-command fails closed before measurement. The runner owns an open file descriptor;
+This path requires util-linux `flock` on Linux or `python3` (standard-library
+`fcntl.flock`) on macOS. A missing or incompatible backend fails closed before
+measurement. The runner owns an open file descriptor;
 `flock` acquires its shared open-file-description lock and exits. Normal completion,
 exceptions, and process death close that descriptor and release ownership. An old
 lock file is safe to reuse immediately: no timestamp expiry or PID reuse can steal
@@ -142,3 +143,41 @@ are outside this guarantee. Reservation/publication uses the same kernel locking
 wait on `<output>.publication.running.lock`, so crashes inside that critical
 section also recover automatically. Stop all older runners before upgrading;
 older mkdir-based writers use a different locking protocol.
+
+### Abandoned-owner recovery evidence
+
+Before requests, the runner reserves a deadline equal to the four sequential
+request timeouts. This wall-clock deadline is diagnostic: even an expired live
+owner is never evicted. Only acquisition of the full-lifetime kernel lock permits
+recovery of an unfinished reservation. An exited owner can be recovered before
+its deadline; a legacy reservation with no deadline has an unknown decision.
+External coordinators using `beginExecution(output)` do not opt into recovery.
+Only callers holding the full-lifetime running lock may pass `{ timeoutMs }`.
+
+Recovery atomically replaces the common result JSON before the next reservation
+or HTTP request. Existing measurement rows and execution identity are retained;
+if no result exists yet, the recovery-only document is `{ schemaVersion: 1,
+runs: [], lockRecovery: ... }` and contains no claimed measurements. The latest
+recovery is carried into subsequent completions, including external notices:
+
+```json
+{
+  "ownerRunId": "00000000-0000-4000-8000-000000000000",
+  "deadlineAt": 1790000000000,
+  "checkedAt": 1790000000001,
+  "deadlineDecision": "expired",
+  "reason": "owner-lock-released"
+}
+```
+
+These are the only `lockRecovery` fields. Times are integer Unix milliseconds;
+`deadlineAt` and `ownerRunId` may be null for missing/invalid legacy metadata.
+Only generated UUID-v4 owner IDs are copied. Deadline decisions are exactly
+`expired` (including equality), `not-expired`, or `unknown`. Reasons are the fixed
+code `owner-lock-released`, never exception text, endpoints, commands, PIDs or
+host names. Completed reservations do not create recovery events. A malformed
+existing result or failed atomic write aborts recovery before replacing its
+reservation. Atomic replacement reuses the fsync-and-rename writer; result and
+execution sidecar still are not a single crash-atomic transaction. A crash
+between their writes can repeat recovery of the same owner; this is a latest
+event, not an exactly-once audit history. Power-loss durability is unchanged.
