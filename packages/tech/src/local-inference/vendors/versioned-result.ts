@@ -1,3 +1,4 @@
+import { recoveryRecord, type LockRecovery } from "../domain/lock-recovery.js";
 import { randomUUID } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
@@ -5,7 +6,23 @@ import { withRunningLock } from "./running-lock.js";
 import { writeJsonAtomic } from "./atomic-json.js";
 
 export type Execution = { runId: string; version: number };
-type State = Execution & { completed: boolean };
+type State = Execution & {
+  completed: boolean;
+  deadlineAt?: number;
+  lockRecovery?: LockRecovery;
+};
+async function readResult(output: string): Promise<Record<string, unknown>> {
+  try {
+    const value: unknown = JSON.parse(await readFile(output, "utf8"));
+    if (!value || typeof value !== "object" || Array.isArray(value))
+      throw new Error("INVALID-RESULT");
+    return value as Record<string, unknown>;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT")
+      return { schemaVersion: 1, runs: [] };
+    throw error;
+  }
+}
 
 export function isStaleExecutionError(error: unknown): error is Error {
   return (
@@ -42,21 +59,66 @@ async function readState(output: string): Promise<State | undefined> {
     typeof state.completed !== "boolean"
   )
     throw new Error("INVALID-EXECUTION-STATE");
+  if (state.lockRecovery) {
+    const r = state.lockRecovery;
+    if (
+      !["expired", "not-expired", "unknown"].includes(r.deadlineDecision) ||
+      r.reason !== "owner-lock-released" ||
+      !Number.isSafeInteger(r.checkedAt) ||
+      r.checkedAt < 0 ||
+      (r.deadlineAt !== null &&
+        (!Number.isSafeInteger(r.deadlineAt) || r.deadlineAt < 0)) ||
+      (r.ownerRunId !== null &&
+        (typeof r.ownerRunId !== "string" ||
+          recoveryRecord({ ...state, runId: r.ownerRunId }, 0).ownerRunId ===
+            null))
+    )
+      throw new Error("INVALID-RECOVERY-STATE");
+    state.lockRecovery = {
+      ownerRunId: r.ownerRunId,
+      deadlineAt: r.deadlineAt,
+      checkedAt: r.checkedAt,
+      deadlineDecision: r.deadlineDecision,
+      reason: r.reason,
+    };
+  }
   return state;
 }
 
 /** Reserve before measurement. Ordering is lock acquisition, never wall time. */
-export async function beginExecution(output: string): Promise<Execution> {
+export async function beginExecution(
+  output: string,
+  // Only a caller holding the full-lifetime running lock may recover an owner.
+  recovery?: { timeoutMs: number },
+): Promise<Execution> {
   output = await canonical(output);
   return locked(output, async () => {
     const previous = await readState(output);
     const version = (previous?.version ?? 0) + 1;
     if (!Number.isSafeInteger(version))
       throw new Error("EXECUTION-VERSION-LIMIT");
+    const now = Date.now();
+    const deadlineAt = recovery ? now + recovery.timeoutMs : undefined;
+    if (
+      recovery &&
+      (!Number.isSafeInteger(deadlineAt) || recovery.timeoutMs <= 0)
+    )
+      throw new Error("INVALID-EXECUTION-DEADLINE");
+    let lockRecovery = previous?.lockRecovery;
+    if (recovery && previous && !previous.completed) {
+      lockRecovery = recoveryRecord(previous, now);
+      const result = await readResult(output);
+      await writeJsonAtomic(output, {
+        ...result,
+        lockRecovery,
+      });
+    }
     const execution = { runId: randomUUID(), version };
     await writeJsonAtomic(`${output}.execution.json`, {
       ...execution,
       completed: false,
+      ...(lockRecovery ? { lockRecovery } : {}),
+      ...(deadlineAt === undefined ? {} : { deadlineAt }),
     });
     return execution;
   });
@@ -81,7 +143,11 @@ export async function completeExecution<T extends object>(
         new Error("STALE-EXECUTION: execution is no longer current"),
         { code: "STALE-EXECUTION" },
       );
-    const result = { ...value, execution: { ...execution } };
+    const result = {
+      ...value,
+      ...(current.lockRecovery ? { lockRecovery: current.lockRecovery } : {}),
+      execution: { ...execution },
+    };
     await writeJsonAtomic(output, result);
     await writeJsonAtomic(`${output}.execution.json`, {
       ...current,

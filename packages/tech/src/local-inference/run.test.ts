@@ -1,5 +1,6 @@
+import { beginExecution } from "./vendors/versioned-result.js";
 import { createServer, type Server } from "node:http";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -248,4 +249,35 @@ describe("local inference common JSON", () => {
       expect(() => parseConfig(config(url))).toThrow();
     expect(() => parseConfig({ ...valid, messages: [] })).toThrow();
   });
+});
+
+it("saves abandoned-owner evidence before HTTP and carries it into four-engine results", async () => {
+  const output = await destination();
+  const owner = await beginExecution(output);
+  await writeFile(
+    `${output}.execution.json`,
+    JSON.stringify({ ...owner, completed: false, deadlineAt: 0 }),
+  );
+  const seen: unknown[] = [];
+  const server = createServer(async (_req, res) => {
+    seen.push(JSON.parse(await readFile(output, "utf8")).lockRecovery);
+    res.end(sse([content("ok")]));
+  });
+  servers.push(server);
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("listen failed");
+  const result = await runLocalInference(
+    config(`http://127.0.0.1:${address.port}/v1`),
+    output,
+  );
+  expect(seen).toHaveLength(4);
+  for (const evidence of seen) expect(evidence).toEqual(result.lockRecovery);
+  expect(result.lockRecovery).toMatchObject({
+    ownerRunId: owner.runId,
+    deadlineDecision: "expired",
+    reason: "owner-lock-released",
+  });
+  expect(result.execution.version).toBe(owner.version + 1);
+  expect(result.runs).toHaveLength(4);
 });
