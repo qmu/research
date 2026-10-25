@@ -1,0 +1,3 @@
+rag-benchmark: 5 backend(s), fixture=true
+wrote /work/research/.worktrees/reproduce/outputs/reproduce-fixture/rag-benchmark.md
+wrote /work/research/.worktrees/reproduce/outputs/reproduce-fixture/rag-benchmark.data.json

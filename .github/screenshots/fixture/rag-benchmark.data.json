@@ -1,0 +1,747 @@
+{
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "dataset": {
+    "id": "scifact-mini",
+    "name": "SciFact miniature subset",
+    "source": "https://github.com/allenai/scifact",
+    "license": "SciFact is Apache-2.0; this miniature fixture is repository-authored from SciFact-style claims.",
+    "documents": [
+      {
+        "id": "D1",
+        "title": "Statin therapy and cardiovascular events",
+        "text": "Randomized trials report that statin therapy lowers LDL cholesterol and reduces major cardiovascular events in adults at elevated risk."
+      },
+      {
+        "id": "D2",
+        "title": "Vitamin D and fracture risk",
+        "text": "Meta analyses of vitamin D supplementation show mixed fracture outcomes, with stronger effects when calcium is co-administered."
+      },
+      {
+        "id": "D3",
+        "title": "CRISPR gene editing specificity",
+        "text": "CRISPR Cas9 systems can edit targeted genomic loci, but guide RNA design and delivery method influence off target activity."
+      },
+      {
+        "id": "D4",
+        "title": "Mask use and respiratory droplets",
+        "text": "Laboratory studies show that face masks reduce emitted respiratory droplets during speech and coughing compared with no mask."
+      },
+      {
+        "id": "D5",
+        "title": "Exercise and insulin sensitivity",
+        "text": "Regular aerobic exercise improves insulin sensitivity and glycemic control in adults with type 2 diabetes."
+      }
+    ],
+    "queries": [
+      {
+        "id": "Q1",
+        "text": "Do statins reduce cardiovascular events in adults at risk?"
+      },
+      {
+        "id": "Q2",
+        "text": "Does CRISPR editing depend on guide RNA design for specificity?"
+      },
+      {
+        "id": "Q3",
+        "text": "Can masks reduce respiratory droplets from speech and coughing?"
+      }
+    ],
+    "qrels": [
+      {
+        "queryId": "Q1",
+        "documentId": "D1",
+        "relevance": 2
+      },
+      {
+        "queryId": "Q2",
+        "documentId": "D3",
+        "relevance": 2
+      },
+      {
+        "queryId": "Q3",
+        "documentId": "D4",
+        "relevance": 2
+      }
+    ]
+  },
+  "runs": [
+    {
+      "backend": {
+        "id": "sqlite-vec",
+        "name": "sqlite-vec",
+        "kind": "self-managed",
+        "embeddingCoupling": "fixed",
+        "isolatedStore": true,
+        "retrievalDeterministic": true,
+        "source": "https://github.com/asg017/sqlite-vec",
+        "costNote": "Local SQLite extension; no API cost for benchmark queries.",
+        "metadataFiltering": false
+      },
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "embeddingModel": "fixed-hash-embedding-v1",
+      "datasetId": "scifact-mini",
+      "k": 3,
+      "retrieval": {
+        "recallAtK": 1,
+        "ndcgAtK": 1,
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
+      },
+      "operational": {
+        "ingestMs": 0,
+        "ingestMsStdDev": 0,
+        "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
+        "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
+        "costUsd": 0,
+        "maxScale": 5
+      },
+      "queryResults": [
+        {
+          "queryId": "Q1",
+          "results": [
+            {
+              "documentId": "D1",
+              "score": 0.4866642633922876
+            },
+            {
+              "documentId": "D5",
+              "score": 0.23210354127426377
+            },
+            {
+              "documentId": "D4",
+              "score": 0.15249857033260467
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q2",
+          "results": [
+            {
+              "documentId": "D3",
+              "score": 0.6374552583116767
+            },
+            {
+              "documentId": "D5",
+              "score": 0.08206099398622184
+            },
+            {
+              "documentId": "D4",
+              "score": 0.07188851546895896
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q3",
+          "results": [
+            {
+              "documentId": "D4",
+              "score": 0.6437206858203839
+            },
+            {
+              "documentId": "D5",
+              "score": 0.26243194054073904
+            },
+            {
+              "documentId": "D3",
+              "score": 0.25482359571881275
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        }
+      ]
+    },
+    {
+      "backend": {
+        "id": "openai-vector-store",
+        "name": "OpenAI vector store (File Search)",
+        "kind": "managed",
+        "embeddingCoupling": "managed",
+        "isolatedStore": false,
+        "retrievalDeterministic": false,
+        "source": "https://platform.openai.com/docs/guides/retrieval",
+        "costNote": "Storage $0.10/GB/day after the first free GB; search calls $2.50 per 1k (platform.openai.com/pricing, 2026-07).",
+        "metadataFiltering": true,
+        "searchCostPer1kCallsUsd": 2.5,
+        "ingestionNote": "File Search chunks documents server-side (default 800-token chunks, 400-token overlap) and embeds them internally; the indexed unit is OpenAI's chunk, not the committed document."
+      },
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "embeddingModel": "fixed-hash-embedding-v1",
+      "datasetId": "scifact-mini",
+      "k": 3,
+      "retrieval": {
+        "recallAtK": 1,
+        "ndcgAtK": 1,
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
+      },
+      "operational": {
+        "ingestMs": 0,
+        "ingestMsStdDev": 0,
+        "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
+        "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
+        "costUsd": 0,
+        "maxScale": 5
+      },
+      "queryResults": [
+        {
+          "queryId": "Q1",
+          "results": [
+            {
+              "documentId": "D1",
+              "score": 0.4866642633922876
+            },
+            {
+              "documentId": "D5",
+              "score": 0.23210354127426377
+            },
+            {
+              "documentId": "D4",
+              "score": 0.15249857033260467
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q2",
+          "results": [
+            {
+              "documentId": "D3",
+              "score": 0.6374552583116767
+            },
+            {
+              "documentId": "D5",
+              "score": 0.08206099398622184
+            },
+            {
+              "documentId": "D4",
+              "score": 0.07188851546895896
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q3",
+          "results": [
+            {
+              "documentId": "D4",
+              "score": 0.6437206858203839
+            },
+            {
+              "documentId": "D5",
+              "score": 0.26243194054073904
+            },
+            {
+              "documentId": "D3",
+              "score": 0.25482359571881275
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        }
+      ]
+    },
+    {
+      "backend": {
+        "id": "s3-vectors",
+        "name": "AWS S3 Vectors",
+        "kind": "self-managed",
+        "embeddingCoupling": "fixed",
+        "isolatedStore": true,
+        "retrievalDeterministic": true,
+        "source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html",
+        "costNote": "Storage + PUT/query request pricing per AWS S3 Vectors (docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-pricing.html, 2026-07); this benchmark's volume is well under $0.01.",
+        "metadataFiltering": true,
+        "ingestionNote": "Stores the fixed-embedding vectors we provide (float32, cosine); a self-managed, store-isolated reading. Requires AWS credentials and a region where S3 Vectors is available (verified in ap-northeast-1); IAM: s3vectors:CreateVectorBucket/CreateIndex/PutVectors/QueryVectors/DeleteIndex/DeleteVectorBucket."
+      },
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "embeddingModel": "fixed-hash-embedding-v1",
+      "datasetId": "scifact-mini",
+      "k": 3,
+      "retrieval": {
+        "recallAtK": 1,
+        "ndcgAtK": 1,
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
+      },
+      "operational": {
+        "ingestMs": 0,
+        "ingestMsStdDev": 0,
+        "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
+        "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
+        "costUsd": 0,
+        "maxScale": 5
+      },
+      "queryResults": [
+        {
+          "queryId": "Q1",
+          "results": [
+            {
+              "documentId": "D1",
+              "score": 0.4866642633922876
+            },
+            {
+              "documentId": "D5",
+              "score": 0.23210354127426377
+            },
+            {
+              "documentId": "D4",
+              "score": 0.15249857033260467
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q2",
+          "results": [
+            {
+              "documentId": "D3",
+              "score": 0.6374552583116767
+            },
+            {
+              "documentId": "D5",
+              "score": 0.08206099398622184
+            },
+            {
+              "documentId": "D4",
+              "score": 0.07188851546895896
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q3",
+          "results": [
+            {
+              "documentId": "D4",
+              "score": 0.6437206858203839
+            },
+            {
+              "documentId": "D5",
+              "score": 0.26243194054073904
+            },
+            {
+              "documentId": "D3",
+              "score": 0.25482359571881275
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        }
+      ]
+    },
+    {
+      "backend": {
+        "id": "vectorize",
+        "name": "Cloudflare Vectorize",
+        "kind": "self-managed",
+        "embeddingCoupling": "fixed",
+        "isolatedStore": true,
+        "retrievalDeterministic": true,
+        "source": "https://developers.cloudflare.com/vectorize/",
+        "costNote": "Priced per stored-vector-dimension and per queried-vector-dimension (developers.cloudflare.com/vectorize/platform/pricing, 2026-07); this benchmark's volume is within the free allotment.",
+        "metadataFiltering": true,
+        "ingestionNote": "Stores the fixed-embedding vectors we provide (v2 index, cosine, dimensions in [32,1536]); a self-managed, store-isolated reading. Mutations are eventually consistent (~5-15s), so the polled propagation wait is included in measured ingest. Auth: CLOUDFLARE_ACCOUNT_ID + an API token with Vectorize edit."
+      },
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "embeddingModel": "fixed-hash-embedding-v1",
+      "datasetId": "scifact-mini",
+      "k": 3,
+      "retrieval": {
+        "recallAtK": 1,
+        "ndcgAtK": 1,
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
+      },
+      "operational": {
+        "ingestMs": 0,
+        "ingestMsStdDev": 0,
+        "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
+        "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
+        "costUsd": 0,
+        "maxScale": 5
+      },
+      "queryResults": [
+        {
+          "queryId": "Q1",
+          "results": [
+            {
+              "documentId": "D1",
+              "score": 0.4866642633922876
+            },
+            {
+              "documentId": "D5",
+              "score": 0.23210354127426377
+            },
+            {
+              "documentId": "D4",
+              "score": 0.15249857033260467
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q2",
+          "results": [
+            {
+              "documentId": "D3",
+              "score": 0.6374552583116767
+            },
+            {
+              "documentId": "D5",
+              "score": 0.08206099398622184
+            },
+            {
+              "documentId": "D4",
+              "score": 0.07188851546895896
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q3",
+          "results": [
+            {
+              "documentId": "D4",
+              "score": 0.6437206858203839
+            },
+            {
+              "documentId": "D5",
+              "score": 0.26243194054073904
+            },
+            {
+              "documentId": "D3",
+              "score": 0.25482359571881275
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        }
+      ]
+    },
+    {
+      "backend": {
+        "id": "autorag",
+        "name": "Cloudflare AutoRAG",
+        "kind": "managed",
+        "embeddingCoupling": "managed",
+        "isolatedStore": false,
+        "retrievalDeterministic": false,
+        "source": "https://developers.cloudflare.com/autorag/",
+        "costNote": "Managed pipeline priced on the underlying Workers AI + R2 + Vectorize usage (developers.cloudflare.com/autorag, 2026-07); no separate AutoRAG fee as of source.",
+        "metadataFiltering": true,
+        "ingestionNote": "Fully-managed: ingests from an R2 bucket and embeds/indexes internally (whole-stack, not store-isolated). Indexing is asynchronous (a 6-hour cycle or a rate-limited force sync); its R2 data-source binding is provisioned via the dashboard, so a live REST-only end-to-end run may render an honest `error` rather than `measured`."
+      },
+      "provenance": "fixtured",
+      "measuredAt": "2026-01-01T00:00:00.000Z",
+      "embeddingModel": "fixed-hash-embedding-v1",
+      "datasetId": "scifact-mini",
+      "k": 3,
+      "retrieval": {
+        "recallAtK": 1,
+        "ndcgAtK": 1,
+        "mrr": 1,
+        "recallAtKCi95": {
+          "lower": 0.43849391955098227,
+          "upper": 1
+        },
+        "ndcgAtKCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "mrrCi95": {
+          "lower": 1,
+          "upper": 1
+        },
+        "queryCount": 3,
+        "trialCount": 1,
+        "intervalNote": "Retrieval quality is deterministic for this run; the 95% interval is over the 3-query sample, not trial variance."
+      },
+      "operational": {
+        "ingestMs": 0,
+        "ingestMsStdDev": 0,
+        "queryLatencyMs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "queryLatencyP50Ms": 0,
+        "queryLatencyP50MsStdDev": 0,
+        "queryLatencyP95Ms": 0,
+        "queryLatencyP95MsStdDev": 0,
+        "trialCount": 5,
+        "costUsd": 0,
+        "maxScale": 5
+      },
+      "queryResults": [
+        {
+          "queryId": "Q1",
+          "results": [
+            {
+              "documentId": "D1",
+              "score": 0.4866642633922876
+            },
+            {
+              "documentId": "D5",
+              "score": 0.23210354127426377
+            },
+            {
+              "documentId": "D4",
+              "score": 0.15249857033260467
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q2",
+          "results": [
+            {
+              "documentId": "D3",
+              "score": 0.6374552583116767
+            },
+            {
+              "documentId": "D5",
+              "score": 0.08206099398622184
+            },
+            {
+              "documentId": "D4",
+              "score": 0.07188851546895896
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        },
+        {
+          "queryId": "Q3",
+          "results": [
+            {
+              "documentId": "D4",
+              "score": 0.6437206858203839
+            },
+            {
+              "documentId": "D5",
+              "score": 0.26243194054073904
+            },
+            {
+              "documentId": "D3",
+              "score": 0.25482359571881275
+            }
+          ],
+          "metrics": {
+            "recallAtK": 1,
+            "ndcgAtK": 1,
+            "mrr": 1
+          }
+        }
+      ]
+    }
+  ],
+  "artifactPath": "rag-benchmark.data.json",
+  "fixture": true,
+  "trials": 5
+}
