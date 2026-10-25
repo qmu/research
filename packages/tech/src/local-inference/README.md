@@ -22,12 +22,17 @@ Ollama/llama.cpp/MLX.
 `runStrataExecutor` always returns a `StrataRun` — one of four `status`
 values:
 
-| status | exitCode | meaning |
-| --- | --- | --- |
-| `measured` | `0` | process exited cleanly and its outputs.jsonl line validated |
-| `timeout` | `null` | process ran past `timeoutMs` and was `SIGKILL`ed; the outputs file is never read in this case, since a killed run can leave it partially written |
-| `exit-failed` | the real exit code (or `-1` if the process could not even be spawned) | process exited nonzero |
-| `invalid-output` | `0` | process exited 0, but its last outputs.jsonl line was missing, unparsable, or failed validation (error present, non-200 `http_status`, unfinished `finish_reason`, missing/invalid `usage.completion_tokens`, or `end_offset_s` before `dispatch_offset_s`) |
+- `measured` — `exitCode` is `0`; the process exited cleanly and its
+  outputs.jsonl line validated.
+- `timeout` — `exitCode` is `null`; the process ran past `timeoutMs` and was
+  `SIGKILL`ed. The outputs file is never read in this case, since a killed
+  run can leave it partially written.
+- `exit-failed` — `exitCode` is the real exit code, or `-1` if the process
+  could not even be spawned; the process exited nonzero.
+- `invalid-output` — `exitCode` is `0`, but the process's last outputs.jsonl
+  line was missing, unparsable, or failed validation (error present,
+  non-200 `http_status`, unfinished `finish_reason`, missing/invalid
+  `usage.completion_tokens`, or `end_offset_s` before `dispatch_offset_s`).
 
 Only numbers and the status/exit code are saved. The generated answer text,
 the raw outputs.jsonl record, and anything the process wrote to stdout/stderr
@@ -46,7 +51,14 @@ than accumulates stale rows.
 // config.json
 {
   "command": "strata",
-  "args": ["bench", "run", "--protocol", "strata-qwen38-thinking-v1-draft.1", "--output", "/tmp/strata-outputs.jsonl"],
+  "args": [
+    "bench",
+    "run",
+    "--protocol",
+    "strata-qwen38-thinking-v1-draft.1",
+    "--output",
+    "/tmp/strata-outputs.jsonl"
+  ],
   "outputsPath": "/tmp/strata-outputs.jsonl",
   "timeoutMs": 300000,
   "model": "qwen3.8-flash-next-iq3_s",

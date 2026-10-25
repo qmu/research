@@ -85,16 +85,18 @@ describe("parseStrataBenchLine", () => {
   });
 
   it("rejects a missing final_answer", () => {
-    const { final_answer: _drop, ...rest } = JSON.parse(validLine);
-    expect(parseStrataBenchLine(JSON.stringify(rest))).toEqual({
+    const record = JSON.parse(validLine);
+    delete record.final_answer;
+    expect(parseStrataBenchLine(JSON.stringify(record))).toEqual({
       accepted: false,
       reason: "final_answer is not a string",
     });
   });
 
   it("rejects a record with no usage object at all", () => {
-    const { usage: _drop, ...rest } = JSON.parse(validLine);
-    expect(parseStrataBenchLine(JSON.stringify(rest))).toEqual({
+    const record = JSON.parse(validLine);
+    delete record.usage;
+    expect(parseStrataBenchLine(JSON.stringify(record))).toEqual({
       accepted: false,
       reason: "usage is missing or not an object",
     });
@@ -217,10 +219,7 @@ describe("buildStrataRun", () => {
       unit: "tokens/s",
     });
     if (run.metrics.tokensPerSecond.value !== null) {
-      expect(run.metrics.tokensPerSecond.value).toBeCloseTo(
-        128 / 3.4,
-        5,
-      );
+      expect(run.metrics.tokensPerSecond.value).toBeCloseTo(128 / 3.4, 5);
     }
   });
 

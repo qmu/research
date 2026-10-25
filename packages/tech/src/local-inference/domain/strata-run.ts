@@ -188,13 +188,10 @@ export function buildStrataRun(
       metrics: gapMetrics("INVALID-OUTPUT"),
     };
   }
+  const throughput = parsed.outputTokens / (parsed.elapsedMs / 1000);
   const tokensPerSecond =
     parsed.elapsedMs > 0
-      ? measured(
-          parsed.outputTokens / (parsed.elapsedMs / 1000),
-          "tokens/s",
-          "client",
-        )
+      ? measured(throughput, "tokens/s", "client")
       : gap("tokens/s", "INVALID-OUTPUT");
   return {
     ...identity,
