@@ -58,6 +58,10 @@ build: ## Type-check and build every package and the docs site
 
 test: ## Type-check and run unit tests in every package
 	$(call for_each_package,test,npm test)
+# The gate overrides PACKAGES before dependencies exist; keep its scratch runs hermetic.
+ifeq ($(origin PACKAGES),file)
+	@node --test scripts/reproduce-local-inference.test.mjs
+endif
 
 lint: ## Lint and format-check every package
 	$(call for_each_package,lint,npm run lint)
@@ -109,3 +113,7 @@ publish-guard: ## Prove the exporter cannot silently overwrite downstream prose
 
 publish: ## Copy finished research Markdown to the corporate site
 	@bash scripts/publish-research.sh --all
+
+.PHONY: reproduce-local-inference
+reproduce-local-inference: ## Save fixed local inference JSON, comparison table and raw exit code
+	@node scripts/reproduce-local-inference.mjs "$(if $(OUTPUT_DIR),$(OUTPUT_DIR),outputs/local-inference-fixture)"
