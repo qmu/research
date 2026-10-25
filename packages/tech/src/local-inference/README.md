@@ -11,7 +11,8 @@ From `packages/tech`, run:
 npm run local-inference -- /path/to/config.json /path/to/new-result.json
 ```
 
-The output parent directory must exist; an existing result is never overwritten.
+The output parent directory must exist. A completed run atomically replaces the
+previous result at that path; use a different path to retain each trial.
 The command exits nonzero if a request fails, but saves every engine's row.
 Each request has a 60-second timeout. Start the servers separately, using their
 explicit model, context, cache, thread and GPU settings. No server is launched
@@ -132,3 +133,28 @@ fields and `[DONE]` terminator. Blank JSON log lines are ignored; a final
 JSON schemas are not interpreted as token measurements. Malformed records use
 `INVALID-STREAM`; EOF before `[DONE]` uses `INCOMPLETE-STREAM`. Both paths
 discard partial TTFT through the existing fixed-reason failure handling.
+
+### Atomic TTFT publication
+
+`local-inference/5` connects incremental SSE/JSON-line TTFT evidence to the
+versioned atomic writer from qmu/research#238. Before any request, it captures
+checkout HEAD as `targetCommit`, runner version and a redacted argv fingerprint,
+and reserves `execution.runId` / `execution.version`. Each request keeps its own
+fresh `runs[].runId` and repeats the captured `runnerVersion` / `targetCommit`
+next to its TTFT value and fixed acquisition reason. The execution ID identifies
+the four-request batch; the row ID identifies one measured request.
+
+All rows and execution metadata are serialized together, written to a private
+temporary file, fsynced and closed before a single rename publishes the JSON.
+Write or rename failure leaves the previous result intact. The existing
+reservation lock rejects a superseded execution before requests and again at
+publication, so a late old result cannot overwrite a newer one. The sidecar
+`<output>.execution.json` coordinates writers; it is not a measurement artifact.
+The result and sidecar are not a multi-file transaction and the parent directory
+is not fsynced, so this does not promise recovery from power loss. An interrupted
+process can leave a lock requiring operator recovery after writers have stopped.
+
+Missing Git provenance fails before measurement. HEAD does not describe dirty
+working-tree edits: use a clean committed checkout for reproducible trials.
+Tests use synthetic HTTP streams and injected filesystem failures, not Apple
+Silicon hardware performance results.

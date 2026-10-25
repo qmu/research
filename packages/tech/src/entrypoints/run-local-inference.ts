@@ -21,7 +21,7 @@ try {
   if (result.runs.some((r) => r.status === "failed")) process.exitCode = 1;
 } catch {
   console.error(
-    "Local inference failed. Usage: npm run local-inference -- config.json new-result.json (valid config and unused output path required).",
+    "Local inference failed. Usage: npm run local-inference -- config.json result.json (valid config and writable output directory required).",
   );
   process.exitCode = 1;
 }

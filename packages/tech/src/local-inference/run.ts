@@ -1,5 +1,10 @@
 import { createHash, randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import {
+  assertExecutionCurrent,
+  beginExecution,
+  completeExecution,
+} from "./vendors/versioned-result.js";
+import { readTargetCommit } from "./vendors/provenance.js";
 import { engines, metrics, type Engine } from "./domain/result.js";
 import { startPeakRss } from "./vendors/peak-rss.js";
 import { peakRssReading } from "./domain/peak-memory.js";
@@ -8,6 +13,39 @@ import {
   streamFailureReason,
   type StreamFailureReason,
 } from "./vendors/stream.js";
+
+/** Bump when the runner's measurement or persistence semantics change. */
+export const runnerVersion = "local-inference/5";
+
+/** Only fixed public syntax survives. Unknown arguments, paths, environment
+ * assignments, headers, URLs and option values are redacted BEFORE hashing.
+ * Accept argv tokens, not a shell command: whitespace inside a token is data.
+ * No environment is read and neither raw nor normalized argv is persisted.
+ */
+export function commandFingerprint(argv: readonly string[]): string {
+  const publicTokens = new Set([
+    "node",
+    "nodejs",
+    "tsx",
+    "npm",
+    "run",
+    "local-inference",
+    "run-local-inference.ts",
+    "--import",
+    "tsx/esm",
+    "--",
+  ]);
+  const normalized = argv.map((token, index) => {
+    // Normalize only the executable and the known runner path; never trim or
+    // split arguments, which would collapse distinct argument boundaries.
+    const name = token.replaceAll("\\", "/").split("/").at(-1) ?? "";
+    if (index === 0 && ["node", "nodejs", "tsx", "npm"].includes(name))
+      return name === "nodejs" ? "node" : name;
+    if (name === "run-local-inference.ts") return name;
+    return publicTokens.has(token) ? token : "[REDACTED]";
+  });
+  return createHash("sha256").update(JSON.stringify(normalized)).digest("hex");
+}
 
 export type Config = {
   messages: { role: "system" | "user"; content: string }[];
@@ -94,11 +132,23 @@ export async function runLocalInference(
   output: string,
   timeoutMs = 60_000,
   memorySampler = startPeakRss,
+  argv: readonly string[] = [
+    process.execPath,
+    ...process.execArgv,
+    ...process.argv.slice(1),
+  ],
 ) {
   const config = parseConfig(input);
+  const provenance = {
+    targetCommit: readTargetCommit(),
+    runnerVersion,
+    commandSha256: commandFingerprint(argv),
+  };
+  const execution = { ...(await beginExecution(output)), ...provenance };
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
   const runs = [];
   for (const target of config.targets) {
+    await assertExecutionCurrent(output, execution);
     const runId = randomUUID();
     const sampler = memorySampler(target.memoryPid);
     const started = performance.now();
@@ -137,6 +187,8 @@ export async function runLocalInference(
       reading.value === null ? reading : { ...reading, source: "os-sampler" };
     runs.push({
       runId,
+      runnerVersion: execution.runnerVersion,
+      targetCommit: execution.targetCommit,
       ttft: {
         ...measured.ttft,
         reason:
@@ -166,9 +218,5 @@ export async function runLocalInference(
     procedure: "single-request-per-engine",
     runs,
   };
-  // Refuse to overwrite prior measurements; callers choose a new path per trial.
-  await writeFile(output, JSON.stringify(result, null, 2) + "\n", {
-    flag: "wx",
-  });
-  return result;
+  return completeExecution(output, execution, result);
 }

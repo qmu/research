@@ -97,10 +97,13 @@ describe("local inference common JSON", () => {
       });
     }
     expect(await readFile(output, "utf8")).not.toContain("127.0.0.1");
-    await expect(
-      runLocalInference(config(`http://127.0.0.1:${address.port}/v1`), output),
-    ).rejects.toThrow();
-    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+    const replacement = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+    );
+    expect(replacement.execution.version).toBe(2);
+    expect(replacement.execution.runId).not.toBe(result.execution.runId);
+    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(replacement);
   });
 
   it("saves failures without response bodies or URLs and continues to later engines", async () => {
