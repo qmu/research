@@ -79,7 +79,11 @@ export const extractMlxGeneratedText = (stdout: string): string => {
       "mlx_lm.generate output is missing the `==========` framing around the generated text",
     );
   }
-  return String(separatorIndexes.length);
+  const [firstIndex, secondIndex] = separatorIndexes;
+  return lines
+    .slice(firstIndex + 1, secondIndex)
+    .join("\n")
+    .trim();
 };
 
 export const DIAG_A_PLACEHOLDER: StreamedCompletion = {
