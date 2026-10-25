@@ -46,92 +46,64 @@ function result(runs: unknown[]) {
 describe("parseComparisonResult", () => {
   it("parses the committed fixture", () => {
     const parsed = parseComparisonResult(fixture);
+    const engines = parsed.runs.map((r) => r.engine).sort();
     expect(parsed.runs).toHaveLength(4);
-    expect(parsed.runs.map((r) => r.engine).sort()).toEqual([
-      ...ENGINES,
-    ].sort());
+    expect(engines).toEqual([...ENGINES].sort());
   });
 
   it("rejects an unknown gap reason", () => {
-    expect(() =>
-      parseComparisonResult(
-        result([
-          run({
-            metrics: {
-              ...run().metrics,
-              ttft: { value: null, unit: "s", reason: "SOMETHING-ELSE" },
-            },
-          }),
-        ]),
-      ),
-    ).toThrow();
+    const badTtft = { value: null, unit: "s", reason: "SOMETHING-ELSE" };
+    const badRun = run({ metrics: { ...run().metrics, ttft: badTtft } });
+    const input = result([badRun]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects an unknown failure code", () => {
-    expect(() =>
-      parseComparisonResult(
-        result([
-          run({ status: "failed", failure: { code: "WHO-KNOWS" } }),
-        ]),
-      ),
-    ).toThrow();
+    const input = result([
+      run({ status: "failed", failure: { code: "WHO-KNOWS" } }),
+    ]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("requires a failure code on a failed run", () => {
-    expect(() =>
-      parseComparisonResult(result([run({ status: "failed" })])),
-    ).toThrow();
+    const input = result([run({ status: "failed" })]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects a failure code on a measured run", () => {
-    expect(() =>
-      parseComparisonResult(
-        result([run({ failure: { code: "TIMEOUT" } })]),
-      ),
-    ).toThrow();
+    const input = result([run({ failure: { code: "TIMEOUT" } })]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects an unknown engine", () => {
-    expect(() =>
-      parseComparisonResult(result([run({ engine: "gpt4all" })])),
-    ).toThrow();
+    const input = result([run({ engine: "gpt4all" })]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects a duplicate engine", () => {
-    expect(() =>
-      parseComparisonResult(result([run(), run()])),
-    ).toThrow();
+    const input = result([run(), run()]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects a negative measurement", () => {
-    expect(() =>
-      parseComparisonResult(
-        result([
-          run({
-            metrics: {
-              ...run().metrics,
-              tps: { value: -1, unit: "tokens/s", source: "client" },
-            },
-          }),
-        ]),
-      ),
-    ).toThrow();
+    const badTps = { value: -1, unit: "tokens/s", source: "client" };
+    const input = result([run({ metrics: { ...run().metrics, tps: badTps } })]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects schema versions other than 1", () => {
-    expect(() =>
-      parseComparisonResult({ ...result([run()]), schemaVersion: 2 }),
-    ).toThrow();
+    const input = { ...result([run()]), schemaVersion: 2 };
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects a malformed input digest", () => {
-    expect(() =>
-      parseComparisonResult({ ...result([run()]), inputSha256: "not-hex" }),
-    ).toThrow();
+    const input = { ...result([run()]), inputSha256: "not-hex" };
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 
   it("rejects an empty runs array", () => {
-    expect(() => parseComparisonResult(result([]))).toThrow();
+    const input = result([]);
+    expect(() => parseComparisonResult(input)).toThrow();
   });
 });
 
@@ -163,11 +135,10 @@ describe("renderComparisonMarkdown", () => {
 
   it("shows the fixed failure code only for failed runs", () => {
     const page = renderComparisonMarkdown(fixture);
+    const lines = page.split("\n");
+    const ollamaRow = lines.find((line) => line.startsWith("| Ollama |"));
     expect(page).toContain("UNREACHABLE");
     expect(page).toContain("NOT-LOADABLE");
-    const ollamaRow = page
-      .split("\n")
-      .find((line) => line.startsWith("| Ollama |"));
     expect(ollamaRow).toBeDefined();
     expect(ollamaRow).toMatch(/\| — \|$/);
   });
@@ -183,17 +154,14 @@ describe("renderComparisonMarkdown", () => {
   });
 
   it("escapes Markdown table syntax in operator-supplied text", () => {
-    const page = renderComparisonMarkdown(
-      result([run({ model: "a|b*c_d`e" })]),
-    );
+    const input = result([run({ model: "a|b*c_d`e" })]);
+    const page = renderComparisonMarkdown(input);
     expect(page).not.toContain("a|b*c_d`e");
     expect(page).toContain("a&#124;b&#42;c&#95;d&#96;e");
   });
 
   it("fails before any output is produced on invalid input", () => {
-    expect(() =>
-      renderComparisonMarkdown({ schemaVersion: 2 }),
-    ).toThrow();
+    expect(() => renderComparisonMarkdown({ schemaVersion: 2 })).toThrow();
   });
 });
 

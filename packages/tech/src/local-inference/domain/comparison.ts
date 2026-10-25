@@ -244,12 +244,13 @@ function renderRow(run: Run): string {
 /** Rows always appear in the fixed engine order, independent of input order. */
 export function renderComparisonMarkdown(input: unknown): string {
   const result = parseComparisonResult(input);
-  const rows = ENGINES.map((engine) =>
-    result.runs.find((run) => run.engine === engine),
-  ).filter((run): run is Run => run !== undefined);
-  const missing = ENGINES.filter(
-    (engine) => !rows.some((run) => run.engine === engine),
-  );
+  const rows: Run[] = [];
+  const missing: Engine[] = [];
+  for (const engine of ENGINES) {
+    const found = result.runs.find((run) => run.engine === engine);
+    if (found) rows.push(found);
+    else missing.push(engine);
+  }
   const missingLabel = missing
     .map((engine) => ENGINE_LABELS[engine])
     .join(", ");
