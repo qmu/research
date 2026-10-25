@@ -8,11 +8,12 @@ the join; they are not engine measurements or product recommendations.
 From `packages/tech`, run:
 
 ```sh
-npm run local-inference:adoption -- /tmp/adoption.md \
+npm run local-inference:adoption -- --commit 1111111111111111111111111111111111111111 /tmp/adoption.md \
   src/local-inference-adoption/fixtures/baseline.json \
   src/local-inference-adoption/fixtures/other-host.json \
   src/local-inference-adoption/fixtures/other-evaluator.json \
-  src/local-inference-adoption/fixtures/legacy.json
+  src/local-inference-adoption/fixtures/legacy.json \
+  src/local-inference-adoption/fixtures/other-commit.json
 ```
 
 The output must be a new file. Every input is validated before writing; input
@@ -76,10 +77,36 @@ Missing metadata remains undetermined, rather than a version mismatch.
 3. Render the new artifacts from `packages/tech`:
 
    ```sh
-   npm run local-inference:adoption -- /tmp/remeasured-adoption.md first-new.json second-new.json
+   npm run local-inference:adoption -- --commit <full-current-sha> /tmp/remeasured-adoption.md first-new.json second-new.json
    ```
 
 Only matching complete condition groups can be compared. Rendering saved JSON
 alone does not execute inference or remeasure quality; this adapter does not
 provide an engine runner. The keyless synthetic command above only reproduces
 the report and its mismatch notice.
+
+## Commit eligibility
+
+The saved field follows [qmu/research#237](https://github.com/qmu/research/pull/237);
+this consumer does not import or modify that pending runner.
+
+The caller must supply `--commit <full-current-sha>`: the exact lowercase,
+40-character Git commit ID of the code being compared. Saved measurements must
+record that ID in `execution.targetCommit` when measured. Resolve the target from
+your trusted checkout (for example, `git rev-parse HEAD`), independently of the
+saved artifact. Do not choose the target from the artifact merely to make it
+eligible. This adapter checks identity, not authenticity or working-tree state.
+
+`COMMIT-MISMATCH` excludes all runs whose saved ID differs from the target.
+`MISSING-COMMIT` excludes legacy artifacts without a saved ID. Missing or
+malformed target IDs and malformed saved IDs reject rendering before any output
+is written. Short hashes, branch names and whitespace are not accepted.
+
+Excluded rows receive no adoption pass/fail and belong to no comparison group
+or evaluator mismatch pair. The eligibility table shows the fixed reason and
+saved ID; expandable evidence preserves the recorded metrics and quality verdicts.
+A matching ID only clears this gate; all other condition and quality checks apply.
+
+Remeasure the target checkout and save a new artifact with the actual measured
+commit ID. Preserve the old JSON; adding or replacing its ID is not remeasurement.
+The demo uses synthetic IDs `111...` and `222...`; it is not a real benchmark.
