@@ -84,8 +84,8 @@ describe("normalizeStrataTtft", () => {
   });
 
   it("retains TTFT for stop, same as the fixture's length finish", () => {
-    expect(
-      normalizeStrataTtft({ ...measured, finish_reason: "stop" }),
-    ).toEqual(normalizeStrataTtft(measured));
+    expect(normalizeStrataTtft({ ...measured, finish_reason: "stop" })).toEqual(
+      normalizeStrataTtft(measured),
+    );
   });
 });
