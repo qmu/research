@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { writeFile } from "node:fs/promises";
+import { beginExecution, completeExecution } from "./versioned-result.js";
 
 export type Engine = "strata" | "ollama" | "llama.cpp" | "mlx";
 export type ProcessResult = {
@@ -78,12 +78,17 @@ export async function measureProcess(options: {
   });
 }
 
-/** Exclusive creation protects previous evidence; failure rows are saved too. */
+/**
+ * Publishes the measured exit code and a reserved execution id through the
+ * same atomic save `runLocalInference` uses, so both land in one write. A
+ * newer execution may replace an older completed one; a stale or duplicate
+ * completion is rejected instead (see `isStaleExecutionError`).
+ */
 export async function saveProcessMeasurement(
   path: string,
   options: Parameters<typeof measureProcess>[0],
-): Promise<ProcessResult> {
+) {
+  const execution = await beginExecution(path);
   const result = await measureProcess(options);
-  await writeFile(path, JSON.stringify(result, null, 2) + "\n", { flag: "wx" });
-  return result;
+  return completeExecution(path, execution, result);
 }

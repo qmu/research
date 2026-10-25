@@ -7,6 +7,7 @@ import {
   saveProcessMeasurement,
   type Engine,
 } from "./process.js";
+import { beginExecution, completeExecution } from "./versioned-result.js";
 
 const engines: Engine[] = ["strata", "ollama", "llama.cpp", "mlx"];
 const command = process.execPath;
@@ -14,7 +15,7 @@ const timeoutMs = 5000;
 
 describe.each(engines)("%s process evidence", (engine) => {
   it.each([0, 1, 137])(
-    "persists exit %i without guessing OOM",
+    "persists the measured exit code and its execution id in one save",
     async (exit) => {
       const dir = await mkdtemp(join(tmpdir(), "measurement-"));
       try {
@@ -31,13 +32,43 @@ describe.each(engines)("%s process evidence", (engine) => {
         expect(result.failure).toEqual(
           exit === 0 ? null : { code: "MEASURE-FAILED" },
         );
-        await expect(saveProcessMeasurement(path, options)).rejects.toThrow();
-        expect(JSON.parse(await readFile(path, "utf8"))).toEqual(result);
+        expect(result.execution.version).toBe(1);
+        expect(result.execution.runId).toMatch(/^[0-9a-f-]{36}$/);
+        // A later measurement is a newer execution, so it may replace the first.
+        const replacement = await saveProcessMeasurement(path, options);
+        expect(replacement.execution.version).toBe(2);
+        expect(replacement.execution.runId).not.toBe(result.execution.runId);
+        expect(JSON.parse(await readFile(path, "utf8"))).toEqual(replacement);
       } finally {
         await rm(dir, { recursive: true, force: true });
       }
     },
   );
+  it("rejects completing a stale execution and keeps the saved evidence", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "measurement-"));
+    try {
+      const path = join(dir, "result.json");
+      const stale = await beginExecution(path);
+      const current = await saveProcessMeasurement(path, {
+        engine,
+        command,
+        args: ["-e", "process.exit(0)"],
+        timeoutMs,
+      });
+      await expect(
+        completeExecution(path, stale, {
+          schema_version: 1 as const,
+          engine,
+          status: "ok" as const,
+          process: { exit_code: 0, signal: null },
+          failure: null,
+        }),
+      ).rejects.toThrow("STALE-EXECUTION");
+      expect(JSON.parse(await readFile(path, "utf8"))).toEqual(current);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
   it("records missing executable without diagnostics or command", async () => {
     const result = await measureProcess({
       engine,
