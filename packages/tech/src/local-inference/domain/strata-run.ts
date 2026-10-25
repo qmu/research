@@ -11,10 +11,7 @@ export type StrataMeasurement =
   | Readonly<{ value: null; unit: string; reason: StrataGapReason }>;
 
 export type StrataRunStatus =
-  | "measured"
-  | "timeout"
-  | "exit-failed"
-  | "invalid-output";
+  "measured" | "timeout" | "exit-failed" | "invalid-output";
 
 export type StrataRunIdentity = Readonly<{
   model: string;

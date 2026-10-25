@@ -15,7 +15,7 @@
     "build": "tsc",
     "tsc": "tsc --noEmit",
     "test": "tsc --noEmit && vitest --run --passWithNoTests",
-    "lint": "prettier --write src/local-inference src/entrypoints/run-strata-executor.ts src/entrypoints/run-strata-executor.test.ts && git --no-pager diff && exit 1",
+    "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "research": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-research.ts",
     "generational-precision": "node --import tsx/esm src/entrypoints/analyze-generational-precision.ts",

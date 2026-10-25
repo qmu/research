@@ -57,13 +57,13 @@ than accumulates stale rows.
     "--protocol",
     "strata-qwen38-thinking-v1-draft.1",
     "--output",
-    "/tmp/strata-outputs.jsonl"
+    "/tmp/strata-outputs.jsonl",
   ],
   "outputsPath": "/tmp/strata-outputs.jsonl",
   "timeoutMs": 300000,
   "model": "qwen3.8-flash-next-iq3_s",
   "runtimeVersion": "strata-0.0.0",
-  "condition": { "pack": "IQ3_S" }
+  "condition": { "pack": "IQ3_S" },
 }
 ```
 
