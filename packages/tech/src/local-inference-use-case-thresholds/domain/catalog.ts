@@ -51,9 +51,7 @@ function isMetricId(value: string): value is MetricId {
 
 function parseRule(rule: RawRule, useCaseId: string): ThresholdRule {
   if (!isMetricId(rule.metric))
-    throw new Error(
-      `use case "${useCaseId}": unknown metric "${rule.metric}"`,
-    );
+    throw new Error(`use case "${useCaseId}": unknown metric "${rule.metric}"`);
   if (!directions.includes(rule.direction as Direction))
     throw new Error(
       `use case "${useCaseId}": unknown direction "${rule.direction}" for metric "${rule.metric}"`,
@@ -96,9 +94,8 @@ function parseUseCase(useCase: RawUseCase): UseCase {
 export const useCaseCatalogStatus: string = catalog.status;
 export const useCaseCatalogNote: string = catalog.note;
 
-export const useCases: ReadonlyArray<UseCase> = catalog.useCases.map(
-  parseUseCase,
-);
+export const useCases: ReadonlyArray<UseCase> =
+  catalog.useCases.map(parseUseCase);
 
 export function useCaseById(id: string): UseCase {
   const useCase = useCases.find((candidate) => candidate.id === id);
