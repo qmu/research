@@ -144,9 +144,7 @@ export type MlxGenerateRequest = Readonly<{
   maxTokens: number;
 }>;
 
-export type MlxGenerateRunner = (
-  request: MlxGenerateRequest,
-) => Promise<string>;
+export type MlxGenerateRunner = (request: MlxGenerateRequest) => Promise<string>;
 
 const execFileAsync = promisify(execFile);
 
