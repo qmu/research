@@ -42,7 +42,8 @@
           "verdict": "pass",
           "reason": null
         }
-      ]
+      ],
+      "runId": "synthetic-run-1"
     },
     {
       "engine": "ollama",
@@ -68,7 +69,8 @@
           "verdict": "fail",
           "reason": null
         }
-      ]
+      ],
+      "runId": "synthetic-run-1-second-request"
     }
   ],
   "execution": {

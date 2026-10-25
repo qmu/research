@@ -13,6 +13,25 @@ EVALUATOR-VERSION-MISMATCH: Evaluator versions differ; direct comparison is bloc
 | 1 / 1 | exact-answer: exact-text/v1 | 3 / 1 | exact-answer: exact-text/v2 | EVALUATOR-VERSION-MISMATCH | [Remeasure](./local-inference-adoption-format.md#remeasure) |
 | 1 / 2 | exact-answer: exact-text/v1 | 3 / 1 | exact-answer: exact-text/v2 | EVALUATOR-VERSION-MISMATCH | [Remeasure](./local-inference-adoption-format.md#remeasure) |
 
+## First-token latency eligibility
+
+Only saved TTFT from the selected run ID, runner version and target commit is adopted here. Quality verdicts below are separate: adopting a latency value is not an engine recommendation. Missing selection or evidence never becomes zero.
+
+Selected run: synthetic-run-1; runner: local-inference/4; commit: 1111111111111111111111111111111111111111.
+
+| Source / run | Engine / model | Adopted TTFT (s) | Reason / next step |
+| --- | --- | --- | --- |
+| 1 / 1 | ollama / synthetic-model | 0.25 | same execution; measured |
+| 1 / 2 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+| 2 / 1 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+| 3 / 1 | ollama / synthetic-model | 0.25 | same execution; measured |
+| 4 / 1 | ollama / synthetic-model | not adopted | MISSING-RUN-ID, MISSING-RUNNER-VERSION, MISSING-COMMIT — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+| 5 / 1 | ollama / synthetic-model | not adopted | COMMIT-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+| 6 / 1 | ollama / synthetic-model | not adopted | RUNNER-VERSION-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+| 6 / 2 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH, RUNNER-VERSION-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+| 7 / 1 | ollama / synthetic-model | not adopted | MISSING-RUNNER-VERSION — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+| 7 / 2 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH, MISSING-RUNNER-VERSION — [Remeasure](./local-inference-adoption-format.md#first-token-latency) |
+
 ## Commit eligibility
 
 Current comparison commit: 1111111111111111111111111111111111111111

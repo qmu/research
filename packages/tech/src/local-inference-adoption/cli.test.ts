@@ -48,16 +48,53 @@ afterEach(() =>
 describe("condition-scoped adoption CLI", () => {
   it("reproduces the committed demo from enriched common JSON", () => {
     const output = join(temp(), "report.md");
-    const result = cli(output, ...fixtures);
+    const result = cli(
+      "--run-id",
+      "synthetic-run-1",
+      "--runner-version",
+      "local-inference/4",
+      output,
+      ...fixtures,
+    );
     expect(result.status).toBe(0);
     const expected = renderAdoptionReport(
       fixtures.map((path) => JSON.parse(readFileSync(path, "utf8"))),
       currentCommit,
+      {
+        runId: "synthetic-run-1",
+        runnerVersion: "local-inference/4",
+        targetCommit: currentCommit,
+      },
     );
     expect(readFileSync(output, "utf8")).toBe(expected);
     expect(readFileSync("../../docs/local-inference-adoption.md", "utf8")).toBe(
       expected,
     );
+  });
+
+  it("rejects invalid TTFT selectors before creating a report", () => {
+    const output = join(temp(), "report.md");
+    expect(
+      cli(
+        "--run-id",
+        "synthetic-run-1",
+        "--runner-version",
+        "unknown",
+        output,
+        fixtures[0],
+      ).status,
+    ).toBe(1);
+    expect(() => readFileSync(output)).toThrow();
+    expect(
+      cli(
+        "--run-id",
+        "synthetic-run-1",
+        "--wrong-flag",
+        "local-inference/4",
+        output,
+        fixtures[0],
+      ).status,
+    ).toBe(1);
   });
 
   it("refuses to replace source data, existing reports, and hard links", () => {

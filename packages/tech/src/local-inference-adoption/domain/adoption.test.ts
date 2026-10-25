@@ -352,7 +352,9 @@ describe("exact adoption join", () => {
       }),
       legacy,
     ]);
-    expect(output.match(/\| Source \/ run \| Engine/g)).toHaveLength(3);
+    expect(
+      output.match(/\| Source \/ run \| Engine \/ model \| Status/g),
+    ).toHaveLength(3);
     expect(output).toContain("## condition-1");
     expect(output).toContain("## condition-2");
     expect(output).toContain("## Undetermined conditions");

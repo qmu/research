@@ -8,7 +8,8 @@ the join; they are not engine measurements or product recommendations.
 From `packages/tech`, run:
 
 ```sh
-npm run local-inference:adoption -- --commit 1111111111111111111111111111111111111111 /tmp/adoption.md \
+npm run local-inference:adoption -- --commit 1111111111111111111111111111111111111111 \
+  --run-id synthetic-run-1 --runner-version local-inference/4 /tmp/adoption.md \
   src/local-inference-adoption/fixtures/baseline.json \
   src/local-inference-adoption/fixtures/other-host.json \
   src/local-inference-adoption/fixtures/other-evaluator.json \
@@ -169,3 +170,50 @@ the commit gate. This check validates labels, not artifact authenticity.
 
 The demo's supported, unknown and empty version labels are synthetic test data,
 not updates to historical engine measurements.
+
+## First-token latency
+
+The **First-token latency eligibility** table adopts the saved `runs[].metrics.ttft`
+value only when `runs[].runId`, `execution.runnerVersion`, and
+`execution.targetCommit` exactly match an independently selected execution. The
+contract is seconds (`unit: "s"`), client measurement (`source: "client"`), a
+finite nonnegative number, and a measured run. Measured zero is valid. Missing
+values, failed runs, throughput, startup time and other runs cannot supply TTFT.
+This is metric eligibility, separate from the existing fixture-quality adoption
+verdicts; it introduces no latency threshold or general engine recommendation.
+
+```sh
+cd packages/tech
+npm run local-inference:adoption -- --commit <full-sha> \
+  --run-id <recorded-run-id> --runner-version local-inference/4 \
+  /tmp/new-adoption.md /path/to/saved-result.json
+```
+
+Choose all three expected values from the intended execution before reading the
+artifacts; copying them from each input would defeat the join. No trimming or
+fallback is used. The runner version must also be explicitly supported. An
+invalid selector refuses the whole render before writing a file. Existing calls
+without the two optional flags continue to render quality evidence, but adopt no
+TTFT (`TTFT-IDENTITY-NOT-SELECTED`). The independently supplied `--commit` also
+remains the comparison commit; the API rejects inconsistent commit selectors.
+
+Missing identity fields return `MISSING-RUN-ID`, `MISSING-RUNNER-VERSION`, or
+`MISSING-COMMIT`; differences return the corresponding `*-MISMATCH`, in run ID,
+runner version, commit order. After provenance matches, missing/failed evidence
+retains `NO-FIELD`, `NOT-RUN`, or `MEASURE-FAILED`; invalid TTFT semantics return
+`INVALID-TTFT`. Structurally invalid common JSON still fails the existing input
+validator. Excluded TTFT is shown as **not adopted**, never zero; original metrics
+remain under **Recorded evidence**. Preserve those originals and remeasure the
+selected execution to recover missing provenance or measurements. Do not relabel
+old JSON. All IDs and values in the committed demo are synthetic fixtures.
+
+The HTTP runner in qmu/research#279 records a separate UUID per request in
+`runs[].runId`; an artifact-level run ID must never substitute for it. When its
+`runs[].ttft` acquisition record is present, it must agree with `metrics.ttft`
+and carry `FIRST-CONTENT` for a value or `NO-CONTENT` for missing content.
+Contradictory records are rejected. `quality: {value:null, reason:"NOT-RUN"}`
+means no quality evaluation and cannot pass quality adoption. Its OS-sampled
+`peak_rss` remains evidence. That pending runner does not yet save
+`execution.runnerVersion` or `execution.targetCommit`, so its current raw output
+is deliberately ineligible until the producer records those fields; neither this
+page nor its CLI invents them.

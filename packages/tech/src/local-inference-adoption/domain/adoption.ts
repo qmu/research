@@ -1,3 +1,8 @@
+import {
+  adoptSavedTtft,
+  validateTtftIdentity,
+  type TtftIdentity,
+} from "./ttft.js";
 import { checkRunnerVersion, type RunnerRecovery } from "./runner-version.js";
 
 /** Join the schemaVersion 1 measurement, fingerprint and exact-text quality contracts. */
@@ -96,7 +101,12 @@ function metrics(value: unknown): RecordValue {
         : typeof metric.value !== "number" ||
           !Number.isFinite(metric.value) ||
           metric.value < 0 ||
-          !oneOf(metric.source, ["client", "usage"]) ||
+          !(
+            oneOf(metric.source, ["client", "usage"]) ||
+            (name === "peak_rss" &&
+              metric.unit === "MiB" &&
+              metric.source === "os-sampler")
+          ) ||
           own(metric, "reason"))
     )
       throw new Error(`Invalid metric: ${name}`);
@@ -104,6 +114,16 @@ function metrics(value: unknown): RecordValue {
   return structuredClone(data);
 }
 function quality(value: unknown): RecordValue[] {
+  // The HTTP runner explicitly records that no evaluator has run yet.
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const pending = object(value);
+    if (
+      pending.value === null &&
+      pending.reason === "NOT-RUN" &&
+      Object.keys(pending).length === 2
+    )
+      return [];
+  }
   if (!Array.isArray(value) || !value.length)
     throw new Error("Expected nonempty quality array");
   const ids = new Set<string>();
@@ -323,7 +343,13 @@ const cell = (value: string) =>
 export function renderAdoptionReport(
   inputs: readonly unknown[],
   currentCommit: string,
+  ttftIdentity?: TtftIdentity,
 ): string {
+  if (ttftIdentity) {
+    validateTtftIdentity(ttftIdentity);
+    if (ttftIdentity.targetCommit !== currentCommit)
+      throw new Error("TTFT-COMPARISON-COMMIT-MISMATCH");
+  }
   const report = joinAdoptionResults(inputs, currentCommit);
   const pretty = (value: unknown) =>
     JSON.stringify(value, null, 2).split("\n").map(cell).join("\n");
@@ -407,6 +433,25 @@ export function renderAdoptionReport(
           "",
         ]
       : []),
+    "## First-token latency eligibility",
+    "",
+    "Only saved TTFT from the selected run ID, runner version and target commit is adopted here. Quality verdicts below are separate: adopting a latency value is not an engine recommendation. Missing selection or evidence never becomes zero.",
+    "",
+    ...(ttftIdentity
+      ? [
+          `Selected run: ${cell(ttftIdentity.runId)}; runner: ${cell(ttftIdentity.runnerVersion)}; commit: ${ttftIdentity.targetCommit}.`,
+          "",
+        ]
+      : []),
+    "| Source / run | Engine / model | Adopted TTFT (s) | Reason / next step |",
+    "| --- | --- | --- | --- |",
+    ...report.rows.map((row) => {
+      const input = object(inputs[row.sourceIndex]);
+      const run = (input.runs as unknown[])[row.runIndex];
+      const result = adoptSavedTtft(input.execution, run, ttftIdentity);
+      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${cell(`${row.engine} / ${row.model}`)} | ${result.value ?? "not adopted"} | ${result.reasons.length ? `${result.reasons.join(", ")} — [Remeasure](./local-inference-adoption-format.md#first-token-latency)` : "same execution; measured"} |`;
+    }),
+    "",
     "## Commit eligibility",
     "",
     `Current comparison commit: ${report.currentCommit}`,
