@@ -1,5 +1,6 @@
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
+import { renderAdoptionRationaleSection } from "./adoption-rationale";
 import type { BenchmarkResult, HistoryFile } from "./types";
 
 export type RagReportRenderOptions = Readonly<{
@@ -328,6 +329,8 @@ export const renderRagBenchmarkReport = (
 - Fully-managed backends measure the whole stack; a credential-absent run renders their card \`fixtured\`, never faked.
 - The miniature dataset is intended to verify the harness and metric calculations; it is not a statistical claim about backend quality at production scale.`,
     verificationResults: `${overviewSection(result)}
+
+${renderAdoptionRationaleSection(result.runs)}
 
 ${historyCharts}`,
     analysis: backendNotes,
