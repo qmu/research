@@ -70,7 +70,8 @@
     "svggen:fixture": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-svg-generation.ts",
     "svggen:real": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-svg-generation.ts --real",
     "svggen:estimate": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-svg-generation.ts --estimate",
-    "local-inference:adoption": "node --import tsx/esm src/entrypoints/render-local-inference-adoption.ts"
+    "local-inference:adoption": "node --import tsx/esm src/entrypoints/render-local-inference-adoption.ts",
+    "local-inference": "node --import tsx/esm src/entrypoints/run-local-inference.ts"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
