@@ -90,3 +90,35 @@ Runtime-specific `timings` are deliberately not substituted for the client clock
 Tests use a local HTTP server and synthetic SSE streams; their numbers are not
 performance measurements of any installed inference engine. Real hardware runs,
 quality judging and steady-state aggregation remain separate work.
+
+### Completion notices from external workers
+
+An external worker may return a completion envelope to the saving process:
+
+```json
+{
+  "execution": { "runId": "<reservation runId>", "version": 1 },
+  "result": { "schemaVersion": 1, "runs": [] }
+}
+```
+
+The coordinator must first call `beginExecution(output)` from
+`vendors/versioned-result.ts` and pass that reservation to the worker. The
+worker returns it unchanged. From `packages/tech`, ingest its notice with:
+
+```sh
+node --import tsx/esm src/entrypoints/complete-local-inference.ts notice.json result.json
+```
+
+This entrypoint never creates a reservation. It reuses the locked compare and
+publish boundary: either an ID mismatch or a version mismatch, a superseded
+reservation, or a duplicate completion returns exit 1 and exactly
+`{"status":"failed","code":"STALE-EXECUTION"}` on stderr, without replacing the
+result. Invalid envelopes and I/O failures return exit 1 with the fixed code
+`COMPLETION-FAILED`; raw errors and notice payloads are not logged. Success
+returns exit 0 with `status: saved` and the execution identity on stdout.
+`result.execution` is forbidden so there is only one identity in the notice.
+The result body is otherwise opaque: workers remain responsible for producing
+valid, sanitized measurement JSON. This is a trusted local worker transport,
+not an authentication boundary. The same lock, crash and recovery limitations
+as the in-process runner apply.
