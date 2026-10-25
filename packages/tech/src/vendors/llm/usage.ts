@@ -38,3 +38,14 @@ export type GoogleUsageShape =
   { candidatesTokenCount?: unknown } | null | undefined;
 export const googleOutputTokens = (usage: GoogleUsageShape): number =>
   toCount(usage?.candidatesTokenCount);
+
+// Ollama's /api/generate and /api/chat responses name the output-token count
+// `eval_count` (the number of tokens evaluated while generating the response,
+// per the documented API shape at
+// https://github.com/ollama/ollama/blob/main/docs/api.md). Only present on the
+// final response of a stream (`done: true`); an in-progress chunk is correctly
+// read as 0 by `toCount`, the same "not yet measured" signal every other
+// provider's partial usage gives.
+export type OllamaUsageShape = { eval_count?: unknown } | null | undefined;
+export const ollamaOutputTokens = (usage: OllamaUsageShape): number =>
+  toCount(usage?.eval_count);
