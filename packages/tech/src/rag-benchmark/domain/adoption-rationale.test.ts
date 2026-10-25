@@ -3,6 +3,7 @@ import {
   decideAdoptionRationale,
   renderAdoptionRationaleRow,
   renderAdoptionRationaleSection,
+  renderAdoptionVerdictSummary,
   QUALITY_ADOPT_FLOOR_RECALL_AT_K,
   SPEED_ADOPT_CEILING_P50_MS,
 } from "./adoption-rationale";
@@ -164,5 +165,36 @@ describe("renderAdoptionRationaleSection", () => {
     );
     expect(section).toContain("| sqlite-vec | **Adopt** |");
     expect(section).toContain("| other-backend | **Reject** |");
+  });
+});
+
+describe("renderAdoptionVerdictSummary", () => {
+  it("returns an empty string for no runs", () => {
+    expect(renderAdoptionVerdictSummary([])).toBe("");
+  });
+
+  it("counts adopted backends and points to section 7 for the detail", () => {
+    const summary = renderAdoptionVerdictSummary([
+      baseRun(),
+      baseRun({
+        backend: { ...backend, id: "other", name: "other-backend" },
+        provenance: "fixtured",
+      }),
+    ]);
+    expect(summary).toContain("1 of 2 backend(s)");
+    expect(summary).toContain("section 7, Verification Data");
+  });
+
+  it("stays within the section 4 character budget for many backends", () => {
+    const runs = Array.from({ length: 20 }, (_, index) =>
+      baseRun({
+        backend: {
+          ...backend,
+          id: `backend-${index}`,
+          name: `backend-${index}`,
+        },
+      }),
+    );
+    expect(renderAdoptionVerdictSummary(runs).length).toBeLessThan(500);
   });
 });

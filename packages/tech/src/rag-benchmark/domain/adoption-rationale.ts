@@ -166,6 +166,13 @@ export const renderAdoptionRationaleRow = (
   return `| ${run.backend.name} | **${verdictLabel}** | ${cells} |`;
 };
 
+/**
+ * The exhaustive per-backend table — one fixed-order line per backend with
+ * all four factors expandable. Belongs in §7 Verification Data alongside the
+ * other per-backend tables; §4 Verification Results keeps only the one-line
+ * aggregate from `renderAdoptionVerdictSummary`, per the site-wide §4
+ * character budget (see `published-pages.test.ts`).
+ */
 export const renderAdoptionRationaleSection = (
   runs: ReadonlyArray<BackendRun>,
 ): string => {
@@ -184,4 +191,29 @@ export const renderAdoptionRationaleSection = (
 
 ${header}
 ${rows}`;
+};
+
+/**
+ * The §4-sized aggregate: one line naming how many backends would be
+ * adopted at the fixed thresholds, pointing to the full per-backend
+ * breakdown in §7. Keeps the decisive number in the concise overview
+ * without repeating every expandable detail there.
+ */
+export const renderAdoptionVerdictSummary = (
+  runs: ReadonlyArray<BackendRun>,
+): string => {
+  if (runs.length === 0) return "";
+  const adopted = runs.filter(
+    (run) => decideAdoptionRationale(run).verdict === "adopt",
+  ).length;
+  const speedCeiling = SPEED_ADOPT_CEILING_P50_MS;
+  const qualityFloor = (QUALITY_ADOPT_FLOOR_RECALL_AT_K * 100).toFixed(0);
+  return (
+    `**Adoption verdict.** ${adopted} of ${runs.length} backend(s) would ` +
+    `be adopted at this run's speed (≤ ${speedCeiling} ms p50) and ` +
+    `quality (≥ ${qualityFloor}% recall@k) thresholds; peak memory is not ` +
+    `measured by this harness and does not gate adoption on its own. The ` +
+    `per-backend speed / quality / peak memory / missing-data breakdown is ` +
+    `in section 7, Verification Data.`
+  );
 };
