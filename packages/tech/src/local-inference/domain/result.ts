@@ -2,7 +2,7 @@
 export const engines = ["ollama", "llama.cpp", "mlx", "strata"] as const;
 export type Engine = (typeof engines)[number];
 export type Measurement =
-  | { value: number; unit: string; source: "client" | "usage" }
+  | { value: number; unit: string; source: "client" | "usage" | "os-sampler" }
   | {
       value: null;
       unit: string;

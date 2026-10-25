@@ -1,11 +1,14 @@
 import { createHash } from "node:crypto";
 import { writeFile } from "node:fs/promises";
 import { engines, metrics, type Engine } from "./domain/result.js";
+import { startPeakRss } from "./vendors/peak-rss.js";
+import { peakRssReading } from "./domain/peak-memory.js";
 import { observeStream } from "./vendors/stream.js";
 
 export type Config = {
   messages: { role: "system" | "user"; content: string }[];
   targets: {
+    memoryPid?: number;
     engine: Engine;
     baseUrl: string;
     model: string;
@@ -47,6 +50,15 @@ export function parseConfig(input: unknown): Config {
       throw new Error("Invalid target identity");
     const url = new URL(target.baseUrl);
     if (
+      target.memoryPid !== undefined &&
+      (!Number.isSafeInteger(target.memoryPid) ||
+        target.memoryPid <= 0 ||
+        !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname))
+    )
+      throw new Error(
+        "memoryPid requires a positive PID and loopback endpoint",
+      );
+    if (
       !["http:", "https:"].includes(url.protocol) ||
       url.username ||
       url.password ||
@@ -77,11 +89,13 @@ export async function runLocalInference(
   input: unknown,
   output: string,
   timeoutMs = 60_000,
+  memorySampler = startPeakRss,
 ) {
   const config = parseConfig(input);
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
   const runs = [];
   for (const target of config.targets) {
+    const sampler = memorySampler(target.memoryPid);
     const started = performance.now();
     let measured;
     let status: "measured" | "failed" = "measured";
@@ -106,7 +120,12 @@ export async function runLocalInference(
       status = "failed";
       measured = metrics({}, true);
     }
+    const peakMemory = await sampler.stop();
+    const reading = peakRssReading(peakMemory);
+    measured.peak_rss =
+      reading.value === null ? reading : { ...reading, source: "os-sampler" };
     runs.push({
+      peakMemory,
       engine: target.engine,
       model: target.model,
       runtimeVersion: target.runtimeVersion,
