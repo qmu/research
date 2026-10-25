@@ -1,6 +1,11 @@
+import { randomUUID } from "node:crypto";
 import { open, writeFile } from "node:fs/promises";
-import { parseDarwinPeakRss, type PeakRss } from "./domain/peak-rss.js";
-import { execute } from "./vendors/process.js";
+import { type PeakRss } from "./domain/peak-rss.js";
+import {
+  execute,
+  SAMPLE_INTERVAL_MS,
+  SNAPSHOT_TIMEOUT_MS,
+} from "./vendors/process.js";
 
 const engines = ["ollama", "llama.cpp", "mlx", "strata"] as const;
 export type ProcessRun = {
@@ -50,25 +55,18 @@ export async function runLocalInferenceProcess(
     let status: "measured" | "failed" | "not-run" = "not-run";
     let exitCode: number | null = null;
     let signal: string | null = null;
+    let sampleCount = 0;
     if (!supported) {
       peakRss = { value: null, unit: "MiB", reason: "NOT-RUN" };
       acquisitionReason = "UNSUPPORTED-HOST";
     } else {
       try {
         const result = await dependencies.execute(
-          "/usr/bin/time",
-          // The shell only redirects engine stderr, then execs the exact argv.
-          // time's own stderr remains separate from model output/diagnostics.
-          [
-            "-l",
-            "/bin/sh",
-            "-c",
-            'exec "$@" 2>/dev/null',
-            "inference",
-            ...config.command,
-          ],
+          config.command[0],
+          config.command.slice(1),
           timeoutMs,
         );
+        sampleCount = result.sampleCount;
         exitCode = result.exitCode;
         signal = result.signal;
         status =
@@ -82,11 +80,15 @@ export async function runLocalInferenceProcess(
           result.exitCode !== 0
         ) {
           peakRss = { value: null, unit: "MiB", reason: "MEASURE-FAILED" };
-          acquisitionReason = result.timedOut ? "TIMEOUT" : "PROCESS-FAILED";
+          acquisitionReason = result.timedOut
+            ? "TIMEOUT"
+            : !["RECORDED", "NO-FIELD"].includes(result.acquisitionReason)
+              ? result.acquisitionReason
+              : "PROCESS-FAILED";
         } else {
-          peakRss = parseDarwinPeakRss(result.stderr);
-          acquisitionReason =
-            peakRss.value !== null ? "RECORDED" : peakRss.reason;
+          peakRss = result.peakRss;
+          acquisitionReason = result.acquisitionReason;
+          if (peakRss.value === null) status = "failed";
         }
       } catch {
         status = "failed";
@@ -95,15 +97,20 @@ export async function runLocalInferenceProcess(
       }
     }
     const result = {
-      schemaVersion: 1,
+      schemaVersion: 2,
+      runId: randomUUID(),
       engine: config.engine,
       status,
       exitCode,
       signal,
       metrics: { peak_rss: peakRss },
       memoryMeasurement: {
-        method: "darwin-time-l",
-        scope: "local-inference-process",
+        method: "ps-sampled-simultaneous-rss",
+        scope: "local-inference-process-tree",
+        aggregation: "maximum-sampled-sum",
+        sampleIntervalMs: SAMPLE_INTERVAL_MS,
+        snapshotTimeoutMs: SNAPSHOT_TIMEOUT_MS,
+        sampleCount,
         acquisitionReason,
       },
     };
