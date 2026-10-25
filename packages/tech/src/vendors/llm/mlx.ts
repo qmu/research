@@ -63,6 +63,26 @@ export const parseMlxGenerateStats = (stdout: string): MlxGenerateStats => {
   };
 };
 
+// The generated text sits between the FIRST and SECOND `==========` separator
+// line; everything after the second separator is the stats block this module
+// parses separately.
+export const extractMlxGeneratedText = (stdout: string): string => {
+  const lines = stdout.split("\n");
+  const separatorIndexes: number[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    if (SEPARATOR_LINE.test(lines[index].trim())) {
+      separatorIndexes.push(index);
+    }
+  }
+  if (separatorIndexes.length < 2) {
+    throw new Error(
+      "mlx_lm.generate output is missing the `==========` framing around the generated text",
+    );
+  }
+  const [firstIndex, secondIndex] = separatorIndexes;
+  return lines.slice(firstIndex + 1, secondIndex).join("\n").trim();
+};
+
 export const DIAG_A_PLACEHOLDER: StreamedCompletion = {
   text: "",
   outputTokens: 0,
@@ -71,4 +91,4 @@ export const DIAG_A_PLACEHOLDER: StreamedCompletion = {
   model: "diag",
 };
 
-export const diagUse = (): unknown => [SEPARATOR_LINE];
+export const diagUse = (): unknown => [extractMlxGeneratedText];
