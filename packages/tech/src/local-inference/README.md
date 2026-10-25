@@ -59,8 +59,7 @@ content delta, following the proposed ADR. Role, finish and usage-only frames do
 not extend that interval. A single content delta cannot establish that interval.
 Missing counts or an unmeasurable interval produce `value: null` / `NO-FIELD`,
 never estimated tokens or a zero. HTTP errors, malformed/truncated streams and
-timeouts produce `MEASURE-FAILED`. Startup and process RSS are `NOT-RUN`: measuring
-the runner's RSS or request duration would not measure the engine's process.
+timeouts produce `MEASURE-FAILED`. Startup is `NOT-RUN`; server RSS requires the optional PID described below.
 Runtime-specific `timings` are deliberately not substituted for the client clock.
 
 Tests use a local HTTP server and synthetic SSE streams; their numbers are not
@@ -95,3 +94,20 @@ it is not an OS lifetime high-water mark. Server identity, PID reuse and model
 isolation are operator responsibilities. No Apple Silicon hardware measurement
 is claimed by the synthetic tests. Runner version and reproduction identity
 remain separate concerns.
+
+### Request identity and TTFT evidence
+
+Every request receives a fresh UUID `runId`, including failures and repeat trials.
+The row binds `metrics` (speed and peak RSS), `peakMemory`, `ttft` and `quality`
+to that one request. Do not join measurements from other requests by engine alone.
+Existing `metrics.ttft` remains compatible; `ttft` repeats its value/unit/source
+and adds an explicit acquisition reason: `FIRST-CONTENT` for the first nonempty
+content delta, `NO-CONTENT` for a completed stream without content, or
+`REQUEST-FAILED` for HTTP, parsing, truncation or timeout failure. Failed streams
+discard partial timings. Role, empty-content and usage frames cannot start TTFT.
+The time begins immediately before fetch, so it includes connection and request
+latency; it is not model-only prefill time or server startup time.
+
+`quality: { value: null, reason: "NOT-RUN" }` explicitly records that this runner
+has no quality evaluator. It is not a zero or a passing judgment. Real quality
+scores require a separately specified evaluator; none are fabricated here.

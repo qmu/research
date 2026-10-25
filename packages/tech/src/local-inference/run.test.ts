@@ -77,9 +77,17 @@ describe("local inference common JSON", () => {
     );
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
     expect(result.runs.map((r) => r.engine)).toEqual(engines);
+    expect(new Set(result.runs.map((r) => r.runId)).size).toBe(4);
     expect(requests).toHaveLength(4);
     for (const request of requests) expect(request).toEqual(requests[0]);
     for (const run of result.runs) {
+      expect(run.runId).toMatch(/^[a-f0-9-]{36}$/);
+      expect(run.ttft).toEqual({
+        ...run.metrics.ttft,
+        reason: "FIRST-CONTENT",
+      });
+      expect(run.ttft.value).toBeGreaterThanOrEqual(0);
+      expect(run.quality).toEqual({ value: null, reason: "NOT-RUN" });
       expect(run.status).toBe("measured");
       expect(run.metrics.completion_tokens.value).toBe(2);
       expect(run.metrics.tps.value).toBeGreaterThan(0);
@@ -103,7 +111,10 @@ describe("local inference common JSON", () => {
         res.writeHead(500);
         res.end("secret-test-marker");
       } else if (calls === 2) {
-        res.end("data: {broken}\n\n");
+        res.end(
+          sse([content("partial")]).replace("data: [DONE]\r\n\r\n", "") +
+            "data: {broken}\n\n",
+        );
       } else if (calls === 3) {
         res.end(sse([content("ok")]));
       }
@@ -128,6 +139,13 @@ describe("local inference common JSON", () => {
       "measured",
       "failed",
     ]);
+    for (const run of result.runs.filter((r) => r.status === "failed")) {
+      expect(run.ttft).toEqual({
+        value: null,
+        unit: "s",
+        reason: "REQUEST-FAILED",
+      });
+    }
     expect(result.runs[0].metrics.ttft).toMatchObject({
       value: null,
       reason: "MEASURE-FAILED",
@@ -163,6 +181,11 @@ describe("local inference common JSON", () => {
       lastMs: 200,
       completionTokens: 4,
     });
+    expect(metrics(observed).ttft).toEqual({
+      value: 0.1,
+      unit: "s",
+      source: "client",
+    });
     expect(metrics(observed).tps.value).toBe(40);
   });
 
@@ -183,6 +206,41 @@ describe("local inference common JSON", () => {
     expect(
       metrics({ firstMs: 0, lastMs: 0, completionTokens: 1 }).tps.value,
     ).toBeNull();
+  });
+
+  it("persists NO-CONTENT for successful streams without text and assigns fresh run IDs", async () => {
+    const server = createServer((_req, res) => {
+      res.end(
+        sse([
+          { choices: [{ delta: { role: "assistant", content: "" } }] },
+          { usage: { completion_tokens: 0 } },
+        ]),
+      );
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const input = config(`http://127.0.0.1:${address.port}/v1`);
+    const ids = new Set<string>();
+    for (let trial = 0; trial < 2; trial++) {
+      const output = await destination();
+      const result = await runLocalInference(input, output);
+      for (const run of result.runs) {
+        expect(run.status).toBe("measured");
+        expect(run.ttft).toEqual({
+          value: null,
+          unit: "s",
+          reason: "NO-CONTENT",
+        });
+        expect(ids.has(run.runId)).toBe(false);
+        ids.add(run.runId);
+      }
+      expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+    }
   });
 
   it("validates engine identity, conditions and URL credentials before requests", () => {

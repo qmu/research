@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { writeFile } from "node:fs/promises";
 import { engines, metrics, type Engine } from "./domain/result.js";
 import { startPeakRss } from "./vendors/peak-rss.js";
@@ -95,6 +95,7 @@ export async function runLocalInference(
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
   const runs = [];
   for (const target of config.targets) {
+    const runId = randomUUID();
     const sampler = memorySampler(target.memoryPid);
     const started = performance.now();
     let measured;
@@ -125,6 +126,17 @@ export async function runLocalInference(
     measured.peak_rss =
       reading.value === null ? reading : { ...reading, source: "os-sampler" };
     runs.push({
+      runId,
+      ttft: {
+        ...measured.ttft,
+        reason:
+          measured.ttft.value !== null
+            ? "FIRST-CONTENT"
+            : status === "failed"
+              ? "REQUEST-FAILED"
+              : "NO-CONTENT",
+      },
+      quality: { value: null, reason: "NOT-RUN" },
       peakMemory,
       engine: target.engine,
       model: target.model,
