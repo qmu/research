@@ -21,7 +21,18 @@ if (
       args,
       timeoutMs: Number(timeout),
     });
-    console.log(JSON.stringify(result));
+    // Captured diagnostics can contain credentials; keep them in the local file.
+    const { output: captured, ...summary } = result;
+    console.log(
+      JSON.stringify({
+        ...summary,
+        output: Object.fromEntries(
+          Object.entries(captured).map(
+            ([stream, { data: _data, ...metadata }]) => [stream, metadata],
+          ),
+        ),
+      }),
+    );
     process.exitCode = result.status === "ok" ? 0 : 1;
   } catch {
     console.error(

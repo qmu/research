@@ -20,14 +20,26 @@ it("CLI saves child status and returns distinct measurement/save errors", async 
           "5000",
           process.execPath,
           "-e",
-          `process.exit(${exit})`,
+          `process.stdout.write("local-diagnostic");process.stderr.write("local-error");process.exitCode = ${exit}`,
         ],
         { encoding: "utf8" },
       );
     expect(invoke("invalid", 0).status).toBe(2);
-    expect(invoke("mlx", 7).status).toBe(1);
+    const measured = invoke("mlx", 7);
+    expect(measured.status).toBe(1);
+    expect(measured.stdout).not.toContain("local-diagnostic");
+    expect(measured.stdout).not.toContain(
+      Buffer.from("local-diagnostic").toString("base64"),
+    );
+    expect(measured.stderr).not.toContain("local-error");
     const saved = JSON.parse(await readFile(path, "utf8"));
     expect(saved.process.exit_code).toBe(7);
+    expect(Buffer.from(saved.output.stdout.data, "base64").toString()).toBe(
+      "local-diagnostic",
+    );
+    expect(Buffer.from(saved.output.stderr.data, "base64").toString()).toBe(
+      "local-error",
+    );
     expect(saved.execution).toEqual({ runId: expect.any(String), version: 1 });
     // A later invocation on the same path reserves the next version and
     // publishes through the same atomic save, replacing the prior evidence.
