@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "snapshots": [
+    {
+      "id": "llama-cpp-8b-q4",
+      "engineVersion": "llama.cpp b3985",
+      "model": "llama-3.1-8b-instruct-q4_k_m",
+      "fixtureVersion": "fixture-2026-08-01",
+      "runnerVersion": "runner-1.4.0",
+      "verdict": "adopted"
+    },
+    {
+      "id": "ollama-8b-q4",
+      "engineVersion": "ollama 0.4.7",
+      "model": "llama3.1:8b-instruct-q4_K_M",
+      "fixtureVersion": "fixture-2026-08-01",
+      "runnerVersion": "runner-1.3.2",
+      "verdict": "rejected",
+      "reasonCode": "runner-version-mismatch"
+    },
+    {
+      "id": "vllm-8b-fp16",
+      "engineVersion": "vllm 0.6.3",
+      "model": "llama-3.1-8b-instruct",
+      "fixtureVersion": "fixture-2026-08-01",
+      "runnerVersion": "runner-1.4.0",
+      "verdict": "adopted"
+    }
+  ]
+}
