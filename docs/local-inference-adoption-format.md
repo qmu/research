@@ -213,7 +213,30 @@ The HTTP runner in qmu/research#279 records a separate UUID per request in
 and carry `FIRST-CONTENT` for a value or `NO-CONTENT` for missing content.
 Contradictory records are rejected. `quality: {value:null, reason:"NOT-RUN"}`
 means no quality evaluation and cannot pass quality adoption. Its OS-sampled
-`peak_rss` remains evidence. That pending runner does not yet save
-`execution.runnerVersion` or `execution.targetCommit`, so its current raw output
-is deliberately ineligible until the producer records those fields; neither this
-page nor its CLI invents them.
+`peak_rss` remains evidence. Older outputs without `execution.runnerVersion` or
+`execution.targetCommit` stay ineligible; neither this page nor its CLI invents
+them. The connected runner contract is described below.
+
+### Recorded acquisition failures
+
+The HTTP runner now requires a full lowercase `targetCommit` in its config and
+records `execution: {runnerVersion: "local-inference/4", targetCommit}` before
+saving the observations. The runner version is a code constant; it cannot be
+supplied by the config. The target commit is operator-selected provenance, not
+an authenticity claim or a lookup from the report reader's checkout.
+
+For an exactly selected request, **Acquisition** is `available` when TTFT is
+adopted, or `unavailable` for verified `NO-CONTENT`, `HTTP-ERROR`, `NO-BODY`,
+`INVALID-STREAM`, `STREAM-ERROR`, `INCOMPLETE-STREAM`, `TIMEOUT` and
+`REQUEST-FAILED`. All other rejected rows are `unverified`. The same table row
+shows the saved request UUID, supported runner version and target commit.
+The reason and remeasurement link belong to that row; a failed request never
+borrows another engine's successful observation.
+
+A failed acquisition must have null seconds and no source in both `ttft` and
+`metrics.ttft`, with generic `MEASURE-FAILED` in the latter. `NO-CONTENT` requires
+a measured request with `NO-FIELD` in the metric. Numeric values on failures,
+unknown codes, or contradictory status/unit/source produce `INVALID-TTFT`.
+Provenance rejection takes precedence over all acquisition reasons. Legacy rows
+without `ttft` keep their existing generic missing reasons. No missing value
+becomes zero, and the quality verdict remains a separate evaluation.

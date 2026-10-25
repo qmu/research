@@ -161,3 +161,26 @@ it("excludes unsupported saved runners through the CLI without rewriting evidenc
   expect(cli(output, input).status).toBe(1);
   expect(readFileSync(output, "utf8")).toBe(rendered);
 });
+
+it("reproduces the selected acquisition failure page through the CLI", () => {
+  const output = join(temp(), "failure.md");
+  expect(
+    cli(
+      "--run-id",
+      "synthetic-timeout-request",
+      "--runner-version",
+      "local-inference/4",
+      output,
+      resolve("src/local-inference-adoption/fixtures/ttft-failure.json"),
+    ).status,
+  ).toBe(0);
+  const rendered = readFileSync(output, "utf8");
+  expect(rendered).toContain("not adopted | TIMEOUT");
+  expect(rendered).toContain(
+    "| unavailable | synthetic-timeout-request / local-inference/4 / ",
+  );
+  expect(rendered).not.toContain("| 0 | ");
+  expect(
+    readFileSync("../../docs/local-inference-ttft-failure.md", "utf8"),
+  ).toBe(rendered);
+});

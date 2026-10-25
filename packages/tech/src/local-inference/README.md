@@ -21,6 +21,7 @@ Configuration (include each of `ollama`, `llama.cpp`, `mlx`, `strata` exactly on
 
 ```json
 {
+  "targetCommit": "0123456789abcdef0123456789abcdef01234567",
   "messages": [{ "role": "user", "content": "Say hello" }],
   "targets": [
     {
@@ -43,6 +44,12 @@ Configuration (include each of `ollama`, `llama.cpp`, `mlx`, `strata` exactly on
   ]
 }
 ```
+
+`targetCommit` is required and must be the full 40-character lowercase commit
+SHA of the intended measurement target. It is validated before requests and saved
+as `execution.targetCommit` alongside `execution.runnerVersion: "local-inference/4"`.
+Supply the actual target commit explicitly; the runner does not infer it from the
+output or current checkout.
 
 The snippet shows one target; add the other three with their own endpoint,
 model, runtime version and actual weight identity. `condition` holds
@@ -92,8 +99,7 @@ headroom: it excludes other processes, child workers and GPU allocations not
 represented in server RSS. The sampled maximum can miss peaks between reads;
 it is not an OS lifetime high-water mark. Server identity, PID reuse and model
 isolation are operator responsibilities. No Apple Silicon hardware measurement
-is claimed by the synthetic tests. Runner version and reproduction identity
-remain separate concerns.
+is claimed by the synthetic tests. Runner provenance is saved separately in `execution`.
 
 ### Request identity and TTFT evidence
 

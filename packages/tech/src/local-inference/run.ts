@@ -10,6 +10,7 @@ import {
 } from "./vendors/stream.js";
 
 export type Config = {
+  targetCommit: string;
   messages: { role: "system" | "user"; content: string }[];
   targets: {
     memoryPid?: number;
@@ -25,6 +26,11 @@ export function parseConfig(input: unknown): Config {
   if (!input || typeof input !== "object")
     throw new Error("Expected config object");
   const config = input as Config;
+  if (
+    typeof config.targetCommit !== "string" ||
+    !/^[a-f0-9]{40}$/.test(config.targetCommit)
+  )
+    throw new Error("Expected full lowercase targetCommit SHA");
   if (
     !Array.isArray(config.messages) ||
     config.messages.length === 0 ||
@@ -158,6 +164,10 @@ export async function runLocalInference(
   }
   const result = {
     schemaVersion: 1,
+    execution: {
+      runnerVersion: "local-inference/4",
+      targetCommit: config.targetCommit,
+    },
     generatedAt: new Date().toISOString(),
     inputSha256: createHash("sha256")
       .update(JSON.stringify(config.messages))

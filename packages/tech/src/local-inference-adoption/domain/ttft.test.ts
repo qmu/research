@@ -230,7 +230,7 @@ describe("saved TTFT adoption", () => {
       ttft: { value: null, unit: "s", reason: "NO-CONTENT" },
     };
     expect(adoptSavedTtft(expected, empty, expected).reasons).toEqual([
-      "NO-FIELD",
+      "NO-CONTENT",
     ]);
   });
   it("escapes selected run IDs rather than interpolating markup", () => {
@@ -240,5 +240,76 @@ describe("saved TTFT adoption", () => {
     });
     expect(markdown).not.toContain("<script>");
     expect(markdown).not.toContain("{{x}}");
+  });
+});
+
+describe("fixed acquisition failures on the selected execution", () => {
+  const missing = (reason: string, status = "failed") => ({
+    runId: expected.runId,
+    status,
+    ttft: { value: null, unit: "s", reason },
+    metrics: {
+      ttft: {
+        value: null,
+        unit: "s",
+        reason: status === "failed" ? "MEASURE-FAILED" : "NO-FIELD",
+      },
+    },
+  });
+  it.each([
+    "HTTP-ERROR",
+    "NO-BODY",
+    "INVALID-STREAM",
+    "STREAM-ERROR",
+    "INCOMPLETE-STREAM",
+    "TIMEOUT",
+    "REQUEST-FAILED",
+    "NO-CONTENT",
+  ])("preserves %s only on matching provenance", (reason) => {
+    const row = missing(
+      reason,
+      reason === "NO-CONTENT" ? "measured" : "failed",
+    );
+    expect(adoptSavedTtft(expected, row, expected)).toEqual({
+      value: null,
+      unit: "s",
+      reasons: [reason],
+    });
+    for (const [key, value, code] of [
+      ["runnerVersion", "local-inference/3", "RUNNER-VERSION-MISMATCH"],
+      ["targetCommit", "2".repeat(40), "COMMIT-MISMATCH"],
+    ])
+      expect(
+        adoptSavedTtft({ ...expected, [key]: value }, row, expected).reasons,
+      ).toEqual([code]);
+    expect(
+      adoptSavedTtft(expected, { ...row, runId: "different" }, expected)
+        .reasons,
+    ).toEqual(["RUN-ID-MISMATCH"]);
+  });
+  it("rejects contradictory and unknown acquisition evidence without exposing raw errors", () => {
+    const row = missing("TIMEOUT");
+    for (const invalid of [
+      { ...row, status: "measured" },
+      { ...row, ttft: { ...row.ttft, reason: ["HTTP-ERROR"] } },
+      { ...row, ttft: { ...row.ttft, reason: "secret-test-marker" } },
+      { ...row, ttft: { ...row.ttft, value: 0.2 } },
+      { ...row, ttft: { ...row.ttft, source: "client" } },
+      {
+        ...row,
+        metrics: { ttft: { value: 0.2, unit: "s", source: "client" } },
+      },
+      {
+        ...row,
+        metrics: { ttft: { ...row.metrics.ttft, reason: "NO-FIELD" } },
+      },
+      {
+        ...missing("NO-CONTENT", "measured"),
+        metrics: { ttft: { value: 0, unit: "s", source: "client" } },
+      },
+    ])
+      expect(adoptSavedTtft(expected, invalid, expected).reasons).toEqual([
+        "INVALID-TTFT",
+      ]);
   });
 });

@@ -437,19 +437,49 @@ export function renderAdoptionReport(
     "",
     "Only saved TTFT from the selected run ID, runner version and target commit is adopted here. Quality verdicts below are separate: adopting a latency value is not an engine recommendation. Missing selection or evidence never becomes zero.",
     "",
+    "[Synthetic acquisition failure example](./local-inference-ttft-failure.md#first-token-latency-eligibility). No Apple Silicon performance measurement is claimed.",
+    "",
     ...(ttftIdentity
       ? [
           `Selected run: ${cell(ttftIdentity.runId)}; runner: ${cell(ttftIdentity.runnerVersion)}; commit: ${ttftIdentity.targetCommit}.`,
           "",
         ]
       : []),
-    "| Source / run | Engine / model | Adopted TTFT (s) | Reason / next step |",
-    "| --- | --- | --- | --- |",
+    "| Source / run | Engine / model | Adopted TTFT (s) | Reason / next step | Acquisition | Saved execution (request / runner / commit) |",
+    "| --- | --- | --- | --- | --- | --- |",
     ...report.rows.map((row) => {
       const input = object(inputs[row.sourceIndex]);
-      const run = (input.runs as unknown[])[row.runIndex];
+      const run = object((input.runs as unknown[])[row.runIndex]);
       const result = adoptSavedTtft(input.execution, run, ttftIdentity);
-      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${cell(`${row.engine} / ${row.model}`)} | ${result.value ?? "not adopted"} | ${result.reasons.length ? `${result.reasons.join(", ")} — [Remeasure](./local-inference-adoption-format.md#first-token-latency)` : "same execution; measured"} |`;
+      const unavailable = [
+        "NO-CONTENT",
+        "HTTP-ERROR",
+        "NO-BODY",
+        "INVALID-STREAM",
+        "STREAM-ERROR",
+        "INCOMPLETE-STREAM",
+        "TIMEOUT",
+        "REQUEST-FAILED",
+      ].includes(result.reasons[0]);
+      const acquisition =
+        result.value !== null
+          ? "available"
+          : unavailable
+            ? "unavailable"
+            : "unverified";
+      const execution = own(input, "execution") ? object(input.execution) : {};
+      const identity = [
+        run.runId,
+        checkRunnerVersion(execution.runnerVersion).version,
+        execution.targetCommit,
+      ]
+        .map((value) =>
+          cell(
+            typeof value === "string" && value.trim() ? value : "not recorded",
+          ),
+        )
+        .join(" / ");
+      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${cell(`${row.engine} / ${row.model}`)} | ${result.value ?? "not adopted"} | ${result.reasons.length ? `${result.reasons.join(", ")} — [Remeasure](./local-inference-adoption-format.md#first-token-latency)` : "same execution; measured"} | ${acquisition} | ${identity} |`;
     }),
     "",
     "## Commit eligibility",

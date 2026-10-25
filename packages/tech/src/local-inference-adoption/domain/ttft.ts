@@ -56,21 +56,48 @@ export function adoptSavedTtft(
     else if (saved[key] !== expected[key]) reasons.push(`${label}-MISMATCH`);
   }
   if (reasons.length) return reject(...reasons);
-  if (row.status !== "measured") return reject("MEASURE-FAILED");
   const metric = object(object(row.metrics).ttft);
-  // The HTTP runner also saves the acquisition reason beside the measurement.
+  // Acquisition reasons are trusted only after identity and shape checks.
   if (Object.hasOwn(row, "ttft")) {
     const recorded = object(row.ttft);
-    const expectedReason =
-      metric.value === null ? "NO-CONTENT" : "FIRST-CONTENT";
+    const missing =
+      metric.value === null &&
+      metric.unit === "s" &&
+      !Object.hasOwn(metric, "source") &&
+      recorded.value === null &&
+      recorded.unit === "s" &&
+      !Object.hasOwn(recorded, "source");
+    if (row.status === "failed") {
+      const failureReasons = [
+        "HTTP-ERROR",
+        "NO-BODY",
+        "INVALID-STREAM",
+        "STREAM-ERROR",
+        "INCOMPLETE-STREAM",
+        "TIMEOUT",
+        "REQUEST-FAILED",
+      ];
+      return missing &&
+        metric.reason === "MEASURE-FAILED" &&
+        typeof recorded.reason === "string" &&
+        failureReasons.includes(recorded.reason)
+        ? reject(recorded.reason)
+        : reject("INVALID-TTFT");
+    }
+    if (row.status !== "measured") return reject("INVALID-TTFT");
+    if (recorded.reason === "NO-CONTENT")
+      return missing && metric.reason === "NO-FIELD"
+        ? reject("NO-CONTENT")
+        : reject("INVALID-TTFT");
     if (
-      recorded.reason !== expectedReason ||
+      recorded.reason !== "FIRST-CONTENT" ||
       recorded.value !== metric.value ||
       recorded.unit !== metric.unit ||
       recorded.source !== metric.source
     )
       return reject("INVALID-TTFT");
   }
+  if (row.status !== "measured") return reject("MEASURE-FAILED");
   if (!Object.keys(metric).length) return reject("NO-FIELD");
   if (
     metric.value === null &&

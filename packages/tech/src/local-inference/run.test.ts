@@ -5,6 +5,8 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { engines, metrics } from "./domain/result.js";
 import { parseConfig, runLocalInference } from "./run.js";
+import { adoptSavedTtft } from "../local-inference-adoption/domain/ttft.js";
+import { renderAdoptionReport } from "../local-inference-adoption/domain/adoption.js";
 import { observeStream } from "./vendors/stream.js";
 
 const directories: string[] = [];
@@ -27,6 +29,7 @@ async function destination() {
 }
 function config(baseUrl: string) {
   return {
+    targetCommit: "1".repeat(40),
     messages: [{ role: "user", content: "Say hello" }],
     targets: engines.map((engine) => ({
       engine,
@@ -76,6 +79,29 @@ describe("local inference common JSON", () => {
       output,
     );
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+    expect(result.execution).toEqual({
+      runnerVersion: "local-inference/4",
+      targetCommit: "1".repeat(40),
+    });
+    const first = result.runs[0];
+    const identity = { ...result.execution, runId: first.runId };
+    expect(adoptSavedTtft(result.execution, first, identity).value).toBe(
+      first.metrics.ttft.value,
+    );
+    expect(
+      renderAdoptionReport([result], identity.targetCommit, identity),
+    ).toContain(
+      `| 1 / 1 | ollama / test-model | ${first.metrics.ttft.value} | same execution; measured |`,
+    );
+    for (const [key, value, reason] of [
+      ["runId", "different-request", "RUN-ID-MISMATCH"],
+      ["runnerVersion", "local-inference/3", "RUNNER-VERSION-MISMATCH"],
+      ["targetCommit", "2".repeat(40), "COMMIT-MISMATCH"],
+    ])
+      expect(
+        adoptSavedTtft(result.execution, first, { ...identity, [key]: value })
+          .reasons,
+      ).toEqual([reason]);
     expect(result.runs.map((r) => r.engine)).toEqual(engines);
     expect(new Set(result.runs.map((r) => r.runId)).size).toBe(4);
     expect(requests).toHaveLength(4);
@@ -152,6 +178,13 @@ describe("local inference common JSON", () => {
         reason: run.ttft.reason,
       });
     }
+    const identity = { ...result.execution, runId: result.runs[0].runId };
+    expect(
+      adoptSavedTtft(result.execution, result.runs[0], identity),
+    ).toMatchObject({ value: null, reasons: ["HTTP-ERROR"] });
+    expect(
+      renderAdoptionReport([result], identity.targetCommit, identity),
+    ).toContain("| 1 / 1 | ollama / test-model | not adopted | HTTP-ERROR");
     expect(result.runs[0].metrics.ttft).toMatchObject({
       value: null,
       reason: "MEASURE-FAILED",
@@ -245,6 +278,13 @@ describe("local inference common JSON", () => {
         expect(ids.has(run.runId)).toBe(false);
         ids.add(run.runId);
       }
+      const identity = { ...result.execution, runId: result.runs[0].runId };
+      expect(
+        adoptSavedTtft(result.execution, result.runs[0], identity),
+      ).toMatchObject({ value: null, reasons: ["NO-CONTENT"] });
+      expect(
+        renderAdoptionReport([result], identity.targetCommit, identity),
+      ).toContain("| 1 / 1 | ollama / test-model | not adopted | NO-CONTENT");
       expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
     }
   });
@@ -318,6 +358,19 @@ describe("local inference common JSON", () => {
     }
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
   });
+
+  it.each([undefined, null, "", "HEAD", "A".repeat(40), "1".repeat(39), 42])(
+    "rejects invalid target commit %s before requests or writing",
+    async (targetCommit) => {
+      const input = { ...config("http://127.0.0.1:1/v1"), targetCommit };
+      const output = await destination();
+      expect(() => parseConfig(input)).toThrow("targetCommit");
+      await expect(runLocalInference(input, output)).rejects.toThrow(
+        "targetCommit",
+      );
+      await expect(readFile(output)).rejects.toMatchObject({ code: "ENOENT" });
+    },
+  );
 
   it("validates engine identity, conditions and URL credentials before requests", () => {
     const valid = config("http://localhost:8000/v1");
