@@ -15,6 +15,10 @@ const validFile = {
   snapshots: [validSnapshot],
 };
 
+const expectInvalid = (file: unknown, matcher: RegExp): void => {
+  expect(() => parseComparisonSnapshotFile(file)).toThrow(matcher);
+};
+
 describe("parseComparisonSnapshotFile", () => {
   it("parses a valid adopted snapshot", () => {
     const parsed = parseComparisonSnapshotFile(validFile);
@@ -45,15 +49,14 @@ describe("parseComparisonSnapshotFile", () => {
   });
 
   it("rejects an unsupported schemaVersion", () => {
-    expect(() =>
-      parseComparisonSnapshotFile({ ...validFile, schemaVersion: 2 }),
-    ).toThrow(/unsupported schemaVersion/);
+    expectInvalid(
+      { ...validFile, schemaVersion: 2 },
+      /unsupported schemaVersion/,
+    );
   });
 
   it("rejects a missing snapshots array", () => {
-    expect(() =>
-      parseComparisonSnapshotFile({ schemaVersion: 1 }),
-    ).toThrow(/snapshots array/);
+    expectInvalid({ schemaVersion: 1 }, /snapshots array/);
   });
 
   for (const field of [
@@ -64,39 +67,34 @@ describe("parseComparisonSnapshotFile", () => {
     "runnerVersion",
   ]) {
     it(`rejects a missing or empty ${field}`, () => {
-      expect(() =>
-        parseComparisonSnapshotFile({
-          schemaVersion: 1,
-          snapshots: [{ ...validSnapshot, [field]: "" }],
-        }),
-      ).toThrow(new RegExp(`${field} must be a nonempty string`));
+      expectInvalid(
+        { schemaVersion: 1, snapshots: [{ ...validSnapshot, [field]: "" }] },
+        new RegExp(`${field} must be a nonempty string`),
+      );
     });
   }
 
   it("rejects an invalid verdict", () => {
-    expect(() =>
-      parseComparisonSnapshotFile({
-        schemaVersion: 1,
-        snapshots: [{ ...validSnapshot, verdict: "maybe" }],
-      }),
-    ).toThrow(/verdict must be "adopted" or "rejected"/);
+    expectInvalid(
+      { schemaVersion: 1, snapshots: [{ ...validSnapshot, verdict: "maybe" }] },
+      /verdict must be "adopted" or "rejected"/,
+    );
   });
 
   it("rejects a rejected snapshot with no reasonCode", () => {
-    expect(() =>
-      parseComparisonSnapshotFile({
+    expectInvalid(
+      {
         schemaVersion: 1,
         snapshots: [{ ...validSnapshot, verdict: "rejected" }],
-      }),
-    ).toThrow(/carries no reasonCode/);
+      },
+      /carries no reasonCode/,
+    );
   });
 
   it("rejects a duplicate snapshot id", () => {
-    expect(() =>
-      parseComparisonSnapshotFile({
-        schemaVersion: 1,
-        snapshots: [validSnapshot, validSnapshot],
-      }),
-    ).toThrow(/duplicate snapshot id/);
+    expectInvalid(
+      { schemaVersion: 1, snapshots: [validSnapshot, validSnapshot] },
+      /duplicate snapshot id/,
+    );
   });
 });
