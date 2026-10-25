@@ -58,6 +58,27 @@ expected cost in its own README and result page.
 - `make`
 - Docker (optional, for `workloads/docker/` reproducible environments)
 
+### Reproduce the local inference comparison fixture
+
+After `npm ci --prefix packages/tech`, run from the repository root:
+
+```sh
+make reproduce-local-inference
+```
+
+This keyless command uses the existing shared-JSON renderer and synthetic fixed
+fixture (no engines are measured). It saves `comparison.json`, `comparison.md`,
+`stdout.txt`, `stderr.txt` and `exit-code.txt` in
+`outputs/local-inference-fixture/`. Set `OUTPUT_DIR=/absolute/path` to choose a
+separate output directory; use a dedicated directory because these five named
+files are replaced on each run. Generated files are ignored by Git and do not
+overwrite published reports. The JSON and table are byte-stable across runs.
+`exit-code.txt` contains the renderer's raw status (0 on success); GNU Make
+itself returns 2 on recipe failure. A failed run removes any stale/partial table
+and retains diagnostics. `make test` verifies the real fixture path and failure
+handling. See [the comparison](docs/local-inference-comparison.md) and
+[the shared JSON format](docs/local-inference-format.md).
+
 ## License
 
 [MIT](LICENSE).
