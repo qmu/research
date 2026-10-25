@@ -1,5 +1,8 @@
 import { createHash } from "node:crypto";
-import { writeJsonAtomic } from "./vendors/atomic-json.js";
+import {
+  beginExecution,
+  completeExecution,
+} from "./vendors/versioned-result.js";
 import { engines, metrics, type Engine } from "./domain/result.js";
 import { observeStream } from "./vendors/stream.js";
 
@@ -79,6 +82,7 @@ export async function runLocalInference(
   timeoutMs = 60_000,
 ) {
   const config = parseConfig(input);
+  const execution = await beginExecution(output);
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
   const runs = [];
   for (const target of config.targets) {
@@ -125,6 +129,5 @@ export async function runLocalInference(
     procedure: "single-request-per-engine",
     runs,
   };
-  await writeJsonAtomic(output, result);
-  return result;
+  return completeExecution(output, execution, result);
 }

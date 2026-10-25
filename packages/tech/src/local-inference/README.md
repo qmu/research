@@ -14,8 +14,28 @@ npm run local-inference -- /path/to/config.json /path/to/new-result.json
 The output parent directory must exist. Results replace an existing output atomically:
 a temporary file on the same filesystem is written, fsynced and closed before
 rename. A failure before rename leaves the previous bytes intact and removes
-the temporary file. Concurrent writers use last-rename-wins. This does not
-guarantee directory-entry durability across power loss.
+the temporary file. Each run reserves an `execution.runId` (UUID) and monotonically
+increasing `execution.version` before sending requests. These fields are saved in
+the result and printed by the CLI; `schemaVersion` remains the data format version.
+For the same output path, only the latest reservation may publish. An older run
+finishing later exits nonzero with `STALE-EXECUTION` and leaves the result intact,
+even when the newer run has not completed. Failed newer runs do not revive old
+reservations; the last published result remains until a current run publishes.
+
+A persistent `<output>.execution.json` sidecar tracks reservations. A short-lived
+`<output>.execution.lock` directory serializes reservation and compare-and-publish
+across local processes. Measurement runs outside the lock. Parent-directory
+symlinks and relative paths resolve to the same lock. Different hard-link names
+are separate destinations. All writers must use this protocol on a local filesystem;
+older runners or direct edits bypass it. Legacy result JSON without execution
+metadata is accepted and replaced only by a successful current publication.
+Do not delete or edit the sidecar while runners may be active. Corrupt state fails
+closed. Lock acquisition times out after five seconds; locks are never stolen.
+After a process crash inside the critical section, stop all writers and remove
+only the abandoned lock directory before retrying. Keep the sidecar to preserve
+version ordering. This does not guarantee directory-entry durability across
+power loss, nor a transaction between result and sidecar: a crash after result
+rename can publish the complete result before marking the reservation completed.
 The command exits nonzero if a request fails, but saves every engine's row.
 Each request has a 60-second timeout. Start the servers separately, using their
 explicit model, context, cache, thread and GPU settings. No server is launched

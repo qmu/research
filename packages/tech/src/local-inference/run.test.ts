@@ -96,6 +96,49 @@ describe("local inference common JSON", () => {
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(replacement);
   });
 
+  it("reserves before inference and rejects a slower older run", async () => {
+    function deferred() {
+      let resolve!: () => void;
+      const promise = new Promise<void>((done) => {
+        resolve = done;
+      });
+      return { promise, resolve };
+    }
+    const firstRequest = deferred();
+    const release = deferred();
+    let calls = 0;
+    const server = createServer(async (_req, res) => {
+      if (++calls === 1) {
+        firstRequest.resolve();
+        await release.promise;
+      }
+      res.end(sse([content("ok")]));
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const output = await destination();
+    const input = config(`http://127.0.0.1:${address.port}/v1`);
+    const old = runLocalInference(input, output);
+    const rejected = expect(old).rejects.toThrow("STALE-EXECUTION");
+    try {
+      await firstRequest.promise;
+      const newer = await runLocalInference(input, output);
+      expect(newer.execution.version).toBe(2);
+      const bytes = await readFile(output, "utf8");
+      release.resolve();
+      await rejected;
+      expect(await readFile(output, "utf8")).toBe(bytes);
+    } finally {
+      release.resolve();
+      await rejected;
+    }
+  });
+
   it("saves failures without response bodies or URLs and continues to later engines", async () => {
     let calls = 0;
     const server = createServer((_req, res) => {
