@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "inputSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "fixture": true,
+  "note": "Synthetic gate demonstration, not an engine measurement.",
+  "runs": [
+    {
+      "engine": "strata",
+      "model": "synthetic-not-measured",
+      "status": "measured",
+      "metrics": {
+        "ttft": {
+          "value": 0.1,
+          "unit": "s"
+        },
+        "tps": {
+          "value": 100,
+          "unit": "tokens/s"
+        },
+        "peak_rss": {
+          "value": 1024,
+          "unit": "MiB"
+        }
+      },
+      "quality": [
+        {
+          "fixtureId": "answer",
+          "fixtureSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "evaluatorVersion": "exact/v1",
+          "verdict": "fail",
+          "reason": null
+        },
+        {
+          "fixtureId": "format",
+          "fixtureSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "evaluatorVersion": "exact/v1",
+          "verdict": "pass",
+          "reason": null
+        },
+        {
+          "fixtureId": "schema",
+          "fixtureSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "evaluatorVersion": "exact/v1",
+          "verdict": "pass",
+          "reason": null
+        },
+        {
+          "fixtureId": "language",
+          "fixtureSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "evaluatorVersion": "exact/v1",
+          "verdict": "pass",
+          "reason": null
+        }
+      ]
+    }
+  ]
+}
