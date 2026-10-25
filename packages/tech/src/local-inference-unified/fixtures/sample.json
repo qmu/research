@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-25T00:00:00.000Z",
+  "inputSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+  "procedure": "synthetic-fixture-only (no engine measured)",
+  "runs": [
+    {
+      "engine": "ollama",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": { "context_length": 4096, "quantization": "Q4_K_M" },
+      "status": "measured",
+      "metrics": {
+        "ttft": { "value": 0.42, "unit": "s", "source": "client" },
+        "tps": { "value": 31.7, "unit": "tokens/s", "source": "client" },
+        "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
+        "quality_score": {
+          "value": 0.86,
+          "unit": "score",
+          "source": "usage"
+        },
+        "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+      }
+    },
+    {
+      "engine": "llama.cpp",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": { "context_length": 4096, "quantization": "Q4_K_M" },
+      "status": "measured",
+      "metrics": {
+        "ttft": { "value": 0.39, "unit": "s", "source": "client" },
+        "tps": { "value": null, "unit": "tokens/s", "reason": "NO-FIELD" },
+        "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
+        "quality_score": {
+          "value": 0.83,
+          "unit": "score",
+          "source": "usage"
+        },
+        "peak_rss": { "value": 5123, "unit": "MiB", "source": "client" }
+      }
+    },
+    {
+      "engine": "mlx",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": {
+        "context_length": 4096,
+        "quantization": "nominal 4-bit"
+      },
+      "status": "failed",
+      "failure": { "code": "NOT-LOADABLE" },
+      "metrics": {
+        "ttft": { "value": null, "unit": "s", "reason": "MEASURE-FAILED" },
+        "tps": {
+          "value": null,
+          "unit": "tokens/s",
+          "reason": "MEASURE-FAILED"
+        },
+        "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
+        "quality_score": {
+          "value": null,
+          "unit": "score",
+          "reason": "MEASURE-FAILED"
+        },
+        "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+      }
+    },
+    {
+      "engine": "strata",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": {
+        "context_length": 4096,
+        "quantization": "nominal 4-bit"
+      },
+      "status": "measured",
+      "metrics": {
+        "ttft": { "value": null, "unit": "s", "reason": "UNSUPPORTED" },
+        "tps": { "value": 27.4, "unit": "tokens/s", "source": "client" },
+        "startup_time": { "value": 1.1, "unit": "s", "source": "client" },
+        "quality_score": {
+          "value": null,
+          "unit": "score",
+          "reason": "UNSUPPORTED"
+        },
+        "peak_rss": { "value": null, "unit": "MiB", "reason": "NO-FIELD" }
+      }
+    }
+  ]
+}
