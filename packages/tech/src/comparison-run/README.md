@@ -59,3 +59,24 @@ import { loadAdoptionRuns } from "./store";
 const eligible = await loadAdoptionRuns("output/runs");
 // Apply metric validation and adoption thresholds to eligible records only.
 ```
+
+## Handling admission versus adoption
+
+An admitted record can still contain an explicitly missing metric. Keep the
+integrity gate separate from metric completeness and project-specific thresholds:
+
+```ts
+const complete = await loadAdoptionRuns("output/runs");
+const measuredSpeed = complete.filter(
+  ({ measurements }) =>
+    typeof measurements.tokensPerSecond === "number" &&
+    measurements.tokensPerSecond > 0,
+);
+// Only measuredSpeed can enter a speed comparison. A null or absent speed is
+// missing evidence, not a zero-speed result or evidence of adoption eligibility.
+```
+
+Do not catch a directory read error and treat it as an empty successful run.
+If a save reports an I/O error, retry the entire manifest/results pair; never
+repair only the command or measurements in place. After a crash, ignore leftover
+temporary files and use the last valid published record returned by the loader.
