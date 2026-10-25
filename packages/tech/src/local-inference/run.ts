@@ -9,13 +9,18 @@ import { engines, metrics, type Engine } from "./domain/result.js";
 import { startPeakRss } from "./vendors/peak-rss.js";
 import { peakRssReading } from "./domain/peak-memory.js";
 import {
+  remeasurementRequest,
+  validFixedTier,
+} from "./domain/remeasurement.js";
+import type { FixedCapacityTier } from "../local-inference-memory-margin/domain/types.js";
+import {
   observeStream,
   streamFailureReason,
   type StreamFailureReason,
 } from "./vendors/stream.js";
 
 /** Bump when the runner's measurement or persistence semantics change. */
-export const runnerVersion = "local-inference/5";
+export const runnerVersion = "local-inference/6";
 
 /** Only fixed public syntax survives. Unknown arguments, paths, environment
  * assignments, headers, URLs and option values are redacted BEFORE hashing.
@@ -48,6 +53,7 @@ export function commandFingerprint(argv: readonly string[]): string {
 }
 
 export type Config = {
+  fixedTier?: FixedCapacityTier;
   messages: { role: "system" | "user"; content: string }[];
   targets: {
     memoryPid?: number;
@@ -63,6 +69,8 @@ export function parseConfig(input: unknown): Config {
   if (!input || typeof input !== "object")
     throw new Error("Expected config object");
   const config = input as Config;
+  if (config.fixedTier !== undefined && !validFixedTier(config.fixedTier))
+    throw new Error("Invalid fixed memory tier");
   if (
     !Array.isArray(config.messages) ||
     config.messages.length === 0 ||
@@ -138,7 +146,7 @@ export async function runLocalInference(
     ...process.argv.slice(1),
   ],
 ) {
-  const config = parseConfig(input);
+  const config = structuredClone(parseConfig(input));
   const provenance = {
     targetCommit: readTargetCommit(),
     runnerVersion,
@@ -146,6 +154,22 @@ export async function runLocalInference(
   };
   const execution = { ...(await beginExecution(output)), ...provenance };
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
+  const fixtureSha256 = createHash("sha256")
+    .update(
+      JSON.stringify({
+        messages: config.messages,
+        sampling,
+        targets: config.targets.map(
+          ({ engine, model, runtimeVersion, condition }) => ({
+            engine,
+            model,
+            runtimeVersion,
+            condition,
+          }),
+        ),
+      }),
+    )
+    .digest("hex");
   const runs = [];
   for (const target of config.targets) {
     await assertExecutionCurrent(output, execution);
@@ -216,7 +240,32 @@ export async function runLocalInference(
       .digest("hex"),
     sampling,
     procedure: "single-request-per-engine",
+    fixtureSha256,
+    ...(config.fixedTier
+      ? {
+          fixedTier: {
+            label: config.fixedTier.label,
+            totalMiB: config.fixedTier.totalMiB,
+          },
+        }
+      : {}),
     runs,
   };
-  return completeExecution(output, execution, result);
+  const request = config.fixedTier
+    ? remeasurementRequest(
+        { ...result, execution },
+        {
+          execution: { runId: execution.runId, version: execution.version },
+          targetCommit: provenance.targetCommit,
+          runnerVersion: provenance.runnerVersion,
+          fixtureSha256,
+          fixedTier: config.fixedTier,
+        },
+        randomUUID(),
+      )
+    : null;
+  return completeExecution(output, execution, {
+    ...result,
+    ...(config.fixedTier ? { remeasurementRequest: request } : {}),
+  });
 }

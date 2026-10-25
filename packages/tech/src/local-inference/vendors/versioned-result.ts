@@ -122,3 +122,31 @@ export async function completeExecution<T extends object, E extends Execution>(
     return result;
   });
 }
+
+/** Update a published result only while its completed reservation is current.
+ * Recovery requests share the measurement lock, so a new run cannot be
+ * reserved between checking the result and publishing the request.
+ */
+export async function updateCompletedExecution<T extends object>(
+  output: string,
+  execution: Execution,
+  update: (value: unknown) => T,
+): Promise<T> {
+  output = await canonical(output);
+  return locked(output, async () => {
+    const state = await readState(output);
+    if (
+      !state?.completed ||
+      state.runId !== execution.runId ||
+      state.version !== execution.version
+    )
+      throw Object.assign(
+        new Error("STALE-EXECUTION: completed execution is no longer current"),
+        { code: "STALE-EXECUTION" },
+      );
+    const value: unknown = JSON.parse(await readFile(output, "utf8"));
+    const updated = update(value);
+    if (updated !== value) await writeJsonAtomic(output, updated);
+    return updated;
+  });
+}
