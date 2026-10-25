@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "inputSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "sampling": {
+    "seed": 42
+  },
+  "procedure": "single-request-per-engine",
+  "fingerprint": {
+    "os": "fixture-os",
+    "arch": "fixture-arch",
+    "totalMemoryMiB": 1024,
+    "nodeVersion": "fixture-node"
+  },
+  "runs": [
+    {
+      "engine": "ollama",
+      "model": "synthetic-fixture",
+      "runtimeVersion": "fixture-v1",
+      "condition": {
+        "quantization": "Q4"
+      },
+      "status": "measured",
+      "metrics": {
+        "ttft": {
+          "value": 2,
+          "unit": "s",
+          "source": "client"
+        },
+        "tps": {
+          "value": 10,
+          "unit": "tokens/s",
+          "source": "client"
+        },
+        "peak_rss": {
+          "value": 100,
+          "unit": "MiB",
+          "source": "client"
+        }
+      },
+      "quality": [
+        {
+          "fixtureId": "one",
+          "evaluatorVersion": "exact-text/v1",
+          "verdict": "fail",
+          "reason": null
+        }
+      ]
+    }
+  ]
+}
