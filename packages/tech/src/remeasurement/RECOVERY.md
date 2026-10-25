@@ -69,3 +69,63 @@ untrusted directory mutation and dispatch/worker exactly-once execution are not
 covered. Consumers must still allocate a new measurement run ID and artifact:
 `requiresNewExecutionId` and `requiresNewArtifact` are persisted as true, not
 permission to reuse the failed snapshot or adopt its metrics.
+
+## Expiration and recreation
+
+New saves persist `createdAt` and `expiresAt` as Unix milliseconds in the same
+atomic record as the source and failure reason. The default lifetime is 24 hours.
+The optional third argument `{ now, ttlMs }` selects a trusted clock and positive
+safe-integer lifetime. Exact retries return the original timestamps, even after
+expiration; submitting the same generation never renews it. Clock and TTL policy
+belong to the caller, not to untrusted request JSON.
+
+Before dispatch, call `inspectSnapshotRecoveryRequest(directory, expected, now)`.
+`expected` is the original normalized save input, pinned by the caller (including
+source run ID, commit, runner version, fixtures, execution version and reason).
+A different generation fails with `RECOVERY-STORE-STALE`; mixed identity fails
+closed. A different commit/runner/fixture scope is an independent lookup and may
+return `RECOVERY-STORE-NOT-FOUND`. Inspection never substitutes a matching-looking
+request from another scope.
+
+The returned `status` is `active` only before `expiresAt`; equality is expired.
+`reason` is `null` for active requests, `RECOVERY-TTL-EXPIRED` at or after the
+deadline, or `RECOVERY-EXPIRY-UNKNOWN` for legacy records without timestamps.
+These are lifecycle reasons, separate from the original snapshot failure
+`request.reason`. Legacy records are not silently granted a new lifetime.
+Malformed or partial timestamps are corrupt records and fail closed.
+
+An expired request exposes `recreation.expected` and
+`recreation.minimumExecutionVersion`. Pass those values to
+`recreateSnapshotRecoveryRequest(directory, expected, nextExecutionVersion,
+{ now, ttlMs })`. This API rechecks the predecessor and expiration under the same
+per-scope lock, preserves source and failure reason, and atomically replaces the
+expired request with one higher generation. Repeating the same predecessor and
+next generation returns `changed: false` and the persisted deadline. Competing
+calls can return `RECOVERY-STORE-BUSY`; retry the same arguments. Once another
+generation wins, stale descriptors cannot replace it. There is no recreation
+descriptor when the safe-integer generation limit is reached.
+
+```ts
+import {
+  inspectSnapshotRecoveryRequest,
+  recreateSnapshotRecoveryRequest,
+} from "./recovery-store.js";
+
+const state = await inspectSnapshotRecoveryRequest(directory, expected);
+if (state.recreation) {
+  const { expected: predecessor, minimumExecutionVersion } = state.recreation;
+  await recreateSnapshotRecoveryRequest(
+    directory,
+    predecessor,
+    minimumExecutionVersion,
+  );
+}
+```
+
+This is a library entry point, not an HTTP link or automatic job dispatch.
+The existing save CLI creates timed requests; inspection and recreation are
+explicit API calls. A new failed snapshot can still use the existing higher-version
+save operation. Dispatchers must inspect immediately before use and provide their
+own scheduling/claim protocol: inspection alone does not reserve a request or
+prevent it expiring while a worker runs. Recreation keeps the failed source run ID
+as evidence; the eventual measurement must allocate a new run ID and artifact.
