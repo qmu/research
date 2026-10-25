@@ -91,6 +91,22 @@ describe("incremental TTFT stream parsing", () => {
     ).toEqual({ firstMs: 25, lastMs: 100 });
   });
 
+  it("fails with a fixed reason once decoded output exceeds the budget", async () => {
+    const frame = JSON.stringify({
+      choices: [{ delta: { content: "secret-payload" } }],
+    });
+    const oversized =
+      `data: ${frame}\r\n\r\n`.repeat(50) + "data: [DONE]\r\n\r\n";
+    const error = await observeStream(
+      response(oversized, "text/event-stream", 4096),
+      100,
+      () => 125,
+      200,
+    ).catch((error: unknown) => error);
+    expect(streamFailureReason(error)).toBe("OUTPUT-BUDGET-EXCEEDED");
+    expect(String(error)).not.toContain("secret-payload");
+  });
+
   it("does not guess JSON log framing for SSE responses", async () => {
     const error = await observeStream(
       response(`${content}\n[DONE]\n`, "text/event-stream", 1),

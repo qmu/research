@@ -20,13 +20,14 @@ import {
 } from "./domain/remeasurement.js";
 import type { FixedCapacityTier } from "../local-inference-memory-margin/domain/types.js";
 import {
+  defaultOutputBudgetChars,
   observeStream,
   streamFailureReason,
   type StreamFailureReason,
 } from "./vendors/stream.js";
 
 /** Bump when the runner's measurement or persistence semantics change. */
-export const runnerVersion = "local-inference/7";
+export const runnerVersion = "local-inference/8";
 
 /** Only fixed public syntax survives. Unknown arguments, paths, environment
  * assignments, headers, URLs and option values are redacted BEFORE hashing.
@@ -145,6 +146,7 @@ export async function runLocalInference(
   input: unknown,
   output: string,
   timeoutMs = 60_000,
+  outputBudgetChars = defaultOutputBudgetChars,
   memorySampler = startPeakRss,
   argv: readonly string[] = [
     process.execPath,
@@ -226,7 +228,9 @@ export async function runLocalInference(
           signal,
         },
       );
-      measured = metrics(await observeStream(response, started));
+      measured = metrics(
+        await observeStream(response, started, undefined, outputBudgetChars),
+      );
     } catch (error) {
       failureReason = signal.aborted
         ? "TIMEOUT"

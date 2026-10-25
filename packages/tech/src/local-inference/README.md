@@ -15,7 +15,11 @@ npm run local-inference -- /path/to/config.json /path/to/new-result.json
 The output parent directory must exist. A completed run atomically replaces the
 previous result at that path; use a different path to retain each trial.
 The command exits nonzero if a request fails, but saves every engine's row.
-Each request has a 60-second timeout. Start the servers separately, using their
+Each request has a 60-second timeout and a 4,000,000-decoded-character output
+budget; either one ends the request with a fixed failure reason instead of
+growing the process's memory or runtime without bound. `sampling.max_tokens`
+only asks the server to stop — the budget is the client-side backstop for a
+server that ignores or exceeds it. Start the servers separately, using their
 explicit model, context, cache, thread and GPU settings. No server is launched
 and no model or credentials are downloaded by this command.
 
@@ -107,15 +111,16 @@ and adds an explicit acquisition reason: `FIRST-CONTENT` for the first nonempty
 content delta, `NO-CONTENT` for a completed stream without content, or
 a fixed failure reason from the table below. Failed streams discard partial timings.
 
-| TTFT reason         | Meaning                                                   |
-| ------------------- | --------------------------------------------------------- |
-| `HTTP-ERROR`        | Endpoint returned a non-success HTTP status.              |
-| `NO-BODY`           | Successful response has no readable body.                 |
-| `INVALID-STREAM`    | An SSE data frame is not a JSON object.                   |
-| `STREAM-ERROR`      | A JSON frame reports a server error.                      |
-| `INCOMPLETE-STREAM` | The stream ends without the `[DONE]` event.               |
-| `TIMEOUT`           | The request deadline expires, including during streaming. |
-| `REQUEST-FAILED`    | Other transport/read failure; no raw error is saved.      |
+| TTFT reason              | Meaning                                                   |
+| ------------------------ | --------------------------------------------------------- |
+| `HTTP-ERROR`             | Endpoint returned a non-success HTTP status.              |
+| `NO-BODY`                | Successful response has no readable body.                 |
+| `INVALID-STREAM`         | An SSE data frame is not a JSON object.                   |
+| `STREAM-ERROR`           | A JSON frame reports a server error.                      |
+| `INCOMPLETE-STREAM`      | The stream ends without the `[DONE]` event.               |
+| `TIMEOUT`                | The request deadline expires, including during streaming. |
+| `OUTPUT-BUDGET-EXCEEDED` | Decoded response text exceeded the output budget.         |
+| `REQUEST-FAILED`         | Other transport/read failure; no raw error is saved.      |
 
 HTTP status bodies, server error messages and exception text are never saved.
 Role, empty-content and usage frames cannot start TTFT.
@@ -207,7 +212,7 @@ artifacts, not a distributed queue or a cross-file deduplication service.
 
 ### Strata's warm-up run is separated on the manifest
 
-Runner `local-inference/7` sends Strata (and only Strata) an extra request
+Runner `local-inference/8` sends Strata (and only Strata) an extra request
 before its measured one: community packs pay a cold-start load/compile cost on
 their first request, and without a warm-up that cost would land inside the one
 engine's speed, not its runtime. Every row in `runs[]` — for every engine, not
@@ -229,3 +234,15 @@ row still fails the same binding check as any other row — it just never
 contributes a missing-metric target, so a warm-up's own `NO-FIELD` /
 `MEASURE-FAILED` TTFT or RSS can never trigger or join a remeasurement
 request for the engine's real measurement.
+
+### Output budget
+
+Every request — warm-up and adoption-target alike — is read through the same
+`outputBudgetChars` limit (default 4,000,000 decoded characters, overridable
+by `runLocalInference`'s 4th argument). `sampling.max_tokens` is a request to
+the server; a server that ignores or exceeds it would otherwise let a single
+hung or misbehaving engine grow this process's memory for as long as the
+request's own timeout allows. Exceeding the budget cancels the stream reader
+and fails the request with the fixed reason `OUTPUT-BUDGET-EXCEEDED`, the same
+way a timeout or HTTP error does: the row is saved as `status: "failed"` with
+every metric `MEASURE-FAILED`, never partial content or a raw size.
