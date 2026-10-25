@@ -45,7 +45,9 @@ describe("normalizeLlamaCpp", () => {
       elapsedMs: null,
       ttftMs: null,
     });
-    expect(normalizeLlamaCpp({ model: "m", content: "" })).toMatchObject({
+    expect(
+      normalizeLlamaCpp({ model: "m", content: "", stop: true }),
+    ).toMatchObject({
       text: "",
       inputTokens: null,
       outputTokens: null,
@@ -78,6 +80,12 @@ describe("normalizeLlamaCpp", () => {
   it.each([
     null,
     { ...completion, stop: false },
+    { ...completion, stop: undefined },
+    { ...completion, stop: "true" },
+    { ...chat, choices: [{ ...chat.choices[0], finish_reason: null }] },
+    { ...chat, choices: [{ ...chat.choices[0], finish_reason: "" }] },
+    { ...chat, choices: [{ ...chat.choices[0], finish_reason: " " }] },
+    { ...chat, choices: [{ message: { content: "partial" } }] },
     {},
     { error: { message: "private server details" } },
     { ...chat, choices: [] },

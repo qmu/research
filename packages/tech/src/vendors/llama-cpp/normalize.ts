@@ -51,6 +51,13 @@ export const normalizeLlamaCpp = (
   if (chat && choices.length !== 1)
     throw new Error("Expected exactly one llama.cpp completion choice");
   const choice = object(choices[0]);
+  if (
+    chat
+      ? typeof choice.finish_reason !== "string" ||
+        choice.finish_reason.trim() === ""
+      : root.stop !== true
+  )
+    throw new Error("Expected a completed llama.cpp response");
   const text = chat ? object(choice.message).content : root.content;
   if (
     typeof root.model !== "string" ||

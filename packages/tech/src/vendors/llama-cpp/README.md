@@ -4,7 +4,9 @@
 `/completion` or non-streaming `/v1/chat/completions` JSON into the same
 `LocalInferenceResult`. It rejects server errors and ambiguous/malformed results.
 It does not issue requests or decode SSE. Pass the final assembled chat response
-when importing a stream; a delta alone is not a completed response.
+when importing a stream; a delta alone is not a completed response. Native
+responses require `stop: true`; chat responses require a nonempty
+`finish_reason`, so partial messages cannot become measured results.
 
 Client measurements are optional and remain `null` when absent. Server
 `timings` remain separate runtime cross-checks, in milliseconds and tokens/second.
