@@ -491,17 +491,18 @@ export const createStrataCompletionClient = (
 
   // The model can take well past the request timeout to finish loading, so a
   // connection-refused attempt is retried (not failed) until `launchTimeoutMs`
-  // elapses. Any other failure — including one already classified above —
-  // propagates on the first attempt; only "the server isn't up yet" is worth
-  // waiting out.
+  // elapses. Any other failure — a `StrataFailure` already classified above,
+  // or a plain `Error` from `normalizeStrataCompletion` — is not a connection
+  // problem and propagates on the first attempt, unwrapped: only "the server
+  // isn't up yet" is worth waiting out or reclassifying.
   const callWithRetry = async <T>(attempt: () => Promise<T>): Promise<T> => {
     const deadline = clock() + launchTimeoutMs;
     for (;;) {
       try {
         return await attempt();
       } catch (error) {
-        if (isStrataFailure(error)) throw error;
-        if (!isConnectionRefused(error) || clock() >= deadline) {
+        if (!isConnectionRefused(error)) throw error;
+        if (clock() >= deadline) {
           throw createStrataFailure(
             "launch-timeout",
             `Strata server at ${baseUrl} never accepted a connection within ` +
