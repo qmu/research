@@ -5,6 +5,8 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, it } from "vitest";
+import { runnerVersion } from "./run.js";
+import { readTargetCommit } from "./vendors/provenance.js";
 import { engines } from "./domain/result.js";
 
 const exec = promisify(execFile);
@@ -64,6 +66,22 @@ it.each([false, true])(
       expect(
         JSON.parse(json).runs.map((r: { status: string }) => r.status),
       ).toEqual(Array(4).fill(fail ? "failed" : "measured"));
+      const saved = JSON.parse(json);
+      expect(saved.execution).toMatchObject({
+        runnerVersion,
+        targetCommit: readTargetCommit(),
+        runId: expect.any(String),
+        version: 1,
+      });
+      expect(
+        new Set(saved.runs.map((row: { runId: string }) => row.runId)).size,
+      ).toBe(4);
+      for (const row of saved.runs) {
+        expect(row.runnerVersion).toBe(saved.execution.runnerVersion);
+        expect(row.targetCommit).toBe(saved.execution.targetCommit);
+        expect(row.ttft.reason).toBe(fail ? "HTTP-ERROR" : "FIRST-CONTENT");
+        expect(row.ttft.value).toBe(row.metrics.ttft.value);
+      }
       expect(json).not.toContain("private-response-marker");
     } finally {
       server.closeAllConnections();
