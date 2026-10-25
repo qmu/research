@@ -14,6 +14,8 @@ and run provenance. Missing or unsupported evidence prevents adoption.
 not measured engine results or performance claims.
 
 
+[Engine names](#publication-engine-names) · [Metric names](#publication-metric-names) · [Reason codes](#publication-reason-codes)
+
 ### Run demo-adopt: Adopt
 
 Commit: `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`; runner: `1.0.0`.
@@ -35,6 +37,38 @@ Commit: `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`; runner: `1.0.0`.
 | Quality | Does not meet policy |
 | Memory | Evidence missing |
 | Environment | Measurement unsupported |
+
+<a id="publication-engine-names"></a>
+
+## Engine names
+
+Engine identity is supplied by upstream context, not inferred from a run ID.
+This input contract does not carry engine names or establish engine rankings.
+
+<a id="publication-metric-names"></a>
+
+## Metric names
+
+These are decision axes, not numerical measurements or threshold definitions.
+
+| Key | Aspect |
+| --- | --- |
+| speed | Speed |
+| quality | Quality |
+| memory | Memory |
+| environment | Environment |
+
+<a id="publication-reason-codes"></a>
+
+## Reason codes
+
+| Code | Reason |
+| --- | --- |
+| pass | Meets policy |
+| fail | Does not meet policy |
+| missing | Evidence missing |
+| unsupported | Measurement unsupported |
+
 
 ## Publish verifier output
 

@@ -6,6 +6,18 @@ thresholds. The caller must complete those operations before building the input
 contract described in [the publication guide](../../../../docs/snapshot-publication.md).
 Existing saved-report and comparison APIs are independent of this adapter.
 
+Generated publications include three stable fragment targets:
+
+- `#publication-engine-names` explains the upstream engine-name boundary.
+- `#publication-metric-names` maps the four decision-axis keys to display names.
+- `#publication-reason-codes` maps reason codes to their public descriptions.
+
+Link to these explicit HTML targets rather than renderer-generated heading IDs.
+They occur once per publication, even with multiple runs, and remain unchanged
+when run order, provenance or adoption decisions change. The preview guide
+contains the same generated sections and navigation links. Engine names are not
+part of the input contract; callers must supply that context separately.
+
 Try the **synthetic, non-measured** example from `packages/tech`:
 
 ```sh
