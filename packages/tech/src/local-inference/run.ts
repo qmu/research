@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeJsonAtomic } from "./vendors/atomic-json.js";
 import { engines, metrics, type Engine } from "./domain/result.js";
 import { observeStream } from "./vendors/stream.js";
 
@@ -125,9 +125,6 @@ export async function runLocalInference(
     procedure: "single-request-per-engine",
     runs,
   };
-  // Refuse to overwrite prior measurements; callers choose a new path per trial.
-  await writeFile(output, JSON.stringify(result, null, 2) + "\n", {
-    flag: "wx",
-  });
+  await writeJsonAtomic(output, result);
   return result;
 }

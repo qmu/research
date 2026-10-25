@@ -11,7 +11,11 @@ From `packages/tech`, run:
 npm run local-inference -- /path/to/config.json /path/to/new-result.json
 ```
 
-The output parent directory must exist; an existing result is never overwritten.
+The output parent directory must exist. Results replace an existing output atomically:
+a temporary file on the same filesystem is written, fsynced and closed before
+rename. A failure before rename leaves the previous bytes intact and removes
+the temporary file. Concurrent writers use last-rename-wins. This does not
+guarantee directory-entry durability across power loss.
 The command exits nonzero if a request fails, but saves every engine's row.
 Each request has a 60-second timeout. Start the servers separately, using their
 explicit model, context, cache, thread and GPU settings. No server is launched
