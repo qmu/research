@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-01-01T00:00:00.000Z",
+  "inputSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 42,
+    "max_tokens": 1024
+  },
+  "procedure": "synthetic-demo-not-measured",
+  "fingerprint": {
+    "os": "fixture-os-1",
+    "arch": "arm64",
+    "totalMemoryMiB": 16384,
+    "engineVersion": "v22.0.0"
+  },
+  "qualitySchemaVersion": 1,
+  "qualitySourceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "runs": [
+    {
+      "engine": "ollama",
+      "model": "synthetic-model",
+      "runtimeVersion": "fixture-runtime-1",
+      "condition": {
+        "quantization": "Q4",
+        "context": 4096
+      },
+      "status": "measured",
+      "metrics": {
+        "ttft": {
+          "value": 0.25,
+          "unit": "s",
+          "source": "client"
+        }
+      },
+      "quality": [
+        {
+          "fixtureId": "exact-answer",
+          "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "evaluatorVersion": "exact-text/v1",
+          "verdict": "pass",
+          "reason": null
+        }
+      ],
+      "runId": "synthetic-run-1"
+    },
+    {
+      "engine": "ollama",
+      "model": "synthetic-model",
+      "runtimeVersion": "fixture-runtime-1",
+      "condition": {
+        "quantization": "Q4",
+        "context": 4096
+      },
+      "status": "measured",
+      "metrics": {
+        "ttft": {
+          "value": 0.25,
+          "unit": "s",
+          "source": "client"
+        }
+      },
+      "quality": [
+        {
+          "fixtureId": "exact-answer",
+          "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "evaluatorVersion": "exact-text/v1",
+          "verdict": "fail",
+          "reason": null
+        }
+      ],
+      "runId": "synthetic-run-1-second-request"
+    }
+  ],
+  "execution": {
+    "targetCommit": "1111111111111111111111111111111111111111",
+    "runnerVersion": "local-inference/4"
+  }
+}
