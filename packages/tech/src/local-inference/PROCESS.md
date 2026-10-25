@@ -40,7 +40,7 @@ the measured exit code and that same execution through the local-inference
 runner's shared atomic save (qmu/research#224's `writeJsonAtomic`, via
 `completeExecution`) — the same mechanism `runLocalInference` uses, so both
 land in one write. This also saves failure rows. A later measurement is a
-newer execution and may replace an older *completed* one; only a stale or
+newer execution and may replace an older _completed_ one; only a stale or
 duplicate completion is rejected (`STALE-EXECUTION`), matching
 `runLocalInference`'s own replace-if-newer contract. The CLI exits 0 on
 success, 1 on measured failure, and 2 on invalid invocation or a rejected save.
