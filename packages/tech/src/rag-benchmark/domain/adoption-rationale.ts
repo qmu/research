@@ -96,7 +96,8 @@ const missingDataReasonFactor = (
     return {
       label: "Missing-data reason",
       summary: "none",
-      detail: "Every factor above was measured; nothing is missing for this run.",
+      detail:
+        "Every factor above was measured; nothing is missing for this run.",
     };
   }
   return {
@@ -113,9 +114,7 @@ const missingDataReasonFactor = (
  * only a non-`measured` run or a speed/quality factor outside its threshold
  * does. A known, disclosed gap is not the same as an unmet requirement.
  */
-export const decideAdoptionRationale = (
-  run: BackendRun,
-): AdoptionRationale => {
+export const decideAdoptionRationale = (run: BackendRun): AdoptionRationale => {
   const speed = speedFactor(run);
   const quality = qualityFactor(run);
   const peakMemory = peakMemoryFactor();
