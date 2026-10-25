@@ -11,13 +11,21 @@ const cli = [
   "tsx/esm",
   "src/entrypoints/render-local-inference-quality-adoption.ts",
 ];
+const targetCommit = "1".repeat(40);
 describe("quality adoption CLI", () => {
   it("reads saved common JSON without changing it and prints the regression beside reject", () => {
     const before = readFileSync(baseline, "utf8"),
       after = readFileSync(current, "utf8");
     const output = execFileSync(
       process.execPath,
-      [...cli, baseline, current, "interactive-coding-assistant"],
+      [
+        ...cli,
+        "--commit",
+        targetCommit,
+        baseline,
+        current,
+        "interactive-coding-assistant",
+      ],
       { encoding: "utf8" },
     );
     expect(output).toContain("strata / synthetic-not-measured | reject");
@@ -35,7 +43,7 @@ describe("quality adoption CLI", () => {
   it("fails closed without printing paths or partial decisions", () => {
     const result = spawnSync(
       process.execPath,
-      [...cli, "/missing/private-path", current],
+      [...cli, "--commit", targetCommit, "/missing/private-path", current],
       { encoding: "utf8" },
     );
     expect(result.status).toBe(1);
