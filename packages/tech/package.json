@@ -11,6 +11,8 @@
   "license": "MIT",
   "author": "qmu co.,Inc.",
   "scripts": {
+    "local-inference:validate": "node --import tsx/esm src/entrypoints/validate-local-inference.ts",
+    "local-inference:render": "node --import tsx/esm src/entrypoints/render-local-inference.ts",
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "tsc": "tsc --noEmit",
