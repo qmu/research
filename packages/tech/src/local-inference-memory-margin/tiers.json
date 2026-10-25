@@ -1,0 +1,17 @@
+{
+  "status": "illustrative",
+  "note": "Fixed memory capacities vendors sell machines in this class with — not a specific device's spec sheet, and not a measurement. A caller comparing a real host should supply the tier list that host's vendor actually ships, if it differs from this default catalog.",
+  "tiers": [
+    { "label": "8 GiB", "totalMiB": 8192 },
+    { "label": "16 GiB", "totalMiB": 16384 },
+    { "label": "24 GiB", "totalMiB": 24576 },
+    { "label": "32 GiB", "totalMiB": 32768 },
+    { "label": "48 GiB", "totalMiB": 49152 },
+    { "label": "64 GiB", "totalMiB": 65536 },
+    { "label": "96 GiB", "totalMiB": 98304 },
+    { "label": "128 GiB", "totalMiB": 131072 },
+    { "label": "192 GiB", "totalMiB": 196608 },
+    { "label": "256 GiB", "totalMiB": 262144 },
+    { "label": "512 GiB", "totalMiB": 524288 }
+  ]
+}
