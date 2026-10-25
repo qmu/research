@@ -96,7 +96,7 @@ describe("local inference common JSON", () => {
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(replacement);
   });
 
-  it("reserves before inference and rejects a slower older run", async () => {
+  it("rejects a concurrent runner before reservation or HTTP requests", async () => {
     function deferred() {
       let resolve!: () => void;
       const promise = new Promise<void>((done) => {
@@ -124,19 +124,21 @@ describe("local inference common JSON", () => {
     const output = await destination();
     const input = config(`http://127.0.0.1:${address.port}/v1`);
     const old = runLocalInference(input, output);
-    const rejected = expect(old).rejects.toThrow("STALE-EXECUTION");
     try {
       await firstRequest.promise;
-      const newer = await runLocalInference(input, output);
-      expect(newer.execution.version).toBe(2);
-      const bytes = await readFile(output, "utf8");
-      release.resolve();
-      await rejected;
-      expect(await readFile(output, "utf8")).toBe(bytes);
+      const state = await readFile(`${output}.execution.json`, "utf8");
+      await expect(runLocalInference(input, output)).rejects.toThrow(
+        "OUTPUT-RUNNING",
+      );
+      expect(calls).toBe(1);
+      expect(await readFile(`${output}.execution.json`, "utf8")).toBe(state);
     } finally {
       release.resolve();
-      await rejected;
+      await old;
     }
+    expect(calls).toBe(4);
+    const newer = await runLocalInference(input, output);
+    expect(newer.execution.version).toBe(2);
   });
 
   it("saves failures without response bodies or URLs and continues to later engines", async () => {

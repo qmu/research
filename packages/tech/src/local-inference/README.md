@@ -22,8 +22,8 @@ finishing later exits nonzero with `STALE-EXECUTION` and leaves the result intac
 even when the newer run has not completed. Failed newer runs do not revive old
 reservations; the last published result remains until a current run publishes.
 
-A persistent `<output>.execution.json` sidecar tracks reservations. A short-lived
-`<output>.execution.lock` directory serializes reservation and compare-and-publish
+A persistent `<output>.execution.json` sidecar tracks reservations. A kernel lock on
+`<output>.publication.running.lock` serializes reservation and compare-and-publish
 across local processes. Measurement runs outside the lock. Parent-directory
 symlinks and relative paths resolve to the same lock. Different hard-link names
 are separate destinations. All writers must use this protocol on a local filesystem;
@@ -31,9 +31,8 @@ older runners or direct edits bypass it. Legacy result JSON without execution
 metadata is accepted and replaced only by a successful current publication.
 Do not delete or edit the sidecar while runners may be active. Corrupt state fails
 closed. Lock acquisition times out after five seconds; locks are never stolen.
-After a process crash inside the critical section, stop all writers and remove
-only the abandoned lock directory before retrying. Keep the sidecar to preserve
-version ordering. This does not guarantee directory-entry durability across
+Process exit releases the lock automatically; keep the lock file and sidecar
+to preserve exclusion and version ordering. This does not guarantee directory-entry durability across
 power loss, nor a transaction between result and sidecar: a crash after result
 rename can publish the complete result before marking the reservation completed.
 The command exits nonzero if a request fails, but saves every engine's row.
@@ -122,3 +121,24 @@ The result body is otherwise opaque: workers remain responsible for producing
 valid, sanitized measurement JSON. This is a trusted local worker transport,
 not an authentication boundary. The same lock, crash and recovery limitations
 as the in-process runner apply.
+
+### Running-owner lock
+
+The runner holds `<output>.running.lock` from before reservation through final
+publication. A second runner targeting the same canonical output fails with
+`OUTPUT-RUNNING` before reserving a version or sending HTTP requests. Different
+outputs remain independent. Existing execution ID/version validation still
+rejects stale external completion notices.
+
+This path requires Linux and util-linux `flock` on PATH; a missing or incompatible
+command fails closed before measurement. The runner owns an open file descriptor;
+`flock` acquires its shared open-file-description lock and exits. Normal completion,
+exceptions, and process death close that descriptor and release ownership. An old
+lock file is safe to reuse immediately: no timestamp expiry or PID reuse can steal
+an active owner's lock. Never delete the lock file while writers may run, because
+that creates a different inode and defeats exclusion. Use local filesystems with
+working flock semantics; network filesystems and writers bypassing this protocol
+are outside this guarantee. Reservation/publication uses the same kernel locking mechanism with a five-second
+wait on `<output>.publication.running.lock`, so crashes inside that critical
+section also recover automatically. Stop all older runners before upgrading;
+older mkdir-based writers use a different locking protocol.
