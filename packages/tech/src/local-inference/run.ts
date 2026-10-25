@@ -3,7 +3,11 @@ import { writeFile } from "node:fs/promises";
 import { engines, metrics, type Engine } from "./domain/result.js";
 import { startPeakRss } from "./vendors/peak-rss.js";
 import { peakRssReading } from "./domain/peak-memory.js";
-import { observeStream } from "./vendors/stream.js";
+import {
+  observeStream,
+  streamFailureReason,
+  type StreamFailureReason,
+} from "./vendors/stream.js";
 
 export type Config = {
   messages: { role: "system" | "user"; content: string }[];
@@ -99,7 +103,10 @@ export async function runLocalInference(
     const sampler = memorySampler(target.memoryPid);
     const started = performance.now();
     let measured;
+    let failureReason: StreamFailureReason | "TIMEOUT" | "REQUEST-FAILED" =
+      "REQUEST-FAILED";
     let status: "measured" | "failed" = "measured";
+    const signal = AbortSignal.timeout(timeoutMs);
     try {
       const response = await fetch(
         `${target.baseUrl.replace(/\/$/, "")}/chat/completions`,
@@ -113,11 +120,14 @@ export async function runLocalInference(
             stream: true,
             stream_options: { include_usage: true },
           }),
-          signal: AbortSignal.timeout(timeoutMs),
+          signal,
         },
       );
       measured = metrics(await observeStream(response, started));
-    } catch {
+    } catch (error) {
+      failureReason = signal.aborted
+        ? "TIMEOUT"
+        : (streamFailureReason(error) ?? "REQUEST-FAILED");
       status = "failed";
       measured = metrics({}, true);
     }
@@ -133,7 +143,7 @@ export async function runLocalInference(
           measured.ttft.value !== null
             ? "FIRST-CONTENT"
             : status === "failed"
-              ? "REQUEST-FAILED"
+              ? failureReason
               : "NO-CONTENT",
       },
       quality: { value: null, reason: "NOT-RUN" },
