@@ -1,0 +1,48 @@
+{
+  "binding": {
+    "execution": {
+      "runId": "synthetic-batch-1",
+      "version": 1
+    },
+    "targetCommit": "1111111111111111111111111111111111111111",
+    "runnerVersion": "local-inference/6",
+    "fixtureSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "fixedTier": {
+      "label": "16 GiB",
+      "totalMiB": 16384
+    }
+  },
+  "result": {
+    "execution": {
+      "runId": "synthetic-batch-1",
+      "version": 1,
+      "targetCommit": "1111111111111111111111111111111111111111",
+      "runnerVersion": "local-inference/6"
+    },
+    "fixtureSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "fixedTier": {
+      "label": "16 GiB",
+      "totalMiB": 16384
+    },
+    "runs": [
+      {
+        "runId": "synthetic-row-1",
+        "engine": "ollama",
+        "targetCommit": "1111111111111111111111111111111111111111",
+        "runnerVersion": "local-inference/6",
+        "metrics": {
+          "ttft": {
+            "value": null,
+            "unit": "s",
+            "reason": "MEASURE-FAILED"
+          },
+          "peak_rss": {
+            "value": null,
+            "unit": "MiB",
+            "reason": "NO-FIELD"
+          }
+        }
+      }
+    ]
+  }
+}

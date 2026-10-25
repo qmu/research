@@ -3,7 +3,10 @@
     "standard": "WCAG2AA",
     "timeout": 30000,
     "chromeLaunchConfig": {
-      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+      "args": [
+        "--no-sandbox",
+        "--disable-setuid-sandbox"
+      ]
     }
   },
   "urls": [
@@ -12,6 +15,13 @@
     "http://localhost:4173/en/llm-model-comparison",
     "http://localhost:4173/en/llm-benchmark",
     "http://localhost:4173/ja/llm-benchmark",
-    "http://localhost:4173/glossary"
+    "http://localhost:4173/glossary",
+    {
+      "url": "http://localhost:4173/local-inference-adoption",
+      "actions": [
+        "click element .table-scroll button",
+        "click element #recovery button"
+      ]
+    }
   ]
 }
