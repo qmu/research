@@ -1,0 +1,30 @@
+{
+  "fixture": true,
+  "note": "Synthetic numbers for demonstrating the evaluator end to end. Not a measured result from any of the four engines; see README.md.",
+  "readings": {
+    "ollama": {
+      "ttft": { "value": 1.1, "unit": "s" },
+      "tps": { "value": 28, "unit": "tokens/s" },
+      "quality": { "value": 0.86, "unit": "ratio" },
+      "peakRss": { "value": 9500, "unit": "MiB" }
+    },
+    "llama.cpp": {
+      "ttft": { "value": 0.9, "unit": "s" },
+      "tps": { "value": 34, "unit": "tokens/s" },
+      "quality": { "value": 0.8, "unit": "ratio" },
+      "peakRss": { "value": 7200, "unit": "MiB" }
+    },
+    "mlx": {
+      "ttft": { "value": 1.4, "unit": "s" },
+      "tps": { "value": 22, "unit": "tokens/s" },
+      "quality": { "value": 0.91, "unit": "ratio" },
+      "peakRss": { "value": 15500, "unit": "MiB" }
+    },
+    "strata": {
+      "ttft": { "value": 3.2, "unit": "s" },
+      "tps": { "value": 9, "unit": "tokens/s" },
+      "quality": { "value": 0.69, "unit": "ratio" },
+      "peakRss": { "value": 3800, "unit": "MiB" }
+    }
+  }
+}
