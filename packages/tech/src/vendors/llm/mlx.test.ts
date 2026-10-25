@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  createMlxCompletionClient,
   extractMlxGeneratedText,
   normalizeMlxGenerateOutput,
   parseMlxGenerateStats,
+  type MlxGenerateRequest,
 } from "./mlx";
 import {
   MLX_GENERATE_FIXTURE_MULTILINE,
@@ -113,5 +115,98 @@ Peak memory: 1.000 GB
     expect(result.ttftMs).toBe(0);
     expect(result.elapsedMs).toBe(0);
     expect(result.outputTokens).toBe(0);
+  });
+});
+
+describe("createMlxCompletionClient", () => {
+  const model = "mlx-community/Llama-3.2-3B-Instruct-4bit";
+
+  it("completeStreaming runs the injected runner and normalizes its captured stdout", async () => {
+    const requests: MlxGenerateRequest[] = [];
+    const client = createMlxCompletionClient(model, async (request) => {
+      requests.push(request);
+      return MLX_GENERATE_FIXTURE_SHORT;
+    });
+    const result = await client.completeStreaming(
+      "What is the capital of France?",
+    );
+    const expectedTtftMs = (28 / 214.552) * 1000;
+    const expectedGenerationMs = (9 / 71.063) * 1000;
+    expect(result.text).toBe("Paris is the capital of France.");
+    expect(result.outputTokens).toBe(9);
+    expect(result.model).toBe(model);
+    expect(result.ttftMs).toBeCloseTo(expectedTtftMs, 6);
+    expect(result.elapsedMs).toBeCloseTo(
+      expectedTtftMs + expectedGenerationMs,
+      6,
+    );
+    // Connects the port to the process boundary with the model and prompt it was
+    // given, and a default generation window when the caller states none.
+    expect(requests).toEqual([
+      { model, prompt: "What is the capital of France?", maxTokens: 512 },
+    ]);
+  });
+
+  it("complete runs the same path but drops ttftMs, returning the plain Completion shape", async () => {
+    const client = createMlxCompletionClient(
+      model,
+      async () => MLX_GENERATE_FIXTURE_MULTILINE,
+    );
+    const result = await client.complete("Explain mixed precision.");
+    const expectedTtftMs = (12 / 301.884) * 1000;
+    const expectedGenerationMs = (47 / 58.217) * 1000;
+    expect(result.outputTokens).toBe(47);
+    expect(result.model).toBe(model);
+    expect(result.elapsedMs).toBeCloseTo(
+      expectedTtftMs + expectedGenerationMs,
+      6,
+    );
+    expect(Object.keys(result).sort()).toEqual([
+      "elapsedMs",
+      "model",
+      "outputTokens",
+      "text",
+    ]);
+  });
+
+  it("forwards a caller-supplied maxTokens to the runner instead of the default", async () => {
+    const requests: MlxGenerateRequest[] = [];
+    const client = createMlxCompletionClient(model, async (request) => {
+      requests.push(request);
+      return MLX_GENERATE_FIXTURE_SHORT;
+    });
+    await client.completeStreaming("prompt", { maxTokens: 64 });
+    expect(requests[0].maxTokens).toBe(64);
+  });
+
+  it("propagates a failed process launch instead of swallowing it", async () => {
+    const client = createMlxCompletionClient(model, async () => {
+      throw new Error("mlx_lm.generate exited with code 1: model not found");
+    });
+    await expect(client.completeStreaming("prompt")).rejects.toThrow(
+      /exited with code 1/,
+    );
+    await expect(client.complete("prompt")).rejects.toThrow(
+      /exited with code 1/,
+    );
+  });
+
+  it("propagates a malformed-capture failure reason from the normalizer", async () => {
+    const client = createMlxCompletionClient(
+      model,
+      async () => "==========\nhello\n==========\n",
+    );
+    await expect(client.completeStreaming("prompt")).rejects.toThrow(
+      /stats block/,
+    );
+  });
+
+  it("surfaces completeStructured as an unsupported-capability failure, never a faked conformance", async () => {
+    const client = createMlxCompletionClient(model, async () => {
+      throw new Error("the runner must not be called for completeStructured");
+    });
+    await expect(
+      client.completeStructured("prompt", { type: "object" }),
+    ).rejects.toThrow(/no structured-output feature/);
   });
 });

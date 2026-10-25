@@ -1,4 +1,10 @@
-import type { StreamedCompletion } from "./types";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import type {
+  CompletionClient,
+  CompletionOptions,
+  StreamedCompletion,
+} from "./types";
 
 // Anti-corruption layer for MLX (Apple's on-device inference framework). Unlike
 // the cloud adapters in this directory, there is no SDK call to wrap: a trial
@@ -113,5 +119,101 @@ export const normalizeMlxGenerateOutput = (
     elapsedMs: ttftMs + generationMs,
     ttftMs,
     model,
+  };
+};
+
+// ── Connecting to the shared benchmark runner ────────────────────────────────
+// Every cloud adapter in this directory reaches a live SDK/HTTP endpoint and is
+// usable directly as the `CompletionClient` the shared benchmark runner
+// (`llm-model-comparison/run.ts`'s `buildConfigRun`/`runTrial`) depends on. Until
+// now `normalizeMlxGenerateOutput` was only ever called directly from a test —
+// nothing produced the stdout it normalizes, so MLX had no way to reach that
+// port. `mlx_lm.generate --verbose` IS a live, local invocation on the
+// operator's own Apple Silicon machine, so it is wrapped the same way the
+// OpenAI-compatible adapters wrap `fetch`: launch the process, capture its
+// stdout, and normalize it with `normalizeMlxGenerateOutput` above. The process
+// launch is injected as `runGenerate` so a trial's HTTP-free, subprocess-free
+// unit test can supply fixed fixture stdout, or a rejection, with no Apple
+// Silicon hardware or `mlx_lm` install required. Registering an MLX `ModelCard`
+// in that runner's provider catalog — which today assumes an API-key credential
+// per provider — is a separate change; this is the client the catalog entry
+// would construct.
+export type MlxGenerateRequest = Readonly<{
+  model: string;
+  prompt: string;
+  maxTokens: number;
+}>;
+
+export type MlxGenerateRunner = (
+  request: MlxGenerateRequest,
+) => Promise<string>;
+
+const execFileAsync = promisify(execFile);
+
+// The real runner: shells out to the `mlx_lm.generate` console script installed
+// by `pip install mlx-lm`. Not unit-tested itself (there is no `mlx_lm` install in
+// CI) — `createMlxCompletionClient`'s tests inject a fixture or failing runner in
+// its place instead, the same split `parseMlxGenerateStats` keeps from framing.
+export const runMlxGenerate: MlxGenerateRunner = async ({
+  model,
+  prompt,
+  maxTokens,
+}) => {
+  const { stdout } = await execFileAsync("mlx_lm.generate", [
+    "--model",
+    model,
+    "--prompt",
+    prompt,
+    "--max-tokens",
+    String(maxTokens),
+    "--verbose",
+  ]);
+  return stdout;
+};
+
+// Falls back to a generation window wide enough for a meaningful trial when the
+// caller states no `maxTokens`; override it per call for a real benchmark run.
+const DEFAULT_MAX_TOKENS = 512;
+
+// Wrap the MLX CLI behind the domain-named `CompletionClient` port every other
+// provider implements, so the shared benchmark runner drives an on-device MLX
+// trial exactly like it drives Anthropic/OpenAI/etc — same prompt in, same
+// `Completion`/`StreamedCompletion` shape out. `mlx_lm.generate` has no
+// structured-output / JSON-schema feature, so `completeStructured` is surfaced
+// as a failed call rather than faking conformance — the same rule this
+// repository applies to a model asked for an effort level it does not support
+// (see `CompletionOptions`): an unsupported capability is a failure the caller
+// can see, never a silently wrong result.
+export const createMlxCompletionClient = (
+  model: string,
+  runGenerate: MlxGenerateRunner = runMlxGenerate,
+): CompletionClient => {
+  const runAndNormalize = async (
+    prompt: string,
+    options: CompletionOptions | undefined,
+  ): Promise<StreamedCompletion> => {
+    const stdout = await runGenerate({
+      model,
+      prompt,
+      maxTokens: options?.maxTokens ?? DEFAULT_MAX_TOKENS,
+    });
+    return normalizeMlxGenerateOutput(stdout, model);
+  };
+  return {
+    model,
+    complete: async (prompt, options) => {
+      const { text, outputTokens, elapsedMs } = await runAndNormalize(
+        prompt,
+        options,
+      );
+      return { text, outputTokens, elapsedMs, model };
+    },
+    completeStreaming: (prompt, options) => runAndNormalize(prompt, options),
+    completeStructured: async () => {
+      throw new Error(
+        "mlx_lm.generate has no structured-output feature; " +
+          "completeStructured is not supported by the MLX CLI adapter",
+      );
+    },
   };
 };
