@@ -35,6 +35,7 @@ const indexable = publicHostname !== "";
 // theme finds no locale and hides the language switcher, instead of offering a
 // Japanese counterpart that does not exist.
 const projectItems = [
+  { text: "Local inference JSON", link: "/local-inference-format" },
   {
     text: "Research development guideline",
     link: docsRoute("docs/research-development-guideline.md"),
