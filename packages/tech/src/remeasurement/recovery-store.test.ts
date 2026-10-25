@@ -11,6 +11,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, it } from "vitest";
 import {
+  defaultRecoveryTtlMs,
+  inspectSnapshotRecoveryRequest,
+  recreateSnapshotRecoveryRequest,
   saveSnapshotRecoveryRequest,
   snapshotFailureReasons,
 } from "./recovery-store.js";
@@ -95,6 +98,8 @@ it.each(snapshotFailureReasons)(
       requiresNewArtifact: true,
     });
     expect(JSON.stringify(saved)).not.toContain("private-marker");
+    expect(saved.expiresAt - saved.createdAt).toBe(defaultRecoveryTtlMs);
+    expect(defaultRecoveryTtlMs).toBe(24 * 60 * 60 * 1000);
     expect(await cli(path, data)).toEqual({
       code: 0,
       stderr: "",
@@ -213,4 +218,226 @@ it("does not change the independent commit/runner/fixture scopes", async () => {
     executionVersion: 1,
   });
   expect(await readdir(path)).toHaveLength(2);
+});
+
+it("persists deadlines and expires at the exact boundary without renewing retries", async () => {
+  const path = await directory();
+  const first = await saveSnapshotRecoveryRequest(path, input, {
+    now: 1000,
+    ttlMs: 100,
+  });
+  expect(first.request).toMatchObject({ createdAt: 1000, expiresAt: 1100 });
+  expect(await inspectSnapshotRecoveryRequest(path, input, 1099)).toMatchObject(
+    {
+      status: "active",
+      reason: null,
+      recreation: null,
+    },
+  );
+  expect(await inspectSnapshotRecoveryRequest(path, input, 1100)).toMatchObject(
+    {
+      status: "expired",
+      reason: "RECOVERY-TTL-EXPIRED",
+      recreation: { expected: input, minimumExecutionVersion: 3 },
+    },
+  );
+  expect(
+    await saveSnapshotRecoveryRequest(path, input, { now: 2000, ttlMs: 9000 }),
+  ).toEqual({
+    changed: false,
+    request: first.request,
+  });
+});
+
+it.each([
+  { source: { ...input.source, runId: "wrong-run" } },
+  { source: { ...input.source, runnerVersion: "local-inference/3" } },
+  { source: { ...input.source, targetCommit: "b".repeat(40) } },
+  { runnerVersion: "local-inference/3" },
+  {
+    runnerVersion: "local-inference/3",
+    source: { ...input.source, runnerVersion: "local-inference/3" },
+  },
+  { targetCommit: "b".repeat(40) },
+])(
+  "rejects untrusted inspection and recreation identities %j",
+  async (change) => {
+    const path = await directory();
+    await saveSnapshotRecoveryRequest(path, input, { now: 1000, ttlMs: 100 });
+    const file = await record(path),
+      bytes = await readFile(file, "utf8");
+    await expect(
+      inspectSnapshotRecoveryRequest(path, { ...input, ...change }, 1100),
+    ).rejects.toThrow();
+    await expect(
+      recreateSnapshotRecoveryRequest(path, { ...input, ...change }, 3, {
+        now: 1100,
+      }),
+    ).rejects.toThrow();
+    expect(await readFile(file, "utf8")).toBe(bytes);
+  },
+);
+
+it("recreates only after expiry, preserves provenance, and rejects stale generations", async () => {
+  const path = await directory();
+  await saveSnapshotRecoveryRequest(path, input, { now: 1000, ttlMs: 100 });
+  await expect(
+    recreateSnapshotRecoveryRequest(path, input, 3, { now: 1099 }),
+  ).rejects.toThrow("RECOVERY-NOT-EXPIRED");
+  await expect(
+    recreateSnapshotRecoveryRequest(path, input, 2, { now: 1100 }),
+  ).rejects.toThrow("RECOVERY-STORE-STALE");
+  const result = await recreateSnapshotRecoveryRequest(
+    path,
+    {
+      ...input,
+      privatePath: "secret-marker",
+      source: { ...input.source, debug: "secret-marker" },
+    },
+    3,
+    { now: 1100, ttlMs: 50 },
+  );
+  expect(result).toMatchObject({
+    changed: true,
+    request: {
+      ...input,
+      executionVersion: 3,
+      createdAt: 1100,
+      expiresAt: 1150,
+    },
+  });
+  const inspection = await inspectSnapshotRecoveryRequest(
+    path,
+    { ...input, executionVersion: 3 },
+    1150,
+  );
+  expect(JSON.stringify(inspection)).not.toContain("secret-marker");
+  await expect(
+    inspectSnapshotRecoveryRequest(path, input, 1150),
+  ).rejects.toThrow("RECOVERY-STORE-STALE");
+  await expect(saveSnapshotRecoveryRequest(path, input)).rejects.toThrow(
+    "RECOVERY-STORE-STALE",
+  );
+  expect(
+    await recreateSnapshotRecoveryRequest(path, input, 3, { now: 2000 }),
+  ).toEqual({ changed: false, request: result.request });
+  await recreateSnapshotRecoveryRequest(
+    path,
+    { ...input, executionVersion: 3 },
+    4,
+    { now: 1150 },
+  );
+  await expect(
+    recreateSnapshotRecoveryRequest(path, input, 3, { now: 2000 }),
+  ).rejects.toThrow("RECOVERY-STORE-STALE");
+});
+
+it("serializes concurrent recreations and resolves busy retries without extending expiry", async () => {
+  const path = await directory();
+  await saveSnapshotRecoveryRequest(path, input, { now: 1000, ttlMs: 100 });
+  const results = await Promise.allSettled(
+    Array.from({ length: 8 }, () =>
+      recreateSnapshotRecoveryRequest(path, input, 3, {
+        now: 1100,
+        ttlMs: 100,
+      }),
+    ),
+  );
+  const fulfilled = results.filter((result) => result.status === "fulfilled");
+  expect(fulfilled.filter((result) => result.value.changed)).toHaveLength(1);
+  for (const result of results)
+    if (result.status === "rejected")
+      expect(result.reason.message).toBe("RECOVERY-STORE-BUSY");
+  const retried = await recreateSnapshotRecoveryRequest(path, input, 3, {
+    now: 1300,
+  });
+  expect(retried).toMatchObject({
+    changed: false,
+    request: { createdAt: 1100, expiresAt: 1200 },
+  });
+  expect(await readdir(path)).toHaveLength(1);
+  await expect(
+    recreateSnapshotRecoveryRequest(path, input, 4, { now: 1300 }),
+  ).rejects.toThrow("RECOVERY-STORE-STALE");
+});
+
+it("treats legacy records as expired without inventing or refreshing timestamps", async () => {
+  const path = await directory();
+  await saveSnapshotRecoveryRequest(path, input);
+  const file = await record(path);
+  const legacy = JSON.parse(await readFile(file, "utf8"));
+  delete legacy.createdAt;
+  delete legacy.expiresAt;
+  await writeFile(file, JSON.stringify(legacy) + "\n");
+  expect(await saveSnapshotRecoveryRequest(path, input)).toEqual({
+    changed: false,
+    request: legacy,
+  });
+  expect(await inspectSnapshotRecoveryRequest(path, input, 1000)).toMatchObject(
+    {
+      status: "expired",
+      reason: "RECOVERY-EXPIRY-UNKNOWN",
+    },
+  );
+  expect(
+    await recreateSnapshotRecoveryRequest(path, input, 3, { now: 1000 }),
+  ).toMatchObject({
+    changed: true,
+    request: { executionVersion: 3, createdAt: 1000 },
+  });
+});
+
+it.each([
+  { createdAt: 1000 },
+  { expiresAt: 1100 },
+  { createdAt: 1100, expiresAt: 1100 },
+  { createdAt: 1000, expiresAt: "1100" },
+  { createdAt: 1000, expiresAt: 1100, recreatedFrom: "private-marker" },
+])("fails closed on malformed lifecycle metadata %j", async (metadata) => {
+  const path = await directory();
+  const result = await saveSnapshotRecoveryRequest(path, input);
+  const file = await record(path);
+  const request = { ...result.request };
+  delete request.createdAt;
+  delete request.expiresAt;
+  const bytes = JSON.stringify({ ...request, ...metadata }) + "\n";
+  await writeFile(file, bytes);
+  await expect(
+    inspectSnapshotRecoveryRequest(path, input, 1100),
+  ).rejects.toThrow("RECOVERY-STORE-CORRUPT");
+  await expect(
+    recreateSnapshotRecoveryRequest(path, input, 3, { now: 1100 }),
+  ).rejects.toThrow("RECOVERY-STORE-CORRUPT");
+  expect(await readFile(file, "utf8")).toBe(bytes);
+});
+
+it("does not offer recreation beyond the safe generation limit", async () => {
+  const path = await directory();
+  const last = { ...input, executionVersion: Number.MAX_SAFE_INTEGER };
+  await saveSnapshotRecoveryRequest(path, last, { now: 1000, ttlMs: 100 });
+  expect(await inspectSnapshotRecoveryRequest(path, last, 1100)).toMatchObject({
+    status: "expired",
+    recreation: null,
+  });
+  await expect(
+    recreateSnapshotRecoveryRequest(path, last, Number.MAX_SAFE_INTEGER + 1, {
+      now: 1100,
+    }),
+  ).rejects.toThrow();
+});
+
+it.each([
+  { now: -1 },
+  { now: NaN },
+  { ttlMs: 0 },
+  { ttlMs: -1 },
+  { ttlMs: Infinity },
+  { ttlMs: 1.5 },
+  { now: Number.MAX_SAFE_INTEGER, ttlMs: 1 },
+])("rejects invalid trusted timing before storage %j", async (timing) => {
+  const parent = await directory();
+  await expect(
+    saveSnapshotRecoveryRequest(join(parent, "new"), input, timing),
+  ).rejects.toThrow();
+  expect(await readdir(parent)).toEqual([]);
 });
