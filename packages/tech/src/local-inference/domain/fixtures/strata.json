@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "engine": "strata",
+  "status": "ok",
+  "process": {
+    "exit_code": 0,
+    "signal": null
+  },
+  "failure": null
+}
