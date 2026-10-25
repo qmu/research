@@ -71,7 +71,40 @@ their own independence from other open branches.
 - `domain/margin.ts` — `computeMemoryMargin`,
   `computeMemoryMarginFromRawCapacity`.
 - `domain/table.ts` — `renderMemoryMarginTable`: one deterministic Markdown
-  table, escaped cells, row order preserved.
+  table, escaped cells, row order preserved; exports `formatMemoryMarginCell`
+  so the margin cell's text has one source.
+- `domain/adoption.ts` — `decideAdoption`, `renderAdoptionTable`: see below.
+
+## Connecting the margin to the 採否 (adopt/reject) page
+
+The scope note above says this module "decides nothing about adoption" and
+is "the pure calculation and rendering layer a future measurement PR can
+call" — `domain/adoption.ts` is that call. `EngineAdoptionRow` extends
+`EngineMemoryMarginRow` with a `runId` per cell (speed, quality, memory —
+the shape qmu/research#269's `reproductionIdentity` produces: a stable ID
+from `engine`/`model`/`fixture`/`runnerVersion`/`targetCommit`, so two
+measurements share a `runId` only when all five conditions match).
+
+`decideAdoption` adopts a row only when its three `runId`s are present and
+equal — i.e. the speed, quality and memory-margin figures were all produced
+under the same run, not assembled from whichever rows happened to be on
+hand for each metric. It rejects with:
+
+- `ORIGIN-MISSING` — any cell carries no `runId` (an absent origin is never
+  treated as agreement).
+- `ORIGIN-MISMATCH` — the `runId`s are present but not all equal.
+
+`renderAdoptionTable` renders the same Markdown shape as
+`renderMemoryMarginTable` plus a `採否` column (`採用` / `不採用 (<reason>)`).
+A rejected row still shows its computed margin cell: rejection says these
+three figures should not be read as describing one run, not that the
+numbers should be hidden.
+
+This module still does not run an engine, collect a host fingerprint, judge
+quality, or compute `runId` — it only takes the already-produced `runId`
+per cell, the same way it already took an already-normalized `peak`
+reading. It imports nothing from qmu/research#269 (the identity generator)
+or any other unmerged PR; a caller wires the two together.
 
 No CLI, model registry, or web page changes are included — this is the pure
 calculation and rendering layer a future measurement PR can call once a real

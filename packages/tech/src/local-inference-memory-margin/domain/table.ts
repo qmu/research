@@ -5,7 +5,12 @@ function escape(text: string): string {
   return text.replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
 }
 
-function marginCell(
+/**
+ * Formats one row's memory-margin cell. Exported so a caller building a
+ * wider table (e.g. an adoption/rejection column alongside this one) can
+ * reuse the exact same text instead of recomputing or restating it.
+ */
+export function formatMemoryMarginCell(
   row: EngineMemoryMarginRow,
   tiers?: ReadonlyArray<FixedCapacityTier>,
   toleranceRatio?: number,
@@ -45,7 +50,7 @@ export function renderMemoryMarginTable(
       escape(row.engine),
       escape(row.speed),
       escape(row.quality),
-      marginCell(row, tiers, toleranceRatio),
+      formatMemoryMarginCell(row, tiers, toleranceRatio),
     ];
     return `| ${cells.join(" | ")} |`;
   });
