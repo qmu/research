@@ -7,8 +7,7 @@ const object = (value: unknown): Record<string, unknown> => {
 };
 
 const isFingerprint = (value: unknown): value is Fingerprint => {
-  if (!value || typeof value !== "object" || Array.isArray(value))
-    return false;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const candidate = value as Record<string, unknown>;
   if (Object.keys(candidate).length !== 4) return false;
   if (typeof candidate.os !== "string" || !candidate.os) return false;
