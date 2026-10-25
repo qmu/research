@@ -25,7 +25,7 @@ COMMIT-MISMATCH: Saved measurement commit differs from the current comparison co
 | 1 / 2 | 1111111111111111111111111111111111111111 | eligible | none |
 | 2 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
 | 3 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
-| 4 / 1 | not recorded | excluded | MISSING-COMMIT |
+| 4 / 1 | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Remeasure missing commit](./local-inference-adoption-format.md#missing-commit) |
 | 5 / 1 | 2222222222222222222222222222222222222222 | excluded | COMMIT-MISMATCH |
 
 <details>

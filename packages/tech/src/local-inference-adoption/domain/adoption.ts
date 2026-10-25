@@ -406,10 +406,11 @@ export function renderAdoptionReport(
     "",
     "| Source / run | Saved commit | Eligibility | Reason |",
     "| --- | --- | --- | --- |",
-    ...report.rows.map(
-      (row) =>
-        `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.commitSha ?? "not recorded"} | ${row.excluded ? "excluded" : "eligible"} | ${row.excluded ? row.reasons[0] : "none"} |`,
-    ),
+    ...report.rows.map((row) => {
+      if (row.reasons[0] === "MISSING-COMMIT")
+        return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Remeasure missing commit](./local-inference-adoption-format.md#missing-commit) |`;
+      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.commitSha ?? "not recorded"} | ${row.excluded ? "excluded" : "eligible"} | ${row.excluded ? row.reasons[0] : "none"} |`;
+    }),
     "",
     ...report.rows
       .filter((row) => row.excluded)

@@ -110,3 +110,22 @@ A matching ID only clears this gate; all other condition and quality checks appl
 Remeasure the target checkout and save a new artifact with the actual measured
 commit ID. Preserve the old JSON; adding or replacing its ID is not remeasurement.
 The demo uses synthetic IDs `111...` and `222...`; it is not a real benchmark.
+
+## Missing commit
+
+`MISSING-COMMIT`: Target commit SHA was not recorded. The row is excluded
+(cannot adopt), even if its saved quality verdict is `pass`. This applies when
+`execution` or its `targetCommit` field is absent. The fixed reason and this
+recovery link appear on every affected row. Malformed saved IDs remain errors;
+this missing-data branch does not change `COMMIT-MISMATCH` handling.
+
+1. Preserve the original artifact and its metrics/quality evidence. Do not fill
+   in its missing SHA from the current checkout: that would assert unrecorded
+   provenance, not perform a measurement.
+2. Choose the target checkout, resolve its full SHA with `git rev-parse HEAD`,
+   and rerun measurement and quality evaluation. Save a new artifact with the
+   actual measured SHA in `execution.targetCommit` and complete comparison
+   conditions. This report generator does not run inference.
+3. Use the [remeasurement render command](#remeasure) with that independently
+   resolved comparison SHA and the new artifacts. Check that the new rows are
+   eligible and that all condition and quality gates pass before adopting.

@@ -527,3 +527,52 @@ describe("current commit eligibility", () => {
     ).toBe("pass");
   });
 });
+
+describe("missing target commit recovery", () => {
+  it.each(["execution", "targetCommit"])(
+    "keeps every run in a source without %s ineligible and links each to recovery",
+    (field) => {
+      const missing = sample();
+      missing.runs.push(structuredClone(missing.runs[0]));
+      missing.runs[1].quality[0].verdict = "fail";
+      missing.runs[1].quality[0].evaluatorVersion = "other-version";
+      if (field === "execution") Reflect.deleteProperty(missing, field);
+      else Reflect.deleteProperty(missing.execution, field);
+      const before = structuredClone(missing);
+      const report = joinAdoptionResults([sample(), missing]);
+      expect(report.groups.flatMap((group) => group.rowIndexes)).toEqual([0]);
+      expect(report.evaluatorMismatches).toEqual([]);
+      for (const [index, row] of report.rows.slice(1).entries()) {
+        expect(row).toMatchObject({
+          commitSha: null,
+          excluded: true,
+          adoption: "undetermined",
+          comparability: "undetermined",
+          groupId: null,
+          conditionKey: null,
+          metrics: before.runs[index].metrics,
+          quality: before.runs[index].quality,
+        });
+        expect(row.reasons[0]).toBe("MISSING-COMMIT");
+      }
+      const output = renderAdoptionReport([sample(), missing]);
+      for (const run of [1, 2])
+        expect(output).toContain(
+          `| 2 / ${run} | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Remeasure missing commit](./local-inference-adoption-format.md#missing-commit) |`,
+        );
+      expect(missing).toEqual(before);
+      expect(renderAdoptionReport([sample(), missing])).toBe(output);
+    },
+  );
+  it("does not add missing-commit recovery to matching or mismatched rows", () => {
+    const stale = sample();
+    stale.execution.targetCommit = "2".repeat(40);
+    const output = renderAdoptionReport([sample(), stale]);
+    expect(output).not.toContain("#missing-commit");
+    expect(output).not.toContain("excluded (cannot adopt)");
+    expect(output).toContain(`| 1 / 1 | ${currentCommit} | eligible | none |`);
+    expect(output).toContain(
+      `| 2 / 1 | ${stale.execution.targetCommit} | excluded | COMMIT-MISMATCH |`,
+    );
+  });
+});
