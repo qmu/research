@@ -1,6 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { recomputeThroughput } from "../llm-model-comparison/domain/recompute-throughput";
-import { readMissingTtftAsNull } from "../llm-model-comparison/domain/missing-ttft";
+import { readComparisonArtifact } from "../llm-model-comparison/domain/read-artifact";
 import { basename, dirname, resolve } from "node:path";
 import { isDirectRun } from "./direct-run";
 import type { ComparisonResult } from "../llm-model-comparison/domain/types";
@@ -50,24 +49,7 @@ const readComparison = async (
 ): Promise<ComparisonResult | null> => {
   try {
     const parsed = JSON.parse(await readFile(path, "utf8")) as ComparisonResult;
-    // Apply the CURRENT throughput definition, exactly as the comparison
-    // entrypoint does when it loads a record. This projection publishes
-    // llm-speed-comparison.md, so skipping it here republished the retired
-    // post-first-token numbers (Opus 5 low at 576 tok/s rather than 96) even
-    // though the comparison report itself had been corrected -- one artifact,
-    // two definitions, depending on which reader opened it.
-    // See llm-model-comparison/domain/recompute-throughput.ts and ADR 0009.
-    const { configs } = recomputeThroughput(
-      parsed.configs,
-      parsed.throughputDefinition,
-    );
-    // Same for a stored first-token time of 0, which meant "not captured" and
-    // was averaged as if it were a measurement.
-    return {
-      ...parsed,
-      configs: [...readMissingTtftAsNull(configs).configs],
-      throughputDefinition: "end-to-end",
-    };
+    return readComparisonArtifact(parsed).record;
   } catch {
     return null;
   }
