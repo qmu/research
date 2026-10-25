@@ -184,3 +184,23 @@ it("reproduces the selected acquisition failure page through the CLI", () => {
     readFileSync("../../docs/local-inference-ttft-failure.md", "utf8"),
   ).toBe(rendered);
 });
+
+it("persists selected acquisition reasons in the calculated adoption verdict", () => {
+  const output = join(temp(), "no-content.md");
+  const result = cli(
+    "--run-id",
+    "synthetic-no-content-request",
+    "--runner-version",
+    "local-inference/4",
+    output,
+    resolve("src/local-inference-adoption/fixtures/ttft-no-content.json"),
+  );
+  expect(result.status).toBe(0);
+  const report = readFileSync(output, "utf8");
+  expect(report).toContain("not adopted | NO-CONTENT");
+  expect(report).toContain("| measured | undetermined | NO-CONTENT |");
+  expect(report).toContain('"verdict": "pass"');
+  expect(report).toBe(
+    readFileSync("../../docs/local-inference-ttft-no-content.md", "utf8"),
+  );
+});
