@@ -25,6 +25,35 @@ const reasonText: Record<PublicationReason, string> = {
   unsupported: "Measurement unsupported",
 };
 
+// Explicit HTML targets work in both GitHub Markdown and the VitePress preview.
+// Keep these IDs independent of headings, display labels and result order.
+const referenceSections = [
+  '<a id="publication-engine-names"></a>',
+  "",
+  "## Engine names",
+  "",
+  "Engine identity is supplied by upstream context, not inferred from a run ID.",
+  "This input contract does not carry engine names or establish engine rankings.",
+  "",
+  '<a id="publication-metric-names"></a>',
+  "",
+  "## Metric names",
+  "",
+  "These are decision axes, not numerical measurements or threshold definitions.",
+  "",
+  "| Key | Aspect |",
+  "| --- | --- |",
+  ...axes.map((axis) => `| ${axis} | ${labels[axis]} |`),
+  "",
+  '<a id="publication-reason-codes"></a>',
+  "",
+  "## Reason codes",
+  "",
+  "| Code | Reason |",
+  "| --- | --- |",
+  ...Object.entries(reasonText).map(([code, text]) => `| ${code} | ${text} |`),
+].join("\n");
+
 /** Render only an upstream-verified decision. The verifier is responsible for
  * run ID/commit/runner matching, measurement validation and policy evaluation.
  * The marker is an API contract, not a substitute for those checks. Only fixed
@@ -72,5 +101,12 @@ export const renderVerifiedSnapshotResults = (
       ...reasons,
     ].join("\n");
   });
-  return `${rows.join("\n\n")}\n`;
+  return [
+    "[Engine names](#publication-engine-names) · " +
+      "[Metric names](#publication-metric-names) · " +
+      "[Reason codes](#publication-reason-codes)",
+    ...rows,
+    referenceSections,
+    "",
+  ].join("\n\n");
 };

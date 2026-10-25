@@ -81,6 +81,30 @@ describe("verified snapshot publication", () => {
     expect(() => renderVerifiedSnapshotResults([valid, valid])).toThrow();
   });
 
+  it("keeps one fixed reference target per section across result order and provenance changes", () => {
+    const other = { ...valid, runId: "Other.Run_2", runnerVersion: "2.0.0" };
+    const first = renderVerifiedSnapshotResults([valid, other]);
+    const reordered = renderVerifiedSnapshotResults([other, valid]);
+    for (const id of [
+      "publication-engine-names",
+      "publication-metric-names",
+      "publication-reason-codes",
+    ]) {
+      expect(first.match(new RegExp(`<a id="${id}"></a>`, "g"))).toHaveLength(
+        1,
+      );
+      expect(
+        reordered.match(new RegExp(`<a id="${id}"></a>`, "g")),
+      ).toHaveLength(1);
+      expect(first).toContain(`](#${id})`);
+    }
+    expect(first.slice(first.indexOf('<a id="'))).toBe(
+      reordered.slice(reordered.indexOf('<a id="')),
+    );
+    expect(first).toContain("| speed | Speed |");
+    expect(first).toContain("| unsupported | Measurement unsupported |");
+  });
+
   it("CLI emits the table, and emits no partial output or raw error on invalid input", () => {
     const dir = mkdtempSync(join(tmpdir(), "snapshot-publication-"));
     const path = join(dir, "results.json");
