@@ -209,8 +209,7 @@ export const createMlxCompletionClient = (
     completeStreaming: (prompt, options) => runAndNormalize(prompt, options),
     completeStructured: async () => {
       throw new Error(
-        "mlx_lm.generate has no structured-output feature; " +
-          "completeStructured is not supported by the MLX CLI adapter",
+        "mlx_lm.generate has no structured-output feature; completeStructured is not supported by the MLX CLI adapter",
       );
     },
   };
