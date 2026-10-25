@@ -123,3 +123,12 @@ latency; it is not model-only prefill time or server startup time.
 `quality: { value: null, reason: "NOT-RUN" }` explicitly records that this runner
 has no quality evaluator. It is not a zero or a passing judgment. Real quality
 scores require a separately specified evaluator; none are fabricated here.
+
+The HTTP TTFT reader incrementally decodes UTF-8 and buffers incomplete lines.
+It accepts SSE events and, when explicitly advertised as `application/x-ndjson`
+or `application/jsonl`, JSON log lines using the same OpenAI content/usage
+fields and `[DONE]` terminator. Blank JSON log lines are ignored; a final
+`[DONE]` line need not have a newline. Arbitrary console prose and other vendor
+JSON schemas are not interpreted as token measurements. Malformed records use
+`INVALID-STREAM`; EOF before `[DONE]` uses `INCOMPLETE-STREAM`. Both paths
+discard partial TTFT through the existing fixed-reason failure handling.

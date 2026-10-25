@@ -319,6 +319,43 @@ describe("local inference common JSON", () => {
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
   });
 
+  it("persists split JSON log lines and discards timing on truncated logs", async () => {
+    let calls = 0;
+    const server = createServer((_req, res) => {
+      const complete = ++calls % 2 === 1;
+      res.writeHead(200, { "Content-Type": "application/x-ndjson" });
+      const line = JSON.stringify(content("hello"));
+      res.write(line.slice(0, 10));
+      setTimeout(
+        () => res.end(line.slice(10) + "\n" + (complete ? "[DONE]" : "")),
+        10,
+      );
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const output = await destination();
+    const result = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+    );
+    expect(result.runs.map((run) => run.ttft.reason)).toEqual([
+      "FIRST-CONTENT",
+      "INCOMPLETE-STREAM",
+      "FIRST-CONTENT",
+      "INCOMPLETE-STREAM",
+    ]);
+    for (const run of result.runs.filter((run) => run.status === "failed")) {
+      expect(run.ttft.value).toBeNull();
+      expect(run.metrics.ttft.value).toBeNull();
+    }
+    expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
+  });
+
   it("validates engine identity, conditions and URL credentials before requests", () => {
     const valid = config("http://localhost:8000/v1");
     expect(parseConfig(valid)).toEqual(valid);

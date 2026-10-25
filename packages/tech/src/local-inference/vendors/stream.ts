@@ -32,10 +32,12 @@ export async function observeStream(
   if (!response.body) throw streamFailure("NO-BODY");
   const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
   const observation: Observation = {};
+  const jsonLines = /application\/(?:x-ndjson|jsonl)(?:;|$)/i.test(
+    response.headers.get("content-type") ?? "",
+  );
   let buffer = "";
   let data: string[] = [];
-  function event(): boolean {
-    const payload = data.join("\n");
+  function event(payload = data.join("\n")): boolean {
     data = [];
     if (!payload) return false;
     if (payload === "[DONE]") return true;
@@ -62,13 +64,20 @@ export async function observeStream(
   try {
     while (true) {
       const { value, done } = await reader.read();
-      if (done) throw streamFailure("INCOMPLETE-STREAM");
+      if (done) {
+        // JSON log streams may end with an unterminated DONE line.
+        if (jsonLines && buffer.trim() && event(buffer.trim()))
+          return observation;
+        throw streamFailure("INCOMPLETE-STREAM");
+      }
       buffer += value;
       let newline: number;
       while ((newline = buffer.indexOf("\n")) >= 0) {
         const line = buffer.slice(0, newline).replace(/\r$/, "");
         buffer = buffer.slice(newline + 1);
-        if (line === "") {
+        if (jsonLines) {
+          if (line.trim() && event(line.trim())) return observation;
+        } else if (line === "") {
           if (event()) return observation;
         } else if (line.startsWith("data:")) {
           data.push(line.slice(5).replace(/^ /, ""));
