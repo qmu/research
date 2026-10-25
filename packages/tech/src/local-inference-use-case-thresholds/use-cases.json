@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "status": "proposed",
+  "note": "Threshold values below are a design proposal, not a measured verdict. No real four-engine (ollama/llama.cpp/mlx/strata) common-result trial exists yet (see README.md); these numbers are illustrative starting points for review and must be recalibrated against a real trial's common JSON before any adoption decision is published.",
+  "useCases": [
+    {
+      "id": "interactive-coding-assistant",
+      "label": "Interactive coding assistant",
+      "description": "A single developer waits on the response in an editor loop. First-token latency and sustained throughput dominate; quality must stay usable but a large model's extra quality is not worth a stall.",
+      "rules": [
+        {
+          "metric": "ttft",
+          "direction": "lower-is-better",
+          "unit": "s",
+          "threshold": 1.5,
+          "tolerance": 0.2,
+          "rationale": "Past ~1.5-1.7s the editor loop reads as hung rather than thinking."
+        },
+        {
+          "metric": "tps",
+          "direction": "higher-is-better",
+          "unit": "tokens/s",
+          "threshold": 20,
+          "tolerance": 2,
+          "rationale": "Below ~20 tokens/s, streamed completions render slower than the developer reads/types."
+        },
+        {
+          "metric": "quality",
+          "direction": "higher-is-better",
+          "unit": "ratio",
+          "threshold": 0.75,
+          "rationale": "Below 0.75 on the fixed quality rubric, suggestions need manual correction often enough to cost more time than they save."
+        },
+        {
+          "metric": "peakRss",
+          "direction": "lower-is-better",
+          "unit": "MiB",
+          "threshold": 16384,
+          "tolerance": 512,
+          "rationale": "16 GiB leaves room for the editor, language server and browser on a typical developer machine."
+        }
+      ]
+    },
+    {
+      "id": "batch-document-summarization",
+      "label": "Batch document summarization",
+      "description": "An unattended job summarizes many documents overnight. Nothing is waiting on a single response, so latency and per-request throughput matter far less than output quality and fitting the batch host's memory.",
+      "rules": [
+        {
+          "metric": "ttft",
+          "direction": "lower-is-better",
+          "unit": "s",
+          "threshold": 5,
+          "tolerance": 1,
+          "rationale": "No interactive wait exists; this only guards against a stalled or hanging request."
+        },
+        {
+          "metric": "tps",
+          "direction": "higher-is-better",
+          "unit": "tokens/s",
+          "threshold": 8,
+          "tolerance": 1,
+          "rationale": "Sets a floor so the overnight batch window has a bounded worst case, not a target to optimize."
+        },
+        {
+          "metric": "quality",
+          "direction": "higher-is-better",
+          "unit": "ratio",
+          "threshold": 0.9,
+          "rationale": "Unattended output reaches a reader without a human re-check, so the quality floor is the highest of the three use cases."
+        },
+        {
+          "metric": "peakRss",
+          "direction": "lower-is-better",
+          "unit": "MiB",
+          "threshold": 32768,
+          "tolerance": 1024,
+          "rationale": "32 GiB matches a dedicated batch host; nothing else runs alongside the job."
+        }
+      ]
+    },
+    {
+      "id": "edge-offline-device",
+      "label": "Edge / offline device",
+      "description": "The engine runs alongside other software on constrained, often battery-powered hardware with no fallback to a larger machine. A low memory ceiling is the binding constraint; speed and quality only need to clear a usability floor.",
+      "rules": [
+        {
+          "metric": "ttft",
+          "direction": "lower-is-better",
+          "unit": "s",
+          "threshold": 3,
+          "tolerance": 0.5,
+          "rationale": "A few seconds to first token stays usable for a device assistant that is not a real-time conversation."
+        },
+        {
+          "metric": "tps",
+          "direction": "higher-is-better",
+          "unit": "tokens/s",
+          "threshold": 5,
+          "tolerance": 1,
+          "rationale": "5 tokens/s keeps a short reply arriving within a few seconds on constrained hardware."
+        },
+        {
+          "metric": "quality",
+          "direction": "higher-is-better",
+          "unit": "ratio",
+          "threshold": 0.65,
+          "rationale": "Lowest floor of the three use cases: the device task set is narrower and the model is the smallest that fits."
+        },
+        {
+          "metric": "peakRss",
+          "direction": "lower-is-better",
+          "unit": "MiB",
+          "threshold": 4096,
+          "tolerance": 128,
+          "rationale": "4 GiB leaves headroom on an 8 GiB device shared with the OS and other apps."
+        }
+      ]
+    }
+  ]
+}
