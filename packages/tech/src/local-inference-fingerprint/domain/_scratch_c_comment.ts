@@ -4,7 +4,11 @@ const object = (value: unknown): Record<string, unknown> => {
   return value as Record<string, unknown>;
 };
 
-export function scratchMinimal(source: string) {
+/**
+ * Attach a host fingerprint to a local-inference schemaVersion 1 result,
+ * once.
+ */
+export function scratchC(source: string) {
   const result = object(JSON.parse(source));
   if (
     result.schemaVersion !== 1 ||
