@@ -39,6 +39,30 @@ const firstMatch = (
   return undefined;
 };
 
+// Pure parse of the trailing stats block mlx_lm.generate prints after the
+// closing `==========`. Exported and unit-tested on its own, separately from
+// text extraction, so a stats-format regression and a framing regression fail
+// with distinct messages.
+export const parseMlxGenerateStats = (stdout: string): MlxGenerateStats => {
+  const lines = stdout.split("\n").map((line) => line.trim());
+
+  const promptMatch = firstMatch(lines, PROMPT_STATS_RE);
+  const generationMatch = firstMatch(lines, GENERATION_STATS_RE);
+  const peakMemoryMatch = firstMatch(lines, PEAK_MEMORY_RE);
+  if (!promptMatch || !generationMatch || !peakMemoryMatch) {
+    throw new Error(
+      "mlx_lm.generate output is missing the Prompt/Generation/Peak memory stats block",
+    );
+  }
+  return {
+    promptTokens: Number(promptMatch[1]),
+    promptTokensPerSecond: Number(promptMatch[2]),
+    generationTokens: Number(generationMatch[1]),
+    generationTokensPerSecond: Number(generationMatch[2]),
+    peakMemoryGb: Number(peakMemoryMatch[1]),
+  };
+};
+
 export const DIAG_A_PLACEHOLDER: StreamedCompletion = {
   text: "",
   outputTokens: 0,
@@ -47,10 +71,4 @@ export const DIAG_A_PLACEHOLDER: StreamedCompletion = {
   model: "diag",
 };
 
-export const diagUse = (): unknown => [
-  SEPARATOR_LINE,
-  PROMPT_STATS_RE,
-  GENERATION_STATS_RE,
-  PEAK_MEMORY_RE,
-  firstMatch,
-];
+export const diagUse = (): unknown => [SEPARATOR_LINE];
