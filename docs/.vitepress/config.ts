@@ -36,6 +36,10 @@ const indexable = publicHostname !== "";
 // Japanese counterpart that does not exist.
 const projectItems = [
   {
+    text: "Local inference: safe next actions",
+    link: "/local-inference-next-actions",
+  },
+  {
     text: "Research development guideline",
     link: docsRoute("docs/research-development-guideline.md"),
   },
