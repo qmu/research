@@ -5,8 +5,8 @@ type Fingerprint = {
   engineVersion: string;
 };
 
-export function scratchL(value: unknown): value is Fingerprint {
+export const scratchN = (value: unknown): value is Fingerprint => {
   if (!value || typeof value !== "object" || Array.isArray(value))
-    return false;
+    throw new Error("Expected object");
   return true;
-}
+};
