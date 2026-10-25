@@ -11,7 +11,7 @@ import { engines } from "./domain/result.js";
 
 const exec = promisify(execFile);
 it.each([false, true])(
-  "CLI saves four rows and signals request failure=%s",
+  "CLI saves five rows (incl. Strata warm-up) and signals request failure=%s",
   async (fail) => {
     const dir = await mkdtemp(join(tmpdir(), "local-inference-cli-"));
     const server = createServer((_req, res) => {
@@ -59,13 +59,16 @@ it.each([false, true])(
       else {
         const { stdout } = await exec(process.execPath, args);
         expect(JSON.parse(stdout).runs).toEqual(
-          engines.map((engine) => ({ engine, status: "measured" })),
+          [...engines, "strata"].map((engine) => ({
+            engine,
+            status: "measured",
+          })),
         );
       }
       const json = await readFile(output, "utf8");
       expect(
         JSON.parse(json).runs.map((r: { status: string }) => r.status),
-      ).toEqual(Array(4).fill(fail ? "failed" : "measured"));
+      ).toEqual(Array(5).fill(fail ? "failed" : "measured"));
       const saved = JSON.parse(json);
       expect(saved.execution).toMatchObject({
         runnerVersion,
@@ -75,7 +78,16 @@ it.each([false, true])(
       });
       expect(
         new Set(saved.runs.map((row: { runId: string }) => row.runId)).size,
-      ).toBe(4);
+      ).toBe(5);
+      expect(saved.runs.map((row: { purpose: string }) => row.purpose)).toEqual(
+        [
+          "adoption-target",
+          "adoption-target",
+          "adoption-target",
+          "warmup",
+          "adoption-target",
+        ],
+      );
       for (const row of saved.runs) {
         expect(row.runnerVersion).toBe(saved.execution.runnerVersion);
         expect(row.targetCommit).toBe(saved.execution.targetCommit);

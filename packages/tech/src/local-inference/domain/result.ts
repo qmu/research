@@ -1,6 +1,21 @@
 /** Per-request observations; no cross-engine ranking or steady-state aggregation. */
 export const engines = ["ollama", "llama.cpp", "mlx", "strata"] as const;
 export type Engine = (typeof engines)[number];
+
+/** A `warmup` row exists only to absorb cold-start cost (seen on Strata's
+ * community packs) before the measured request. Its speed/quality/memory
+ * values must never be read by a speed, quality or memory adoption decision;
+ * only `adoption-target` rows are eligible. */
+export const runPurposes = ["warmup", "adoption-target"] as const;
+export type RunPurpose = (typeof runPurposes)[number];
+
+/** The one selector adoption/margin/remeasurement consumers must call: it is
+ * the single place that keeps warm-up rows out of every downstream decision. */
+export function adoptionTargetRuns<T extends { purpose: RunPurpose }>(
+  runs: readonly T[],
+): T[] {
+  return runs.filter((run) => run.purpose === "adoption-target");
+}
 export type Measurement =
   | { value: number; unit: string; source: "client" | "usage" | "os-sampler" }
   | {

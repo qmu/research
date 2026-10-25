@@ -1,9 +1,10 @@
 # Local inference observations
 
 This is the measurement/persistence slice of qmu/research#179. It uses one
-OpenAI-compatible streaming request per engine and writes all four observations
-to a single versioned JSON file. It does not implement the full 40-item benchmark
-or claim first-after-launch / steady-state results from qmu/research#176.
+OpenAI-compatible streaming request per engine (plus one warm-up request for
+Strata; see below) and writes all four engines' observations to a single
+versioned JSON file. It does not implement the full 40-item benchmark or claim
+first-after-launch / steady-state results from qmu/research#176.
 
 From `packages/tech`, run:
 
@@ -203,3 +204,28 @@ reading, validating and atomically replacing the result. Starting a newer run
 invalidates recovery for the old execution. The atomic-file and interrupted-lock
 limitations described above still apply. Separate output paths are separate
 artifacts, not a distributed queue or a cross-file deduplication service.
+
+### Strata's warm-up run is separated on the manifest
+
+Runner `local-inference/7` sends Strata (and only Strata) an extra request
+before its measured one: community packs pay a cold-start load/compile cost on
+their first request, and without a warm-up that cost would land inside the one
+engine's speed, not its runtime. Every row in `runs[]` — for every engine, not
+only Strata — now carries `purpose: "warmup" | "adoption-target"`. Strata
+contributes two rows with the same `engine` but different `runId`: a `warmup`
+row first, then its `adoption-target` row; the other three engines keep their
+single row, always `adoption-target`.
+
+The warm-up row is measured and persisted like any other row — its own TTFT,
+token speed and peak RSS are saved for operator visibility — but it is not an
+adoption input. `adoptionTargetRuns` (`domain/result.ts`) is the one selector
+that keeps it out: it filters `runs[]` down to exactly one `adoption-target`
+row per engine, and every reader that turns a run into a speed, quality or
+memory adoption decision (including the `remeasurementRequest` built here)
+must read through it rather than `runs[]` directly. `remeasurementRequest`
+(`domain/remeasurement.ts`) still checks a `warmup` row's provenance (commit,
+runner version, run ID uniqueness) against the batch, so a mismatched warm-up
+row still fails the same binding check as any other row — it just never
+contributes a missing-metric target, so a warm-up's own `NO-FIELD` /
+`MEASURE-FAILED` TTFT or RSS can never trigger or join a remeasurement
+request for the engine's real measurement.

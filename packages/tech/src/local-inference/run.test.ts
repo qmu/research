@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { engines, metrics } from "./domain/result.js";
+import { adoptionTargetRuns, engines, metrics } from "./domain/result.js";
 import { parseConfig, runLocalInference } from "./run.js";
 import { observeStream } from "./vendors/stream.js";
 
@@ -76,9 +76,16 @@ describe("local inference common JSON", () => {
       output,
     );
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
-    expect(result.runs.map((r) => r.engine)).toEqual(engines);
-    expect(new Set(result.runs.map((r) => r.runId)).size).toBe(4);
-    expect(requests).toHaveLength(4);
+    expect(result.runs.map((r) => r.engine)).toEqual([...engines, "strata"]);
+    expect(result.runs.map((r) => r.purpose)).toEqual([
+      "adoption-target",
+      "adoption-target",
+      "adoption-target",
+      "warmup",
+      "adoption-target",
+    ]);
+    expect(new Set(result.runs.map((r) => r.runId)).size).toBe(5);
+    expect(requests).toHaveLength(5);
     for (const request of requests) expect(request).toEqual(requests[0]);
     for (const run of result.runs) {
       expect(run.runId).toMatch(/^[a-f0-9-]{36}$/);
@@ -106,6 +113,49 @@ describe("local inference common JSON", () => {
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(replacement);
   });
 
+  it("separates Strata's warm-up run from its adoption-target run so the warm-up's speed never reaches adoption", async () => {
+    let calls = 0;
+    const server = createServer(async (_req, res) => {
+      calls++;
+      // The 4th request is Strata's warm-up: give it an outlandish token
+      // count no adoption-target reader should ever see.
+      const tokens = calls === 4 ? 999 : 2;
+      res.writeHead(200, { "Content-Type": "text/event-stream" });
+      res.end(
+        sse([content("hello world"), { usage: { completion_tokens: tokens } }]),
+      );
+    });
+    servers.push(server);
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("listen failed");
+    const output = await destination();
+    const result = await runLocalInference(
+      config(`http://127.0.0.1:${address.port}/v1`),
+      output,
+    );
+    expect(calls).toBe(5);
+    const strataRuns = result.runs.filter((r) => r.engine === "strata");
+    expect(strataRuns.map((r) => r.purpose)).toEqual([
+      "warmup",
+      "adoption-target",
+    ]);
+    expect(strataRuns[0].metrics.completion_tokens.value).toBe(999);
+    expect(strataRuns[1].metrics.completion_tokens.value).toBe(2);
+    // The manifest-level selector every adoption/speed/quality/memory reader
+    // must use: exactly one row per engine, and Strata's is the measured
+    // request, never the warm-up.
+    const adoptionRuns = adoptionTargetRuns(result.runs);
+    expect(adoptionRuns.map((r) => r.engine)).toEqual(engines);
+    expect(
+      adoptionRuns.find((r) => r.engine === "strata")?.metrics.completion_tokens
+        .value,
+    ).toBe(2);
+  });
+
   it("saves failures without response bodies or URLs and continues to later engines", async () => {
     let calls = 0;
     const server = createServer((_req, res) => {
@@ -121,7 +171,8 @@ describe("local inference common JSON", () => {
       } else if (calls === 3) {
         res.end(sse([content("ok")]));
       }
-      // Fourth request hangs: the timeout must end it and preserve other rows.
+      // Strata's warm-up (4th) and adoption-target (5th) requests both hang:
+      // the timeout must end each and preserve the other engines' rows.
     });
     servers.push(server);
     await new Promise<void>((resolve) =>
@@ -141,12 +192,21 @@ describe("local inference common JSON", () => {
       "failed",
       "measured",
       "failed",
+      "failed",
     ]);
     expect(result.runs.map((r) => r.ttft.reason)).toEqual([
       "HTTP-ERROR",
       "INVALID-STREAM",
       "FIRST-CONTENT",
       "TIMEOUT",
+      "TIMEOUT",
+    ]);
+    expect(result.runs.map((r) => r.purpose)).toEqual([
+      "adoption-target",
+      "adoption-target",
+      "adoption-target",
+      "warmup",
+      "adoption-target",
     ]);
     for (const run of result.runs.filter((r) => r.status === "failed")) {
       expect(run.ttft).toEqual({
@@ -351,6 +411,7 @@ describe("local inference common JSON", () => {
       "INCOMPLETE-STREAM",
       "FIRST-CONTENT",
       "INCOMPLETE-STREAM",
+      "FIRST-CONTENT",
     ]);
     for (const run of result.runs.filter((run) => run.status === "failed")) {
       expect(run.ttft.value).toBeNull();
@@ -398,7 +459,7 @@ describe("saved RSS evidence", () => {
         }),
       }),
     );
-    expect(result.runs.map((r) => r.peakMemory.value)).toEqual([1, 2, 3, 4]);
+    expect(result.runs.map((r) => r.peakMemory.value)).toEqual([1, 2, 3, 4, 5]);
     expect(result.runs.every((r) => r.status === "failed")).toBe(true);
     expect(result.runs.every((r) => r.ttft.reason === "REQUEST-FAILED")).toBe(
       true,

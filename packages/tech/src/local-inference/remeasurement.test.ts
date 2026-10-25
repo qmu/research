@@ -60,6 +60,7 @@ async function fixture(ttft: number | null = null, rss: number | null = null) {
           engine: engines[0],
           targetCommit: binding.targetCommit,
           runnerVersion,
+          purpose: "adoption-target" as const,
           metrics: { ttft: { value: ttft }, peak_rss: { value: rss } },
         },
       ],
@@ -324,13 +325,30 @@ it("publishes all missing-metric requests with their captured fixture/tier in on
           version: pending.execution.version,
         },
       });
-      expect(pending.remeasurementRequest.targets).toEqual(
-        pending.runs.map((row: { runId: string; engine: string }) => ({
-          runId: row.runId,
-          engine: row.engine,
-          missingMetrics: ["ttft", "peak_rss"],
-        })),
+      const warmupRows = pending.runs.filter(
+        (row: { purpose: string }) => row.purpose === "warmup",
       );
+      expect(warmupRows).toHaveLength(1);
+      expect(warmupRows[0].engine).toBe("strata");
+      expect(pending.remeasurementRequest.targets).toEqual(
+        pending.runs
+          .filter(
+            (row: { purpose: string }) => row.purpose === "adoption-target",
+          )
+          .map((row: { runId: string; engine: string }) => ({
+            runId: row.runId,
+            engine: row.engine,
+            missingMetrics: ["ttft", "peak_rss"],
+          })),
+      );
+      // The warm-up row's own missing metrics must never surface as a
+      // remeasurement target: that would be a warm-up value leaking into
+      // the adoption decision this request feeds.
+      expect(
+        pending.remeasurementRequest.targets.some(
+          (t: { runId: string }) => t.runId === warmupRows[0].runId,
+        ),
+      ).toBe(false);
     }
     await actual.rename(source, target);
   });
