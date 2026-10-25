@@ -9,20 +9,19 @@ const object = (value: unknown): Record<string, unknown> => {
 const isFingerprint = (value: unknown): value is Fingerprint => {
   if (!value || typeof value !== "object" || Array.isArray(value))
     return false;
-  const keys = Object.keys(value);
   const candidate = value as Record<string, unknown>;
-  return (
-    keys.length === 4 &&
-    typeof candidate.os === "string" &&
-    !!candidate.os &&
-    typeof candidate.arch === "string" &&
-    !!candidate.arch &&
-    typeof candidate.totalMemoryMiB === "number" &&
-    Number.isFinite(candidate.totalMemoryMiB) &&
-    candidate.totalMemoryMiB > 0 &&
-    typeof candidate.engineVersion === "string" &&
-    !!candidate.engineVersion
-  );
+  if (Object.keys(candidate).length !== 4) return false;
+  if (typeof candidate.os !== "string" || !candidate.os) return false;
+  if (typeof candidate.arch !== "string" || !candidate.arch) return false;
+  if (
+    typeof candidate.totalMemoryMiB !== "number" ||
+    !Number.isFinite(candidate.totalMemoryMiB) ||
+    candidate.totalMemoryMiB <= 0
+  )
+    return false;
+  if (typeof candidate.engineVersion !== "string" || !candidate.engineVersion)
+    return false;
+  return true;
 };
 
 /**
