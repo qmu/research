@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import { afterEach, expect, it, vi } from "vitest";
-import { captureCommit } from "./provenance.js";
+import { readTargetCommit } from "./provenance.js";
 
 const exec = promisify(execFile);
 const directories: string[] = [];
@@ -43,7 +43,7 @@ it.each(["sha1", "sha256"])(
     const { stdout } = await exec("git", ["-C", dir, "rev-parse", "HEAD"]);
     await exec("git", ["-C", dir, "checkout", "--detach", "HEAD"]);
     vi.stubEnv("GIT_DIR", "/nonexistent-private-marker");
-    expect(await captureCommit(dir)).toBe(stdout.trim());
+    expect(await readTargetCommit(dir)).toBe(stdout.trim());
   },
 );
 it.each([false, true])(
@@ -51,8 +51,19 @@ it.each([false, true])(
   async (initialize) => {
     const dir = await directory();
     if (initialize) await exec("git", ["init", dir]);
-    await expect(captureCommit(dir)).rejects.toThrow(
-      /^COMMIT-UNAVAILABLE: cannot identify runner checkout HEAD$/,
+    expect(() => readTargetCommit(dir)).toThrow(
+      /^Cannot determine target commit$/,
     );
   },
 );
+
+it("resolves checkout HEAD even when the caller changes directory", () => {
+  const expected = readTargetCommit();
+  const cwd = process.cwd();
+  try {
+    process.chdir(tmpdir());
+    expect(readTargetCommit()).toBe(expected);
+  } finally {
+    process.chdir(cwd);
+  }
+});

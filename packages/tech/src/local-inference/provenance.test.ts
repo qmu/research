@@ -6,7 +6,7 @@ import { engines } from "./domain/result.js";
 import { runLocalInference, runnerVersion } from "./run.js";
 import * as provenance from "./vendors/provenance.js";
 
-vi.mock("./vendors/provenance.js", () => ({ captureCommit: vi.fn() }));
+vi.mock("./vendors/provenance.js", () => ({ readTargetCommit: vi.fn() }));
 vi.mock("node:fs/promises", async (original) => ({
   ...(await original<typeof fs>()),
   rename: vi.fn((...args: Parameters<typeof fs.rename>) =>
@@ -17,7 +17,7 @@ const actual = await vi.importActual<typeof fs>("node:fs/promises");
 const directories: string[] = [];
 afterEach(async () => {
   vi.unstubAllGlobals();
-  vi.mocked(provenance.captureCommit).mockReset();
+  vi.mocked(provenance.readTargetCommit).mockReset();
   vi.mocked(fs.rename)
     .mockReset()
     .mockImplementation((...args) => actual.rename(...args));
@@ -49,11 +49,11 @@ it.each([false, true])(
   async (fail) => {
     const { output } = await destination();
     const sha = "a".repeat(40);
-    vi.mocked(provenance.captureCommit)
-      .mockResolvedValueOnce(sha)
-      .mockResolvedValue("b".repeat(40));
+    vi.mocked(provenance.readTargetCommit)
+      .mockReturnValueOnce(sha)
+      .mockReturnValue("b".repeat(40));
     const fetch = vi.fn(async () => {
-      expect(provenance.captureCommit).toHaveBeenCalledTimes(1);
+      expect(provenance.readTargetCommit).toHaveBeenCalledTimes(1);
       return fail
         ? new Response("private-marker", { status: 503 })
         : new Response(
@@ -70,7 +70,7 @@ it.each([false, true])(
         );
         const pending = JSON.parse(await actual.readFile(source, "utf8"));
         expect(pending.execution).toEqual({
-          commitSha: sha,
+          targetCommit: sha,
           runnerVersion,
           commandSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
           runId: expect.any(String),
@@ -86,7 +86,7 @@ it.each([false, true])(
     expect(published).toBe(1);
     expect(fetch).toHaveBeenCalledTimes(4);
     expect(JSON.parse(await actual.readFile(output, "utf8"))).toEqual(result);
-    expect(result.execution.commitSha).toBe(sha);
+    expect(result.execution.targetCommit).toBe(sha);
     expect(await actual.readFile(output, "utf8")).not.toContain(
       "private-marker",
     );
@@ -94,13 +94,13 @@ it.each([false, true])(
 );
 it("refuses to measure or reserve when the commit is unavailable and preserves old bytes", async () => {
   const { dir, output } = await destination();
-  vi.mocked(provenance.captureCommit).mockRejectedValue(
-    new Error("COMMIT-UNAVAILABLE"),
-  );
+  vi.mocked(provenance.readTargetCommit).mockImplementation(() => {
+    throw new Error("Cannot determine target commit");
+  });
   const fetch = vi.fn();
   vi.stubGlobal("fetch", fetch);
   await expect(runLocalInference(input, output)).rejects.toThrow(
-    "COMMIT-UNAVAILABLE",
+    "Cannot determine target commit",
   );
   expect(fetch).not.toHaveBeenCalled();
   expect(await actual.readFile(output, "utf8")).toBe('{"previous":true}\n');
@@ -108,7 +108,7 @@ it("refuses to measure or reserve when the commit is unavailable and preserves o
 });
 it("keeps prior metrics and metadata together when publication fails", async () => {
   const { dir, output } = await destination();
-  vi.mocked(provenance.captureCommit).mockResolvedValue("a".repeat(40));
+  vi.mocked(provenance.readTargetCommit).mockReturnValue("a".repeat(40));
   vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
   vi.mocked(fs.rename).mockImplementation(async (source, target) => {
     if (target === output) throw new Error("publication failed");

@@ -10,11 +10,11 @@ import {
   type Engine,
   type Execution,
 } from "./domain/result.js";
-import { captureCommit } from "./vendors/provenance.js";
+import { readTargetCommit } from "./vendors/provenance.js";
 import { observeStream } from "./vendors/stream.js";
 
 /** Bump when the runner's measurement or persistence semantics change. */
-export const runnerVersion = "local-inference/3";
+export const runnerVersion = "local-inference/4";
 
 /** Only fixed public syntax survives. Unknown arguments, paths, environment
  * assignments, headers, URLs and option values are redacted BEFORE hashing.
@@ -128,7 +128,7 @@ export async function runLocalInference(
 ) {
   const config = parseConfig(input);
   const provenance: Execution = {
-    commitSha: await captureCommit(),
+    targetCommit: readTargetCommit(),
     commandSha256: commandFingerprint(argv),
     runnerVersion,
   };

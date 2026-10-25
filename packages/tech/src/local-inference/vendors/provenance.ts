@@ -1,20 +1,18 @@
-import { execFile } from "node:child_process";
-import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
+import { execFileSync } from "node:child_process";
 
-const exec = promisify(execFile);
-
-/** Resolve the runner's checkout, never the caller's cwd or a Git env override.
- * Capture once before requests. Paths, remotes and Git diagnostics stay private.
+/** Resolve the runner checkout, not the caller's cwd. Never persist Git errors
+ * (which may contain local paths), branch names or environment values.
+ * HEAD identifies committed code; it does not certify a clean working tree.
  */
-export async function captureCommit(
-  directory = fileURLToPath(new URL(".", import.meta.url)),
-): Promise<string> {
+export function readTargetCommit(
+  cwd: string | URL = new URL(".", import.meta.url),
+): string {
   try {
-    const { stdout } = await exec(
+    const commit = execFileSync(
       "git",
-      ["-C", directory, "rev-parse", "--verify", "HEAD^{commit}"],
+      ["rev-parse", "--verify", "HEAD^{commit}"],
       {
+        cwd,
         env: Object.fromEntries(
           Object.entries(process.env).filter(
             ([key]) => !key.startsWith("GIT_"),
@@ -22,12 +20,13 @@ export async function captureCommit(
         ),
         timeout: 5_000,
         maxBuffer: 1024,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
       },
-    );
-    const sha = stdout.trim();
-    if (/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(sha)) return sha;
+    ).trim();
+    if (/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(commit)) return commit;
   } catch {
-    // Do not leak stderr, paths or environment through the error cause.
+    // Fail closed before issuing any measurement request.
   }
-  throw new Error("COMMIT-UNAVAILABLE: cannot identify runner checkout HEAD");
+  throw new Error("Cannot determine target commit");
 }

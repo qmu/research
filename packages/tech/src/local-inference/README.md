@@ -133,8 +133,8 @@ the locked comparison at publication remains the authority for saving results.
 ### Commit and runner provenance
 
 The in-process runner captures its own checkout's full Git `HEAD` once, before
-reserving an execution or sending requests. It adds `execution.commitSha`,
-`execution.runnerVersion` (`local-inference/3`) and the sanitized argv fingerprint
+reserving an execution or sending requests. It adds `execution.targetCommit`,
+`execution.runnerVersion` (`local-inference/4`) and the sanitized argv fingerprint
 `execution.commandSha256` to the same JSON as `runId`, `version` and all four
 measurement rows. Successful and failed measurements use the same locked,
 fsynced temporary-file / atomic-rename publication. A publication failure keeps
@@ -147,7 +147,7 @@ directory. Git environment overrides are excluded. Missing Git, a checkout with
 no commit, or an exported tree without Git metadata fails before measurement;
 there is no fabricated `unknown` commit. Git diagnostics, paths, remotes and
 credentials are not included in the result. SHA-1 and SHA-256 repositories and
-detached HEADs are supported. `commitSha` identifies HEAD at execution start,
+detached HEADs are supported. `targetCommit` identifies HEAD at execution start,
 not uncommitted file contents; use a clean, stable checkout for reproducibility.
 `runnerVersion` identifies measurement/persistence semantics and is separate
 from engine `runtimeVersion` and the monotonically increasing execution `version`.

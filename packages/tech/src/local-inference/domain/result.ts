@@ -56,8 +56,8 @@ export function metrics(observation: Observation, failed = false) {
  * runnerVersion identifies the saving/measurement implementation, not the engine.
  */
 export type Execution = {
-  /** Repository HEAD captured before measurement; not a hash of dirty files. */
-  commitSha: string;
   commandSha256: string;
   runnerVersion: string;
+  /** Full checkout HEAD captured before measurement; absent on older runners. */
+  targetCommit?: string;
 };

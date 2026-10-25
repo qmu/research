@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, it } from "vitest";
 import { fileURLToPath } from "node:url";
-import { captureCommit } from "./vendors/provenance.js";
+import { readTargetCommit } from "./vendors/provenance.js";
 import { runnerVersion } from "./run.js";
 import { engines } from "./domain/result.js";
 
@@ -69,7 +69,7 @@ it.each([false, true])(
       }
       const json = await readFile(output, "utf8");
       expect(JSON.parse(json).execution).toMatchObject({
-        commitSha: await captureCommit(),
+        targetCommit: await readTargetCommit(),
         runnerVersion,
       });
       expect(
