@@ -18,10 +18,12 @@ type RawCatalog = Readonly<{
 const catalog = rawCatalog as unknown as RawCatalog;
 
 function parseTier(tier: RawTier): FixedCapacityTier {
-  if (!Number.isFinite(tier.totalMiB) || tier.totalMiB <= 0)
-    throw new Error(`tier "${tier.label}": totalMiB must be positive finite`);
-  if (tier.label.trim() === "")
+  if (!Number.isFinite(tier.totalMiB) || tier.totalMiB <= 0) {
+    throw new Error(`tier "${tier.label}": totalMiB must be positive`);
+  }
+  if (tier.label.trim() === "") {
     throw new Error("tier label must not be empty");
+  }
   return { label: tier.label, totalMiB: tier.totalMiB };
 }
 
@@ -30,9 +32,7 @@ function assertAscending(tiers: ReadonlyArray<FixedCapacityTier>): void {
     const prev = tiers[i - 1];
     const cur = tiers[i];
     if (!prev || !cur || prev.totalMiB < cur.totalMiB) continue;
-    throw new Error(
-      `tiers.json must be strictly ascending by totalMiB: "${prev.label}" is not below "${cur.label}"`,
-    );
+    throw new Error(`"${prev.label}" is not below "${cur.label}"`);
   }
 }
 
