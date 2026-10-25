@@ -3,13 +3,14 @@ import { expect, it } from "vitest";
 import { enrichFingerprint } from "./fingerprint.js";
 import { collectFingerprint } from "../vendors/host.js";
 
-const source = JSON.stringify({
+const base = {
   schemaVersion: 1,
   inputSha256: "a".repeat(64),
   runs: [
     { engine: "mlx", model: "synthetic", status: "measured", metrics: {} },
   ],
-});
+};
+const source = JSON.stringify(base);
 
 const validFingerprint = {
   os: "linux 6.1.0",
@@ -22,27 +23,21 @@ it("attaches the fingerprint while preserving the original fields", () => {
   const result = enrichFingerprint(source, validFingerprint);
   expect(result.fingerprint).toEqual(validFingerprint);
   expect(result.schemaVersion).toBe(1);
-  expect(result.runs).toEqual(JSON.parse(source).runs);
+  expect(result.runs).toEqual(base.runs);
 });
 
 it("rejects a result that is not schemaVersion 1", () => {
-  const other = JSON.stringify({
-    ...JSON.parse(source),
-    schemaVersion: 2,
-  });
+  const other = JSON.stringify({ ...base, schemaVersion: 2 });
   expect(() => enrichFingerprint(other, validFingerprint)).toThrow();
 });
 
 it("rejects a result with an empty runs array", () => {
-  const empty = JSON.stringify({ ...JSON.parse(source), runs: [] });
+  const empty = JSON.stringify({ ...base, runs: [] });
   expect(() => enrichFingerprint(empty, validFingerprint)).toThrow();
 });
 
 it("refuses to overwrite an existing fingerprint", () => {
-  const already = JSON.stringify({
-    ...JSON.parse(source),
-    fingerprint: validFingerprint,
-  });
+  const already = JSON.stringify({ ...base, fingerprint: validFingerprint });
   expect(() => enrichFingerprint(already, validFingerprint)).toThrow();
 });
 
@@ -54,9 +49,7 @@ it.each([
   { ...validFingerprint, engineVersion: "" },
   { ...validFingerprint, extra: "unexpected" },
 ])("rejects an invalid fingerprint shape %#", (invalid) => {
-  expect(() =>
-    enrichFingerprint(source, invalid as never),
-  ).toThrow();
+  expect(() => enrichFingerprint(source, invalid as never)).toThrow();
 });
 
 it("collects a fingerprint carrying no host, user or network identity", () => {
