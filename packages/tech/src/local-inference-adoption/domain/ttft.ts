@@ -91,6 +91,7 @@ export function adoptSavedTtft(
         : reject("INVALID-TTFT");
     if (
       recorded.reason !== "FIRST-CONTENT" ||
+      typeof metric.value !== "number" ||
       recorded.value !== metric.value ||
       recorded.unit !== metric.unit ||
       recorded.source !== metric.source

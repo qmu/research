@@ -291,6 +291,7 @@ describe("fixed acquisition failures on the selected execution", () => {
     const row = missing("TIMEOUT");
     for (const invalid of [
       { ...row, status: "measured" },
+      { ...missing("FIRST-CONTENT", "measured") },
       { ...row, ttft: { ...row.ttft, reason: ["HTTP-ERROR"] } },
       { ...row, ttft: { ...row.ttft, reason: "secret-test-marker" } },
       { ...row, ttft: { ...row.ttft, value: 0.2 } },
