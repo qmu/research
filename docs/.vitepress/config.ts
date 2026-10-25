@@ -35,6 +35,8 @@ const indexable = publicHostname !== "";
 // theme finds no locale and hides the language switcher, instead of offering a
 // Japanese counterpart that does not exist.
 const projectItems = [
+  { text: "Condition-scoped adoption", link: "/local-inference-adoption" },
+  { text: "Adoption JSON contract", link: "/local-inference-adoption-format" },
   {
     text: "Research development guideline",
     link: docsRoute("docs/research-development-guideline.md"),
