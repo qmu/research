@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "fixture": true,
+  "runs": [
+    {
+      "id": "llama-cpp-1",
+      "backend": "llama.cpp",
+      "modelCondition": {
+        "model": "llama-3.1-8b-instruct",
+        "quantization": "Q4_K_M",
+        "condition": "ctx=4096, temp=0.2, seed=7, single GPU layer offload"
+      },
+      "runner": {
+        "name": "llama.cpp server",
+        "version": "b3985"
+      },
+      "commandFingerprint": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    },
+    {
+      "id": "mlx-1",
+      "backend": "mlx",
+      "modelCondition": {
+        "model": "llama-3.1-8b-instruct",
+        "quantization": "4-bit",
+        "condition": "ctx=4096, temp=0.2, seed=7"
+      },
+      "runner": {
+        "name": "mlx-lm",
+        "version": "0.19.3"
+      },
+      "commandFingerprint": "sha256:123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0"
+    },
+    {
+      "id": "ollama-1",
+      "backend": "ollama",
+      "modelCondition": {
+        "model": "llama-3.1-8b-instruct",
+        "quantization": "Q4_K_M",
+        "condition": "ctx=4096, temp=0.2, seed=7, keepalive=5m"
+      },
+      "runner": {
+        "name": "ollama",
+        "version": "0.4.7"
+      },
+      "commandFingerprint": "sha256:23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01"
+    }
+  ]
+}
