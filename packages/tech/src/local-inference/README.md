@@ -122,3 +122,10 @@ The result body is otherwise opaque: workers remain responsible for producing
 valid, sanitized measurement JSON. This is a trusted local worker transport,
 not an authentication boundary. The same lock, crash and recovery limitations
 as the in-process runner apply.
+
+Runner preflight: before each engine request, the runner checks that its
+reservation is still current. A superseded run stops with `STALE-EXECUTION`
+instead of issuing requests to the remaining engines, including when its last
+response failed or the newer reservation has not completed. An in-flight request
+is allowed to finish or time out. A newer reservation can race the preflight;
+the locked comparison at publication remains the authority for saving results.
