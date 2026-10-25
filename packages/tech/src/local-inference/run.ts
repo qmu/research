@@ -115,7 +115,11 @@ export async function runLocalInference(
   input: unknown,
   output: string,
   timeoutMs = 60_000,
-  argv: readonly string[] = process.argv,
+  argv: readonly string[] = [
+    process.execPath,
+    ...process.execArgv,
+    ...process.argv.slice(1),
+  ],
 ) {
   const config = parseConfig(input);
   const execution: Execution = {
