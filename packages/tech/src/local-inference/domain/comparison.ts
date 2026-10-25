@@ -15,8 +15,13 @@ const ENGINE_LABELS: Readonly<Record<Engine, string>> = {
   strata: "Strata",
 };
 
-// Why a single metric is missing even though the run itself succeeded.
-export const GAP_REASONS = ["NO-FIELD", "NOT-RUN", "MEASURE-FAILED"] as const;
+// Per-metric reasons are independent of the overall run status.
+export const GAP_REASONS = [
+  "NO-FIELD",
+  "NOT-RUN",
+  "MEASURE-FAILED",
+  "UNSUPPORTED",
+] as const;
 export type GapReason = (typeof GAP_REASONS)[number];
 
 // Why a run was not adopted into the comparison at all.
@@ -215,9 +220,16 @@ function conditionText(condition: Run["condition"]): string {
     : keys.map((key) => `${key}=${String(condition[key])}`).join("; ");
 }
 
+const GAP_LABELS: Readonly<Record<GapReason, string>> = {
+  UNSUPPORTED: "未対応",
+  "MEASURE-FAILED": "失敗",
+  "NO-FIELD": "記録なし",
+  "NOT-RUN": "記録なし",
+};
+
 function measurementText(measurement: Measurement): string {
   return measurement.value === null
-    ? `欠測 (${measurement.reason})`
+    ? `欠測 (${measurement.reason}) — ${GAP_LABELS[measurement.reason]}`
     : `${measurement.value} ${measurement.unit}`;
 }
 
@@ -236,6 +248,23 @@ function renderRow(run: Run): string {
     failureText(run),
   ].map((value) => cell(String(value)));
   return `| ${cells.join(" | ")} |`;
+}
+
+function renderStrataMetrics(run: Run | undefined): string[] {
+  if (!run) return [];
+  return [
+    "## Strata: TTFT・速度・メモリ",
+    "",
+    "| Metric | Value / 欠測理由 |",
+    "| --- | --- |",
+    ...(["ttft", "tps", "peak_rss"] as const).map(
+      (name) =>
+        `| ${METRIC_LABELS[name]} | ${cell(measurementText(run.metrics[name]))} |`,
+    ),
+    "",
+    "## All engines",
+    "",
+  ];
 }
 
 /** Rows always appear in the fixed engine order, independent of input order. */
@@ -266,7 +295,10 @@ export function renderComparisonMarkdown(input: unknown): string {
     "",
     `Generated ${result.generatedAt} from input ${result.inputSha256}. Procedure: ${result.procedure}.`,
     "",
-    "Every engine is one row, in the fixed order Ollama, llama.cpp, MLX, Strata. A missing metric (欠測) keeps its gap reason — `NO-FIELD`, `NOT-RUN` or `MEASURE-FAILED` — instead of a blank cell or a zero. A run that was not adopted into the comparison (不採用) carries one of eight fixed failure codes in the last column; a measured run shows `—` there because nothing was rejected.",
+    "欠測理由: 未対応 (`UNSUPPORTED`), 失敗 (`MEASURE-FAILED`), 記録なし (`NO-FIELD`: field absent; `NOT-RUN`: measurement not run). Reasons belong to each metric; a run failure never overwrites them. A recorded zero remains a measured value.",
+    "",
+    ...renderStrataMetrics(rows.find((run) => run.engine === "strata")),
+    "Every engine is one row, in the fixed order Ollama, llama.cpp, MLX, Strata. A missing metric (欠測) keeps its gap reason — `NO-FIELD`, `NOT-RUN`, `MEASURE-FAILED` or `UNSUPPORTED` — instead of a blank cell or a zero. A run that was not adopted into the comparison (不採用) carries one of eight fixed failure codes in the last column; a measured run shows `—` there because nothing was rejected.",
     "",
     `| ${header.join(" | ")} |`,
     `| ${header.map(() => "---").join(" | ")} |`,
