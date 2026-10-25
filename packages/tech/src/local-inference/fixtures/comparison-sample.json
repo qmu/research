@@ -59,7 +59,11 @@
       "status": "measured",
       "metrics": {
         "ttft": { "value": 0.42, "unit": "s", "source": "client" },
-        "completion_tokens": { "value": 128, "unit": "tokens", "source": "usage" },
+        "completion_tokens": {
+          "value": 128,
+          "unit": "tokens",
+          "source": "usage"
+        },
         "tps": { "value": 31.7, "unit": "tokens/s", "source": "client" },
         "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
         "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
@@ -73,7 +77,11 @@
       "status": "measured",
       "metrics": {
         "ttft": { "value": 0.39, "unit": "s", "source": "client" },
-        "completion_tokens": { "value": 128, "unit": "tokens", "source": "usage" },
+        "completion_tokens": {
+          "value": 128,
+          "unit": "tokens",
+          "source": "usage"
+        },
         "tps": { "value": null, "unit": "tokens/s", "reason": "NO-FIELD" },
         "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
         "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
