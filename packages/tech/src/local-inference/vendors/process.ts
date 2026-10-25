@@ -1,5 +1,9 @@
 import { spawn } from "node:child_process";
-import { writeFile } from "node:fs/promises";
+import {
+  beginExecution,
+  completeExecution,
+  type Execution,
+} from "./versioned-result.js";
 
 export type Engine = "strata" | "ollama" | "llama.cpp" | "mlx";
 export type ProcessResult = {
@@ -78,12 +82,17 @@ export async function measureProcess(options: {
   });
 }
 
-/** Exclusive creation protects previous evidence; failure rows are saved too. */
+/**
+ * Reserves an execution before measuring and publishes through the same
+ * version-fenced atomic save as the common inference JSON (`run.ts`), so a
+ * slower stale measurement can never clobber newer evidence for the same
+ * path, and the saved JSON carries the same `execution.{runId,version}` field.
+ */
 export async function saveProcessMeasurement(
   path: string,
   options: Parameters<typeof measureProcess>[0],
-): Promise<ProcessResult> {
+): Promise<ProcessResult & { execution: Execution }> {
+  const execution = await beginExecution(path);
   const result = await measureProcess(options);
-  await writeFile(path, JSON.stringify(result, null, 2) + "\n", { flag: "wx" });
-  return result;
+  return completeExecution(path, execution, result);
 }

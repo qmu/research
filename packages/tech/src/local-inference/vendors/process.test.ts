@@ -1,6 +1,7 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { setTimeout } from "node:timers/promises";
 import { describe, expect, it } from "vitest";
 import {
   measureProcess,
@@ -31,13 +32,60 @@ describe.each(engines)("%s process evidence", (engine) => {
         expect(result.failure).toEqual(
           exit === 0 ? null : { code: "MEASURE-FAILED" },
         );
-        await expect(saveProcessMeasurement(path, options)).rejects.toThrow();
-        expect(JSON.parse(await readFile(path, "utf8"))).toEqual(result);
+        expect(result.execution).toEqual({
+          runId: expect.any(String),
+          version: 1,
+        });
+        // A later measurement of the same path reserves the next version and
+        // publishes through the same atomic save, replacing the prior evidence.
+        const replacement = await saveProcessMeasurement(path, options);
+        expect(replacement.execution.version).toBe(2);
+        expect(replacement.execution.runId).not.toBe(result.execution.runId);
+        expect(JSON.parse(await readFile(path, "utf8"))).toEqual(replacement);
       } finally {
         await rm(dir, { recursive: true, force: true });
       }
     },
   );
+  it("fences a stale measurement once a newer run reserves, even mid-process", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "measurement-"));
+    try {
+      const path = join(dir, "result.json");
+      const gate = join(dir, "release");
+      const slow = saveProcessMeasurement(path, {
+        engine,
+        command,
+        args: [
+          "-e",
+          `const fs=require("fs");const deadline=Date.now()+${timeoutMs};` +
+            `while(!fs.existsSync(${JSON.stringify(gate)})){if(Date.now()>deadline){process.exit(9)}}`,
+        ],
+        timeoutMs,
+      });
+      // Deterministic sync point: the sidecar only exists once `slow` has
+      // reserved its execution, before the gate file unblocks its process.
+      while (
+        !(await readFile(`${path}.execution.json`, "utf8").catch(
+          () => undefined,
+        ))
+      ) {
+        await setTimeout(5);
+      }
+      const newer = await saveProcessMeasurement(path, {
+        engine,
+        command,
+        args: ["-e", "process.exit(0)"],
+        timeoutMs,
+      });
+      expect(newer.execution.version).toBe(2);
+      const saved = await readFile(path, "utf8");
+      await writeFile(gate, "");
+      await expect(slow).rejects.toMatchObject({ code: "STALE-EXECUTION" });
+      expect(await readFile(path, "utf8")).toBe(saved);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  }, 15000);
   it("records missing executable without diagnostics or command", async () => {
     const result = await measureProcess({
       engine,

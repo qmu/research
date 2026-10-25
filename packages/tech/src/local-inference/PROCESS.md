@@ -34,9 +34,17 @@ numbers. The diagnostic normalizer proposed in qmu/research#202 and HTTP
 measurement schema proposed in qmu/research#183 remain independent; this
 process artifact supplies actual termination evidence without duplicating them.
 
-`saveProcessMeasurement` creates a new file exclusively, including on measurement
-failure; it never overwrites existing evidence. The CLI exits 0 on success, 1
-on measured failure, and 2 on invalid invocation or inability to save. The CLI
-exit code is distinct from the measured child's exit code. Use the exported
+`saveProcessMeasurement` reserves an `execution.{runId,version}` and publishes
+through the same version-fenced atomic save as the common inference JSON
+(`run.ts`'s `beginExecution`/`completeExecution`, backed by `writeJsonAtomic`):
+a temporary file is written, fsynced and closed before rename, and only the
+latest reservation for a given output path may publish — an older measurement
+finishing later fails closed with `STALE-EXECUTION` and leaves the newer
+evidence intact, including when the failure itself is what's being measured.
+The saved JSON carries the same `execution.{runId,version}` field as the
+common inference JSON, saved by the identical atomic-save call. The CLI exits
+0 on success, 1 on measured failure, and 2 on invalid invocation or inability
+to save (including a stale reservation). The CLI exit code is distinct from
+the measured child's exit code. Use the exported
 `measureProcess`/`saveProcessMeasurement` functions to embed the same record in
 future runner integration; AbortSignal cancellation is available through that API.

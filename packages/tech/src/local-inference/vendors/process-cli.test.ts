@@ -26,13 +26,16 @@ it("CLI saves child status and returns distinct measurement/save errors", async 
       );
     expect(invoke("invalid", 0).status).toBe(2);
     expect(invoke("mlx", 7).status).toBe(1);
-    const saved = await readFile(path, "utf8");
-    expect(JSON.parse(saved).process.exit_code).toBe(7);
-    expect(invoke("mlx", 0).status).toBe(2);
-    expect(await readFile(path, "utf8")).toBe(saved);
-    await rm(path);
+    const saved = JSON.parse(await readFile(path, "utf8"));
+    expect(saved.process.exit_code).toBe(7);
+    expect(saved.execution).toEqual({ runId: expect.any(String), version: 1 });
+    // A later invocation on the same path reserves the next version and
+    // publishes through the same atomic save, replacing the prior evidence.
     expect(invoke("ollama", 0).status).toBe(0);
-    expect(JSON.parse(await readFile(path, "utf8")).failure).toBeNull();
+    const replaced = JSON.parse(await readFile(path, "utf8"));
+    expect(replaced.process.exit_code).toBe(0);
+    expect(replaced.failure).toBeNull();
+    expect(replaced.execution.version).toBe(2);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
