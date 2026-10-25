@@ -379,3 +379,71 @@ describe("exact adoption join", () => {
     expect(output).toContain("&#124;");
   });
 });
+
+describe("evaluator mismatch diagnostics", () => {
+  it("blocks cross-version grouping with a fixed reason and remeasurement link", () => {
+    const inputs = [
+      sample(),
+      changed((v) => {
+        v.runs[0].quality[0].evaluatorVersion = "exact-text/v2";
+        v.runs[0].quality[0].verdict = "fail";
+      }),
+    ];
+    const before = structuredClone(inputs);
+    const report = joinAdoptionResults(inputs);
+    expect(report.groups).toHaveLength(2);
+    expect(report.evaluatorMismatches).toEqual([
+      {
+        rowIndexes: [0, 1],
+        reason: "EVALUATOR-VERSION-MISMATCH",
+      },
+    ]);
+    expect(report.rows.map((r) => r.adoption)).toEqual(["pass", "fail"]);
+    const rendered = renderAdoptionReport(inputs);
+    expect(rendered).toContain("exact-text/v1");
+    expect(rendered).toContain("exact-text/v2");
+    expect(rendered).toContain("EVALUATOR-VERSION-MISMATCH");
+    expect(rendered).toContain(
+      "./local-inference-adoption-format.md#remeasure",
+    );
+    expect(inputs).toEqual(before);
+  });
+  it("does not diagnose equal versions, other condition changes or missing metadata", () => {
+    expect(
+      joinAdoptionResults([sample(), sample()]).evaluatorMismatches,
+    ).toEqual([]);
+    const other = changed((v) => {
+      v.runs[0].quality[0].evaluatorVersion = "exact-text/v2";
+      v.runs[0].condition.quantization = "Q8";
+    });
+    expect(joinAdoptionResults([sample(), other]).evaluatorMismatches).toEqual(
+      [],
+    );
+    const missing = sample() as Partial<ReturnType<typeof sample>>;
+    delete missing.fingerprint;
+    expect(
+      joinAdoptionResults([sample(), missing]).evaluatorMismatches,
+    ).toEqual([]);
+    expect(renderAdoptionReport([sample()])).not.toContain(
+      "EVALUATOR-VERSION-MISMATCH",
+    );
+  });
+  it("checks every fixture independent of quality array order", () => {
+    const a = sample();
+    a.runs[0].quality.push({ ...a.runs[0].quality[0], fixtureId: "second" });
+    const b = structuredClone(a);
+    b.runs[0].quality.reverse();
+    expect(joinAdoptionResults([a, b]).evaluatorMismatches).toEqual([]);
+    b.runs[0].quality[0].evaluatorVersion = "exact-text/v2";
+    expect(joinAdoptionResults([a, b]).evaluatorMismatches).toHaveLength(1);
+  });
+  it("escapes untrusted evaluator labels in the notice", () => {
+    const hostile = changed((v) => {
+      v.runs[0].quality[0].evaluatorVersion = "<script>{{x}}|[link](bad)";
+    });
+    const rendered = renderAdoptionReport([sample(), hostile]);
+    expect(rendered).not.toContain("<script>");
+    expect(rendered).not.toContain("{{x}}");
+    expect(rendered).toContain("&#60;script&#62;");
+  });
+});

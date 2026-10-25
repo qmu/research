@@ -4,6 +4,15 @@ Adoption pass means the recorded fixtures passed under complete recorded conditi
 
 Synthetic entries test joining and are not measured engine performance.
 
+## Evaluator version mismatch
+
+EVALUATOR-VERSION-MISMATCH: Evaluator versions differ; direct comparison is blocked. Adoption is local to each recorded evaluator; no cross-version winner or quality delta is computed.
+
+| Source / run A | Evaluator A (fixture: version) | Source / run B | Evaluator B (fixture: version) | Reason | Next step |
+| --- | --- | --- | --- | --- | --- |
+| 1 / 1 | exact-answer: exact-text/v1 | 3 / 1 | exact-answer: exact-text/v2 | EVALUATOR-VERSION-MISMATCH | [Remeasure](./local-inference-adoption-format.md#remeasure) |
+| 1 / 2 | exact-answer: exact-text/v1 | 3 / 1 | exact-answer: exact-text/v2 | EVALUATOR-VERSION-MISMATCH | [Remeasure](./local-inference-adoption-format.md#remeasure) |
+
 ## condition-1
 
 Rows in this group share every recorded comparison dimension.

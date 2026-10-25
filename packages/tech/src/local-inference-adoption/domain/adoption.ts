@@ -19,6 +19,10 @@ export interface AdoptionRow {
 export interface AdoptionReport {
   schemaVersion: 1;
   rows: AdoptionRow[];
+  evaluatorMismatches: {
+    rowIndexes: [number, number];
+    reason: "EVALUATOR-VERSION-MISMATCH";
+  }[];
   groups: { id: string; conditionKey: string; rowIndexes: number[] }[];
 }
 const object = (value: unknown): RecordValue => {
@@ -245,7 +249,37 @@ export function joinAdoptionResults(
       group.rowIndexes.push(index);
     }
   });
-  return { schemaVersion: 1, rows, groups };
+  // Compare evaluator identities only after all other recorded dimensions match.
+  // Missing metadata never establishes a comparison candidate.
+  const candidates = rows.map((row) => {
+    if (row.conditionKey === null) return null;
+    const key = JSON.parse(row.conditionKey);
+    key.quality = key.quality
+      .map(({ fixtureId, fixtureSha256 }: RecordValue) => ({
+        fixtureId,
+        fixtureSha256,
+      }))
+      .sort((a: RecordValue, b: RecordValue) =>
+        compare(canonical(a), canonical(b)),
+      );
+    return canonical(key);
+  });
+  const evaluatorMismatches: AdoptionReport["evaluatorMismatches"] = [];
+  rows.forEach((row, right) => {
+    for (let left = 0; left < right; left++) {
+      if (
+        candidates[right] !== null &&
+        candidates[left] === candidates[right] &&
+        rows[left].conditionKey !== row.conditionKey
+      ) {
+        evaluatorMismatches.push({
+          rowIndexes: [left, right],
+          reason: "EVALUATOR-VERSION-MISMATCH",
+        });
+      }
+    }
+  });
+  return { schemaVersion: 1, rows, groups, evaluatorMismatches };
 }
 
 // Encode markup, including Vue template delimiters, before embedding untrusted JSON.
@@ -312,6 +346,26 @@ export function renderAdoptionReport(inputs: readonly unknown[]): string {
     )
       ? [
           "Synthetic entries test joining and are not measured engine performance.",
+          "",
+        ]
+      : []),
+    ...(report.evaluatorMismatches.length
+      ? [
+          "## Evaluator version mismatch",
+          "",
+          "EVALUATOR-VERSION-MISMATCH: Evaluator versions differ; direct comparison is blocked. Adoption is local to each recorded evaluator; no cross-version winner or quality delta is computed.",
+          "",
+          "| Source / run A | Evaluator A (fixture: version) | Source / run B | Evaluator B (fixture: version) | Reason | Next step |",
+          "| --- | --- | --- | --- | --- | --- |",
+          ...report.evaluatorMismatches.map(({ rowIndexes, reason }) => {
+            const [a, b] = rowIndexes.map((index) => report.rows[index]);
+            const versions = (r: AdoptionRow) =>
+              r.quality
+                .map((q) => `${q.fixtureId}: ${q.evaluatorVersion}`)
+                .sort(compare)
+                .join(", ");
+            return `| ${cell(`${a.sourceIndex + 1} / ${a.runIndex + 1}`)} | ${cell(versions(a))} | ${cell(`${b.sourceIndex + 1} / ${b.runIndex + 1}`)} | ${cell(versions(b))} | ${reason} | [Remeasure](./local-inference-adoption-format.md#remeasure) |`;
+          }),
           "",
         ]
       : []),
