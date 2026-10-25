@@ -8,11 +8,22 @@ export function readTargetCommit(
   cwd: string | URL = new URL(".", import.meta.url),
 ): string {
   try {
-    const commit = execFileSync("git", ["rev-parse", "--verify", "HEAD"], {
-      cwd,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-    }).trim();
+    const commit = execFileSync(
+      "git",
+      ["rev-parse", "--verify", "HEAD^{commit}"],
+      {
+        cwd,
+        env: Object.fromEntries(
+          Object.entries(process.env).filter(
+            ([key]) => !key.startsWith("GIT_"),
+          ),
+        ),
+        timeout: 5_000,
+        maxBuffer: 1024,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    ).trim();
     if (/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(commit)) return commit;
   } catch {
     // Fail closed before issuing any measurement request.

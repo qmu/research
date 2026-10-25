@@ -1,16 +1,20 @@
 import { createHash } from "node:crypto";
-import { writeJsonAtomic } from "./vendors/atomic-json.js";
-import { readTargetCommit } from "./vendors/provenance.js";
+import {
+  assertExecutionCurrent,
+  beginExecution,
+  completeExecution,
+} from "./vendors/versioned-result.js";
 import {
   engines,
   metrics,
   type Engine,
   type Execution,
 } from "./domain/result.js";
+import { readTargetCommit } from "./vendors/provenance.js";
 import { observeStream } from "./vendors/stream.js";
 
 /** Bump when the runner's measurement or persistence semantics change. */
-export const runnerVersion = "local-inference/3";
+export const runnerVersion = "local-inference/4";
 
 /** Only fixed public syntax survives. Unknown arguments, paths, environment
  * assignments, headers, URLs and option values are redacted BEFORE hashing.
@@ -123,15 +127,16 @@ export async function runLocalInference(
   ],
 ) {
   const config = parseConfig(input);
-  const execution: Execution = {
+  const provenance: Execution = {
+    targetCommit: readTargetCommit(),
     commandSha256: commandFingerprint(argv),
     runnerVersion,
-    targetCommit: readTargetCommit(),
   };
-
+  const execution = { ...(await beginExecution(output)), ...provenance };
   const sampling = { temperature: 0, top_p: 1, seed: 42, max_tokens: 1024 };
   const runs = [];
   for (const target of config.targets) {
+    await assertExecutionCurrent(output, execution);
     const started = performance.now();
     let measured;
     let status: "measured" | "failed" = "measured";
@@ -166,7 +171,6 @@ export async function runLocalInference(
     });
   }
   const result = {
-    execution,
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
     inputSha256: createHash("sha256")
@@ -176,6 +180,5 @@ export async function runLocalInference(
     procedure: "single-request-per-engine",
     runs,
   };
-  await writeJsonAtomic(output, result);
-  return result;
+  return completeExecution(output, execution, result);
 }

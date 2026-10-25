@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { engines, metrics } from "./domain/result.js";
+import { beginExecution } from "./vendors/versioned-result.js";
 import {
   commandFingerprint,
   runnerVersion,
@@ -92,7 +93,7 @@ describe("local inference common JSON", () => {
       ],
     );
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(result);
-    expect(result.execution).toEqual({
+    expect(result.execution).toMatchObject({
       commandSha256: commandFingerprint([
         "node",
         "run-local-inference.ts",
@@ -123,6 +124,71 @@ describe("local inference common JSON", () => {
     );
     expect(JSON.parse(await readFile(output, "utf8"))).toEqual(replacement);
   });
+
+  it.each(["completed", "pending", "failed-response"])(
+    "stops sending requests when superseded (%s)",
+    async (scenario) => {
+      function deferred() {
+        let resolve!: () => void;
+        const promise = new Promise<void>((done) => {
+          resolve = done;
+        });
+        return { promise, resolve };
+      }
+      const firstRequest = deferred();
+      const release = deferred();
+      let calls = 0;
+      const server = createServer(async (_req, res) => {
+        if (++calls === 1) {
+          firstRequest.resolve();
+          await release.promise;
+        }
+        if (scenario === "failed-response") res.writeHead(500);
+        res.end(sse([content("ok")]));
+      });
+      servers.push(server);
+      await new Promise<void>((resolve) =>
+        server.listen(0, "127.0.0.1", resolve),
+      );
+      const address = server.address();
+      if (!address || typeof address === "string")
+        throw new Error("listen failed");
+      const output = await destination();
+      const input = config(`http://127.0.0.1:${address.port}/v1`);
+      vi.spyOn(provenance, "readTargetCommit")
+        .mockReturnValueOnce("a".repeat(40))
+        .mockReturnValue("b".repeat(40));
+      const old = runLocalInference(input, output);
+      const rejected = expect(old).rejects.toThrow("STALE-EXECUTION");
+      try {
+        await firstRequest.promise;
+        const pending = scenario === "pending";
+        const newer = pending
+          ? { execution: await beginExecution(output) }
+          : await runLocalInference(input, output);
+        expect(newer.execution.version).toBe(2);
+        const bytes = pending ? undefined : await readFile(output, "utf8");
+        if (bytes)
+          expect(JSON.parse(bytes).execution).toMatchObject({
+            targetCommit: "b".repeat(40),
+            runnerVersion,
+          });
+        const state = await readFile(output + ".execution.json", "utf8");
+        release.resolve();
+        await rejected;
+        expect(calls).toBe(pending ? 1 : 5);
+        expect(await readFile(output + ".execution.json", "utf8")).toBe(state);
+        if (pending)
+          await expect(readFile(output)).rejects.toMatchObject({
+            code: "ENOENT",
+          });
+        else expect(await readFile(output, "utf8")).toBe(bytes);
+      } finally {
+        release.resolve();
+        await rejected;
+      }
+    },
+  );
 
   it("saves failures without response bodies or URLs and continues to later engines", async () => {
     let calls = 0;
