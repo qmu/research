@@ -45,7 +45,7 @@ describe("renderScatterChart", () => {
     const svg = renderScatterChart({
       id: "filtered-chart",
       title: "Filtered chart",
-      description: "One bad reading, one good reading.",
+      description: "One non-finite reading, one finite reading.",
       xLabel: "X",
       yLabel: "Y",
       series: [
@@ -53,7 +53,7 @@ describe("renderScatterChart", () => {
           id: "a",
           label: "Engine A",
           points: [
-            { label: "bad", x: Number.NaN, y: 5 },
+            { label: "dropped", x: Number.NaN, y: 5 },
             { label: "good", x: 10, y: 20 },
           ],
         },
@@ -62,7 +62,7 @@ describe("renderScatterChart", () => {
 
     expect(svg).toContain('cx="344.00" cy="148.00"');
     expect(svg).toContain("x=10.0 y=20.0");
-    expect(svg).not.toContain("bad");
+    expect(svg).not.toContain("dropped");
     expect(svg.match(/fill-opacity="0.85"/g)).toHaveLength(1);
   });
 

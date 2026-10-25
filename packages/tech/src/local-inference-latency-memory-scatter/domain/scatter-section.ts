@@ -65,21 +65,21 @@ export const renderLatencyMemoryScatterSection = (
     })),
   }));
 
+  const caption =
+    excludedCount > 0
+      ? `検証済みrun ${verified.length} 件を表示。未検証のため ${excludedCount} 件を除外した。`
+      : `検証済みrun ${verified.length} 件を表示。`;
+
   const svg = renderScatterChart({
     id: options.id ?? "local-inference-latency-memory-scatter",
     title: "初回遅延×ピークRSS散布図（検証済みrunのみ）",
-    description: `検証済みrun ${verified.length} 件の初回遅延とピークRSSの関係。未検証の ${excludedCount} 件は除外した。`,
+    description: caption,
     xLabel: "初回遅延 (ms)",
     yLabel: "ピークRSS (MiB)",
     xDigits: 0,
     yDigits: 0,
     series,
   });
-
-  const caption =
-    excludedCount > 0
-      ? `検証済みrun ${verified.length} 件を表示。未検証のため ${excludedCount} 件を除外した。`
-      : `検証済みrun ${verified.length} 件を表示。`;
 
   return {
     markdown: `**初回遅延×ピークRSS散布図**\n\n${svg}\n\n${caption} 既存の速度・品質・メモリ余白の採否表とは独立した補助図であり、採否判定は変更しない。`,
