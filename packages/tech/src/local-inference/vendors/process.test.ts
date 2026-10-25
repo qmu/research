@@ -194,6 +194,29 @@ describe.skipIf(process.platform === "win32")("process-group cleanup", () => {
     }
   });
 
+  it("keeps cancellation as the first reason while the deadline expires", async () => {
+    const active = new AbortController();
+    const pending = measureProcess({
+      engine: "ollama",
+      command,
+      timeoutMs: 600,
+      signal: active.signal,
+      args: ["-e", "process.on('SIGTERM',()=>{}); setInterval(()=>{},1000)"],
+    });
+    const timer = setTimeout(() => active.abort(), 500);
+    try {
+      const result = await pending;
+      expect(result.failure?.code).toBe("CANCELLED");
+      expect(result.cleanup).toMatchObject({
+        kill_sent: true,
+        child_reaped: true,
+        group_state: "gone",
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+  });
+
   it("forces an uncooperative leader to exit and reaps it", async () => {
     const result = await measureProcess({
       engine: "strata",
