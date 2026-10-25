@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "fixture": true,
+  "runs": [
+    {
+      "id": "1",
+      "backend": "Ollama",
+      "model": "fixture-model",
+      "quantization": "Q4_K_M",
+      "hardware": "Synthetic CPU / 16 GiB",
+      "condition": "fixture-v1; synthetic prompt, weights and rubric; not comparable to real runs",
+      "speed": {
+        "value": 12.5
+      },
+      "quality": {
+        "value": 0
+      }
+    },
+    {
+      "id": "2",
+      "backend": "llama.cpp server",
+      "model": "fixture-model",
+      "quantization": "Q4_K_M",
+      "hardware": "Synthetic CPU / 16 GiB",
+      "condition": "fixture-v1; synthetic prompt, weights and rubric; not comparable to real runs",
+      "speed": {
+        "value": 13.5
+      },
+      "quality": {
+        "value": null,
+        "reason": "NOT-RUN"
+      }
+    },
+    {
+      "id": "3",
+      "backend": "MLX",
+      "model": "fixture-model",
+      "quantization": "nominal 4-bit",
+      "hardware": "Synthetic CPU / 16 GiB",
+      "condition": "fixture-v1; synthetic prompt, weights and rubric; not comparable to real runs",
+      "speed": {
+        "value": null,
+        "reason": "NO-FIELD"
+      },
+      "quality": {
+        "value": null,
+        "reason": "NOT-RUN"
+      }
+    },
+    {
+      "id": "4",
+      "backend": "Strata",
+      "model": "fixture-model",
+      "quantization": "nominal 4-bit",
+      "hardware": "Synthetic CPU / 16 GiB",
+      "condition": "fixture-v1; synthetic prompt, weights and rubric; not comparable to real runs",
+      "speed": {
+        "value": null,
+        "reason": "NOT-RUN"
+      },
+      "quality": {
+        "value": null,
+        "reason": "NOT-RUN"
+      }
+    }
+  ]
+}
