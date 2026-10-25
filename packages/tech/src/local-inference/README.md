@@ -158,3 +158,48 @@ Missing Git provenance fails before measurement. HEAD does not describe dirty
 working-tree edits: use a clean committed checkout for reproducible trials.
 Tests use synthetic HTTP streams and injected filesystem failures, not Apple
 Silicon hardware performance results.
+
+### Bound missing-metric remeasurement requests
+
+Runner `local-inference/6` accepts an optional top-level configuration field:
+
+```json
+"fixedTier": { "label": "16-GiB", "totalMiB": 16384 }
+```
+
+The tier is an operator-declared fixed process-RSS comparison capacity, not a
+hardware probe or a claim about whole-machine free memory. Its label must be
+nonblank and its MiB capacity a positive safe integer. Old configs still run,
+but cannot create a tier-bound request without this field.
+
+With a fixed tier, the runner saves `fixtureSha256`, `fixedTier`, and
+`remeasurementRequest` in the same atomic JSON publication as the measurements.
+The fixture digest covers messages, sampling, and the ordered targets' engine,
+model, runtime version and condition metadata; endpoints and PIDs are excluded.
+Changing any covered value changes the fixture identity. Use the saved digest,
+not a hand-built prompt hash, when calling the recovery API.
+
+One request aggregates every row with `metrics.ttft.value === null` or
+`metrics.peak_rss.value === null`. A row missing both contributes both metric
+names to that one request. Measured zero is retained as a measurement; invalid
+numbers are rejected. Complete results save `remeasurementRequest: null`.
+The request binds the batch execution ID/version, captured Git commit, runner
+version, fixture digest and fixed tier, and identifies affected rows by their
+individual run IDs and engines. It schedules no network calls or automatic retry.
+
+For a completed artifact carrying this provenance but no request yet, callers
+can import `saveRemeasurementRequest(output, binding)` from
+`local-inference/vendors/remeasurement-request.ts`. Supply the artifact's
+`execution.runId` / `execution.version`, `execution.targetCommit`,
+`execution.runnerVersion`, `fixtureSha256` and `fixedTier` as the binding.
+Repeated or concurrent calls against the same artifact return the existing
+request ID without rewriting it. A changed commit, runner, fixture, tier or
+execution is rejected; an existing inconsistent request is also rejected.
+Artifacts without the required provenance must be measured again rather than
+having their missing identity inferred.
+
+The recovery operation holds the same cross-process execution lock while
+reading, validating and atomically replacing the result. Starting a newer run
+invalidates recovery for the old execution. The atomic-file and interrupted-lock
+limitations described above still apply. Separate output paths are separate
+artifacts, not a distributed queue or a cross-file deduplication service.
