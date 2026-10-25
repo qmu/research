@@ -1,9 +1,13 @@
+import { checkRunnerVersion, type RunnerRecovery } from "./runner-version.js";
+
 /** Join the schemaVersion 1 measurement, fingerprint and exact-text quality contracts. */
 type RecordValue = Record<string, unknown>;
 type Verdict = "pass" | "fail" | "undetermined";
 export interface AdoptionRow {
   sourceIndex: number;
   commitSha: string | null;
+  runnerVersion: string | null;
+  runnerRecovery: RunnerRecovery | null;
   excluded: boolean;
   runIndex: number;
   engine: string;
@@ -150,6 +154,8 @@ export function joinAdoptionResults(
         : commitSha !== currentCommit
           ? "COMMIT-MISMATCH"
           : null;
+    const runner = checkRunnerVersion(execution.runnerVersion);
+    const excluded = commitReason !== null || runner.recovery !== null;
     const environment = own(data, "fingerprint")
       ? fingerprint(data.fingerprint)
       : null;
@@ -189,6 +195,7 @@ export function joinAdoptionResults(
       )
         throw new Error("Measured run has contradictory quality");
       const reasons: string[] = commitReason ? [commitReason] : [];
+      if (runner.recovery) reasons.push(runner.recovery.reason);
       if (!environment) reasons.push("MISSING-FINGERPRINT");
       if (!condition || !Object.keys(condition).length)
         reasons.push("MISSING-CONDITION");
@@ -206,6 +213,7 @@ export function joinAdoptionResults(
       const conditionKey = reasons.length
         ? null
         : canonical({
+            runnerVersion: runner.version,
             fingerprint: environment,
             engine: run.engine,
             model: run.model,
@@ -231,7 +239,9 @@ export function joinAdoptionResults(
       rows.push({
         sourceIndex,
         commitSha,
-        excluded: commitReason !== null,
+        runnerVersion: runner.version,
+        runnerRecovery: runner.recovery ? { ...runner.recovery } : null,
+        excluded,
         runIndex,
         engine: String(run.engine),
         model: run.model,
@@ -239,14 +249,13 @@ export function joinAdoptionResults(
         metrics: metrics(run.metrics),
         ...(own(run, "error") ? { error: run.error as string } : {}),
         quality: evaluations,
-        adoption:
-          commitReason !== null
-            ? "undetermined"
-            : reasons.includes("QUALITY-FAIL")
-              ? "fail"
-              : reasons.length
-                ? "undetermined"
-                : "pass",
+        adoption: excluded
+          ? "undetermined"
+          : reasons.includes("QUALITY-FAIL")
+            ? "fail"
+            : reasons.length
+              ? "undetermined"
+              : "pass",
         comparability: conditionKey === null ? "undetermined" : "comparable",
         reasons,
         conditionKey,
@@ -409,7 +418,19 @@ export function renderAdoptionReport(
     ...report.rows.map((row) => {
       if (row.reasons[0] === "MISSING-COMMIT")
         return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Remeasure missing commit](./local-inference-adoption-format.md#missing-commit) |`;
-      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.commitSha ?? "not recorded"} | ${row.excluded ? "excluded" : "eligible"} | ${row.excluded ? row.reasons[0] : "none"} |`;
+      const commitExcluded = row.reasons.includes("COMMIT-MISMATCH");
+      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.commitSha ?? "not recorded"} | ${commitExcluded ? "excluded" : "eligible"} | ${commitExcluded ? "COMMIT-MISMATCH" : "none"} |`;
+    }),
+    "",
+    "## Runner version eligibility",
+    "",
+    "Only explicitly supported runner versions clear this gate. Commit eligibility alone does not permit adoption. Unknown or missing versions are excluded from adoption, condition groups and evaluator differences; original metrics and quality remain evidence. A supported version still requires all other checks.",
+    "",
+    "| Source / run | Runner version | Eligibility | Reason / next step |",
+    "| --- | --- | --- | --- |",
+    ...report.rows.map((row) => {
+      const recovery = row.runnerRecovery;
+      return `| ${row.sourceIndex + 1} / ${row.runIndex + 1} | ${row.runnerVersion ?? "unavailable"} | ${recovery ? "excluded (cannot adopt)" : "supported"} | ${recovery ? `${recovery.reason}: ${recovery.message} [Remeasure runner](${recovery.href})` : "none"} |`;
     }),
     "",
     ...report.rows

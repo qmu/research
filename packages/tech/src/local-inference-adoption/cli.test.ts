@@ -18,6 +18,8 @@ const fixtures = [
   "other-evaluator",
   "legacy",
   "other-commit",
+  "unknown-runner",
+  "empty-runner",
 ].map((name) => resolve(`src/local-inference-adoption/fixtures/${name}.json`));
 const dirs: string[] = [];
 const temp = () => {
@@ -101,4 +103,24 @@ describe("condition-scoped adoption CLI", () => {
     expect(cli().status).toBe(1);
     expect(cli(join(temp(), "report.md")).status).toBe(1);
   });
+});
+
+it("excludes unsupported saved runners through the CLI without rewriting evidence", () => {
+  const dir = temp();
+  const input = join(dir, "saved.json");
+  const output = join(dir, "report.md");
+  const saved = JSON.parse(readFileSync(fixtures[0], "utf8"));
+  saved.execution.runnerVersion = "private-label-$(exit 1)";
+  saved.runs[0].quality[0].verdict = "fail";
+  const original = JSON.stringify(saved);
+  writeFileSync(input, original);
+  expect(cli(output, input).status).toBe(0);
+  const rendered = readFileSync(output, "utf8");
+  expect(rendered).toContain("UNKNOWN-RUNNER-VERSION");
+  expect(rendered).toContain("#runner-version");
+  expect(rendered).not.toContain("| Adoption |");
+  expect(rendered).not.toContain("private-label");
+  expect(readFileSync(input, "utf8")).toBe(original);
+  expect(cli(output, input).status).toBe(1);
+  expect(readFileSync(output, "utf8")).toBe(rendered);
 });

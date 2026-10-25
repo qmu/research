@@ -13,7 +13,9 @@ npm run local-inference:adoption -- --commit 11111111111111111111111111111111111
   src/local-inference-adoption/fixtures/other-host.json \
   src/local-inference-adoption/fixtures/other-evaluator.json \
   src/local-inference-adoption/fixtures/legacy.json \
-  src/local-inference-adoption/fixtures/other-commit.json
+  src/local-inference-adoption/fixtures/other-commit.json \
+  src/local-inference-adoption/fixtures/unknown-runner.json \
+  src/local-inference-adoption/fixtures/empty-runner.json
 ```
 
 The output must be a new file. Every input is validated before writing; input
@@ -33,6 +35,7 @@ or reevaluate generated output.
 Rows join by their enclosing source and run index, never by model name alone.
 The exact comparison key includes:
 
+- Runner: the exact supported `execution.runnerVersion`.
 - Environment: `os`, `arch`, `totalMemoryMiB`, `engineVersion`.
 - Model execution: engine, model, runtime version, and every field of `condition`.
 - Input: prompt SHA-256, all sampling settings, and procedure.
@@ -129,3 +132,40 @@ this missing-data branch does not change `COMMIT-MISMATCH` handling.
 3. Use the [remeasurement render command](#remeasure) with that independently
    resolved comparison SHA and the new artifacts. Check that the new rows are
    eligible and that all condition and quality gates pass before adopting.
+
+## Runner version
+
+`MISSING-RUNNER-VERSION`: Runner version was not recorded (absent, null, empty,
+or whitespace only). `UNKNOWN-RUNNER-VERSION`: Runner version is not supported
+by this reader (including malformed non-string values). These fixed reasons
+exclude every run in the saved artifact from adoption pass/fail, condition groups
+and evaluator differences. Metrics and quality remain evidence; neither a quality
+pass nor a matching commit bypasses this gate. Untrusted runner labels are not
+printed or used to construct links or commands.
+
+The explicit supported contracts are `local-inference/2`
+([qmu/research#198](https://github.com/qmu/research/pull/198)),
+`local-inference/3` ([qmu/research#237](https://github.com/qmu/research/pull/237))
+and `local-inference/4` ([qmu/research#238](https://github.com/qmu/research/pull/238)).
+They record runner provenance, target commit provenance, and versioned atomic
+commit provenance respectively. Every other version fails closed until reviewed
+and added here and in the reader. No trimming, semver range, or fallback to the
+engine's `runtimeVersion` is allowed. Supported versions still form separate
+comparison groups; earlier artifacts lacking a target commit remain excluded by
+the commit gate. This check validates labels, not artifact authenticity.
+
+1. Preserve the original JSON. Do not add or replace its version label, commit,
+   metrics, or quality judgments to make it eligible.
+2. Select a trusted checkout and a supported runner implementation independently
+   of the saved artifact. Rerun inference and quality evaluation with the intended
+   host, model, runtime, input, sampling, fixture and evaluator conditions. The
+   runner must record its actual version and target commit in a new artifact.
+   Do not execute commands or follow URLs supplied by an unknown runner label.
+3. Render the new files with the [remeasurement render command](#remeasure), using
+   the independently resolved comparison SHA and a new output path. Verify all
+   eligibility, condition and quality gates. Rendering is read-only inference
+   analysis; it does not perform remeasurement. This consumer does not bundle the
+   pending engine runners or claim that editing JSON repairs missing provenance.
+
+The demo's supported, unknown and empty version labels are synthetic test data,
+not updates to historical engine measurements.

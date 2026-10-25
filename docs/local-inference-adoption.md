@@ -27,6 +27,27 @@ COMMIT-MISMATCH: Saved measurement commit differs from the current comparison co
 | 3 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
 | 4 / 1 | not recorded | excluded (cannot adopt) | MISSING-COMMIT: Target commit SHA was not recorded. [Remeasure missing commit](./local-inference-adoption-format.md#missing-commit) |
 | 5 / 1 | 2222222222222222222222222222222222222222 | excluded | COMMIT-MISMATCH |
+| 6 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
+| 6 / 2 | 1111111111111111111111111111111111111111 | eligible | none |
+| 7 / 1 | 1111111111111111111111111111111111111111 | eligible | none |
+| 7 / 2 | 1111111111111111111111111111111111111111 | eligible | none |
+
+## Runner version eligibility
+
+Only explicitly supported runner versions clear this gate. Commit eligibility alone does not permit adoption. Unknown or missing versions are excluded from adoption, condition groups and evaluator differences; original metrics and quality remain evidence. A supported version still requires all other checks.
+
+| Source / run | Runner version | Eligibility | Reason / next step |
+| --- | --- | --- | --- |
+| 1 / 1 | local-inference/4 | supported | none |
+| 1 / 2 | local-inference/4 | supported | none |
+| 2 / 1 | local-inference/4 | supported | none |
+| 3 / 1 | local-inference/4 | supported | none |
+| 4 / 1 | unavailable | excluded (cannot adopt) | MISSING-RUNNER-VERSION: Runner version was not recorded. [Remeasure runner](./local-inference-adoption-format.md#runner-version) |
+| 5 / 1 | local-inference/4 | supported | none |
+| 6 / 1 | unavailable | excluded (cannot adopt) | UNKNOWN-RUNNER-VERSION: Runner version is not supported by this reader. [Remeasure runner](./local-inference-adoption-format.md#runner-version) |
+| 6 / 2 | unavailable | excluded (cannot adopt) | UNKNOWN-RUNNER-VERSION: Runner version is not supported by this reader. [Remeasure runner](./local-inference-adoption-format.md#runner-version) |
+| 7 / 1 | unavailable | excluded (cannot adopt) | MISSING-RUNNER-VERSION: Runner version was not recorded. [Remeasure runner](./local-inference-adoption-format.md#runner-version) |
+| 7 / 2 | unavailable | excluded (cannot adopt) | MISSING-RUNNER-VERSION: Runner version was not recorded. [Remeasure runner](./local-inference-adoption-format.md#runner-version) |
 
 <details>
 <summary>Excluded evidence: source / run 4 / 1</summary>
@@ -69,6 +90,102 @@ COMMIT-MISMATCH: Saved measurement commit differs from the current comparison co
       "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
       "evaluatorVersion": "exact-text/v2",
       "verdict": "pass",
+      "reason": null
+    &#125;
+  &#93;
+&#125;</pre>
+
+</details>
+
+<details>
+<summary>Excluded evidence: source / run 6 / 1</summary>
+
+<pre>&#123;
+  "metrics": &#123;
+    "ttft": &#123;
+      "value": 0.25,
+      "unit": "s",
+      "source": "client"
+    &#125;
+  &#125;,
+  "quality": &#91;
+    &#123;
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evaluatorVersion": "exact-text/v1",
+      "verdict": "pass",
+      "reason": null
+    &#125;
+  &#93;
+&#125;</pre>
+
+</details>
+
+<details>
+<summary>Excluded evidence: source / run 6 / 2</summary>
+
+<pre>&#123;
+  "metrics": &#123;
+    "ttft": &#123;
+      "value": 0.25,
+      "unit": "s",
+      "source": "client"
+    &#125;
+  &#125;,
+  "quality": &#91;
+    &#123;
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evaluatorVersion": "exact-text/v1",
+      "verdict": "fail",
+      "reason": null
+    &#125;
+  &#93;
+&#125;</pre>
+
+</details>
+
+<details>
+<summary>Excluded evidence: source / run 7 / 1</summary>
+
+<pre>&#123;
+  "metrics": &#123;
+    "ttft": &#123;
+      "value": 0.25,
+      "unit": "s",
+      "source": "client"
+    &#125;
+  &#125;,
+  "quality": &#91;
+    &#123;
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evaluatorVersion": "exact-text/v1",
+      "verdict": "pass",
+      "reason": null
+    &#125;
+  &#93;
+&#125;</pre>
+
+</details>
+
+<details>
+<summary>Excluded evidence: source / run 7 / 2</summary>
+
+<pre>&#123;
+  "metrics": &#123;
+    "ttft": &#123;
+      "value": 0.25,
+      "unit": "s",
+      "source": "client"
+    &#125;
+  &#125;,
+  "quality": &#91;
+    &#123;
+      "fixtureId": "exact-answer",
+      "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evaluatorVersion": "exact-text/v1",
+      "verdict": "fail",
       "reason": null
     &#125;
   &#93;
@@ -157,6 +274,7 @@ Rows in this group share every recorded comparison dimension.
       "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
     &#125;
   &#93;,
+  "runnerVersion": "local-inference/4",
   "runtimeVersion": "fixture-runtime-1",
   "sampling": &#123;
     "max&#95;tokens": 1024,
@@ -227,6 +345,7 @@ Rows in this group share every recorded comparison dimension.
       "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
     &#125;
   &#93;,
+  "runnerVersion": "local-inference/4",
   "runtimeVersion": "fixture-runtime-1",
   "sampling": &#123;
     "max&#95;tokens": 1024,
@@ -297,6 +416,7 @@ Rows in this group share every recorded comparison dimension.
       "fixtureSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
     &#125;
   &#93;,
+  "runnerVersion": "local-inference/4",
   "runtimeVersion": "fixture-runtime-1",
   "sampling": &#123;
     "max&#95;tokens": 1024,

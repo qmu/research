@@ -11,7 +11,10 @@ const renderAdoptionReport = (inputs: readonly unknown[]) =>
 const digest = "a".repeat(64);
 const sample = () => ({
   schemaVersion: 1,
-  execution: { targetCommit: currentCommit },
+  execution: {
+    targetCommit: currentCommit,
+    runnerVersion: "local-inference/4",
+  },
   inputSha256: digest,
   sampling: { temperature: 0, seed: 42 },
   procedure: "single-request-per-engine",
@@ -573,6 +576,110 @@ describe("missing target commit recovery", () => {
     expect(output).toContain(`| 1 / 1 | ${currentCommit} | eligible | none |`);
     expect(output).toContain(
       `| 2 / 1 | ${stale.execution.targetCommit} | excluded | COMMIT-MISMATCH |`,
+    );
+  });
+});
+
+describe("saved runner version eligibility", () => {
+  it.each([
+    [undefined, "MISSING-RUNNER-VERSION"],
+    [null, "MISSING-RUNNER-VERSION"],
+    ["", "MISSING-RUNNER-VERSION"],
+    [" \n\t", "MISSING-RUNNER-VERSION"],
+    ["local-inference/999", "UNKNOWN-RUNNER-VERSION"],
+    [" local-inference/4", "UNKNOWN-RUNNER-VERSION"],
+    ["local-inference/4 ", "UNKNOWN-RUNNER-VERSION"],
+    [4, "UNKNOWN-RUNNER-VERSION"],
+    [{}, "UNKNOWN-RUNNER-VERSION"],
+    [[], "UNKNOWN-RUNNER-VERSION"],
+  ])("excludes all runs for runner %j with %s", (version, reason) => {
+    const saved = sample();
+    Object.assign(saved.execution, { runnerVersion: version });
+    saved.runs.push(structuredClone(saved.runs[0]));
+    saved.runs[1].quality[0].verdict = "fail";
+    saved.runs[1].quality[0].evaluatorVersion = "exact-text/v2";
+    const before = structuredClone(saved);
+    const result = joinAdoptionResults([sample(), saved]);
+    expect(result.groups.flatMap((group) => group.rowIndexes)).toEqual([0]);
+    expect(result.evaluatorMismatches).toEqual([]);
+    for (const [index, row] of result.rows.slice(1).entries()) {
+      expect(row).toMatchObject({
+        excluded: true,
+        adoption: "undetermined",
+        comparability: "undetermined",
+        conditionKey: null,
+        groupId: null,
+        runnerVersion: null,
+        runnerRecovery: {
+          reason,
+          href: "./local-inference-adoption-format.md#runner-version",
+        },
+        metrics: before.runs[index].metrics,
+        quality: before.runs[index].quality,
+      });
+      expect(row.reasons[0]).toBe(reason);
+    }
+    expect(saved).toEqual(before);
+    const rendered = renderAdoptionReport([saved]);
+    expect(rendered).not.toContain("| Adoption |");
+    expect(rendered).not.toContain("## condition-");
+    expect(rendered).toContain("excluded (cannot adopt)");
+    expect(rendered).toContain(
+      "[Remeasure runner](./local-inference-adoption-format.md#runner-version)",
+    );
+    expect(renderAdoptionReport([saved])).toBe(rendered);
+  });
+
+  it("keeps commit and runner failures in fixed order", () => {
+    const saved = sample();
+    Reflect.deleteProperty(saved.execution, "runnerVersion");
+    Reflect.deleteProperty(saved.execution, "targetCommit");
+    expect(joinAdoptionResults([saved]).rows[0].reasons).toEqual([
+      "MISSING-COMMIT",
+      "MISSING-RUNNER-VERSION",
+    ]);
+    expect(renderAdoptionReport([saved])).toContain("#missing-commit");
+    expect(renderAdoptionReport([saved])).toContain("#runner-version");
+  });
+
+  it("accepts known contracts while separating versions and retaining quality gates", () => {
+    const inputs = [
+      "local-inference/2",
+      "local-inference/3",
+      "local-inference/4",
+    ].map((version) =>
+      changed((v) => {
+        v.execution.runnerVersion = version;
+      }),
+    );
+    inputs[1].runs[0].quality[0].verdict = "fail";
+    inputs[2].runs[0].quality[0].evaluatorVersion = "exact-text/v2";
+    const result = joinAdoptionResults(inputs);
+    expect(result.rows.map((row) => row.adoption)).toEqual([
+      "pass",
+      "fail",
+      "pass",
+    ]);
+    expect(
+      result.rows.every((row) => !row.excluded && row.runnerRecovery === null),
+    ).toBe(true);
+    expect(result.groups).toHaveLength(3);
+    expect(result.evaluatorMismatches).toEqual([]);
+  });
+
+  it("never reflects untrusted runner labels into recovery or rendered output", () => {
+    const hostile =
+      "<script>{{secret}}|[link](https://bad) $(touch /tmp/private)";
+    const saved = changed((v) => {
+      v.execution.runnerVersion = hostile;
+    });
+    expect(JSON.stringify(joinAdoptionResults([saved]))).not.toContain(hostile);
+    const rendered = renderAdoptionReport([saved]);
+    expect(rendered).not.toContain("https://bad");
+    expect(rendered).not.toContain("secret");
+    expect(rendered).not.toContain("touch");
+    expect(rendered).toContain(
+      "UNKNOWN-RUNNER-VERSION: Runner version is not supported by this reader.",
     );
   });
 });
