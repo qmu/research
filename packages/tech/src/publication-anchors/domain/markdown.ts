@@ -23,7 +23,9 @@ export function publicationAnchor(
 ): string {
   if (
     !sections.includes(section) ||
-    (key !== undefined && !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(key))
+    (key !== undefined &&
+      (typeof key !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(key)))
   ) {
     throw new Error("Invalid publication anchor key");
   }
@@ -49,6 +51,8 @@ export function renderPublicationSections(input: PublicationSections): string {
       .map((section) => {
         const seen = new Set<string>();
         const entries = input[section].map((entry) => {
+          if (typeof entry.key !== "string")
+            throw new Error("Publication entry key required");
           const id = publicationAnchor(section, entry.key);
           if (seen.has(id)) throw new Error("Duplicate publication anchor key");
           seen.add(id);

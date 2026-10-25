@@ -37,7 +37,7 @@ describe("public adoption anchors", () => {
     for (const section of ["engines", "metrics", "reason-codes"] as const) {
       expect(md).toContain(`<a id="adoption-${section}"></a>`);
       expect(md).toContain(
-        `<a id="${publicationAnchor(section, input[section][0]!.key)}"></a>`,
+        `<a id="${publicationAnchor(section, input[section].map((entry) => entry.key)[0])}"></a>`,
       );
     }
     expect(md.indexOf("## Engines")).toBeLessThan(md.indexOf("## Metrics"));
@@ -46,7 +46,11 @@ describe("public adoption anchors", () => {
     );
   });
   it("keeps identifiers when labels change or entries reorder", () => {
-    const entry = input.engines[0]!;
+    const entry = {
+      key: "llama.cpp",
+      label: "llama.cpp server",
+      description: "Synthetic example only.",
+    };
     const changed = renderPublicationSections({
       ...input,
       engines: [
@@ -106,6 +110,43 @@ describe("public adoption anchors", () => {
     expect(readFileSync("../../docs/publication-anchors.md", "utf8")).toContain(
       renderPublicationSections(input),
     );
+  });
+  it.each([undefined, null, 123])(
+    "rejects missing or non-string entry keys: %s",
+    (key) => {
+      const invalid = JSON.parse(
+        JSON.stringify({
+          ...input,
+          engines: [{ key, label: "Example", description: "Example" }],
+        }),
+      ) as PublicationSections;
+      expect(() => renderPublicationSections(invalid)).toThrow();
+    },
+  );
+  it("preserves empty section targets", () => {
+    const md = renderPublicationSections({
+      engines: [],
+      metrics: [],
+      "reason-codes": [],
+    });
+    expect(md.match(/<a id=/g)).toHaveLength(3);
+    expect(md).not.toContain("### ");
+  });
+  it("CLI renders the documented input example", () => {
+    const result = spawnSync(
+      process.execPath,
+      ["--import", "tsx/esm", "src/entrypoints/render-publication-anchors.ts"],
+      {
+        input: readFileSync(
+          "src/publication-anchors/examples/sections.json",
+          "utf8",
+        ),
+        encoding: "utf8",
+      },
+    );
+    expect(result.status).toBe(0);
+    expect(result.stdout).toBe(renderPublicationSections(input));
+    expect(result.stderr).toBe("");
   });
   it("CLI prints no partial output or sensitive input on invalid later entries", () => {
     const result = spawnSync(
