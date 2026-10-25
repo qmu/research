@@ -7,9 +7,8 @@ export type VerifiedLatencyMemoryRun = Readonly<{
   reading: VerifiedReading;
 }>;
 
-const isVerified = (
-  run: LatencyMemoryRun,
-): run is VerifiedLatencyMemoryRun => run.reading.status === "verified";
+const isVerified = (run: LatencyMemoryRun): run is VerifiedLatencyMemoryRun =>
+  run.reading.status === "verified";
 
 /**
  * Keeps only the runs whose reading is `verified`. This is the one gate the

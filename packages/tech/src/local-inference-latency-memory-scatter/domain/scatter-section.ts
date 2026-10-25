@@ -1,6 +1,4 @@
-import {
-  renderScatterChart,
-} from "../../research-report/domain/scatter-chart.js";
+import { renderScatterChart } from "../../research-report/domain/scatter-chart.js";
 import { onlyVerifiedRuns } from "./verified-runs.js";
 import type { VerifiedLatencyMemoryRun } from "./verified-runs.js";
 import type { LatencyMemoryRun } from "./types.js";
