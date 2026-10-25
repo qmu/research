@@ -5,6 +5,7 @@ import {
   type RecoverableResult,
   type RemeasurementBinding,
 } from "../domain/remeasurement.js";
+import { inspectAdoptionRequest } from "../../adoption-recovery/domain/intent.js";
 import { updateCompletedExecution } from "./versioned-result.js";
 
 /** Idempotently persist one request in the measurement artifact itself.
@@ -21,6 +22,16 @@ export async function saveRemeasurementRequest(
     (value) => {
       const result = value as RecoverableResult;
       const existing = result.remeasurementRequest;
+      if (existing && Object.hasOwn(existing, "lifecycle")) {
+        const state = inspectAdoptionRequest(
+          result,
+          binding,
+          existing,
+          Date.now(),
+        );
+        if (state.reason) throw new Error(state.reason);
+        return result;
+      }
       const request = remeasurementRequest(
         result,
         binding,
