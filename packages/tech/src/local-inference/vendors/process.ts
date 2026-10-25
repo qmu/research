@@ -1,12 +1,46 @@
 import { spawn } from "node:child_process";
 import { writeFile } from "node:fs/promises";
+import { setTimeout as delay } from "node:timers/promises";
 
 export type Engine = "strata" | "ollama" | "llama.cpp" | "mlx";
+export type CleanupResult = {
+  scope: "process-group" | "child";
+  term_sent: boolean;
+  kill_sent: boolean;
+  child_reaped: boolean;
+  group_state: "gone" | "remaining" | "unknown" | "unsupported";
+};
+
+// A successful kill() only means the signal was sent, not that the group exited.
+function groupState(pid: number): CleanupResult["group_state"] {
+  try {
+    process.kill(-pid, 0);
+    return "remaining";
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code === "ESRCH"
+      ? "gone"
+      : "unknown";
+  }
+}
+
+async function waitForGroup(
+  pid: number,
+): Promise<CleanupResult["group_state"]> {
+  const deadline = performance.now() + 250;
+  let state = groupState(pid);
+  while (state === "remaining" && performance.now() < deadline) {
+    await delay(10);
+    state = groupState(pid);
+  }
+  return state;
+}
+
 export type ProcessResult = {
   schema_version: 1;
   engine: Engine;
   status: "ok" | "failed";
   process: { exit_code: number | null; signal: NodeJS.Signals | null };
+  cleanup: CleanupResult | null;
   failure: {
     code: "TIMEOUT" | "CANCELLED" | "UNREACHABLE" | "MEASURE-FAILED";
   } | null;
@@ -30,11 +64,13 @@ export async function measureProcess(options: {
     exitCode: number | null,
     signal: NodeJS.Signals | null,
     code: NonNullable<ProcessResult["failure"]>["code"] | null,
+    cleanup: CleanupResult | null = null,
   ): ProcessResult => ({
     schema_version: 1,
     engine: options.engine,
     status: code === null ? "ok" : "failed",
     process: { exit_code: exitCode, signal },
+    cleanup,
     failure: code === null ? null : { code },
   });
   if (options.signal?.aborted) return result(null, null, "CANCELLED");
@@ -43,12 +79,46 @@ export async function measureProcess(options: {
     // model output can enter the artifact or fill a pipe.
     const child = spawn(options.command, options.args ?? [], {
       stdio: "ignore",
+      detached: process.platform !== "win32",
     });
     let reason: "TIMEOUT" | "CANCELLED" | undefined;
     let spawnFailed = false;
+    let cleanup: Promise<CleanupResult> | undefined;
     const stop = (code: "TIMEOUT" | "CANCELLED") => {
-      reason ??= code;
-      child.kill("SIGKILL");
+      if (reason) return;
+      reason = code;
+      cleanup = (async () => {
+        const grouped = process.platform !== "win32";
+        const evidence: CleanupResult = {
+          scope: grouped ? "process-group" : "child",
+          term_sent: false,
+          kill_sent: false,
+          child_reaped: false,
+          group_state: grouped ? "unknown" : "unsupported",
+        };
+        const pid = child.pid;
+        if (pid === undefined) return evidence;
+        const send = (signal: NodeJS.Signals): boolean => {
+          try {
+            return grouped ? process.kill(-pid, signal) : child.kill(signal);
+          } catch {
+            return false;
+          }
+        };
+        evidence.term_sent = send("SIGTERM");
+        if (grouped) {
+          evidence.group_state = await waitForGroup(pid);
+          // The leader can close before descendants. Do not cancel escalation
+          // on its close event: the entire owned process group must be checked.
+          if (evidence.group_state !== "gone") {
+            evidence.kill_sent = send("SIGKILL");
+            evidence.group_state = await waitForGroup(pid);
+          }
+        } else {
+          evidence.kill_sent = send("SIGKILL");
+        }
+        return evidence;
+      })();
     };
     const cancel = () => stop("CANCELLED");
     const timer = setTimeout(() => stop("TIMEOUT"), options.timeoutMs);
@@ -57,9 +127,11 @@ export async function measureProcess(options: {
     child.on("error", () => {
       spawnFailed = true;
     });
-    child.on("close", (code, signal) => {
+    child.on("close", async (code, signal) => {
       clearTimeout(timer);
       options.signal?.removeEventListener("abort", cancel);
+      const evidence = cleanup ? await cleanup : null;
+      if (evidence) evidence.child_reaped = child.pid !== undefined;
       resolve(
         result(
           spawnFailed ? null : code,
@@ -72,6 +144,7 @@ export async function measureProcess(options: {
                 : signal === "SIGINT"
                   ? "CANCELLED"
                   : "MEASURE-FAILED"),
+          evidence,
         ),
       );
     });

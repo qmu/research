@@ -25,10 +25,27 @@ Fixed process-level classifications:
 | Other nonzero exit or signal | MEASURE-FAILED |
 | Exit 0 with no signal        | null           |
 
-The first requested stop wins. After a deadline/abort the direct measurement
-process is killed with SIGKILL and reaped before saving. Detached descendants
-are not managed: use a command that owns its lifecycle. Stdout/stderr are
-ignored, and commands, arguments, environment and raw errors are never saved.
+The first requested stop wins. On POSIX, each measurement starts in its own
+process group. A deadline or abort sends SIGTERM to the whole group, allows
+250 ms for graceful exit/reaping, then sends SIGKILL if the group still exists.
+The runner checks the group for another 250 ms and waits for the direct child's
+close event before saving. A leader exiting early does not cancel group cleanup.
+A graceful exit with code 0 after the deadline still records `TIMEOUT`.
+
+The additive `cleanup` field is null when no stop was requested. Otherwise it
+records `scope`, `term_sent`, `kill_sent`, `child_reaped` and `group_state`.
+`gone` means the OS reports no process in the owned group; `remaining` means
+members still exist (including orphan zombies); `unknown` means the probe could
+not establish the state. Signal delivery alone never proves successful cleanup.
+Descendants are reaped by their parent or the OS reaper, not by Node's wait on
+its direct child. Containers need a functioning init/reaper to remove orphan
+zombies; the bounded probe records leftovers instead of hanging indefinitely.
+Descendants that create a new session/process group escape this POSIX boundary.
+Windows uses direct-child termination and explicitly records scope `child` and
+state `unsupported`, without claiming process-tree cleanup.
+
+Stdout/stderr are ignored, and commands, arguments, environment, PIDs and raw
+errors are never saved.
 The wrapper deliberately does not infer diagnostic failure codes from exit
 numbers. The diagnostic normalizer proposed in qmu/research#202 and HTTP
 measurement schema proposed in qmu/research#183 remain independent; this
