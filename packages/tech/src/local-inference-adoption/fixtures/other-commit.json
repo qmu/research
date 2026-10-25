@@ -47,6 +47,7 @@
   ],
   "execution": {
     "targetCommit": "2222222222222222222222222222222222222222",
-    "runnerVersion": "local-inference/4"
+    "runnerVersion": "local-inference/4",
+    "runId": "synthetic-other-commit"
   }
 }
