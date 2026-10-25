@@ -109,3 +109,7 @@ publish-guard: ## Prove the exporter cannot silently overwrite downstream prose
 
 publish: ## Copy finished research Markdown to the corporate site
 	@bash scripts/publish-research.sh --all
+
+.PHONY: local-inference-process
+local-inference-process: ## Measure one Apple Silicon local inference process (ARGS='<engine> <new.json> -- <command> [args]')
+	@cd packages/tech && npm run local-inference-process -- $(ARGS)
