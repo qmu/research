@@ -45,7 +45,11 @@ has somewhere to be compared once more engines are measured:
 import { renderMemoryComparisonTable } from "./memory-comparison-table";
 
 renderMemoryComparisonTable([
-  { engine: "strata", hostRamPeak: peaks.host_ram_peak, gpuVramPeak: peaks.gpu_vram_peak },
+  {
+    engine: "strata",
+    hostRamPeak: peaks.host_ram_peak,
+    gpuVramPeak: peaks.gpu_vram_peak,
+  },
 ]);
 ```
 
