@@ -17,6 +17,12 @@ printing a table, creating a comparison file or changing an existing comparison.
 An existing file is preserved, so callers must check the exit code rather than
 interpret a previous comparison as the result of a failed run.
 
+The output must refer to a different file from the input JSON. Rendering rejects
+the same path, relative aliases, symbolic links and hard links to the input before
+opening the output, preserving the JSON for subsequent validation and rendering.
+This guard checks file identity at invocation time; it does not protect against
+another process replacing paths concurrently.
+
 The version 1 table format contains `schemaVersion: 1`, a `fixture` boolean and a
 `runs` array. Each run requires nonblank `id`, `backend`, `model`, `quantization`,
 `hardware` and `condition` strings, plus `speed` and `quality` metrics. IDs are
