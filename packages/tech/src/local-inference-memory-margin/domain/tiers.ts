@@ -29,11 +29,10 @@ function assertAscending(tiers: ReadonlyArray<FixedCapacityTier>): void {
   for (let i = 1; i < tiers.length; i++) {
     const prev = tiers[i - 1];
     const cur = tiers[i];
-    if (prev && cur && prev.totalMiB >= cur.totalMiB)
-      throw new Error(
-        `tiers.json must be strictly ascending by totalMiB: ` +
-          `"${prev.label}" is not below "${cur.label}"`,
-      );
+    if (!prev || !cur || prev.totalMiB < cur.totalMiB) continue;
+    throw new Error(
+      `tiers.json must be strictly ascending by totalMiB: "${prev.label}" is not below "${cur.label}"`,
+    );
   }
 }
 
