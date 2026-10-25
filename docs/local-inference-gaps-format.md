@@ -28,8 +28,8 @@ string/number/boolean fields, a `status` of `measured` or `failed`, and a
 
 Each metric is either a measurement — `{ "value": number, "unit": string,
 "source": "client" | "usage" }`, where zero is a valid measured value — or a
-gap — `{ "value": null, "unit": string, "reason": code }` using one of three
-fixed reason codes: `NO-FIELD`, `NOT-RUN`, `MEASURE-FAILED`. No other reason is
+gap — `{ "value": null, "unit": string, "reason": code }` using one of four
+fixed reason codes: `NO-FIELD`, `NOT-RUN`, `MEASURE-FAILED`, `UNSUPPORTED`. No other reason is
 accepted.
 
 A `failed` run must additionally carry `failure: { "code": code }` naming why
@@ -55,3 +55,18 @@ Operator-supplied text (model name, runtime version, condition values) is
 escaped so it cannot break the Markdown table or inject HTML. Numbers use
 JavaScript's canonical string representation without rounding; there are no
 generated timestamps besides the one carried in the input file.
+
+## Per-metric display reasons
+
+`UNSUPPORTED` means 未対応: the source explicitly does not support the metric.
+`MEASURE-FAILED` means 失敗: the measurement was attempted but failed.
+`NO-FIELD` means 記録なし: the input has no recorded field; `NOT-RUN` also
+means 記録なし but preserves the fact that measurement was not run.
+Missing fields do not prove lack of support. Keep the reason supplied by the
+producer for each metric, independently of the run's failure code. The parser
+rejects a bare null or a missing reason rather than guessing.
+
+The Strata section repeats TTFT, TPS and Peak RSS in a narrow table for small
+screens. It uses the same values and reasons as the four-engine table, and
+keeps measured zero distinct from missing data. The committed fixture is
+synthetic and demonstrates all three display categories within one Strata run.

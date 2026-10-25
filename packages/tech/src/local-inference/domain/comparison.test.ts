@@ -190,8 +190,8 @@ describe("renderComparisonMarkdown", () => {
 });
 
 describe("fixed classification sets", () => {
-  it("names exactly three gap reasons and eight failure codes", () => {
-    expect(GAP_REASONS).toHaveLength(3);
+  it("names exactly four gap reasons and eight failure codes", () => {
+    expect(GAP_REASONS).toHaveLength(4);
     expect(FAILURE_CODES).toHaveLength(8);
     expect(new Set(GAP_REASONS).size).toBe(GAP_REASONS.length);
     expect(new Set(FAILURE_CODES).size).toBe(FAILURE_CODES.length);
