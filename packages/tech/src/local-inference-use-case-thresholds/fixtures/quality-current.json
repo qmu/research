@@ -1,5 +1,9 @@
 {
   "schemaVersion": 1,
+  "execution": {
+    "targetCommit": "1111111111111111111111111111111111111111",
+    "runnerVersion": "local-inference/4"
+  },
   "inputSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "fixture": true,
   "note": "Synthetic gate demonstration, not an engine measurement.",

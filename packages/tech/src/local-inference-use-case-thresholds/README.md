@@ -96,15 +96,40 @@ Run `npm run local-inference-thresholds` to reproduce this table locally.
 
 ## Fixture quality gate from saved common JSON
 
-`npm run local-inference-quality-adoption -- baseline.json current.json [use-case-id]`
+`npm run local-inference-quality-adoption -- --commit <full-target-sha> baseline.json current.json [use-case-id]`
 reads two schemaVersion 1 common inference JSON files. It uses the existing
 quality diff's engine/model identity, input hash, fixture hash and evaluator
 version checks. Metrics (`ttft`, `tps`, `peak_rss`) come from the same current
 run; quality ratio is the fraction of current fixed judgments that pass.
 Missing or undetermined judgments do not become zero or a pass.
 
+Every current row, including Strata, first requires saved
+`execution.runnerVersion` and `execution.targetCommit`. The caller supplies an
+independently resolved lowercase 40-character target SHA. Missing commit metadata
+produces `MISSING-COMMIT`; a different saved SHA produces `COMMIT-MISMATCH`.
+Malformed saved or requested SHAs reject the whole command before output.
+
+The runner checker is reused unchanged from qmu/research#244 at
+`local-inference-adoption/domain/runner-version.ts`. Only `local-inference/2`,
+`local-inference/3` and `local-inference/4` are recognized. Missing, null, empty or
+whitespace-only values produce `MISSING-RUNNER-VERSION`; unsupported strings and
+non-string values produce `UNKNOWN-RUNNER-VERSION`. Runtime versions, per-run
+labels and baseline metadata cannot substitute for this current saved field.
+This consumer uses the checker's reason and version, not its recovery link.
+
+Excluded rows have `decision: undetermined` even when their recorded metrics or
+quality fail. Fixed reasons appear in commit-then-runner order on every row;
+metric rules and fixture differences remain evidence. The baseline is historical
+and is not required to match the target commit. Its execution provenance is not
+validated by this gate; existing fixture/input/evaluator comparison checks still
+apply. Eligibility does not attest authenticity or hardware equivalence.
+
+Rerun measurement and quality evaluation in the intended checkout and save a new
+artifact to recover. Preserve old artifacts; editing their SHA or runner label
+does not remeasure them. The fixture SHAs below are synthetic IDs, not real commits.
+
 The proposed conservative fixture gate requires every current fixture to pass
-and the fixture set to remain comparable. A regression or current failure
+and the fixture set to remain comparable. A regression or current failure in an eligible row
 rejects even if the aggregate ratio and speed thresholds pass. Added/removed
 fixtures, changed inputs/hash/evaluator, and absent judgments withhold adoption.
 Metric failures still reject; otherwise any missing metric or quality evidence
@@ -116,6 +141,7 @@ Reproduce the synthetic regression example without external services:
 
 ```sh
 npm run local-inference-quality-adoption -- \
+  --commit 1111111111111111111111111111111111111111 \
   src/local-inference-use-case-thresholds/fixtures/quality-baseline.json \
   src/local-inference-use-case-thresholds/fixtures/quality-current.json \
   interactive-coding-assistant

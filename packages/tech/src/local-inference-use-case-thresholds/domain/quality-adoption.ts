@@ -1,4 +1,5 @@
 import { diffQuality } from "../../local-inference-quality-diff/domain/diff.js";
+import { checkRunnerVersion } from "../../local-inference-adoption/domain/runner-version.js";
 import { evaluateAdoption } from "./evaluate.js";
 import { parseReading } from "./readings.js";
 import type { AdoptionVerdict, Engine, UseCase } from "./types.js";
@@ -6,6 +7,10 @@ import type { AdoptionVerdict, Engine, UseCase } from "./types.js";
 type QualityRun = ReturnType<typeof diffQuality>["runs"][number];
 export type QualityAdoption = AdoptionVerdict & {
   model: string;
+  runnerVersion: string | null;
+  targetCommit: string | null;
+  excluded: boolean;
+  exclusionReasons: string[];
   qualityDecision: AdoptionVerdict["decision"];
   fixtures: QualityRun["fixtures"];
 };
@@ -37,8 +42,38 @@ export function evaluateQualityAdoption(
   before: unknown,
   after: unknown,
   useCase: UseCase,
+  targetCommit: string,
 ): QualityAdoption[] {
+  const isCommit = (value: unknown): value is string =>
+    typeof value === "string" && /^[a-f0-9]{40}$/.test(value);
+  if (!isCommit(targetCommit)) throw new Error("Invalid target commit");
   const diff = diffQuality(before, after); // validates identities and judgments
+  const saved = after as Record<string, unknown>;
+  const execution = Object.prototype.hasOwnProperty.call(saved, "execution")
+    ? saved.execution
+    : {};
+  if (!execution || typeof execution !== "object" || Array.isArray(execution))
+    throw new Error("Invalid execution");
+  const provenance = execution as Record<string, unknown>;
+  if (
+    Object.prototype.hasOwnProperty.call(provenance, "targetCommit") &&
+    !isCommit(provenance.targetCommit)
+  )
+    throw new Error("Invalid saved commit");
+  const commit = isCommit(provenance.targetCommit)
+    ? provenance.targetCommit
+    : null;
+  const runner = checkRunnerVersion(provenance.runnerVersion);
+  // Provenance controls eligibility before quality or performance can decide.
+  // The baseline is historical; only the current artifact must match the target.
+  const exclusionReasons = [
+    ...(commit === null
+      ? ["MISSING-COMMIT"]
+      : commit !== targetCommit
+        ? ["COMMIT-MISMATCH"]
+        : []),
+    ...(runner.recovery ? [runner.recovery.reason] : []),
+  ];
   const current = (after as { runs: Array<Record<string, unknown>> }).runs;
   return diff.runs.map((run) => {
     const source = current.find(
@@ -85,8 +120,9 @@ export function evaluateQualityAdoption(
         : { value: null, reason: "NO-FIELD" },
     });
     const gate = qualityDecision(run);
-    const decision =
-      verdict.decision === "reject" || gate === "reject"
+    const decision = exclusionReasons.length
+      ? "undetermined"
+      : verdict.decision === "reject" || gate === "reject"
         ? "reject"
         : verdict.decision === "undetermined" || gate === "undetermined"
           ? "undetermined"
@@ -95,6 +131,10 @@ export function evaluateQualityAdoption(
       ...verdict,
       decision,
       model: run.model,
+      runnerVersion: runner.version,
+      targetCommit: commit,
+      excluded: exclusionReasons.length > 0,
+      exclusionReasons: [...exclusionReasons],
       qualityDecision: gate,
       fixtures: run.fixtures,
     };
@@ -115,8 +155,8 @@ export function renderQualityAdoption(
   rows: readonly QualityAdoption[],
 ): string {
   return [
-    "| Engine / model | Adoption | Metric thresholds | Fixture quality gate | Fixture differences |",
-    "| --- | --- | --- | --- | --- |",
+    "| Engine / model | Adoption | Runner version | Target commit | Eligibility | Metric thresholds | Fixture quality gate | Fixture differences |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ...rows.map((row) => {
       const metrics = row.rules
         .map(
@@ -131,7 +171,10 @@ export function renderQualityAdoption(
               `${f.fixtureId}: ${f.change} (${f.before?.verdict ?? "missing"} → ${f.after?.verdict ?? "missing"})${f.after?.reason ? `: ${f.after.reason}` : ""}`,
           )
           .join("; ") || "NO-FIXTURES";
-      return `| ${cell(row.engine)} / ${cell(row.model)} | ${row.decision} | ${cell(metrics)} | ${row.qualityDecision} | ${cell(fixtures)} |`;
+      const eligibility = row.excluded
+        ? `excluded: ${row.exclusionReasons.join("; ")}`
+        : "eligible";
+      return `| ${cell(row.engine)} / ${cell(row.model)} | ${row.decision} | ${cell(row.runnerVersion ?? "unavailable")} | ${cell(row.targetCommit ?? "not recorded")} | ${cell(eligibility)} | ${cell(metrics)} | ${row.qualityDecision} | ${cell(fixtures)} |`;
     }),
     "",
   ].join("\n");
