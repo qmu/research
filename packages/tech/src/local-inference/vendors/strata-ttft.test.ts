@@ -37,10 +37,8 @@ describe("normalizeStrataTtft", () => {
   it.each(["dispatch_offset_s", "first_answer_offset_s"])(
     "marks a missing %s as NO-FIELD",
     (field) => {
-      const { [field]: _omitted, ...rest } = measured as Record<
-        string,
-        unknown
-      >;
+      const rest: Record<string, unknown> = { ...measured };
+      delete rest[field];
       expect(normalizeStrataTtft(rest)).toEqual(missing);
     },
   );
