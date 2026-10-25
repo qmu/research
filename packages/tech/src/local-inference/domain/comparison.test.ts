@@ -47,9 +47,9 @@ describe("parseComparisonResult", () => {
   it("parses the committed fixture", () => {
     const parsed = parseComparisonResult(fixture);
     expect(parsed.runs).toHaveLength(4);
-    expect(parsed.runs.map((r) => r.engine).sort()).toEqual([
-      ...ENGINES,
-    ].sort());
+    expect(parsed.runs.map((r) => r.engine).sort()).toEqual(
+      [...ENGINES].sort(),
+    );
   });
 
   it("rejects an unknown gap reason", () => {
@@ -70,9 +70,7 @@ describe("parseComparisonResult", () => {
   it("rejects an unknown failure code", () => {
     expect(() =>
       parseComparisonResult(
-        result([
-          run({ status: "failed", failure: { code: "WHO-KNOWS" } }),
-        ]),
+        result([run({ status: "failed", failure: { code: "WHO-KNOWS" } })]),
       ),
     ).toThrow();
   });
@@ -85,9 +83,7 @@ describe("parseComparisonResult", () => {
 
   it("rejects a failure code on a measured run", () => {
     expect(() =>
-      parseComparisonResult(
-        result([run({ failure: { code: "TIMEOUT" } })]),
-      ),
+      parseComparisonResult(result([run({ failure: { code: "TIMEOUT" } })])),
     ).toThrow();
   });
 
@@ -98,9 +94,7 @@ describe("parseComparisonResult", () => {
   });
 
   it("rejects a duplicate engine", () => {
-    expect(() =>
-      parseComparisonResult(result([run(), run()])),
-    ).toThrow();
+    expect(() => parseComparisonResult(result([run(), run()]))).toThrow();
   });
 
   it("rejects a negative measurement", () => {
@@ -191,9 +185,7 @@ describe("renderComparisonMarkdown", () => {
   });
 
   it("fails before any output is produced on invalid input", () => {
-    expect(() =>
-      renderComparisonMarkdown({ schemaVersion: 2 }),
-    ).toThrow();
+    expect(() => renderComparisonMarkdown({ schemaVersion: 2 })).toThrow();
   });
 });
 

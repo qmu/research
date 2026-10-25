@@ -134,10 +134,7 @@ function parseMetrics(value: unknown): Record<MetricName, Measurement> {
   return metrics;
 }
 
-function parseFailure(
-  value: unknown,
-  status: Run["status"],
-): Run["failure"] {
+function parseFailure(value: unknown, status: Run["status"]): Run["failure"] {
   if (status === "measured") {
     if (value !== undefined) {
       throw new Error("A measured run must not carry a failure code");
