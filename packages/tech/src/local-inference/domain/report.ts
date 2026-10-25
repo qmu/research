@@ -15,15 +15,15 @@ const describeModelCondition = (run: InferenceRun): string =>
 const describeRunner = (run: InferenceRun): string =>
   `${run.runner.name} ${run.runner.version}`;
 
-const renderRow = (run: InferenceRun): string =>
-  [
-    "",
+const renderRow = (run: InferenceRun): string => {
+  const cells = [
     escapeCell(run.backend),
     escapeCell(describeModelCondition(run)),
     escapeCell(describeRunner(run)),
     `\`${run.commandFingerprint}\``,
-    "",
-  ].join(" | ").trim();
+  ];
+  return `| ${cells.join(" | ")} |`;
+};
 
 const TABLE_HEADER =
   "| Backend | Model condition | Runner | Command fingerprint |\n" +

@@ -65,9 +65,9 @@ describe("parseComparisonFile", () => {
   });
 
   it("rejects a non-boolean fixture flag", () => {
-    expect(() =>
-      parseComparisonFile({ ...validFile, fixture: "yes" }),
-    ).toThrow(/fixture must be a boolean/);
+    expect(() => parseComparisonFile({ ...validFile, fixture: "yes" })).toThrow(
+      /fixture must be a boolean/,
+    );
   });
 
   it("rejects duplicate run ids", () => {

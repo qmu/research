@@ -10,9 +10,7 @@ import { renderComparisonPage } from "../local-inference/domain/report";
 export const main = async (): Promise<void> => {
   const [inputPath, outputPath] = process.argv.slice(2);
   if (inputPath === undefined || outputPath === undefined) {
-    throw new Error(
-      "usage: render-local-inference <input.json> <output.md>",
-    );
+    throw new Error("usage: render-local-inference <input.json> <output.md>");
   }
 
   const raw = JSON.parse(await readFile(inputPath, "utf8"));
