@@ -179,8 +179,9 @@ value only when `runs[].runId`, `execution.runnerVersion`, and
 contract is seconds (`unit: "s"`), client measurement (`source: "client"`), a
 finite nonnegative number, and a measured run. Measured zero is valid. Missing
 values, failed runs, throughput, startup time and other runs cannot supply TTFT.
-This is metric eligibility, separate from the existing fixture-quality adoption
-verdicts; it introduces no latency threshold or general engine recommendation.
+When an execution is explicitly selected, metric eligibility also gates the
+adoption verdict. This introduces no latency threshold or general engine
+recommendation.
 
 ```sh
 cd packages/tech
@@ -240,3 +241,23 @@ unknown codes, or contradictory status/unit/source produce `INVALID-TTFT`.
 Provenance rejection takes precedence over all acquisition reasons. Legacy rows
 without `ttft` keep their existing generic missing reasons. No missing value
 becomes zero, and the quality verdict remains a separate evaluation.
+
+### Selected TTFT and the adoption calculation
+
+`joinAdoptionResults(inputs, currentCommit, ttftIdentity)` returns each row's
+`ttft` decision and uses that same decision in its adoption verdict. With an
+explicit selection, a quality pass becomes `undetermined` when TTFT is unavailable
+or the run, runner or commit does not match. Quality evidence remains recorded;
+a quality failure remains `fail`. Without selection the existing adoption verdict
+continues to describe quality and provenance only.
+
+A selected identity must identify exactly one row across all supplied files.
+Repeated matches produce `AMBIGUOUS-RUN-ID` and no adopted TTFT, even when the
+values agree. Choose the original request artifact once, or remeasure into a new
+artifact with a fresh run ID; do not edit recorded IDs to resolve conflicting
+measurements. Condition groups still describe recorded conditions independently
+of metric availability.
+
+The [synthetic no-content example](./local-inference-ttft-no-content.md) retains a
+passing quality fixture while showing `NO-CONTENT` in both TTFT eligibility and
+the `undetermined` adoption row. It is not an Apple Silicon performance result.

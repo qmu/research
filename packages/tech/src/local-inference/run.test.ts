@@ -6,7 +6,10 @@ import { afterEach, describe, expect, it } from "vitest";
 import { engines, metrics } from "./domain/result.js";
 import { parseConfig, runLocalInference } from "./run.js";
 import { adoptSavedTtft } from "../local-inference-adoption/domain/ttft.js";
-import { renderAdoptionReport } from "../local-inference-adoption/domain/adoption.js";
+import {
+  joinAdoptionResults,
+  renderAdoptionReport,
+} from "../local-inference-adoption/domain/adoption.js";
 import { observeStream } from "./vendors/stream.js";
 
 const directories: string[] = [];
@@ -84,6 +87,23 @@ describe("local inference common JSON", () => {
       targetCommit: "1".repeat(40),
     });
     const first = result.runs[0];
+    const saved = JSON.parse(await readFile(output, "utf8"));
+    const adoption = joinAdoptionResults(
+      [saved],
+      result.execution.targetCommit,
+      {
+        ...result.execution,
+        runId: first.runId,
+      },
+    );
+    expect(adoption.rows[0].ttft.value).toBe(first.metrics.ttft.value);
+    expect(adoption.rows[0].adoption).toBe("undetermined");
+    expect(adoption.rows[0].reasons).toContain("MISSING-QUALITY");
+    expect(
+      adoption.rows
+        .slice(1)
+        .every((row) => row.ttft.reasons.includes("RUN-ID-MISMATCH")),
+    ).toBe(true);
     const identity = { ...result.execution, runId: first.runId };
     expect(adoptSavedTtft(result.execution, first, identity).value).toBe(
       first.metrics.ttft.value,
@@ -179,6 +199,15 @@ describe("local inference common JSON", () => {
       });
     }
     const identity = { ...result.execution, runId: result.runs[0].runId };
+    const saved = JSON.parse(await readFile(output, "utf8"));
+    const adoption = joinAdoptionResults(
+      [saved],
+      identity.targetCommit,
+      identity,
+    );
+    expect(adoption.rows[0].adoption).toBe("undetermined");
+    expect(adoption.rows[0].ttft.reasons).toEqual(["HTTP-ERROR"]);
+    expect(adoption.rows[0].reasons).toContain("HTTP-ERROR");
     expect(
       adoptSavedTtft(result.execution, result.runs[0], identity),
     ).toMatchObject({ value: null, reasons: ["HTTP-ERROR"] });
@@ -279,6 +308,15 @@ describe("local inference common JSON", () => {
         ids.add(run.runId);
       }
       const identity = { ...result.execution, runId: result.runs[0].runId };
+      const saved = JSON.parse(await readFile(output, "utf8"));
+      const adoption = joinAdoptionResults(
+        [saved],
+        identity.targetCommit,
+        identity,
+      );
+      expect(adoption.rows[0].adoption).toBe("undetermined");
+      expect(adoption.rows[0].ttft.reasons).toEqual(["NO-CONTENT"]);
+      expect(adoption.rows[0].reasons).toContain("NO-CONTENT");
       expect(
         adoptSavedTtft(result.execution, result.runs[0], identity),
       ).toMatchObject({ value: null, reasons: ["NO-CONTENT"] });

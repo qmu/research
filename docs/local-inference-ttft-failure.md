@@ -4,7 +4,9 @@ Adoption pass means the recorded fixtures passed under complete recorded conditi
 
 ## First-token latency eligibility
 
-Only saved TTFT from the selected run ID, runner version and target commit is adopted here. Quality verdicts below are separate: adopting a latency value is not an engine recommendation. Missing selection or evidence never becomes zero.
+Only saved TTFT from a uniquely selected run ID, runner version and target commit is adopted here. When a run is selected, adoption below also requires its available TTFT; acquisition and identity failures keep adoption undetermined. Quality failures still fail adoption. Without selection the adoption table evaluates quality only. Missing selection or evidence never becomes zero.
+
+[Synthetic quality-pass / unavailable-TTFT example](./local-inference-ttft-no-content.md#first-token-latency-eligibility) shows why a passing quality fixture cannot substitute for a missing latency.
 
 [Synthetic acquisition failure example](./local-inference-ttft-failure.md#first-token-latency-eligibility). No Apple Silicon performance measurement is claimed.
 
@@ -38,7 +40,7 @@ These rows lack comparison metadata. They are not mutually comparable and do not
 
 | Source / run | Engine / model | Status | Adoption | Reasons |
 | --- | --- | --- | --- | --- |
-| 1 / 1 | mlx / synthetic-model | failed | undetermined | MISSING-FINGERPRINT, MISSING-QUALITY, MEASURE-FAILED |
+| 1 / 1 | mlx / synthetic-model | failed | undetermined | MISSING-FINGERPRINT, MISSING-QUALITY, MEASURE-FAILED, TIMEOUT |
 
 <details>
 <summary>Recorded evidence</summary>

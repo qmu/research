@@ -15,7 +15,9 @@ EVALUATOR-VERSION-MISMATCH: Evaluator versions differ; direct comparison is bloc
 
 ## First-token latency eligibility
 
-Only saved TTFT from the selected run ID, runner version and target commit is adopted here. Quality verdicts below are separate: adopting a latency value is not an engine recommendation. Missing selection or evidence never becomes zero.
+Only saved TTFT from a uniquely selected run ID, runner version and target commit is adopted here. When a run is selected, adoption below also requires its available TTFT; acquisition and identity failures keep adoption undetermined. Quality failures still fail adoption. Without selection the adoption table evaluates quality only. Missing selection or evidence never becomes zero.
+
+[Synthetic quality-pass / unavailable-TTFT example](./local-inference-ttft-no-content.md#first-token-latency-eligibility) shows why a passing quality fixture cannot substitute for a missing latency.
 
 [Synthetic acquisition failure example](./local-inference-ttft-failure.md#first-token-latency-eligibility). No Apple Silicon performance measurement is claimed.
 
@@ -25,8 +27,8 @@ Selected run: synthetic-run-1; runner: local-inference/4; commit: 11111111111111
 | --- | --- | --- | --- | --- | --- |
 | 1 / 1 | ollama / synthetic-model | 0.25 | same execution; measured | available | synthetic-run-1 / local-inference/4 / 1111111111111111111111111111111111111111 |
 | 1 / 2 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unverified | synthetic-run-1-second-request / local-inference/4 / 1111111111111111111111111111111111111111 |
-| 2 / 1 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unverified | synthetic-run-2 / local-inference/4 / 1111111111111111111111111111111111111111 |
-| 3 / 1 | ollama / synthetic-model | 0.25 | same execution; measured | available | synthetic-run-1 / local-inference/4 / 1111111111111111111111111111111111111111 |
+| 2 / 1 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unverified | synthetic-other-host-request / local-inference/4 / 1111111111111111111111111111111111111111 |
+| 3 / 1 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unverified | synthetic-other-evaluator-request / local-inference/4 / 1111111111111111111111111111111111111111 |
 | 4 / 1 | ollama / synthetic-model | not adopted | MISSING-RUN-ID, MISSING-RUNNER-VERSION, MISSING-COMMIT — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unverified | not recorded / not recorded / not recorded |
 | 5 / 1 | ollama / synthetic-model | not adopted | COMMIT-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unverified | synthetic-run-1 / local-inference/4 / 2222222222222222222222222222222222222222 |
 | 6 / 1 | ollama / synthetic-model | not adopted | RUNNER-VERSION-MISMATCH — [Remeasure](./local-inference-adoption-format.md#first-token-latency) | unverified | synthetic-run-1 / not recorded / 1111111111111111111111111111111111111111 |
@@ -221,7 +223,7 @@ Rows in this group share every recorded comparison dimension.
 | Source / run | Engine / model | Status | Adoption | Reasons |
 | --- | --- | --- | --- | --- |
 | 1 / 1 | ollama / synthetic-model | measured | pass | none |
-| 1 / 2 | ollama / synthetic-model | measured | fail | QUALITY-FAIL |
+| 1 / 2 | ollama / synthetic-model | measured | fail | QUALITY-FAIL, RUN-ID-MISMATCH |
 
 <details>
 <summary>Recorded evidence</summary>
@@ -313,7 +315,7 @@ Rows in this group share every recorded comparison dimension.
 
 | Source / run | Engine / model | Status | Adoption | Reasons |
 | --- | --- | --- | --- | --- |
-| 3 / 1 | ollama / synthetic-model | measured | pass | none |
+| 3 / 1 | ollama / synthetic-model | measured | undetermined | RUN-ID-MISMATCH |
 
 <details>
 <summary>Recorded evidence</summary>
@@ -384,7 +386,7 @@ Rows in this group share every recorded comparison dimension.
 
 | Source / run | Engine / model | Status | Adoption | Reasons |
 | --- | --- | --- | --- | --- |
-| 2 / 1 | ollama / synthetic-model | measured | pass | none |
+| 2 / 1 | ollama / synthetic-model | measured | undetermined | RUN-ID-MISMATCH |
 
 <details>
 <summary>Recorded evidence</summary>

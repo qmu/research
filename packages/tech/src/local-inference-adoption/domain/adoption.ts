@@ -2,6 +2,7 @@ import {
   adoptSavedTtft,
   validateTtftIdentity,
   type TtftIdentity,
+  type TtftDecision,
 } from "./ttft.js";
 import { checkRunnerVersion, type RunnerRecovery } from "./runner-version.js";
 
@@ -22,6 +23,7 @@ export interface AdoptionRow {
   error?: string;
   quality: RecordValue[];
   adoption: Verdict;
+  ttft: TtftDecision;
   comparability: "comparable" | "undetermined";
   reasons: string[];
   conditionKey: string | null;
@@ -149,10 +151,34 @@ function quality(value: unknown): RecordValue[] {
 export function joinAdoptionResults(
   inputs: readonly unknown[],
   currentCommit: string,
+  ttftIdentity?: TtftIdentity,
 ): AdoptionReport {
   if (!isCommit(currentCommit)) throw new Error("Invalid current commit");
   if (!Array.isArray(inputs) || !inputs.length)
     throw new Error("Expected at least one result");
+  if (ttftIdentity) {
+    validateTtftIdentity(ttftIdentity);
+    if (ttftIdentity.targetCommit !== currentCommit)
+      throw new Error("TTFT-COMPARISON-COMMIT-MISMATCH");
+  }
+  // A selected identity must resolve to exactly one saved row across all inputs.
+  const selectedCount = ttftIdentity
+    ? inputs.reduce((count: number, input) => {
+        const data = object(input);
+        const execution = own(data, "execution") ? object(data.execution) : {};
+        return (
+          count +
+          (Array.isArray(data.runs)
+            ? data.runs.filter(
+                (raw) =>
+                  object(raw).runId === ttftIdentity.runId &&
+                  execution.runnerVersion === ttftIdentity.runnerVersion &&
+                  execution.targetCommit === ttftIdentity.targetCommit,
+              ).length
+            : 0)
+        );
+      }, 0)
+    : 0;
   const rows: AdoptionRow[] = [];
   inputs.forEach((input, sourceIndex) => {
     const data = object(input);
@@ -256,6 +282,18 @@ export function joinAdoptionResults(
           reasons.push(String(q.reason));
       if (evaluations.some((q) => q.verdict === "fail"))
         reasons.push("QUALITY-FAIL");
+      let ttft = adoptSavedTtft(execution, run, ttftIdentity);
+      if (
+        ttftIdentity &&
+        selectedCount > 1 &&
+        run.runId === ttftIdentity.runId &&
+        execution.runnerVersion === ttftIdentity.runnerVersion &&
+        execution.targetCommit === ttftIdentity.targetCommit
+      )
+        ttft = { value: null, unit: "s", reasons: ["AMBIGUOUS-RUN-ID"] };
+      if (ttftIdentity && ttft.value === null)
+        for (const reason of ttft.reasons)
+          if (!reasons.includes(reason)) reasons.push(reason);
       rows.push({
         sourceIndex,
         commitSha,
@@ -269,6 +307,7 @@ export function joinAdoptionResults(
         metrics: metrics(run.metrics),
         ...(own(run, "error") ? { error: run.error as string } : {}),
         quality: evaluations,
+        ttft,
         adoption: excluded
           ? "undetermined"
           : reasons.includes("QUALITY-FAIL")
@@ -350,7 +389,7 @@ export function renderAdoptionReport(
     if (ttftIdentity.targetCommit !== currentCommit)
       throw new Error("TTFT-COMPARISON-COMMIT-MISMATCH");
   }
-  const report = joinAdoptionResults(inputs, currentCommit);
+  const report = joinAdoptionResults(inputs, currentCommit, ttftIdentity);
   const pretty = (value: unknown) =>
     JSON.stringify(value, null, 2).split("\n").map(cell).join("\n");
   const table = (rows: AdoptionRow[]) => [
@@ -435,7 +474,9 @@ export function renderAdoptionReport(
       : []),
     "## First-token latency eligibility",
     "",
-    "Only saved TTFT from the selected run ID, runner version and target commit is adopted here. Quality verdicts below are separate: adopting a latency value is not an engine recommendation. Missing selection or evidence never becomes zero.",
+    "Only saved TTFT from a uniquely selected run ID, runner version and target commit is adopted here. When a run is selected, adoption below also requires its available TTFT; acquisition and identity failures keep adoption undetermined. Quality failures still fail adoption. Without selection the adoption table evaluates quality only. Missing selection or evidence never becomes zero.",
+    "",
+    "[Synthetic quality-pass / unavailable-TTFT example](./local-inference-ttft-no-content.md#first-token-latency-eligibility) shows why a passing quality fixture cannot substitute for a missing latency.",
     "",
     "[Synthetic acquisition failure example](./local-inference-ttft-failure.md#first-token-latency-eligibility). No Apple Silicon performance measurement is claimed.",
     "",
@@ -450,7 +491,7 @@ export function renderAdoptionReport(
     ...report.rows.map((row) => {
       const input = object(inputs[row.sourceIndex]);
       const run = object((input.runs as unknown[])[row.runIndex]);
-      const result = adoptSavedTtft(input.execution, run, ttftIdentity);
+      const result = row.ttft;
       const unavailable = [
         "NO-CONTENT",
         "HTTP-ERROR",

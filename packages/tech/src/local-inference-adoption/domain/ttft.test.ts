@@ -137,7 +137,7 @@ describe("saved TTFT adoption", () => {
   it("does not mutate saved evidence and does not borrow a metric from another row", () => {
     const input = fixture();
     const original = structuredClone(input);
-    input.runs[1].runId = expected.runId;
+    input.runs[1].runId = "other-request";
     delete input.runs[1].metrics.ttft;
     const markdown = renderAdoptionReport(
       [input],
@@ -148,7 +148,7 @@ describe("saved TTFT adoption", () => {
       "| 1 / 1 | ollama / synthetic-model | 0.25 | same execution; measured |",
     );
     expect(markdown).toContain(
-      "| 1 / 2 | ollama / synthetic-model | not adopted | NO-FIELD",
+      "| 1 / 2 | ollama / synthetic-model | not adopted | RUN-ID-MISMATCH",
     );
     expect(input.runs[0]).toEqual(original.runs[0]);
   });

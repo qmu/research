@@ -685,3 +685,101 @@ describe("saved runner version eligibility", () => {
     );
   });
 });
+
+describe("selected request TTFT gates the adoption calculation", () => {
+  const identity = {
+    runId: "selected-request",
+    runnerVersion: "local-inference/4",
+    targetCommit: currentCommit,
+  };
+  const measured = () => {
+    const data = sample();
+    return {
+      ...data,
+      runs: [
+        {
+          ...data.runs[0],
+          runId: identity.runId,
+          ttft: {
+            value: 0.25 as number | null,
+            unit: "s",
+            source: "client",
+            reason: "FIRST-CONTENT",
+          },
+          metrics: {
+            ttft: { value: 0.25 as number | null, unit: "s", source: "client" },
+          },
+        },
+      ],
+    };
+  };
+  it("uses the same decision in calculation and rendering without changing evidence", () => {
+    const data = measured();
+    const before = structuredClone(data);
+    const row = joinResults([data], currentCommit, identity).rows[0];
+    expect(row.adoption).toBe("pass");
+    expect(row.ttft).toEqual({ value: 0.25, unit: "s", reasons: [] });
+    expect(renderReport([data], currentCommit, identity)).toContain(
+      "| 0.25 | same execution; measured | available |",
+    );
+    expect(data).toEqual(before);
+  });
+  it("blocks an otherwise passing quality result when the selected TTFT is unavailable", () => {
+    const data = measured();
+    const missing = { value: null, unit: "s", reason: "NO-FIELD" };
+    const unavailable = {
+      ...data,
+      runs: [
+        {
+          ...data.runs[0],
+          ttft: { ...missing, reason: "NO-CONTENT" },
+          metrics: { ttft: missing },
+        },
+      ],
+    };
+    const row = joinResults([unavailable], currentCommit, identity).rows[0];
+    expect(row.adoption).toBe("undetermined");
+    expect(row.reasons).toEqual(["NO-CONTENT"]);
+    expect(row.quality[0].verdict).toBe("pass");
+    expect(row.ttft.value).toBeNull();
+    expect(joinResults([unavailable], currentCommit).rows[0].adoption).toBe(
+      "pass",
+    );
+  });
+  it("never borrows a different request's available latency", () => {
+    const data = measured();
+    data.runs[0].runId = "other-request";
+    const row = joinResults([data], currentCommit, identity).rows[0];
+    expect(row.adoption).toBe("undetermined");
+    expect(row.ttft.reasons).toEqual(["RUN-ID-MISMATCH"]);
+  });
+  it.each(["same file", "different files"])(
+    "rejects ambiguous request identities in %s",
+    (where) => {
+      const data = measured();
+      const second = structuredClone(data);
+      second.runs[0].metrics.ttft.value = 9;
+      second.runs[0].ttft.value = 9;
+      const inputs =
+        where === "same file"
+          ? [{ ...data, runs: [data.runs[0], second.runs[0]] }]
+          : [data, second];
+      const rows = joinResults(inputs, currentCommit, identity).rows;
+      expect(rows.map((r) => r.adoption)).toEqual([
+        "undetermined",
+        "undetermined",
+      ]);
+      expect(rows.map((r) => r.ttft.reasons)).toEqual([
+        ["AMBIGUOUS-RUN-ID"],
+        ["AMBIGUOUS-RUN-ID"],
+      ]);
+    },
+  );
+  it("keeps a quality failure as fail even with available TTFT", () => {
+    const data = measured();
+    data.runs[0].quality[0].verdict = "fail";
+    expect(joinResults([data], currentCommit, identity).rows[0].adoption).toBe(
+      "fail",
+    );
+  });
+});
