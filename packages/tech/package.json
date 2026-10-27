@@ -73,25 +73,25 @@
     "local-inference": "node --import tsx/esm src/entrypoints/run-local-inference.ts"
   },
   "devDependencies": {
-    "@types/node": "^26.2.0",
-    "eslint": "^10.8.1",
-    "prettier": "^3.9.6",
-    "tsx": "^4.23.12",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.13.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.67.0",
+    "typescript-eslint": "^8.72.0",
     "vitest": "^4.1.10"
   },
   "dependencies": {
     "@anthropic-ai/bedrock-sdk": "^0.32.4",
     "@anthropic-ai/sdk": "^0.117.1",
     "@anthropic-ai/vertex-sdk": "^0.19.4",
-    "@aws-sdk/client-s3vectors": "^3.1111.0",
-    "@google/genai": "^2.17.1",
+    "@aws-sdk/client-s3vectors": "^3.1156.0",
+    "@google/genai": "^2.31.0",
     "@resvg/resvg-js": "^2.6.2",
     "@types/better-sqlite3": "^9.6.0",
     "better-sqlite3": "^13.0.3",
-    "openai": "^7.4.0",
-    "playwright": "^1.62.1",
+    "openai": "^7.43.0",
+    "playwright": "^1.64.1",
     "sqlite-vec": "^0.1.9"
   }
 }
