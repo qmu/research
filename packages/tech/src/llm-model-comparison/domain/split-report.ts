@@ -13,6 +13,7 @@ import {
 } from "./information-accuracy";
 import { providerDisplayName } from "./provider";
 import { renderGenerationDeltaSection } from "./generational-delta";
+import { safeReproduceCommand } from "./reproduce";
 
 /**
  * The "point-in-time" claim, told honestly.
@@ -303,8 +304,12 @@ ${informationPrompt}
 \`\`\``;
 };
 
-const transparencySection = (artifact: SplitArtifact): string =>
-  `The projected artifact preserves this topic's prompts, raw trial outputs, token
+const transparencySection = (artifact: SplitArtifact): string => {
+  const reproduceCommand = safeReproduceCommand({
+    configs: artifact.configs,
+    trials: artifact.trials,
+  });
+  return `The projected artifact preserves this topic's prompts, raw trial outputs, token
 counts, timing values, and (for accuracy) schema-conformance results and
 provider rejection messages. This page can be regenerated from that artifact
 without rerunning the providers.
@@ -315,7 +320,14 @@ ${artifact.group === "speed" ? speedTransparency(artifact) : accuracyTransparenc
 committed alongside this page as a JSON artifact:
 [\`${escapeCell(artifact.artifactPath)}\`](./${escapeCell(artifact.artifactPath)}).
 It is projected from the combined comparison record
-\`${escapeCell(artifact.sourceArtifact)}\` — the same measurements, never re-run.`;
+\`${escapeCell(artifact.sourceArtifact)}\` — the same measurements, never re-run.
+
+**Safe reproduction command.** \`${reproduceCommand}\` reproduces the shared
+sweep this page was projected from, scoped to this artifact's own public model
+ids, effort levels, and trial count. The command is generated only from this
+artifact's own configuration list — it never contains API keys, tokens, or
+other credentials.`;
+};
 
 export const renderSplitReport = (artifact: SplitArtifact): string => {
   const configs = artifact.configs;

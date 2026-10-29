@@ -169,4 +169,27 @@ describe("renderSplitReport", () => {
     );
     expect(md).toContain("n/a (fixtured)");
   });
+
+  it("shows a safe reproduction command scoped to this artifact's own configurations", () => {
+    const md = renderSplitReport(
+      projectComparison(result, "speed", "llm-model-comparison.data.json"),
+    );
+    expect(md).toContain("**Safe reproduction command.**");
+    expect(md).toContain(
+      "npm run compare -- --configs anthropic-claude-fable-5:low,anthropic-claude-sonnet-5:low --trials 3",
+    );
+  });
+
+  it("never leaks a vendor credential env var name into the rendered report", () => {
+    const md = renderSplitReport(
+      projectComparison(result, "speed", "llm-model-comparison.data.json"),
+    );
+    for (const secretEnvVar of [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY",
+      "GOOGLE_API_KEY",
+    ]) {
+      expect(md).not.toContain(secretEnvVar);
+    }
+  });
 });
