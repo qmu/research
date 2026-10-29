@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "status": "proposed",
+  "note": "Threshold values below are a design proposal, not a measured verdict. No real four-engine (ollama/llama.cpp/mlx/strata) common-result trial exists yet. These ceilings are sized for a WHOLE-MACHINE peak reading from an external OS-level sampler (qmu/research#211's host_ram_peak / gpu_vram_peak: /proc/meminfo and nvidia-smi, not a single process's RSS), so they are deliberately wider than a per-process ceiling for the same use case would be (compare qmu/research#205's peakRss, which is scoped to one process and not reused here for that reason). Recalibrate against a real trial's common JSON before publishing any adoption claim.",
+  "useCases": [
+    {
+      "id": "interactive-coding-assistant",
+      "label": "Interactive coding assistant",
+      "hostRamPeakMiB": 24576,
+      "gpuVramPeakMiB": 24576,
+      "rationale": "A developer workstation also runs the editor, language server and browser alongside the engine; the ceiling covers the whole machine's memory, not an isolated engine process."
+    },
+    {
+      "id": "batch-document-summarization",
+      "label": "Batch document summarization",
+      "hostRamPeakMiB": 65536,
+      "gpuVramPeakMiB": 49152,
+      "rationale": "A dedicated batch host runs little else alongside the job, so the ceiling is sized to a large single-GPU workstation rather than a shared machine."
+    },
+    {
+      "id": "edge-offline-device",
+      "label": "Edge / offline device",
+      "hostRamPeakMiB": 8192,
+      "gpuVramPeakMiB": 8192,
+      "rationale": "Constrained hardware shares its entire memory budget with the OS and other apps; the ceiling covers the whole machine, not an isolated process."
+    }
+  ]
+}
