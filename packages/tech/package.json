@@ -12,6 +12,7 @@
   "author": "qmu co.,Inc.",
   "scripts": {
     "dev": "tsx src/index.ts",
+    "local-inference:quality": "node --import tsx/esm src/entrypoints/enrich-local-inference-quality.ts",
     "build": "tsc",
     "tsc": "tsc --noEmit",
     "test": "tsc --noEmit && vitest --run --passWithNoTests",
