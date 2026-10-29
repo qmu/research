@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-25T00:00:00.000Z",
+  "inputSha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+  "sampling": { "temperature": 0, "top_p": 1, "seed": 42, "max_tokens": 1024 },
+  "procedure": "single-request-per-engine",
+  "runs": [
+    {
+      "engine": "ollama",
+      "model": "synthetic",
+      "runtimeVersion": "test-only",
+      "condition": {},
+      "status": "measured",
+      "metrics": {}
+    },
+    {
+      "engine": "llama.cpp",
+      "model": "synthetic",
+      "runtimeVersion": "test-only",
+      "condition": {},
+      "status": "measured",
+      "metrics": {}
+    },
+    {
+      "engine": "mlx",
+      "model": "synthetic",
+      "runtimeVersion": "test-only",
+      "condition": {},
+      "status": "measured",
+      "metrics": {}
+    },
+    {
+      "engine": "strata",
+      "model": "synthetic",
+      "runtimeVersion": "test-only",
+      "condition": {},
+      "status": "failed",
+      "metrics": {}
+    }
+  ]
+}
