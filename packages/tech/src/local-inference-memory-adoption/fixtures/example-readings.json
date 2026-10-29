@@ -1,0 +1,26 @@
+{
+  "fixture": true,
+  "note": "Synthetic numbers for demonstrating renderMemoryAdoptionTable end to end. Not a measurement of any installed engine; see README.md.",
+  "readings": [
+    {
+      "engine": "ollama",
+      "hostRamPeak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" },
+      "gpuVramPeak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+    },
+    {
+      "engine": "llama.cpp",
+      "hostRamPeak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" },
+      "gpuVramPeak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+    },
+    {
+      "engine": "mlx",
+      "hostRamPeak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" },
+      "gpuVramPeak": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+    },
+    {
+      "engine": "strata",
+      "hostRamPeak": { "value": 46637.9, "unit": "MiB" },
+      "gpuVramPeak": { "value": 31785, "unit": "MiB" }
+    }
+  ]
+}
