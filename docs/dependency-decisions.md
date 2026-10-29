@@ -345,6 +345,37 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   model cards. Model ids are OpenRouter's own spelling, carried per card, so no
   translation layer exists to unwind; the `CompletionClient` port is unchanged.
 
+### Ollama (packages/tech) — no new dependency
+
+- **Reason**: A follow-up to the `llm-model-comparison` topic measures
+  locally-hosted open-weight models served through Ollama's own REST daemon
+  (`http://localhost:11434` by default). Ollama's entire surface used here is a
+  couple of JSON POSTs (`/api/generate`, streamed or not), so the adapter
+  reaches it with the runtime's built-in `fetch` rather than adopting a
+  package — isolated behind `packages/tech/src/vendors/llm/ollama.ts`, which
+  implements the existing `CompletionClient` port. This ticket adds only the
+  adapter and its normalizer (`normalizeOllamaCompletion`, following the same
+  pattern as `usage.ts`'s per-provider output-token normalizers); wiring a
+  `Provider: "ollama"` registry entry into `models.ts` and the entrypoint is a
+  gated follow-up, per the proposal-first research convention.
+- **Assessment**:
+  - License / dependency: none added — native `fetch` only.
+  - Surface stability: the wire shape (`response`, `done`, `eval_count`, the
+    `*_duration` fields in nanoseconds) is documented at
+    https://github.com/ollama/ollama/blob/main/docs/api.md and has been stable
+    across releases; cited correct-as-of-source (2026-07).
+  - Sustainability: unlike every other provider here, Ollama is keyless by
+    nature — the "no credential" case means the local daemon is not running,
+    not "no API key" — so it has no entry in `credentials.ts`. A real run
+    against an absent daemon fails loudly (a fetch error), never silently
+    falls back to a fabricated number.
+- **Monitoring**: `npm audit` in CI (no package added); `ollama.test.ts`
+  exercises the normalizer against a fixture reproducing the documented
+  response shape.
+- **Exit strategy**: Removing the backend is deleting `ollama.ts`,
+  `ollamaOutputTokens` in `usage.ts`, and their tests. The `CompletionClient`
+  port is unchanged, and no domain code depends on Ollama's wire shape.
+
 ### Agent VM / sandbox providers — `vendors/sandbox` port, no SDK yet
 
 - **Reason**: The `agent-vm` topic compares sandbox / microVM platforms (E2B,
