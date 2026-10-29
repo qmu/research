@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "engine": "mlx",
+  "status": "failed",
+  "process": {
+    "exit_code": null,
+    "signal": null
+  },
+  "failure": {
+    "code": "UNREACHABLE"
+  }
+}

@@ -37,6 +37,10 @@ const indexable = publicHostname !== "";
 const projectItems = [
   { text: "Local inference adoption", link: "/local-inference-adoption" },
   {
+    text: "Local inference process comparison",
+    link: "/local-inference-process",
+  },
+  {
     text: "Research development guideline",
     link: docsRoute("docs/research-development-guideline.md"),
   },
@@ -214,7 +218,9 @@ export default defineConfig({
       // When served through the Cloudflare tunnel, HMR must ride wss:443.
       // Gated on HMR_TUNNEL, so plain local dev is unaffected.
       ...(process.env.HMR_TUNNEL
-        ? { hmr: { protocol: "wss", clientPort: 443, host: "research.qmu.dev" } }
+        ? {
+            hmr: { protocol: "wss", clientPort: 443, host: "research.qmu.dev" },
+          }
         : {}),
     },
   },
