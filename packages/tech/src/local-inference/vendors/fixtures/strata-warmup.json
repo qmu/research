@@ -1,0 +1,20 @@
+{
+  "request_id": "warmup",
+  "phase": "warmup",
+  "finish_reason": "length",
+  "http_status": 200,
+  "error": null,
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 75,
+    "prompt_ms": 669.8,
+    "prompt_per_token_ms": 8.931,
+    "prompt_per_second": 112.0,
+    "predicted_n": 128,
+    "predicted_ms": 2546.1,
+    "predicted_per_token_ms": 19.891,
+    "predicted_per_second": 50.3,
+    "draft_n": 113,
+    "draft_n_accepted": 72
+  }
+}
