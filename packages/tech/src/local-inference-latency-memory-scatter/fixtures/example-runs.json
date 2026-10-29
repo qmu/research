@@ -1,0 +1,45 @@
+{
+  "note": "Synthetic data for the worked example test — not a measurement of any installed engine.",
+  "runs": [
+    {
+      "engine": "llama.cpp",
+      "label": "trial-1",
+      "reading": {
+        "status": "verified",
+        "initialDelayMs": 180,
+        "peakRssMiB": 4200
+      }
+    },
+    {
+      "engine": "llama.cpp",
+      "label": "trial-2",
+      "reading": {
+        "status": "verified",
+        "initialDelayMs": 205,
+        "peakRssMiB": 4350
+      }
+    },
+    {
+      "engine": "mlx",
+      "label": "trial-1",
+      "reading": {
+        "status": "verified",
+        "initialDelayMs": 95,
+        "peakRssMiB": 6100
+      }
+    },
+    {
+      "engine": "ollama",
+      "label": "trial-1",
+      "reading": {
+        "status": "unverified",
+        "reason": "runner-version-mismatch"
+      }
+    },
+    {
+      "engine": "strata",
+      "label": "trial-1",
+      "reading": { "status": "unverified", "reason": "NO-FIELD" }
+    }
+  ]
+}
