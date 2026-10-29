@@ -1,5 +1,6 @@
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
+import { safeReproduceCommand } from "./reproduce";
 import type { BenchmarkResult, HistoryFile } from "./types";
 
 export type RagReportRenderOptions = Readonly<{
@@ -272,6 +273,11 @@ export const renderRagBenchmarkReport = (
   result: BenchmarkResult,
   options: RagReportRenderOptions = {},
 ): string => {
+  const reproduceCommand = safeReproduceCommand({
+    fixture: result.fixture,
+    datasetId: result.dataset.id,
+    trials: result.trials,
+  });
   const rows = result.runs
     .map(
       (run) =>
@@ -352,6 +358,8 @@ ${rows}
 **Dataset.** The benchmark uses ${result.dataset.name} (\`${result.dataset.id}\`). Source: ${result.dataset.source}. License note: ${sentence(result.dataset.license)} The run contains ${result.dataset.documents.length} documents, ${result.dataset.queries.length} queries, and ${result.dataset.qrels.length} relevance judgments.
 
 The complete run record is committed as [\`${result.artifactPath}\`](./${result.artifactPath}). It contains the dataset rows, backend registry facts, query-level results, retrieval metrics, operational timings, provenance, and generated timestamp.
+
+**Safe reproduction command.** \`${reproduceCommand}\` reproduces this run from fixture id \`${result.dataset.id}\`. The command is generated only from this run's own fixture flag, dataset id, and trial count — it never contains API keys, tokens, or other credentials.
 
 Generated: ${result.generatedAt}`,
   });
