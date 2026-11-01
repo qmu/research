@@ -14,6 +14,20 @@
 
 `| tail` や `|| true` を付けず、終了コードをそのまま確認する。
 
+### パッケージ別の再現コマンド
+
+更新ブランチをチェックアウトした状態で、リポジトリの根から流す。
+
+```sh
+npm --prefix packages/tech ci
+npm --prefix packages/tech test
+npm --prefix packages/industry ci
+npm --prefix packages/industry run build
+make lockfiles
+```
+
+`make lockfiles` は `node -v` / `npm -v` を表示する。`engines`(node >=22 <23、npm >=10.9 <11)の外なら、結果は証拠にならない。
+
 ## 証拠の強さ
 
 - `packages/tech`: テストが多数あり、`make test` の成功は十分な証拠になる。
