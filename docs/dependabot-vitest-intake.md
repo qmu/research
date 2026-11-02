@@ -38,3 +38,10 @@ make lockfiles
 
 上記がすべて成功し、`make lockfiles` が差分なしであれば取り込める。
 失敗した場合は更新ではなく、失敗した確認を直す作業を先に置く。
+
+## 2026-11-02 の確認結果（隔離環境）
+
+- `packages/industry` の lockfile は main で既に vitest / @vitest/mocker 4.1.12 である。#289 は取り込み済みの内容と重なる。
+- `packages/tech` の lockfile は 4.1.10 のままである。
+- 隔離環境（Node 22、npm 10.9.9）で `npm --prefix packages/tech install vitest@4.1.12 --ignore-scripts`（`--package-lock-only` の有無とも）を流すと、`Cannot read properties of null (reading 'edgesOut')` で終了し、lockfile は変わらなかった。更新の可否は未判定である。
+- 次の一手: 通常の開発環境で同じコマンドを流し、`make test` と `make lockfiles` の結果を記録する。
