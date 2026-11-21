@@ -1,0 +1,23 @@
+{
+  "engines": [
+    {
+      "key": "llama.cpp",
+      "label": "llama.cpp server",
+      "description": "Synthetic example only."
+    }
+  ],
+  "metrics": [
+    {
+      "key": "ttft_ms",
+      "label": "Time to first token",
+      "description": "Milliseconds; lower is better."
+    }
+  ],
+  "reason-codes": [
+    {
+      "key": "missing",
+      "label": "Missing evidence",
+      "description": "No adoption decision can be inferred."
+    }
+  ]
+}
