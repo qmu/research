@@ -532,3 +532,37 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   usage via the pure `pricing.ts` and cross-checked against the curated midpoint.
 - **Exit strategy**: Each subject is one adapter behind the `DeepResearchClient`
   port; a retired or re-shaped endpoint is a single-file change.
+
+## Strata adapter — official CLI + local OpenAI-compatible server (2026-10-25)
+
+- **Decision**: No new npm dependency. `createStrataCompletionClient`
+  (`packages/tech/src/vendors/llm/strata.ts`) shells out to the official
+  `strata` CLI (`strata launch --model NAME --yes --no-tui`) to start the
+  server, then reaches it with the runtime's built-in `fetch` against the
+  OpenAI-compatible `/v1/chat/completions` endpoint it serves at
+  `127.0.0.1:8080`. `strata` itself is a binary the *operator* installs on
+  their own Apple Silicon Mac (`.dmg`, `strata launch`, or `./setup.sh`); it is
+  never installed by this repository's `npm install`/lockfiles and is not
+  reachable from CI (no Apple Silicon runner, no `strata` binary).
+- **Assessment**: Not an npm dependency, so the usual license/reputation
+  assessment above does not apply. The external contract this adapter depends
+  on is the official repository `Niko1221/Strata` (MIT) at the pinned commit
+  `7dd5cf18e68c639a8773e096c5c79f971ea2a9f5` — `README.md` (CLI flags and API
+  addresses), `docs/MAC.md` (Apple Silicon / macOS 15 requirement), and
+  `docs/BENCHMARK_PROTOCOL.md` (the streamed response's closing `usage` chunk
+  and the bench record shape qmu/research#188 also normalizes). The actual
+  subprocess and HTTP calls are isolated behind the injectable `StrataLauncher` and
+  `StrataHttpTransport` seams, so every test runs keyless and
+  hardware-independent against scripted fixtures, never the real binary or a
+  live server.
+- **Monitoring**: None automated (no CI surface to monitor); a wire-shape
+  change in a future `Strata` release would fail `normalizeStrataCompletion` /
+  `createStrataCompletionClient`'s unit tests against a freshly captured
+  response.
+- **Exit strategy**: Reached only through the shared `CompletionClient` port
+  (the same contract `createOllamaCompletionClient` /
+  `createMlxCliCompletionClient` implement); a retired or re-shaped CLI/API is
+  a single-file change. `normalizeStrataCompletion` here is deliberately
+  identical in shape to the function of the same name in the still-open
+  qmu/research#188 (see `strata.ts`'s comment above it); that overlap is
+  called out explicitly in this PR's description.
