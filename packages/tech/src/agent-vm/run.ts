@@ -41,6 +41,11 @@ const selectCards = (
     ? SANDBOX_PROVIDERS
     : SANDBOX_PROVIDERS.filter((card) => providerIds.includes(card.id));
 
+// Why a provider has no probe. The numeric fields are placeholders the report
+// never shows (it prints "—" for unmeasured rows); the reason is what a reader
+// needs, so it is carried in `error` and rendered in the Note column.
+const UNREACHABLE_REASON = "no probe adapter or credential yet";
+
 const unreachable = (repetitions: number): SandboxMeasurement => ({
   provenance: "unreachable",
   repetitions,
@@ -51,6 +56,7 @@ const unreachable = (repetitions: number): SandboxMeasurement => ({
   fixedTaskWallClockMs: 0,
   measuredCostUsd: 0,
   samples: [],
+  error: UNREACHABLE_REASON,
 });
 
 const measureProvider = async (

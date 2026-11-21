@@ -60,6 +60,22 @@ describe("runAgentVm (real, no adapters yet)", () => {
       expect(run.measurement.provenance).toBe("unreachable");
       expect(run.measurement.samples).toHaveLength(0);
       expect(run.measurement.measuredCostUsd).toBe(0);
+      expect(run.measurement.error).toBe(
+        "no probe adapter or credential yet",
+      );
+    }
+  });
+
+  it("shows the reason for each unreachable row in the result page", async () => {
+    const result = await runAgentVm({ fixture: false, repetitions: 2 });
+    const report = renderAgentVmReport(result);
+    const unreachableRows = report
+      .split("\n")
+      .filter((line) => line.includes("| unreachable |"));
+    expect(unreachableRows.length).toBe(result.runs.length);
+    for (const line of unreachableRows) {
+      expect(line).toContain("no probe adapter or credential yet");
+      expect(line).not.toContain("| 0 ms |");
     }
   });
 
