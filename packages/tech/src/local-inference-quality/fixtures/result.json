@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "inputSha256": "a8d5279b9edcfc0b4779bc5a2f7917dbb4c1415dfd265d60684049d59aa1ea32",
+  "procedure": "synthetic-quality-smoke",
+  "runs": [
+    {
+      "engine": "ollama",
+      "model": "synthetic-not-measured",
+      "status": "measured",
+      "metrics": {}
+    },
+    {
+      "engine": "llama.cpp",
+      "model": "synthetic-not-measured",
+      "status": "measured",
+      "metrics": {}
+    },
+    {
+      "engine": "mlx",
+      "model": "synthetic-not-measured",
+      "status": "measured",
+      "metrics": {}
+    },
+    {
+      "engine": "strata",
+      "model": "synthetic-not-measured",
+      "status": "failed",
+      "metrics": {}
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "sourceSha256": "f177b99df22295687672848e2f6b8b023c160d6dec8c5712e57af69d1748084d",
+  "outputs": [
+    {
+      "runIndex": 0,
+      "fixtureId": "multiply-6-7-v1",
+      "text": "42"
+    },
+    {
+      "runIndex": 1,
+      "fixtureId": "multiply-6-7-v1",
+      "text": "41"
+    }
+  ]
+}
