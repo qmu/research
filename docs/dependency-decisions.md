@@ -532,3 +532,26 @@ ourselves first; depend only when the value clearly exceeds the cost of exit.
   usage via the pure `pricing.ts` and cross-checked against the curated midpoint.
 - **Exit strategy**: Each subject is one adapter behind the `DeepResearchClient`
   port; a retired or re-shaped endpoint is a single-file change.
+
+## MLX adapter — official `mlx_lm.generate` CLI (2026-10-25)
+
+- **Decision**: No new npm dependency. `createMlxCliCompletionClient`
+  (`packages/tech/src/vendors/llm/mlx.ts`) shells out to `mlx_lm.generate` — the
+  official CLI of Apple's `mlx-lm` package — via Node's built-in
+  `node:child_process`, the same way `report-translation-runner.ts` already
+  shells out to `git`. `mlx_lm` itself is a Python package the *operator*
+  installs on their own Apple Silicon machine; it is never installed by this
+  repository's `npm install`/lockfiles and is not reachable from CI (no Apple
+  Silicon runner, no `mlx_lm`).
+- **Assessment**: Not an npm dependency, so the usual license/reputation
+  assessment above does not apply; the CLI's `--verbose` output format is the
+  only external contract this adapter depends on (parsed by
+  `normalizeMlxGenerateOutput`), and the actual subprocess call is isolated
+  behind the injectable `MlxGenerateRunner` seam so every test runs keyless and
+  hardware-independent against a fixture, never the real binary.
+- **Monitoring**: None automated (no CI surface to monitor); a format change in
+  a future `mlx_lm` release would fail `parseMlxGenerateStats` /
+  `extractMlxGeneratedText`'s unit tests against a freshly captured fixture.
+- **Exit strategy**: Reached only through the shared `CompletionClient` port; a
+  future server-based measurement path (`mlx_lm.server`) would be a second,
+  independent adapter, not a change to this one.
