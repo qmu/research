@@ -1,0 +1,15 @@
+{
+  "model": "fixture-model.gguf",
+  "content": "東京です。",
+  "stop": true,
+  "stop_type": "eos",
+  "tokens_evaluated": 24,
+  "tokens_predicted": 4,
+  "timings": {
+    "prompt_n": 24,
+    "prompt_ms": 12.5,
+    "predicted_n": 4,
+    "predicted_ms": 80,
+    "predicted_per_second": 50
+  }
+}
