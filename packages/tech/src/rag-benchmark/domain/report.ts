@@ -1,5 +1,9 @@
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
+import {
+  renderAdoptionRationaleSection,
+  renderAdoptionVerdictSummary,
+} from "./adoption-rationale";
 import type { BenchmarkResult, HistoryFile } from "./types";
 
 export type RagReportRenderOptions = Readonly<{
@@ -329,6 +333,8 @@ export const renderRagBenchmarkReport = (
 - The miniature dataset is intended to verify the harness and metric calculations; it is not a statistical claim about backend quality at production scale.`,
     verificationResults: `${overviewSection(result)}
 
+${renderAdoptionVerdictSummary(result.runs)}
+
 ${historyCharts}`,
     analysis: backendNotes,
     reproductionSteps: `\`\`\`sh
@@ -348,6 +354,8 @@ npm run rag:estimate
 | Backend | Kind | Embedding | Store isolated | Provenance | Recall@k (95% CI) | nDCG@k (95% CI) | MRR (95% CI) | Ingest ms (mean±sd) | Query p50 ms (mean±sd) | Query p95 ms (mean±sd) | Cost | Cost note |
 | ------- | ---- | --------- | -------------- | ---------- | -------- | ------ | --- | --------- | ------------ | ------------ | ---- | --------- |
 ${rows}
+
+${renderAdoptionRationaleSection(result.runs)}
 
 **Dataset.** The benchmark uses ${result.dataset.name} (\`${result.dataset.id}\`). Source: ${result.dataset.source}. License note: ${sentence(result.dataset.license)} The run contains ${result.dataset.documents.length} documents, ${result.dataset.queries.length} queries, and ${result.dataset.qrels.length} relevance judgments.
 
