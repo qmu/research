@@ -1,6 +1,11 @@
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
-import type { BenchmarkResult, HistoryFile } from "./types";
+import type {
+  BackendRun,
+  BenchmarkResult,
+  GapReasonCode,
+  HistoryFile,
+} from "./types";
 
 export type RagReportRenderOptions = Readonly<{
   history?: HistoryFile;
@@ -21,6 +26,17 @@ const decimalWithCi = (value: number, lower: number, upper: number): string =>
 
 const msWithStdDev = (mean: number, deviation: number): string =>
   `${ms(mean)} ± ${ms(deviation)}`;
+
+const GAP_REASON_TEXT: Readonly<Record<GapReasonCode, string>> = {
+  UNREACHABLE:
+    "the backend's credential was absent on a real run, so only fixture numbers exist and none are shown",
+  UNSUPPORTED: "no store adapter is registered for this backend",
+  "MEASURE-FAILED": "the adapter ran and threw before producing a measurement",
+};
+
+/** A gap row names its machine-readable reason instead of showing 0 or a blank. */
+const gapCell = (run: BackendRun, cell: string): string =>
+  run.reasonCode === undefined ? cell : `n/a (${run.reasonCode})`;
 
 const sentence = (value: string): string =>
   value.endsWith(".") ? value : `${value}.`;
@@ -190,7 +206,9 @@ const medianOf = (values: ReadonlyArray<number>): number => {
  * site-wide article policy.
  */
 const overviewSection = (result: BenchmarkResult): string => {
-  const measured = result.runs.filter((run) => run.provenance === "measured");
+  const measured = result.runs.filter(
+    (run) => run.provenance === "measured" && run.reasonCode === undefined,
+  );
   const counts = `This run has **${measured.length} measured** of ${result.runs.length} backend configuration(s) (non-measured rows are \`fixtured\` credential-absent cards or \`error\` rows, never faked numbers).`;
   if (measured.length === 0) {
     return `${counts}
@@ -277,13 +295,13 @@ export const renderRagBenchmarkReport = (
       (run) =>
         `| ${run.backend.name} | ${run.backend.kind} | ${run.backend.embeddingCoupling} | ` +
         `${run.backend.isolatedStore ? "yes" : "no"} | ${run.provenance} | ` +
-        `${pctWithCi(run.retrieval.recallAtK, run.retrieval.recallAtKCi95.lower, run.retrieval.recallAtKCi95.upper)} | ` +
-        `${pctWithCi(run.retrieval.ndcgAtK, run.retrieval.ndcgAtKCi95.lower, run.retrieval.ndcgAtKCi95.upper)} | ` +
-        `${decimalWithCi(run.retrieval.mrr, run.retrieval.mrrCi95.lower, run.retrieval.mrrCi95.upper)} | ` +
-        `${msWithStdDev(run.operational.ingestMs, run.operational.ingestMsStdDev)} | ` +
-        `${msWithStdDev(run.operational.queryLatencyP50Ms, run.operational.queryLatencyP50MsStdDev)} | ` +
-        `${msWithStdDev(run.operational.queryLatencyP95Ms, run.operational.queryLatencyP95MsStdDev)} | ` +
-        `$${run.operational.costUsd.toFixed(4)} | ${run.backend.costNote} |`,
+        `${gapCell(run, pctWithCi(run.retrieval.recallAtK, run.retrieval.recallAtKCi95.lower, run.retrieval.recallAtKCi95.upper))} | ` +
+        `${gapCell(run, pctWithCi(run.retrieval.ndcgAtK, run.retrieval.ndcgAtKCi95.lower, run.retrieval.ndcgAtKCi95.upper))} | ` +
+        `${gapCell(run, decimalWithCi(run.retrieval.mrr, run.retrieval.mrrCi95.lower, run.retrieval.mrrCi95.upper))} | ` +
+        `${gapCell(run, msWithStdDev(run.operational.ingestMs, run.operational.ingestMsStdDev))} | ` +
+        `${gapCell(run, msWithStdDev(run.operational.queryLatencyP50Ms, run.operational.queryLatencyP50MsStdDev))} | ` +
+        `${gapCell(run, msWithStdDev(run.operational.queryLatencyP95Ms, run.operational.queryLatencyP95MsStdDev))} | ` +
+        `${gapCell(run, `$${run.operational.costUsd.toFixed(4)}`)} | ${run.backend.costNote} |`,
     )
     .join("\n");
 
@@ -292,14 +310,20 @@ export const renderRagBenchmarkReport = (
       const isolation = run.backend.isolatedStore
         ? "store-isolated (fixed embedding)"
         : "whole-stack, not store-isolated (managed embedding)";
-      const spread = run.retrieval.trialStdDev
-        ? ` Run-to-run retrieval stdDev across ${run.retrieval.trialCount} trials: recall ${(run.retrieval.trialStdDev.recallAtK * 100).toFixed(1)}pp, nDCG ${(run.retrieval.trialStdDev.ndcgAtK * 100).toFixed(1)}pp, MRR ${run.retrieval.trialStdDev.mrr.toFixed(3)}.`
-        : "";
+      const spread =
+        run.reasonCode === undefined && run.retrieval.trialStdDev
+          ? ` Run-to-run retrieval stdDev across ${run.retrieval.trialCount} trials: recall ${(run.retrieval.trialStdDev.recallAtK * 100).toFixed(1)}pp, nDCG ${(run.retrieval.trialStdDev.ndcgAtK * 100).toFixed(1)}pp, MRR ${run.retrieval.trialStdDev.mrr.toFixed(3)}.`
+          : "";
       const details = [
         run.backend.ingestionNote,
-        run.retrieval.intervalNote,
-        `Operational metrics are mean ± sample stdDev across ${run.operational.trialCount} trial(s).`,
+        run.reasonCode === undefined ? run.retrieval.intervalNote : undefined,
+        run.reasonCode === undefined
+          ? `Operational metrics are mean ± sample stdDev across ${run.operational.trialCount} trial(s).`
+          : undefined,
         spread,
+        run.reasonCode === undefined
+          ? undefined
+          : `Gap reason ${run.reasonCode}: ${GAP_REASON_TEXT[run.reasonCode]}`,
         run.provenance === "error" && run.error
           ? `Run errored: ${run.error}`
           : undefined,
@@ -310,6 +334,26 @@ export const renderRagBenchmarkReport = (
       return `- **${run.backend.name}** — ${isolation}.${details}`;
     })
     .join("\n");
+  const gaps = result.runs.filter((run) => run.reasonCode !== undefined);
+  const gapReasons =
+    gaps.length === 0
+      ? ""
+      : `
+
+**Missing measurement reasons**
+
+These rows have no measured values. Fixture fallback values and error placeholders are excluded from the metric cells and overview.
+
+| Backend | Status | Reason code | Explanation |
+| ------- | ------ | ----------- | ----------- |
+${gaps
+  .map((run) => {
+    const code = run.reasonCode;
+    if (code === undefined) return "";
+    const status = code === "MEASURE-FAILED" ? "failed" : code.toLowerCase();
+    return `| ${run.backend.name} | ${status} | \`${code}\` | ${GAP_REASON_TEXT[code]}. |`;
+  })
+  .join("\n")}`;
   const historyCharts = historyChartsSection(result, options.history);
 
   return renderEnglishResearchArticle({
@@ -347,7 +391,7 @@ npm run rag:estimate
 
 | Backend | Kind | Embedding | Store isolated | Provenance | Recall@k (95% CI) | nDCG@k (95% CI) | MRR (95% CI) | Ingest ms (mean±sd) | Query p50 ms (mean±sd) | Query p95 ms (mean±sd) | Cost | Cost note |
 | ------- | ---- | --------- | -------------- | ---------- | -------- | ------ | --- | --------- | ------------ | ------------ | ---- | --------- |
-${rows}
+${rows}${gapReasons}
 
 **Dataset.** The benchmark uses ${result.dataset.name} (\`${result.dataset.id}\`). Source: ${result.dataset.source}. License note: ${sentence(result.dataset.license)} The run contains ${result.dataset.documents.length} documents, ${result.dataset.queries.length} queries, and ${result.dataset.qrels.length} relevance judgments.
 

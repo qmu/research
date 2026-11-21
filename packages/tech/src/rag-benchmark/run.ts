@@ -323,6 +323,7 @@ export const runRagBenchmark = async (
         operational: zeroOperational(dataset.queries.length, trialCount),
         queryResults: [],
         error: `No store factory registered for backend '${backend.id}'.`,
+        reasonCode: "UNSUPPORTED",
       });
       continue;
     }
@@ -411,6 +412,9 @@ export const runRagBenchmark = async (
           trials.map((trial) => trial.operational),
         ),
         queryResults: scoredQueryResults,
+        ...(!options.fixture && fixtured
+          ? { reasonCode: "UNREACHABLE" as const }
+          : {}),
       });
     } catch (error) {
       runs.push({
@@ -428,6 +432,7 @@ export const runRagBenchmark = async (
         operational: zeroOperational(dataset.queries.length, trialCount),
         queryResults: [],
         error: String(error),
+        reasonCode: "MEASURE-FAILED",
       });
     }
   }
