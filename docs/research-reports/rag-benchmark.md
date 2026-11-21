@@ -82,6 +82,8 @@ The local fixture path creates no external resources. Managed-backend real runs 
 
 The complete run record is committed as [`rag-benchmark.data.json`](./rag-benchmark.data.json). It contains the dataset rows, backend registry facts, query-level results, retrieval metrics, operational timings, provenance, and generated timestamp.
 
+**Safe reproduction command.** `npm run rag -- --fixture --trials 5` reproduces this run from fixture id `scifact-mini`. The command is generated only from this run's own fixture flag, dataset id, and trial count — it never contains API keys, tokens, or other credentials.
+
 Generated: 2026-01-01T00:00:00.000Z
 
 **過去の調査 / Past surveys in this series**
