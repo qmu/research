@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-25T02:00:00.000Z",
+  "inputSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+  "sampling": { "temperature": 0, "top_p": 1, "seed": 42, "max_tokens": 1024 },
+  "procedure": "single-request-per-engine",
+  "runs": [
+    {
+      "engine": "strata",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": { "quantization": "nominal 4-bit", "context_length": 4096 },
+      "status": "failed",
+      "failure": { "code": "UNREACHABLE" },
+      "metrics": {
+        "ttft": { "value": null, "unit": "s", "reason": "MEASURE-FAILED" },
+        "completion_tokens": {
+          "value": null,
+          "unit": "tokens",
+          "reason": "MEASURE-FAILED"
+        },
+        "tps": {
+          "value": null,
+          "unit": "tokens/s",
+          "reason": "MEASURE-FAILED"
+        },
+        "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
+        "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+      }
+    },
+    {
+      "engine": "mlx",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": { "quantization": "nominal 4-bit", "context_length": 4096 },
+      "status": "failed",
+      "failure": { "code": "NOT-LOADABLE" },
+      "metrics": {
+        "ttft": { "value": null, "unit": "s", "reason": "MEASURE-FAILED" },
+        "completion_tokens": {
+          "value": null,
+          "unit": "tokens",
+          "reason": "MEASURE-FAILED"
+        },
+        "tps": {
+          "value": null,
+          "unit": "tokens/s",
+          "reason": "MEASURE-FAILED"
+        },
+        "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
+        "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+      }
+    },
+    {
+      "engine": "ollama",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": { "quantization": "Q4_K_M", "context_length": 4096 },
+      "status": "measured",
+      "metrics": {
+        "ttft": { "value": 0.42, "unit": "s", "source": "client" },
+        "completion_tokens": {
+          "value": 128,
+          "unit": "tokens",
+          "source": "usage"
+        },
+        "tps": { "value": 31.7, "unit": "tokens/s", "source": "client" },
+        "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
+        "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+      }
+    },
+    {
+      "engine": "llama.cpp",
+      "model": "fixture-model-7b",
+      "runtimeVersion": "fixture-0.0.0",
+      "condition": { "quantization": "Q4_K_M", "context_length": 4096 },
+      "status": "measured",
+      "metrics": {
+        "ttft": { "value": 0.39, "unit": "s", "source": "client" },
+        "completion_tokens": {
+          "value": 128,
+          "unit": "tokens",
+          "source": "usage"
+        },
+        "tps": { "value": null, "unit": "tokens/s", "reason": "NO-FIELD" },
+        "startup_time": { "value": null, "unit": "s", "reason": "NOT-RUN" },
+        "peak_rss": { "value": null, "unit": "MiB", "reason": "NOT-RUN" }
+      }
+    }
+  ]
+}
