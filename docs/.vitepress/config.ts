@@ -37,6 +37,10 @@ const indexable = publicHostname !== "";
 const projectItems = [
   { text: "Local inference adoption", link: "/local-inference-adoption" },
   {
+    text: "Local inference: safe next actions",
+    link: "/local-inference-next-actions",
+  },
+  {
     text: "Research development guideline",
     link: docsRoute("docs/research-development-guideline.md"),
   },
