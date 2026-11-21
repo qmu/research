@@ -1,0 +1,36 @@
+{
+  "request_id": "warmup",
+  "phase": "warmup",
+  "final_answer": "A hash table finds a value by using a **hash function** to convert a key into an index in an array of buckets.\n\nBasic lookup process:\n\n1. Take the key you want to find.\n",
+  "finish_reason": "length",
+  "usage": {
+    "prompt_tokens": 75,
+    "completion_tokens": 128,
+    "total_tokens": 203,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 75,
+    "prompt_ms": 669.8,
+    "prompt_per_token_ms": 8.931,
+    "prompt_per_second": 112.0,
+    "predicted_n": 128,
+    "predicted_ms": 2546.1,
+    "predicted_per_token_ms": 19.891,
+    "predicted_per_second": 50.3,
+    "draft_n": 113,
+    "draft_n_accepted": 72
+  },
+  "error": null,
+  "http_status": 200,
+  "dispatch_offset_s": 0.0,
+  "end_offset_s": 3.400295,
+  "first_delta": {
+    "offset_s": 0.896668,
+    "kind": "reasoning"
+  },
+  "first_answer_offset_s": 2.689731
+}
