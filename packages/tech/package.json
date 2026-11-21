@@ -17,6 +17,7 @@
     "test": "tsc --noEmit && vitest --run --passWithNoTests",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
+    "local-inference:fingerprint": "node --import tsx/esm src/entrypoints/enrich-local-inference-fingerprint.ts",
     "research": "node --env-file-if-exists=.env --import tsx/esm src/entrypoints/run-research.ts",
     "generational-precision": "node --import tsx/esm src/entrypoints/analyze-generational-precision.ts",
     "research:archive": "node --import tsx/esm src/entrypoints/archive-research-report.ts",
