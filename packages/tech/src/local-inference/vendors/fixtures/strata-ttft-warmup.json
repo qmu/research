@@ -1,0 +1,13 @@
+{
+  "request_id": "warmup",
+  "phase": "warmup",
+  "finish_reason": "length",
+  "http_status": 200,
+  "error": null,
+  "dispatch_offset_s": 0.0,
+  "first_delta": {
+    "offset_s": 0.896668,
+    "kind": "reasoning"
+  },
+  "first_answer_offset_s": 2.689731
+}
