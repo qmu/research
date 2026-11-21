@@ -58,6 +58,23 @@ expected cost in its own README and result page.
 - `make`
 - Docker (optional, for `workloads/docker/` reproducible environments)
 
+## Reproduce the fixed RAG comparison
+
+After `npm ci --prefix packages/tech`, run `make reproduce-fixture` from the
+repository root. This keyless command uses the existing RAG fixture generator
+with its fixed timestamp, mini corpus, k=3 and five trials. Fixture values test
+the pipeline; they are not measurements of live providers.
+
+`outputs/reproduce-fixture/` contains the unchanged common result schema in
+`rag-benchmark.data.json`, the comparison table in `rag-benchmark.md`, combined
+stdout/stderr in `command-output.txt`, and the generator's numeric status in
+`exit-code.txt`. Override the directory with `make reproduce-fixture OUTPUT_DIR=/absolute/path`. Each run replaces these artifacts and removes stale
+JSON/Markdown before execution. The runner propagates failure (GNU Make reports
+recipe failures as status 2); `exit-code.txt` retains the generator's exact code.
+Inspect the Markdown locally or view the matching fixture page at
+`http://127.0.0.1:5173/en/rag-benchmark` after `npm ci --prefix docs` and
+`npm --prefix docs run dev -- --host 127.0.0.1 --port 5173`.
+
 ## License
 
 [MIT](LICENSE).
