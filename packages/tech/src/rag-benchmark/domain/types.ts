@@ -1,5 +1,14 @@
 export type Provenance = "measured" | "fixtured" | "error";
 
+/**
+ * Machine-readable reason a backend row carries no (or no real) numbers.
+ * `UNREACHABLE`: the credential was absent on a real run, so the row is a
+ * fixture card; `UNSUPPORTED`: no store adapter exists for the backend;
+ * `MEASURE-FAILED`: the adapter ran and threw. A row without a code was
+ * measured, or fixtured by request.
+ */
+export type GapReasonCode = "UNREACHABLE" | "UNSUPPORTED" | "MEASURE-FAILED";
+
 export type BackendKind = "self-managed" | "managed";
 
 export type EmbeddingCoupling = "fixed" | "managed";
@@ -140,6 +149,7 @@ export type BackendRun = Readonly<{
     }>
   >;
   error?: string;
+  reasonCode?: GapReasonCode;
 }>;
 
 export type BenchmarkResult = Readonly<{

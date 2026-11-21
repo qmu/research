@@ -1,6 +1,11 @@
 import { renderTimeSeriesChart } from "../../research-report/domain/chart.js";
 import { renderEnglishResearchArticle } from "../../research/domain/article-outline";
-import type { BenchmarkResult, HistoryFile } from "./types";
+import type {
+  BackendRun,
+  BenchmarkResult,
+  GapReasonCode,
+  HistoryFile,
+} from "./types";
 
 export type RagReportRenderOptions = Readonly<{
   history?: HistoryFile;
@@ -22,7 +27,18 @@ const decimalWithCi = (value: number, lower: number, upper: number): string =>
 const msWithStdDev = (mean: number, deviation: number): string =>
   `${ms(mean)} ± ${ms(deviation)}`;
 
-const sentence = (value: string): string =>
+const GAP_REASON_TEXT: Readonly<Record<GapReasonCode, string>> = {
+  UNREACHABLE:
+    "the backend's credential was absent on a real run, so only fixture numbers exist and none are shown",
+  UNSUPPORTED: "no store adapter is registered for this backend",
+  "MEASURE-FAILED": "the adapter ran and threw before producing a measurement",
+};
+
+/** A gap row names its machine-readable reason instead of showing 0 or a blank. */
+const gapCell = (run: BackendRun, cell: string): string =>
+  run.reasonCode === undefined ? cell : `n/a (${run.reasonCode})`;
+
+const sentence =(value: string): string =>
   value.endsWith(".") ? value : `${value}.`;
 
 type HistoryMetricKey =
@@ -277,13 +293,13 @@ export const renderRagBenchmarkReport = (
       (run) =>
         `| ${run.backend.name} | ${run.backend.kind} | ${run.backend.embeddingCoupling} | ` +
         `${run.backend.isolatedStore ? "yes" : "no"} | ${run.provenance} | ` +
-        `${pctWithCi(run.retrieval.recallAtK, run.retrieval.recallAtKCi95.lower, run.retrieval.recallAtKCi95.upper)} | ` +
-        `${pctWithCi(run.retrieval.ndcgAtK, run.retrieval.ndcgAtKCi95.lower, run.retrieval.ndcgAtKCi95.upper)} | ` +
-        `${decimalWithCi(run.retrieval.mrr, run.retrieval.mrrCi95.lower, run.retrieval.mrrCi95.upper)} | ` +
-        `${msWithStdDev(run.operational.ingestMs, run.operational.ingestMsStdDev)} | ` +
-        `${msWithStdDev(run.operational.queryLatencyP50Ms, run.operational.queryLatencyP50MsStdDev)} | ` +
-        `${msWithStdDev(run.operational.queryLatencyP95Ms, run.operational.queryLatencyP95MsStdDev)} | ` +
-        `$${run.operational.costUsd.toFixed(4)} | ${run.backend.costNote} |`,
+        `${gapCell(run, pctWithCi(run.retrieval.recallAtK, run.retrieval.recallAtKCi95.lower, run.retrieval.recallAtKCi95.upper))} | ` +
+        `${gapCell(run, pctWithCi(run.retrieval.ndcgAtK, run.retrieval.ndcgAtKCi95.lower, run.retrieval.ndcgAtKCi95.upper))} | ` +
+        `${gapCell(run, decimalWithCi(run.retrieval.mrr, run.retrieval.mrrCi95.lower, run.retrieval.mrrCi95.upper))} | ` +
+        `${gapCell(run, msWithStdDev(run.operational.ingestMs, run.operational.ingestMsStdDev))} | ` +
+        `${gapCell(run, msWithStdDev(run.operational.queryLatencyP50Ms, run.operational.queryLatencyP50MsStdDev))} | ` +
+        `${gapCell(run, msWithStdDev(run.operational.queryLatencyP95Ms, run.operational.queryLatencyP95MsStdDev))} | ` +
+        `${gapCell(run, `$${run.operational.costUsd.toFixed(4)}`)} | ${run.backend.costNote} |`,
     )
     .join("\n");
 
@@ -300,6 +316,9 @@ export const renderRagBenchmarkReport = (
         run.retrieval.intervalNote,
         `Operational metrics are mean ± sample stdDev across ${run.operational.trialCount} trial(s).`,
         spread,
+        run.reasonCode === undefined
+          ? undefined
+          : `Gap reason ${run.reasonCode}: ${GAP_REASON_TEXT[run.reasonCode]}`,
         run.provenance === "error" && run.error
           ? `Run errored: ${run.error}`
           : undefined,
