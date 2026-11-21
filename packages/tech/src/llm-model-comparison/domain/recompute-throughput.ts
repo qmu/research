@@ -41,6 +41,10 @@
 
 import { endToEndTokensPerSecond } from "./throughput";
 import { summarizeTrials } from "./aggregate";
+import {
+  readLegacyMetrics,
+  type LegacyMetricsConfig,
+} from "./read-legacy-metrics";
 import type { ConfigRun, ThroughputDefinition, TrialResult } from "./types";
 
 // The speed probe's output-token count for one trial, or null when the frame
@@ -80,9 +84,12 @@ const retiredGenerationMs = (totalMs: number, ttftMs: number | null): number =>
  * frame recorded rather than how it is interpreted.
  */
 export const recomputeThroughput = (
-  configs: ReadonlyArray<ConfigRun>,
+  storedConfigs: ReadonlyArray<LegacyMetricsConfig>,
   storedDefinition: ThroughputDefinition = "post-first-token",
 ): RecomputeOutcome => {
+  // This read path also accepts v1 JSON written before information accuracy
+  // existed, even when its throughput already uses the current definition.
+  const configs = readLegacyMetrics(storedConfigs);
   if (storedDefinition === "end-to-end") {
     // Already current. Rescaling would shrink correct numbers.
     return { configs, recomputed: 0, unrecomputable: 0, rescaled: 0 };
