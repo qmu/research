@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "environment": {
+    "execution": {
+      "before": null,
+      "after": null,
+      "changed": false
+    }
+  },
+  "runs": [
+    {
+      "engine": "ollama",
+      "model": "synthetic-model",
+      "presence": "both",
+      "comparable": true,
+      "speed": {
+        "tps": {
+          "before": {
+            "value": 10,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "after": {
+            "value": 20,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "memory": {
+        "peak_rss": {
+          "before": {
+            "value": 10,
+            "unit": "MiB"
+          },
+          "after": {
+            "value": 20,
+            "unit": "MiB"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "quality": {
+        "before": null,
+        "after": null,
+        "changed": false
+      }
+    },
+    {
+      "engine": "llama.cpp",
+      "model": "synthetic-model",
+      "presence": "both",
+      "comparable": true,
+      "speed": {
+        "tps": {
+          "before": {
+            "value": 10,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "after": {
+            "value": 20,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "memory": {
+        "peak_rss": {
+          "before": {
+            "value": 10,
+            "unit": "MiB"
+          },
+          "after": {
+            "value": 20,
+            "unit": "MiB"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "quality": {
+        "before": null,
+        "after": null,
+        "changed": false
+      }
+    },
+    {
+      "engine": "mlx",
+      "model": "synthetic-model",
+      "presence": "both",
+      "comparable": true,
+      "speed": {
+        "tps": {
+          "before": {
+            "value": 10,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "after": {
+            "value": 20,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "memory": {
+        "peak_rss": {
+          "before": {
+            "value": 10,
+            "unit": "MiB"
+          },
+          "after": {
+            "value": 20,
+            "unit": "MiB"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "quality": {
+        "before": null,
+        "after": null,
+        "changed": false
+      }
+    },
+    {
+      "engine": "strata",
+      "model": "synthetic-model",
+      "presence": "both",
+      "comparable": true,
+      "speed": {
+        "tps": {
+          "before": {
+            "value": 10,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "after": {
+            "value": 20,
+            "unit": "tok/s",
+            "source": "fixture"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "memory": {
+        "peak_rss": {
+          "before": {
+            "value": 10,
+            "unit": "MiB"
+          },
+          "after": {
+            "value": 20,
+            "unit": "MiB"
+          },
+          "changed": true,
+          "delta": 10,
+          "reason": null
+        }
+      },
+      "quality": {
+        "before": null,
+        "after": null,
+        "changed": false
+      }
+    }
+  ]
+}
